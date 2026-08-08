@@ -112,6 +112,17 @@ create trigger matriculas_apos_exclusao
   for each row
   execute function public.limpar_curso_ativo_ao_remover_matricula();
 
+-- Etapa 3: fecha o gap em que perfis.curso_ativo_id podia continuar apontando para um curso
+-- cuja matrícula deixou de estar 'ativa' (ex.: cancelada), sem nada limpar automaticamente.
+-- Reaproveita a MESMA função da trigger acima (mesma lógica: zera só curso_ativo_id, nunca
+-- usuario_id), agora também disparada quando o status de uma matrícula deixa de ser 'ativa'.
+drop trigger if exists matriculas_status_alterado on public.matriculas;
+create trigger matriculas_status_alterado
+  after update of status on public.matriculas
+  for each row
+  when (old.status = 'ativa' and new.status is distinct from 'ativa')
+  execute function public.limpar_curso_ativo_ao_remover_matricula();
+
 alter table public.cursos enable row level security;
 alter table public.matriculas enable row level security;
 alter table public.perfis enable row level security;

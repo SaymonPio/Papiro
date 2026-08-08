@@ -51,6 +51,32 @@ export default function Questoes() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { window.location.replace("/login"); return; }
 
+    const { data: perfil } = await supabase
+      .from("perfis")
+      .select("curso_ativo_id")
+      .eq("usuario_id", user.id)
+      .maybeSingle();
+
+    if (!perfil?.curso_ativo_id) {
+      setMensagem("Selecione um curso ativo para iniciar uma sessão.");
+      setCarregando(false);
+      return;
+    }
+
+    const { data: matricula } = await supabase
+      .from("matriculas")
+      .select("id")
+      .eq("usuario_id", user.id)
+      .eq("curso_id", perfil.curso_ativo_id)
+      .eq("status", "ativa")
+      .maybeSingle();
+
+    if (!matricula) {
+      setMensagem("Sua matrícula no curso ativo não está disponível no momento.");
+      setCarregando(false);
+      return;
+    }
+
     const { data: bancoQuestoes, error: erroQuestoes } = await supabase
       .from("questoes")
       .select("id, enunciado, dificuldade, banca, materias(nome), assuntos(nome), alternativas(id, texto, ordem)")
@@ -72,6 +98,7 @@ export default function Questoes() {
       .from("sessoes_estudo")
       .insert({
         usuario_id: user.id,
+        matricula_id: matricula.id,
         nivel_meta: meta,
         status: "em_andamento",
         inicio_em: new Date().toISOString(),
