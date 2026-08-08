@@ -6,6 +6,7 @@ import { createClient } from "@/utils/supabase/client";
 
 type NivelMeta = "minima" | "normal" | "ideal";
 type Alternativa = { id: number; texto: string; ordem: number };
+type IdQuestao = { questao_id: number };
 type Questao = {
   id: number;
   enunciado: string;
@@ -77,22 +78,61 @@ export default function Questoes() {
       return;
     }
 
-    const { data: bancoQuestoes, error: erroQuestoes } = await supabase
-      .from("questoes")
-      .select("id, enunciado, dificuldade, banca, materias(nome), assuntos(nome), alternativas(id, texto, ordem)")
-      .eq("ativa", true)
-      .limit(metas[meta].questoes);
+    const { data: idsQuestoes, error: erroIds } = await supabase.rpc("ids_questoes_para_usuario", {
+      p_limite: metas[meta].questoes,
+    });
 
-    if (erroQuestoes || !bancoQuestoes?.length) {
-      setMensagem("Ainda não há questões publicadas para iniciar esta sessão.");
+    if (erroIds) {
+      console.error("ids_questoes_para_usuario falhou:", {
+        message: erroIds.message,
+        code: erroIds.code,
+        details: erroIds.details,
+        hint: erroIds.hint,
+      });
+      setMensagem("Não foi possível carregar as questões deste curso.");
       setCarregando(false);
       return;
     }
 
-    const preparadas = (bancoQuestoes as unknown as Questao[]).map((questao) => ({
-      ...questao,
-      alternativas: [...questao.alternativas].sort((a, b) => a.ordem - b.ordem),
-    }));
+    const ids = ((idsQuestoes as IdQuestao[] | null) ?? []).map((item) => item.questao_id);
+
+    if (ids.length === 0) {
+      setMensagem("Ainda não há questões cadastradas para este curso.");
+      setCarregando(false);
+      return;
+    }
+
+    // Busca só os detalhes das questões já autorizadas pela RPC para o curso ativo —
+    // nunca um fallback para o banco global nem para outro curso.
+    const { data: bancoQuestoes, error: erroQuestoes } = await supabase
+      .from("questoes")
+      .select("id, enunciado, dificuldade, banca, materias(nome), assuntos(nome), alternativas(id, texto, ordem)")
+      .in("id", ids);
+
+    if (erroQuestoes || !bancoQuestoes?.length) {
+      setMensagem("Ainda não há questões cadastradas para este curso.");
+      setCarregando(false);
+      return;
+    }
+
+    const mapaQuestoes = new Map(
+      (bancoQuestoes as unknown as Questao[]).map((questao) => [questao.id, questao]),
+    );
+
+    // Preserva a ordem de prioridade retornada por ids_questoes_para_usuario.
+    const preparadas = ids
+      .map((id) => mapaQuestoes.get(id))
+      .filter((questao): questao is Questao => Boolean(questao))
+      .map((questao) => ({
+        ...questao,
+        alternativas: [...questao.alternativas].sort((a, b) => a.ordem - b.ordem),
+      }));
+
+    if (preparadas.length === 0) {
+      setMensagem("Ainda não há questões cadastradas para este curso.");
+      setCarregando(false);
+      return;
+    }
 
     const { data: sessao, error: erroSessao } = await supabase
       .from("sessoes_estudo")
@@ -132,6 +172,15 @@ export default function Questoes() {
     });
 
     if (error || !data?.[0]) {
+      if (error) {
+        // Log temporário de diagnóstico — não afrouxa nenhuma validação, só expõe o erro real.
+        console.error("registrar_resposta falhou:", {
+          message: error.message,
+          code: error.code,
+          details: error.details,
+          hint: error.hint,
+        });
+      }
       setMensagem("Não foi possível registrar a resposta.");
       setCarregando(false);
       return;
