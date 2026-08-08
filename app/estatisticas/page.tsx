@@ -7,11 +7,14 @@ import { createClient } from "@/utils/supabase/client";
 type Resposta = {
   acertou: boolean;
   respondida_em: string;
-  questoes: { banca: string | null; materias: { nome: string } | null; assuntos: { nome: string } | null } | null;
+  banca: string | null;
+  materia_nome: string | null;
+  assunto_nome: string | null;
 };
 type Sessao = { data_sessao: string; status: string; questoes_respondidas: number; acertos: number };
 type Revisao = { status: string; agendada_para: string };
-type Erro = { tipo_erro: string | null; corrigido: boolean; questoes: { materias: { nome: string } | null; assuntos: { nome: string } | null } | null };
+type Erro = { tipo_erro: string | null; corrigido: boolean; materia_nome: string | null; assunto_nome: string | null };
+type EstatisticasCurso = { respostas: Resposta[]; sessoes: Sessao[]; revisoes: Revisao[]; erros: Erro[] };
 
 function dataLocal(data: Date) {
   return `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, "0")}-${String(data.getDate()).padStart(2, "0")}`;
@@ -33,24 +36,59 @@ export default function Estatisticas() {
   const [erros, setErros] = useState<Erro[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [mensagem, setMensagem] = useState("");
+  const [semContexto, setSemContexto] = useState(false);
 
   useEffect(() => {
     async function carregar() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { window.location.replace("/login"); return; }
-      const desde = new Date(); desde.setDate(desde.getDate() - 90);
-      const [r, s, rv, e] = await Promise.all([
-        supabase.from("respostas_usuarios").select("acertou, respondida_em, questoes(banca, materias(nome), assuntos(nome))").gte("respondida_em", desde.toISOString()).order("respondida_em"),
-        supabase.from("sessoes_estudo").select("data_sessao, status, questoes_respondidas, acertos").gte("data_sessao", dataLocal(desde)).order("data_sessao"),
-        supabase.from("revisoes").select("status, agendada_para").order("agendada_para"),
-        supabase.from("erros_usuarios").select("tipo_erro, corrigido, questoes(materias(nome), assuntos(nome))"),
-      ]);
-      if (r.error || s.error || rv.error || e.error) setMensagem("Alguns indicadores não puderam ser carregados agora.");
-      setRespostas((r.data as unknown as Resposta[]) ?? []);
-      setSessoes((s.data as Sessao[]) ?? []);
-      setRevisoes((rv.data as Revisao[]) ?? []);
-      setErros((e.data as unknown as Erro[]) ?? []);
+
+      const { data: perfil } = await supabase
+        .from("perfis")
+        .select("curso_ativo_id")
+        .eq("usuario_id", user.id)
+        .maybeSingle();
+
+      if (!perfil?.curso_ativo_id) {
+        setMensagem("Selecione um curso ativo para ver suas estatísticas.");
+        setSemContexto(true);
+        setCarregando(false);
+        return;
+      }
+
+      const { data: matricula } = await supabase
+        .from("matriculas")
+        .select("id")
+        .eq("usuario_id", user.id)
+        .eq("curso_id", perfil.curso_ativo_id)
+        .eq("status", "ativa")
+        .maybeSingle();
+
+      if (!matricula) {
+        setMensagem("Sua matrícula no curso ativo não está disponível no momento.");
+        setSemContexto(true);
+        setCarregando(false);
+        return;
+      }
+
+      const { data, error } = await supabase.rpc("estatisticas_do_curso_ativo");
+
+      if (error) {
+        console.error("estatisticas_do_curso_ativo falhou:", {
+          message: error.message,
+          code: error.code,
+          details: error.details,
+          hint: error.hint,
+        });
+        setMensagem("Alguns indicadores não puderam ser carregados agora.");
+      }
+
+      const resultado = (data as EstatisticasCurso | null) ?? { respostas: [], sessoes: [], revisoes: [], erros: [] };
+      setRespostas(resultado.respostas ?? []);
+      setSessoes(resultado.sessoes ?? []);
+      setRevisoes(resultado.revisoes ?? []);
+      setErros(resultado.erros ?? []);
       setCarregando(false);
     }
     carregar();
@@ -69,7 +107,7 @@ export default function Estatisticas() {
     const corrigidos = erros.filter((e) => e.corrigido).length;
 
     const porMateria = new Map<string, { total: number; acertos: number }>();
-    respostas.forEach((resposta) => { const nome = resposta.questoes?.materias?.nome ?? "Geral"; const atual = porMateria.get(nome) ?? { total: 0, acertos: 0 }; atual.total += 1; if (resposta.acertou) atual.acertos += 1; porMateria.set(nome, atual); });
+    respostas.forEach((resposta) => { const nome = resposta.materia_nome ?? "Geral"; const atual = porMateria.get(nome) ?? { total: 0, acertos: 0 }; atual.total += 1; if (resposta.acertou) atual.acertos += 1; porMateria.set(nome, atual); });
     const materias = [...porMateria.entries()].map(([nome, valor]) => ({ nome, ...valor, percentual: Math.round((valor.acertos / valor.total) * 100) })).sort((a, b) => b.total - a.total);
 
     const tipos = new Map<string, number>();
@@ -88,38 +126,44 @@ export default function Estatisticas() {
         <div><p className="dashboard-label">EVOLUÇÃO NO MÉTODO PAPIRO</p><h1>Consistência que pode ser medida.</h1><span>Indicadores dos últimos 90 dias.</span></div>
         <Link href="/painel">Voltar ao painel</Link>
       </header>
-      {mensagem && <p className="method-message" role="alert">{mensagem}</p>}
+      {semContexto ? (
+        <p className="method-message" role="alert">{mensagem}</p>
+      ) : (
+        <>
+          {mensagem && <p className="method-message" role="alert">{mensagem}</p>}
 
-      <section className="stats-summary">
-        <article><span>Questões respondidas</span><strong>{dados.total}</strong><small>{dados.acertos} acertos</small></article>
-        <article><span>Aproveitamento</span><strong>{dados.aproveitamento}%</strong><small>nos últimos 90 dias</small></article>
-        <article><span>Dias estudados</span><strong>{dados.diasSemana}<b>/7</b></strong><small>nesta semana</small></article>
-        <article><span>Sequência atual</span><strong>{dados.sequencia}</strong><small>dias consecutivos</small></article>
-      </section>
+          <section className="stats-summary">
+            <article><span>Questões respondidas</span><strong>{dados.total}</strong><small>{dados.acertos} acertos</small></article>
+            <article><span>Aproveitamento</span><strong>{dados.aproveitamento}%</strong><small>nos últimos 90 dias</small></article>
+            <article><span>Dias estudados</span><strong>{dados.diasSemana}<b>/7</b></strong><small>nesta semana</small></article>
+            <article><span>Sequência atual</span><strong>{dados.sequencia}</strong><small>dias consecutivos</small></article>
+          </section>
 
-      <section className="stats-grid">
-        <article className="stats-panel performance-panel">
-          <div className="stats-title"><div><p className="dashboard-label">DESEMPENHO</p><h2>Por matéria</h2></div><strong>{dados.aproveitamento}% geral</strong></div>
-          {dados.materias.length === 0 ? <p className="stats-empty">Responda suas primeiras questões para comparar matérias.</p> : dados.materias.map((materia) => <div className="metric-row" key={materia.nome}><div><strong>{materia.nome}</strong><small>{materia.total} questões</small></div><div className="metric-track"><span style={{ width: `${materia.percentual}%` }} /></div><b>{materia.percentual}%</b></div>)}
-        </article>
+          <section className="stats-grid">
+            <article className="stats-panel performance-panel">
+              <div className="stats-title"><div><p className="dashboard-label">DESEMPENHO</p><h2>Por matéria</h2></div><strong>{dados.aproveitamento}% geral</strong></div>
+              {dados.materias.length === 0 ? <p className="stats-empty">Responda suas primeiras questões para comparar matérias.</p> : dados.materias.map((materia) => <div className="metric-row" key={materia.nome}><div><strong>{materia.nome}</strong><small>{materia.total} questões</small></div><div className="metric-track"><span style={{ width: `${materia.percentual}%` }} /></div><b>{materia.percentual}%</b></div>)}
+            </article>
 
-        <article className="stats-panel consistency-panel">
-          <div className="stats-title"><div><p className="dashboard-label">CONSISTÊNCIA</p><h2>Últimos 7 dias</h2></div></div>
-          <div className="week-grid">{dados.ultimosSete.map((dia) => <span className={dia.estudou ? "done" : ""} key={dia.chave}><i>{dia.estudou ? "✓" : "—"}</i><small>{dia.dia}</small></span>)}</div>
-          <div className="consistency-notes"><span>Sessões abandonadas <strong>{dados.abandonadas}</strong></span><span>Meta da semana <strong>{dados.diasSemana >= 5 ? "atingida" : `${5 - dados.diasSemana} dias restantes`}</strong></span></div>
-        </article>
+            <article className="stats-panel consistency-panel">
+              <div className="stats-title"><div><p className="dashboard-label">CONSISTÊNCIA</p><h2>Últimos 7 dias</h2></div></div>
+              <div className="week-grid">{dados.ultimosSete.map((dia) => <span className={dia.estudou ? "done" : ""} key={dia.chave}><i>{dia.estudou ? "✓" : "—"}</i><small>{dia.dia}</small></span>)}</div>
+              <div className="consistency-notes"><span>Sessões abandonadas <strong>{dados.abandonadas}</strong></span><span>Meta da semana <strong>{dados.diasSemana >= 5 ? "atingida" : `${5 - dados.diasSemana} dias restantes`}</strong></span></div>
+            </article>
 
-        <article className="stats-panel reviews-panel">
-          <div className="stats-title"><div><p className="dashboard-label">REVISÕES</p><h2>Fila de consolidação</h2></div></div>
-          <div className="review-summary"><span><strong>{dados.pendentes}</strong>Programadas</span><span className={dados.atrasadas ? "warning" : ""}><strong>{dados.atrasadas}</strong>Atrasadas</span><span><strong>{dados.corrigidos}</strong>Erros corrigidos</span></div>
-          <Link href="/caderno-de-erros">Abrir caderno de erros</Link>
-        </article>
+            <article className="stats-panel reviews-panel">
+              <div className="stats-title"><div><p className="dashboard-label">REVISÕES</p><h2>Fila de consolidação</h2></div></div>
+              <div className="review-summary"><span><strong>{dados.pendentes}</strong>Programadas</span><span className={dados.atrasadas ? "warning" : ""}><strong>{dados.atrasadas}</strong>Atrasadas</span><span><strong>{dados.corrigidos}</strong>Erros corrigidos</span></div>
+              <Link href="/caderno-de-erros">Abrir caderno de erros</Link>
+            </article>
 
-        <article className="stats-panel errors-panel">
-          <div className="stats-title"><div><p className="dashboard-label">PADRÕES DE ERRO</p><h2>O que precisa de atenção</h2></div></div>
-          {dados.errosPorTipo.length === 0 ? <p className="stats-empty">Os tipos de erro aparecerão após a classificação.</p> : dados.errosPorTipo.map((erro) => <div className="error-stat" key={erro.tipo}><span>{erro.tipo}</span><strong>{erro.total}</strong></div>)}
-        </article>
-      </section>
+            <article className="stats-panel errors-panel">
+              <div className="stats-title"><div><p className="dashboard-label">PADRÕES DE ERRO</p><h2>O que precisa de atenção</h2></div></div>
+              {dados.errosPorTipo.length === 0 ? <p className="stats-empty">Os tipos de erro aparecerão após a classificação.</p> : dados.errosPorTipo.map((erro) => <div className="error-stat" key={erro.tipo}><span>{erro.tipo}</span><strong>{erro.total}</strong></div>)}
+            </article>
+          </section>
+        </>
+      )}
     </main>
   );
 }
