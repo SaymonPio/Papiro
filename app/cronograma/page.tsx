@@ -31,6 +31,7 @@ type EvidenciaBruta = Evidencia & {
 
 type ConteudoBruto = {
   id: number;
+  curso_materia_id: number;
   assunto_id: number;
   ordem: number;
   prioridade_estrategica: number | null;
@@ -46,7 +47,6 @@ type MateriaCursoBruta = {
   prioridade_estrategica: number | null;
   frequencia_historica: number | null;
   relevante_para_preparacao: boolean;
-  curso_conteudos: ConteudoBruto[];
 };
 
 type ConteudoCurso = {
@@ -192,6 +192,57 @@ function obterRepeticoes(prioridade: number) {
 }
 
 /**
+ * Rodízio ponderado genérico: dado um conjunto de "raias" (cada uma já ordenada,
+ * com repetição embutida quando for o caso), intercala uma posição de cada raia
+ * por volta, na ordem em que as raias foram passadas, até esvaziar todas.
+ * Usado em dois níveis: dentro de cada matéria (intercala seus próprios
+ * conteúdos) e entre matérias (intercala as matérias entre si).
+ */
+function construirRodizio<T>(raias: T[][]): T[] {
+  const resultado: T[] = [];
+  let indice = 0;
+  let restante = raias.reduce((soma, raia) => soma + raia.length, 0);
+
+  while (restante > 0) {
+    raias.forEach((raia) => {
+      if (indice < raia.length) {
+        resultado.push(raia[indice]);
+        restante -= 1;
+      }
+    });
+
+    indice += 1;
+  }
+
+  return resultado;
+}
+
+/**
+ * Repete um item conforme sua prioridade — mais repetições = aparece mais
+ * vezes na fila daquela matéria.
+ */
+function expandirPorRepeticao(item: ItemPriorizado) {
+  return Array.from({ length: obterRepeticoes(item.prioridade) }, () => item);
+}
+
+// Âncora fixa e arbitrária, só precisa ser estável no tempo — não representa
+// nenhuma data real do produto.
+const EPOCA_RODIZIO = new Date(2024, 0, 1, 0, 0, 0, 0);
+
+/**
+ * Dias corridos desde a âncora fixa até a data informada. Usado para avançar
+ * a posição na fila global conforme o calendário real avança (não conforme o
+ * índice local do dia dentro da semana exibida) — é o que garante que, com o
+ * passar dos dias/semanas reais, a janela de 7 dias percorra toda a fila em
+ * vez de sempre mostrar as mesmas primeiras posições.
+ */
+function diasDesdeEpoca(data: Date) {
+  const alvo = new Date(data);
+  alvo.setHours(0, 0, 0, 0);
+  return Math.floor((alvo.getTime() - EPOCA_RODIZIO.getTime()) / 86_400_000);
+}
+
+/**
  * Descreve a origem mais forte disponível, em linguagem que nunca afirma
  * "confirmado no edital" quando a única evidência é histórico de banca.
  */
@@ -284,25 +335,7 @@ export default function Cronograma() {
 
           supabase
             .from("curso_materias")
-            .select(
-              `
-                id,
-                nome,
-                peso,
-                prioridade_estrategica,
-                frequencia_historica,
-                relevante_para_preparacao,
-                curso_conteudos (
-                  id,
-                  assunto_id,
-                  ordem,
-                  prioridade_estrategica,
-                  frequencia_historica,
-                  relevante_para_preparacao,
-                  assuntos ( nome )
-                )
-              `
-            )
+            .select("id, nome, peso, prioridade_estrategica, frequencia_historica, relevante_para_preparacao")
             .eq("curso_id", perfil.curso_ativo_id)
             .eq("relevante_para_preparacao", true)
             .order("nome"),
@@ -318,23 +351,26 @@ export default function Cronograma() {
         ]);
 
         const materiasCursoBruto =
-          (resultadoMateriasCurso.data as unknown as MateriaCursoBruta[] | null) ?? [];
-
-        const conteudoIds = materiasCursoBruto.flatMap((materia) =>
-          (materia.curso_conteudos ?? [])
-            .filter((conteudo) => conteudo.relevante_para_preparacao)
-            .map((conteudo) => conteudo.id)
-        );
+          (resultadoMateriasCurso.data as MateriaCursoBruta[] | null) ?? [];
 
         const materiaIds = materiasCursoBruto.map((materia) => materia.id);
 
-        const [resultadoEvidenciasConteudo, resultadoEvidenciasMateria] = await Promise.all([
-          conteudoIds.length
+        // curso_conteudos.relevante_para_preparacao = true é filtrado aqui, na própria
+        // consulta (não via embed !inner em curso_materias): um embed com !inner viraria
+        // INNER JOIN e excluiria da resposta qualquer curso_materia sem nenhum conteúdo
+        // relevante, quebrando o fallback genérico por matéria já aprovado. Consultando
+        // curso_conteudos como recurso próprio, o filtro é 100% server-side sem esse efeito.
+        const [resultadoConteudos, resultadoEvidenciasMateria] = await Promise.all([
+          materiaIds.length
             ? supabase
-                .from("curso_evidencias")
-                .select("tipo_origem, frequencia, descricao, curso_conteudo_id")
-                .in("curso_conteudo_id", conteudoIds)
-            : Promise.resolve({ data: [] as EvidenciaBruta[], error: null }),
+                .from("curso_conteudos")
+                .select(
+                  "id, curso_materia_id, assunto_id, ordem, prioridade_estrategica, frequencia_historica, relevante_para_preparacao, assuntos ( nome )"
+                )
+                .in("curso_materia_id", materiaIds)
+                .eq("relevante_para_preparacao", true)
+                .order("ordem")
+            : Promise.resolve({ data: [] as unknown as ConteudoBruto[], error: null }),
 
           materiaIds.length
             ? supabase
@@ -343,6 +379,20 @@ export default function Cronograma() {
                 .in("curso_materia_id", materiaIds)
             : Promise.resolve({ data: [] as EvidenciaBruta[], error: null }),
         ]);
+
+        // Defesa adicional client-side — o filtro real já aconteceu na query acima.
+        const conteudosBruto = ((resultadoConteudos.data as unknown as ConteudoBruto[] | null) ?? []).filter(
+          (conteudo) => conteudo.relevante_para_preparacao
+        );
+
+        const conteudoIds = conteudosBruto.map((conteudo) => conteudo.id);
+
+        const resultadoEvidenciasConteudo = conteudoIds.length
+          ? await supabase
+              .from("curso_evidencias")
+              .select("tipo_origem, frequencia, descricao, curso_conteudo_id")
+              .in("curso_conteudo_id", conteudoIds)
+          : { data: [] as EvidenciaBruta[], error: null };
 
         const evidenciasPorConteudo = new Map<number, Evidencia[]>();
         ((resultadoEvidenciasConteudo.data as EvidenciaBruta[] | null) ?? []).forEach((evidencia) => {
@@ -368,14 +418,20 @@ export default function Cronograma() {
           evidenciasPorMateria.set(evidencia.curso_materia_id, lista);
         });
 
+        const conteudosPorMateria = new Map<number, ConteudoBruto[]>();
+        conteudosBruto.forEach((conteudo) => {
+          const lista = conteudosPorMateria.get(conteudo.curso_materia_id) ?? [];
+          lista.push(conteudo);
+          conteudosPorMateria.set(conteudo.curso_materia_id, lista);
+        });
+
         const materiasCursoMontadas: MateriaCurso[] = materiasCursoBruto.map((materia) => ({
           id: materia.id,
           nome: materia.nome,
           prioridade_estrategica: materia.prioridade_estrategica,
           frequencia_historica: materia.frequencia_historica,
           evidencias: evidenciasPorMateria.get(materia.id) ?? [],
-          conteudos: (materia.curso_conteudos ?? [])
-            .filter((conteudo) => conteudo.relevante_para_preparacao)
+          conteudos: (conteudosPorMateria.get(materia.id) ?? [])
             .sort((a, b) => a.ordem - b.ordem)
             .map((conteudo) => ({
               id: conteudo.id,
@@ -427,6 +483,7 @@ export default function Cronograma() {
           resultadoConfig.error ||
           resultadoCurso.error ||
           resultadoMateriasCurso.error ||
+          resultadoConteudos.error ||
           resultadoSessoes.error ||
           resultadoRevisoes.error ||
           resultadoEvidenciasConteudo.error ||
@@ -437,6 +494,7 @@ export default function Cronograma() {
             config: resultadoConfig.error,
             curso: resultadoCurso.error,
             materiasCurso: resultadoMateriasCurso.error,
+            conteudos: resultadoConteudos.error,
             sessoes: resultadoSessoes.error,
             revisoes: resultadoRevisoes.error,
             evidenciasConteudo: resultadoEvidenciasConteudo.error,
@@ -513,50 +571,45 @@ export default function Cronograma() {
   }, [materiasCurso]);
 
   /**
-   * Cria uma fila ponderada e alternada — mesma lógica de antes, agora operando
-   * sobre itens (conteúdo ou matéria genérica) em vez de matérias inteiras.
+   * Fila global em rodízio ponderado, em dois níveis:
+   *   1. dentro de cada matéria, os conteúdos são intercalados entre si
+   *      (mais repetições = aparece mais vezes, mas nunca empilhado no fim);
+   *   2. as matérias (já com sua fila interna pronta) são intercaladas entre
+   *      si, na ordem da prioridade máxima de cada uma.
+   * Isso substitui a fila plana anterior, que só cobria as ~7 primeiras
+   * posições por rodada (ok com poucas matérias, mas com dezenas de
+   * conteúdos deixava tudo fora do topo permanentemente fora do plano).
+   * A indexação por calendário (ver diasDesdeEpoca, usado em `plano`) é o que
+   * garante que essa fila inteira seja percorrida ao longo das semanas, não
+   * só as primeiras posições.
    */
-  const filaItens = useMemo(() => {
-    const fila: ItemPriorizado[] = [];
+  const filaGlobal = useMemo(() => {
+    const porMateria = new Map<number, ItemPriorizado[]>();
 
     itensPriorizados.forEach((item) => {
-      const repeticoes = obterRepeticoes(item.prioridade);
-
-      for (let indice = 0; indice < repeticoes; indice += 1) {
-        fila.push(item);
-      }
+      const lista = porMateria.get(item.materiaId) ?? [];
+      lista.push(item);
+      porMateria.set(item.materiaId, lista);
     });
 
-    const filaAlternada: ItemPriorizado[] = [];
-    let rodada = 0;
+    const filasPorMateria = [...porMateria.values()]
+      .sort(
+        (a, b) =>
+          Math.max(...b.map((item) => item.prioridade)) -
+          Math.max(...a.map((item) => item.prioridade))
+      )
+      .map((itensDaMateria) => construirRodizio(itensDaMateria.map(expandirPorRepeticao)));
 
-    while (filaAlternada.length < fila.length) {
-      let adicionouItem = false;
+    const fila = construirRodizio(filasPorMateria);
 
-      itensPriorizados.forEach((item) => {
-        const repeticoes = obterRepeticoes(item.prioridade);
-
-        if (rodada < repeticoes) {
-          filaAlternada.push(item);
-          adicionouItem = true;
-        }
-      });
-
-      if (!adicionouItem) {
-        break;
-      }
-
-      rodada += 1;
-    }
-
-    return filaAlternada.length > 0 ? filaAlternada : itensPriorizados;
+    return fila.length > 0 ? fila : itensPriorizados;
   }, [itensPriorizados]);
 
   /**
    * Monta o plano dos próximos sete dias.
    */
   const plano = useMemo(() => {
-    if (filaItens.length === 0) return [];
+    if (filaGlobal.length === 0) return [];
 
     const minutosDia = Math.max(30, Math.round(horasDiarias * 60));
 
@@ -576,8 +629,13 @@ export default function Cronograma() {
         return revisao.agendada_para === chave;
       });
 
-      const itemPrincipal = filaItens[indice % filaItens.length];
-      const itemSecundario = filaItens[(indice + 1) % filaItens.length];
+      // Âncora pelo calendário real (não pelo índice local 0-6): garante que a
+      // janela de 7 dias avance pela fila inteira conforme os dias passam, em
+      // vez de sempre mostrar as mesmas primeiras posições. Determinístico —
+      // depende só da data real e dos dados carregados, nunca de aleatoriedade.
+      const ancora = diasDesdeEpoca(data);
+      const itemPrincipal = filaGlobal[ancora % filaGlobal.length];
+      const itemSecundario = filaGlobal[(ancora + 1) % filaGlobal.length];
 
       const temRevisao = revisoesDia.length > 0;
 
@@ -656,7 +714,7 @@ export default function Cronograma() {
         blocos,
       };
     });
-  }, [horasDiarias, filaItens, revisoes, sessoes]);
+  }, [horasDiarias, filaGlobal, revisoes, sessoes]);
 
   const diasConcluidos = useMemo(() => {
     return plano.filter((dia) => dia.concluido).length;
