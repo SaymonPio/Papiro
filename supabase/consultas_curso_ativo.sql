@@ -82,10 +82,20 @@ $function$;
 
 -- ============================================================================
 -- 2) revisoes_do_curso_ativo()
--- Não é consumida por nenhuma página nesta rodada (caderno de erros recebe revisões
--- aninhadas via erros_do_curso_ativo(); estatísticas recebe via o JSON de
--- estatisticas_do_curso_ativo()). Criada como peça reutilizável independente, já pronta
--- para telas futuras (ex.: cronograma, que não é alterado nesta etapa).
+-- Consumida por app/cronograma/page.tsx (Etapa de priorização por desempenho),
+-- além de continuar disponível como peça reutilizável independente.
+--
+-- assunto_id (adicionado de forma aditiva): resolvido por
+-- coalesce(rv.assunto_id, a.id) — prefere o campo próprio da revisão
+-- (revisoes.assunto_id), com fallback para o assunto da questão original
+-- (mesma cadeia erro->resposta->questão que já alimenta assunto_nome), para
+-- nunca divergir entre os dois campos retornados na mesma linha.
+--
+-- Observação: revisoes.erro_id é nullable, mas o JOIN abaixo com erros_usuarios
+-- já era (antes desta alteração) um INNER JOIN — revisões sem erro_id associado
+-- já ficavam fora deste resultado, porque não existe nenhuma outra cadeia de FK
+-- que ligue uma revisão à matrícula/curso sem passar por erro_id. Isso não muda
+-- com esta alteração aditiva.
 -- ============================================================================
 create or replace function public.revisoes_do_curso_ativo()
 returns table (
@@ -97,6 +107,7 @@ returns table (
   status text,
   concluida_em timestamptz,
   desempenho_pos_revisao numeric,
+  assunto_id bigint,
   materia_nome text,
   assunto_nome text
 )
@@ -114,6 +125,7 @@ as $function$
     rv.status,
     rv.concluida_em,
     rv.desempenho_pos_revisao,
+    coalesce(rv.assunto_id, a.id) as assunto_id,
     m.nome as materia_nome,
     a.nome as assunto_nome
   from public.revisoes rv

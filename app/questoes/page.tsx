@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { createClient } from "@/utils/supabase/client";
 
 type NivelMeta = "minima" | "normal" | "ideal";
 type Alternativa = { id: number; texto: string; ordem: number };
 type IdQuestao = { questao_id: number };
+type CausaErro = "nao_sabia" | "duvida" | "chute" | "atencao" | "interpretacao";
+type Feedback = { acertou: boolean; explicacao: string | null; erroId: number | null };
 type Questao = {
   id: number;
   enunciado: string;
@@ -23,16 +25,78 @@ const metas: Record<NivelMeta, { titulo: string; questoes: number; revisao: numb
   ideal: { titulo: "Meta ideal", questoes: 60, revisao: 20, descricao: "Para os dias com maior disponibilidade." },
 };
 
+const causasErro: { valor: CausaErro; rotulo: string; icone: ReactNode }[] = [
+  {
+    valor: "nao_sabia",
+    rotulo: "Não sabia o conteúdo",
+    icone: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <path d="M4 5c2.5-1 5-1 8 0v14c-3-1-5.5-1-8 0V5Z" />
+        <path d="M20 5c-2.5-1-5-1-8 0v14c3-1 5.5-1 8 0V5Z" />
+      </svg>
+    ),
+  },
+  {
+    valor: "duvida",
+    rotulo: "Fiquei em dúvida",
+    icone: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M9.5 9a2.5 2.5 0 0 1 4.6-1.4c.6.9.4 1.8-.4 2.5-.9.8-1.7 1.3-1.7 2.4" />
+        <circle cx="12" cy="16.6" r="0.6" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+  },
+  {
+    valor: "chute",
+    rotulo: "Chutei",
+    icone: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <rect x="4" y="4" width="16" height="16" rx="3" />
+        <circle cx="9" cy="9" r="1" fill="currentColor" stroke="none" />
+        <circle cx="15" cy="15" r="1" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+  },
+  {
+    valor: "atencao",
+    rotulo: "Erro de atenção",
+    icone: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <path d="M12 4 21 20H3L12 4Z" strokeLinejoin="round" />
+        <path d="M12 10v4" strokeLinecap="round" />
+        <circle cx="12" cy="16.7" r="0.6" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+  },
+  {
+    valor: "interpretacao",
+    rotulo: "Interpretei a questão errado",
+    icone: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <path d="M4 8h13" />
+        <path d="M14 5l3 3-3 3" />
+        <path d="M20 16H7" />
+        <path d="M10 13l-3 3 3 3" />
+      </svg>
+    ),
+  },
+];
+
 export default function Questoes() {
   const [nivel, setNivel] = useState<NivelMeta | null>(null);
   const [questoes, setQuestoes] = useState<Questao[]>([]);
   const [indice, setIndice] = useState(0);
   const [sessaoId, setSessaoId] = useState<number | null>(null);
   const [alternativaId, setAlternativaId] = useState<number | null>(null);
-  const [feedback, setFeedback] = useState<{ acertou: boolean; explicacao: string | null } | null>(null);
+  const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [acertos, setAcertos] = useState(0);
   const [mensagem, setMensagem] = useState("");
   const [carregando, setCarregando] = useState(false);
+  const [causaErro, setCausaErro] = useState<CausaErro | null>(null);
+  const [classificando, setClassificando] = useState(false);
+  const [classificado, setClassificado] = useState(false);
+  const [erroClassificacao, setErroClassificacao] = useState("");
 
   useEffect(() => {
     async function protegerPagina() {
@@ -186,10 +250,45 @@ export default function Questoes() {
       return;
     }
 
-    const resultado = data[0] as { acertou: boolean; explicacao: string | null };
+    const resultado = data[0] as { acertou: boolean; explicacao: string | null; erro_id: number | string | null };
     if (resultado.acertou) setAcertos((valor) => valor + 1);
-    setFeedback(resultado);
+    setFeedback({
+      acertou: resultado.acertou,
+      explicacao: resultado.explicacao,
+      // erro_id é bigint no banco; o PostgREST serializa bigint como string no
+      // JSON. Convertido aqui para number, mesmo tratamento já aplicado a
+      // outros bigints vindos de RPC neste projeto (ex.: app/cronograma).
+      erroId: resultado.erro_id === null || resultado.erro_id === undefined ? null : Number(resultado.erro_id),
+    });
     setCarregando(false);
+  }
+
+  async function classificarErro(causa: CausaErro) {
+    if (!feedback?.erroId) return;
+    setCausaErro(causa);
+    setClassificando(true);
+    setErroClassificacao("");
+
+    const supabase = createClient();
+    const { error } = await supabase.rpc("classificar_erro", {
+      p_erro_id: feedback.erroId,
+      p_tipo_erro: causa,
+    });
+
+    if (error) {
+      console.error("classificar_erro falhou:", {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+        hint: error.hint,
+      });
+      setErroClassificacao("Não foi possível salvar sua resposta. Tente novamente.");
+      setClassificando(false);
+      return;
+    }
+
+    setClassificando(false);
+    setClassificado(true);
   }
 
   async function proxima() {
@@ -198,6 +297,10 @@ export default function Questoes() {
       setIndice((valor) => valor + 1);
       setAlternativaId(null);
       setFeedback(null);
+      setCausaErro(null);
+      setClassificando(false);
+      setClassificado(false);
+      setErroClassificacao("");
       setMensagem("");
       return;
     }
@@ -265,9 +368,39 @@ export default function Questoes() {
 
         {feedback ? (
           <section className={`answer-feedback ${feedback.acertou ? "correct" : "wrong"}`}>
-            <strong>{feedback.acertou ? "Resposta correta" : "Resposta incorreta — adicionada ao caderno de erros"}</strong>
-            <p>{feedback.explicacao ?? "A explicação detalhada será adicionada em breve."}</p>
-            <button type="button" onClick={proxima}>{indice === questoes.length - 1 ? "Ver resultado" : "Próxima questão"}</button>
+            <div className="answer-feedback-head">
+              <strong>{feedback.acertou ? "Resposta correta" : "Resposta incorreta — adicionada ao caderno de erros"}</strong>
+              <p>{feedback.explicacao ?? "A explicação detalhada será adicionada em breve."}</p>
+            </div>
+
+            {!feedback.acertou && (
+              <div className="error-diagnosis">
+                <p className="error-diagnosis-title">Por que você errou essa questão?</p>
+                <div className="error-diagnosis-options">
+                  {causasErro.map((causa) => (
+                    <button
+                      key={causa.valor}
+                      type="button"
+                      className={`error-diagnosis-option${causa.valor === "interpretacao" ? " span-2" : ""}${causaErro === causa.valor ? " selected" : ""}`}
+                      onClick={() => classificarErro(causa.valor)}
+                      disabled={classificando}
+                    >
+                      <span className="error-diagnosis-icon" aria-hidden="true">{causa.icone}</span>
+                      <span>{causa.rotulo}</span>
+                    </button>
+                  ))}
+                </div>
+                {classificando && <p className="method-message error-diagnosis-status">Salvando...</p>}
+                {erroClassificacao && <p className="method-message error-diagnosis-status" role="alert">{erroClassificacao}</p>}
+              </div>
+            )}
+
+            <div className="answer-feedback-footer">
+              <button type="button" className="answer-feedback-next" onClick={proxima} disabled={!feedback.acertou && !classificado}>
+                <span>{indice === questoes.length - 1 ? "Ver resultado" : "Próxima questão"}</span>
+                <span aria-hidden="true">→</span>
+              </button>
+            </div>
           </section>
         ) : (
           <button className="answer-submit" type="button" onClick={responder} disabled={!alternativaId || carregando}>

@@ -51,12 +51,32 @@ type MateriaCursoBruta = {
 
 type ConteudoCurso = {
   id: number;
+  assunto_id: number;
   nome: string;
   ordem: number;
   prioridade_estrategica: number | null;
   frequencia_historica: number | null;
   evidencias: Evidencia[];
 };
+
+// Desempenho do aluno por assunto, escopado à matrícula ativa (RPC
+// desempenho_conteudo_matricula_ativa) — usado só para conteúdos (assunto_id
+// conhecido); o fallback de matéria genérica não tem assunto único, então não
+// recebe estes bônus.
+type DesempenhoAssunto = {
+  totalRespondidas: number;
+  acertos: number;
+  errosNaoCorrigidos: number;
+};
+
+type DesempenhoRpc = {
+  assunto_id: number;
+  total_respondidas: number | string;
+  acertos: number | string;
+  erros_nao_corrigidos: number | string;
+};
+
+type StatusRevisaoAssunto = "vencida" | "futura";
 
 type MateriaCurso = {
   id: number;
@@ -84,6 +104,7 @@ type ItemPriorizado = {
 type RevisaoRpc = {
   status: string;
   agendada_para: string;
+  assunto_id: number | null;
   materia_nome: string | null;
   assunto_nome: string | null;
 };
@@ -165,6 +186,50 @@ function calcularBonusEvidencias(evidencias: Evidencia[]) {
 function calcularPrioridadeItem(base: number | null, evidencias: Evidencia[]) {
   const prioridadeBase = base ?? PRIORIDADE_NEUTRA;
   return prioridadeBase + calcularBonusEvidencias(evidencias);
+}
+
+/**
+ * Bônus de desempenho pessoal do aluno naquele assunto, por faixas aprovadas.
+ * Amostra pequena (0-2) não influencia; a partir daí, quanto pior o
+ * aproveitamento, maior o bônus (prioriza o que o aluno mais erra).
+ * Somado à prioridade já calculada por calcularPrioridadeItem — nunca a
+ * substitui nem a multiplica.
+ */
+function calcularBonusDesempenho(totalRespondidas: number, acertos: number) {
+  if (totalRespondidas < 3) return 0;
+
+  const percentual = acertos / totalRespondidas;
+
+  if (totalRespondidas <= 4) {
+    if (percentual < 0.5) return 1;
+    if (percentual < 0.7) return 0.5;
+    return 0;
+  }
+
+  if (percentual < 0.5) return 2;
+  if (percentual < 0.7) return 1.5;
+  if (percentual < 0.85) return 1;
+  return 0;
+}
+
+/**
+ * Bônus por existência de erro não corrigido naquele assunto — nunca por
+ * quantidade (um assunto com 5 erros não corrigidos recebe o mesmo bônus que
+ * um com 1).
+ */
+function calcularBonusErroNaoCorrigido(errosNaoCorrigidos: number) {
+  return errosNaoCorrigidos > 0 ? 2 : 0;
+}
+
+/**
+ * Bônus de revisão pendente naquele assunto. Quando há mais de uma revisão
+ * pendente no mesmo assunto, usa só o estado mais forte (vencida/hoje > futura
+ * > nenhuma) — nunca soma revisões do mesmo assunto entre si.
+ */
+function calcularBonusRevisao(status: StatusRevisaoAssunto | null) {
+  if (status === "vencida") return 2;
+  if (status === "futura") return 1;
+  return 0;
 }
 
 /**
@@ -260,6 +325,9 @@ export default function Cronograma() {
   const [cursoAtivo, setCursoAtivo] = useState<CursoAtivo | null>(null);
   const [horasDiarias, setHorasDiarias] = useState(1);
   const [materiasCurso, setMateriasCurso] = useState<MateriaCurso[]>([]);
+  const [desempenhoPorAssunto, setDesempenhoPorAssunto] = useState<Map<number, DesempenhoAssunto>>(
+    new Map()
+  );
   const [revisoes, setRevisoes] = useState<RevisaoRpc[]>([]);
   const [sessoes, setSessoes] = useState<Sessao[]>([]);
   const [carregando, setCarregando] = useState(true);
@@ -320,6 +388,7 @@ export default function Cronograma() {
           resultadoMateriasCurso,
           resultadoSessoes,
           resultadoRevisoes,
+          resultadoDesempenho,
         ] = await Promise.all([
           supabase
             .from("configuracoes_estudo")
@@ -348,6 +417,8 @@ export default function Cronograma() {
             .lte("data_sessao", chaveData(fim)),
 
           supabase.rpc("revisoes_do_curso_ativo"),
+
+          supabase.rpc("desempenho_conteudo_matricula_ativa"),
         ]);
 
         const materiasCursoBruto =
@@ -435,6 +506,7 @@ export default function Cronograma() {
             .sort((a, b) => a.ordem - b.ordem)
             .map((conteudo) => ({
               id: conteudo.id,
+              assunto_id: conteudo.assunto_id,
               nome: conteudo.assuntos?.nome ?? "Conteúdo sem nome",
               ordem: conteudo.ordem,
               prioridade_estrategica: conteudo.prioridade_estrategica,
@@ -442,6 +514,18 @@ export default function Cronograma() {
               evidencias: evidenciasPorConteudo.get(conteudo.id) ?? [],
             })),
         }));
+
+        // total_respondidas/acertos/erros_nao_corrigidos vêm de count(*)/sum(),
+        // que o Postgres retorna como bigint — o PostgREST serializa bigint como
+        // string em JSON para não perder precisão. Number(...) cobre os dois casos.
+        const desempenhoMapa = new Map<number, DesempenhoAssunto>();
+        ((resultadoDesempenho.data as DesempenhoRpc[] | null) ?? []).forEach((linha) => {
+          desempenhoMapa.set(linha.assunto_id, {
+            totalRespondidas: Number(linha.total_respondidas),
+            acertos: Number(linha.acertos),
+            errosNaoCorrigidos: Number(linha.erros_nao_corrigidos),
+          });
+        });
 
         const configEstudo = resultadoConfig.data as { horas_diarias: number } | null;
         const curso = resultadoCurso.data as
@@ -461,6 +545,7 @@ export default function Cronograma() {
 
         setHorasDiarias(Number(configEstudo?.horas_diarias ?? 1));
         setMateriasCurso(materiasCursoMontadas);
+        setDesempenhoPorAssunto(desempenhoMapa);
         setSessoes((resultadoSessoes.data as Sessao[] | null) ?? []);
 
         if (resultadoRevisoes.error) {
@@ -469,6 +554,15 @@ export default function Cronograma() {
             code: resultadoRevisoes.error.code,
             details: resultadoRevisoes.error.details,
             hint: resultadoRevisoes.error.hint,
+          });
+        }
+
+        if (resultadoDesempenho.error) {
+          console.error("desempenho_conteudo_matricula_ativa falhou:", {
+            message: resultadoDesempenho.error.message,
+            code: resultadoDesempenho.error.code,
+            details: resultadoDesempenho.error.details,
+            hint: resultadoDesempenho.error.hint,
           });
         }
 
@@ -486,6 +580,7 @@ export default function Cronograma() {
           resultadoConteudos.error ||
           resultadoSessoes.error ||
           resultadoRevisoes.error ||
+          resultadoDesempenho.error ||
           resultadoEvidenciasConteudo.error ||
           resultadoEvidenciasMateria.error;
 
@@ -497,6 +592,7 @@ export default function Cronograma() {
             conteudos: resultadoConteudos.error,
             sessoes: resultadoSessoes.error,
             revisoes: resultadoRevisoes.error,
+            desempenho: resultadoDesempenho.error,
             evidenciasConteudo: resultadoEvidenciasConteudo.error,
             evidenciasMateria: resultadoEvidenciasMateria.error,
           });
@@ -516,10 +612,42 @@ export default function Cronograma() {
   }, []);
 
   /**
+   * Para cada assunto, o estado mais forte entre suas revisões pendentes
+   * (vencida/hoje vence sobre futura) — nunca soma revisões do mesmo assunto.
+   * Considera só a mesma janela de 7 dias já buscada em `revisoes` (não busca
+   * revisões futuras além disso nesta primeira versão).
+   */
+  const statusRevisaoPorAssunto = useMemo(() => {
+    const mapa = new Map<number, StatusRevisaoAssunto>();
+    const hojeChave = chaveData(new Date());
+
+    revisoes.forEach((revisao) => {
+      if (revisao.assunto_id == null) return;
+
+      const vencida = revisao.agendada_para <= hojeChave;
+      const atual = mapa.get(revisao.assunto_id);
+
+      if (vencida) {
+        mapa.set(revisao.assunto_id, "vencida");
+      } else if (atual !== "vencida") {
+        mapa.set(revisao.assunto_id, "futura");
+      }
+    });
+
+    return mapa;
+  }, [revisoes]);
+
+  /**
    * Um item por conteúdo (curso_conteudos), quando a matéria já tiver curadoria.
    * Fallback: um único item genérico por matéria, enquanto ela não tiver
    * curso_conteudos relevantes — nunca remove a matéria do cronograma por
    * falta de curadoria, e nunca substitui uma matéria por outra.
+   *
+   * Para itens de conteúdo, a prioridade estratégica e o bônus de evidências
+   * (calcularPrioridadeItem, intocada) recebem, por cima, os bônus pessoais de
+   * desempenho/erro/revisão daquele assunto — todos valem 0 sem histórico, então
+   * um aluno sem histórico cai exatamente na fórmula que já existia. O fallback
+   * de matéria genérica não tem um assunto único, então não recebe esses bônus.
    */
   const itensPriorizados = useMemo<ItemPriorizado[]>(() => {
     const itens: ItemPriorizado[] = [];
@@ -527,10 +655,17 @@ export default function Cronograma() {
     materiasCurso.forEach((materia) => {
       if (materia.conteudos.length > 0) {
         materia.conteudos.forEach((conteudo) => {
-          const prioridade = calcularPrioridadeItem(
-            conteudo.prioridade_estrategica,
-            conteudo.evidencias
-          );
+          const desempenho = desempenhoPorAssunto.get(conteudo.assunto_id) ?? {
+            totalRespondidas: 0,
+            acertos: 0,
+            errosNaoCorrigidos: 0,
+          };
+
+          const prioridade =
+            calcularPrioridadeItem(conteudo.prioridade_estrategica, conteudo.evidencias) +
+            calcularBonusDesempenho(desempenho.totalRespondidas, desempenho.acertos) +
+            calcularBonusErroNaoCorrigido(desempenho.errosNaoCorrigidos) +
+            calcularBonusRevisao(statusRevisaoPorAssunto.get(conteudo.assunto_id) ?? null);
 
           itens.push({
             tipo: "conteudo",
@@ -568,7 +703,7 @@ export default function Cronograma() {
       if (b.prioridade !== a.prioridade) return b.prioridade - a.prioridade;
       return Number(b.frequenciaHistorica ?? 0) - Number(a.frequenciaHistorica ?? 0);
     });
-  }, [materiasCurso]);
+  }, [materiasCurso, desempenhoPorAssunto, statusRevisaoPorAssunto]);
 
   /**
    * Fila global em rodízio ponderado, em dois níveis:
