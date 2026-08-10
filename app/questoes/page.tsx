@@ -17,10 +17,32 @@ type Questao = {
   enunciado: string;
   dificuldade: string;
   banca: string | null;
+  concurso: string | null;
+  ano: number | null;
+  fonte: string | null;
   materias: { nome: string } | null;
   assuntos: { nome: string } | null;
   alternativas: Alternativa[];
 };
+
+// Identificação visual da origem: questão real (banca preenchida e não
+// autoral) mostra banca • concurso • ano, com a fonte (quando útil para achar
+// o número da questão original) numa linha menor abaixo. Sem banca, ou banca
+// começando com "papiro" (ex.: "Papiro - Teste", "Papiro - estilo Fundatec")
+// = questão autoral Papiro — não existe outro campo no banco para marcar isso
+// explicitamente, então esse prefixo é o próprio sinal.
+function descreverOrigemQuestao(questao: Questao): { linha: string; detalhe: string | null } {
+  const banca = questao.banca?.trim();
+  const autoral = !banca || banca.toLowerCase().startsWith("papiro");
+  if (autoral) {
+    return { linha: "PAPIRO • ESTILO FUNDATEC", detalhe: null };
+  }
+  const partes = [banca, questao.concurso?.trim(), questao.ano ? String(questao.ano) : null].filter(
+    (parte): parte is string => Boolean(parte),
+  );
+  const fonte = questao.fonte?.trim();
+  return { linha: partes.join(" • "), detalhe: fonte || null };
+}
 
 const metas: Record<MetaPreset, { titulo: string; questoes: number; revisao: number; descricao: string }> = {
   minima: { titulo: "Meta mínima", questoes: 5, revisao: 10, descricao: "Para manter a caminhada nos dias difíceis." },
@@ -231,7 +253,7 @@ export default function Questoes() {
     // nunca um fallback para o banco global nem para outro curso.
     const { data: bancoQuestoes, error: erroQuestoes } = await supabase
       .from("questoes")
-      .select("id, enunciado, dificuldade, banca, materias(nome), assuntos(nome), alternativas(id, texto, ordem)")
+      .select("id, enunciado, dificuldade, banca, concurso, ano, fonte, materias(nome), assuntos(nome), alternativas(id, texto, ordem)")
       .in("id", ids);
 
     if (erroQuestoes || !bancoQuestoes?.length) {
@@ -353,7 +375,7 @@ export default function Questoes() {
     // iniciarSessao).
     const { data: bancoQuestoes, error: erroQuestoes } = await supabase
       .from("questoes")
-      .select("id, enunciado, dificuldade, banca, materias(nome), assuntos(nome), alternativas(id, texto, ordem)")
+      .select("id, enunciado, dificuldade, banca, concurso, ano, fonte, materias(nome), assuntos(nome), alternativas(id, texto, ordem)")
       .in("id", ids);
 
     if (erroQuestoes || !bancoQuestoes?.length) {
@@ -593,6 +615,7 @@ export default function Questoes() {
   }
 
   const tituloSessaoAtual = nivel === "personalizada" ? "Sessão personalizada" : metas[nivel].titulo;
+  const origemQuestao = descreverOrigemQuestao(questaoAtual);
 
   return (
     <main className="method-page question-session">
@@ -603,10 +626,13 @@ export default function Questoes() {
       <div className="session-progress" aria-label={`${progresso}% concluído`}><span style={{ width: `${progresso}%` }} /></div>
 
       <article className="question-card">
+        <div className="question-origin">
+          <span className="question-origin-main">{origemQuestao.linha}</span>
+          {origemQuestao.detalhe && <span className="question-origin-detail">{origemQuestao.detalhe}</span>}
+        </div>
         <div className="question-meta">
           <span>{questaoAtual.materias?.nome ?? "Matéria geral"}</span>
           <span>{questaoAtual.assuntos?.nome ?? "Assunto geral"}</span>
-          {questaoAtual.banca && <span>{questaoAtual.banca}</span>}
         </div>
         <h1>{questaoAtual.enunciado}</h1>
         <div className="answer-list">
