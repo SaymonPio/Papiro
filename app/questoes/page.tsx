@@ -4,11 +4,14 @@ import Link from "next/link";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { createClient } from "@/utils/supabase/client";
 
-type NivelMeta = "minima" | "normal" | "ideal";
+type MetaPreset = "minima" | "normal" | "ideal";
+type NivelMeta = MetaPreset | "personalizada";
 type Alternativa = { id: number; texto: string; ordem: number };
 type IdQuestao = { questao_id: number };
 type CausaErro = "nao_sabia" | "duvida" | "chute" | "atencao" | "interpretacao";
 type Feedback = { acertou: boolean; explicacao: string | null; erroId: number | null };
+type MateriaCursoAtivo = { materia_id: number; materia_nome: string; total_questoes: number | string };
+type AssuntoCursoAtivo = { assunto_id: number; assunto_nome: string; total_questoes: number | string };
 type Questao = {
   id: number;
   enunciado: string;
@@ -19,7 +22,7 @@ type Questao = {
   alternativas: Alternativa[];
 };
 
-const metas: Record<NivelMeta, { titulo: string; questoes: number; revisao: number; descricao: string }> = {
+const metas: Record<MetaPreset, { titulo: string; questoes: number; revisao: number; descricao: string }> = {
   minima: { titulo: "Meta mínima", questoes: 5, revisao: 10, descricao: "Para manter a caminhada nos dias difíceis." },
   normal: { titulo: "Meta normal", questoes: 30, revisao: 15, descricao: "A rotina recomendada para avançar com consistência." },
   ideal: { titulo: "Meta ideal", questoes: 60, revisao: 20, descricao: "Para os dias com maior disponibilidade." },
@@ -98,6 +101,17 @@ export default function Questoes() {
   const [classificado, setClassificado] = useState(false);
   const [erroClassificacao, setErroClassificacao] = useState("");
 
+  const [modoInicio, setModoInicio] = useState<"metas" | "personalizada">("metas");
+  const [materiasCurso, setMateriasCurso] = useState<MateriaCursoAtivo[]>([]);
+  const [carregandoMaterias, setCarregandoMaterias] = useState(false);
+  const [assuntosCurso, setAssuntosCurso] = useState<AssuntoCursoAtivo[]>([]);
+  const [carregandoAssuntos, setCarregandoAssuntos] = useState(false);
+  const [materiaSelecionada, setMateriaSelecionada] = useState<number | null>(null);
+  const [assuntoSelecionado, setAssuntoSelecionado] = useState<number | null>(null);
+  const [quantidadePersonalizada, setQuantidadePersonalizada] = useState(10);
+  const [carregandoPersonalizada, setCarregandoPersonalizada] = useState(false);
+  const [mensagemPersonalizada, setMensagemPersonalizada] = useState("");
+
   useEffect(() => {
     async function protegerPagina() {
       const { data: { user } } = await createClient().auth.getUser();
@@ -106,10 +120,57 @@ export default function Questoes() {
     protegerPagina();
   }, []);
 
+  useEffect(() => {
+    if (modoInicio !== "personalizada" || materiasCurso.length > 0 || carregandoMaterias) return;
+    async function carregarMaterias() {
+      setCarregandoMaterias(true);
+      const { data, error } = await createClient().rpc("materias_do_curso_ativo");
+      if (error) {
+        console.error("materias_do_curso_ativo falhou:", {
+          message: error.message,
+          code: error.code,
+          details: error.details,
+          hint: error.hint,
+        });
+        setMensagemPersonalizada("Não foi possível carregar as matérias deste curso.");
+      } else {
+        setMateriasCurso((data as MateriaCursoAtivo[] | null) ?? []);
+      }
+      setCarregandoMaterias(false);
+    }
+    carregarMaterias();
+  }, [modoInicio, materiasCurso.length, carregandoMaterias]);
+
+  useEffect(() => {
+    setAssuntoSelecionado(null);
+    setAssuntosCurso([]);
+    if (!materiaSelecionada) return;
+
+    async function carregarAssuntos() {
+      setCarregandoAssuntos(true);
+      const { data, error } = await createClient().rpc("assuntos_do_curso_ativo", {
+        p_materia_id: materiaSelecionada,
+      });
+      if (error) {
+        console.error("assuntos_do_curso_ativo falhou:", {
+          message: error.message,
+          code: error.code,
+          details: error.details,
+          hint: error.hint,
+        });
+        setMensagemPersonalizada("Não foi possível carregar os assuntos dessa matéria.");
+      } else {
+        setAssuntosCurso((data as AssuntoCursoAtivo[] | null) ?? []);
+      }
+      setCarregandoAssuntos(false);
+    }
+    carregarAssuntos();
+  }, [materiaSelecionada]);
+
   const questaoAtual = questoes[indice];
   const progresso = useMemo(() => questoes.length ? Math.round(((indice + (feedback ? 1 : 0)) / questoes.length) * 100) : 0, [indice, feedback, questoes.length]);
 
-  async function iniciarSessao(meta: NivelMeta) {
+  async function iniciarSessao(meta: MetaPreset) {
     setCarregando(true);
     setMensagem("");
     const supabase = createClient();
@@ -224,6 +285,133 @@ export default function Questoes() {
     setCarregando(false);
   }
 
+  async function iniciarSessaoPersonalizada() {
+    if (!materiaSelecionada) {
+      setMensagemPersonalizada("Escolha uma matéria para iniciar.");
+      return;
+    }
+    setCarregandoPersonalizada(true);
+    setMensagemPersonalizada("");
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) { window.location.replace("/login"); return; }
+
+    const { data: perfil } = await supabase
+      .from("perfis")
+      .select("curso_ativo_id")
+      .eq("usuario_id", user.id)
+      .maybeSingle();
+
+    if (!perfil?.curso_ativo_id) {
+      setMensagemPersonalizada("Selecione um curso ativo para iniciar uma sessão.");
+      setCarregandoPersonalizada(false);
+      return;
+    }
+
+    const { data: matricula } = await supabase
+      .from("matriculas")
+      .select("id")
+      .eq("usuario_id", user.id)
+      .eq("curso_id", perfil.curso_ativo_id)
+      .eq("status", "ativa")
+      .maybeSingle();
+
+    if (!matricula) {
+      setMensagemPersonalizada("Sua matrícula no curso ativo não está disponível no momento.");
+      setCarregandoPersonalizada(false);
+      return;
+    }
+
+    const { data: idsQuestoes, error: erroIds } = await supabase.rpc("ids_questoes_para_usuario", {
+      p_limite: quantidadePersonalizada,
+      p_materia_id: materiaSelecionada,
+      p_assunto_id: assuntoSelecionado,
+    });
+
+    if (erroIds) {
+      console.error("ids_questoes_para_usuario (personalizada) falhou:", {
+        message: erroIds.message,
+        code: erroIds.code,
+        details: erroIds.details,
+        hint: erroIds.hint,
+      });
+      setMensagemPersonalizada("Não foi possível carregar as questões para esse filtro.");
+      setCarregandoPersonalizada(false);
+      return;
+    }
+
+    const ids = ((idsQuestoes as IdQuestao[] | null) ?? []).map((item) => item.questao_id);
+
+    if (ids.length === 0) {
+      setMensagemPersonalizada("Não há questões disponíveis para esse filtro.");
+      setCarregandoPersonalizada(false);
+      return;
+    }
+
+    // Mesma busca por detalhes só dos IDs já autorizados pela RPC — nunca um
+    // fallback para o banco global nem para outro curso (mesmo padrão de
+    // iniciarSessao).
+    const { data: bancoQuestoes, error: erroQuestoes } = await supabase
+      .from("questoes")
+      .select("id, enunciado, dificuldade, banca, materias(nome), assuntos(nome), alternativas(id, texto, ordem)")
+      .in("id", ids);
+
+    if (erroQuestoes || !bancoQuestoes?.length) {
+      setMensagemPersonalizada("Não há questões disponíveis para esse filtro.");
+      setCarregandoPersonalizada(false);
+      return;
+    }
+
+    const mapaQuestoes = new Map(
+      (bancoQuestoes as unknown as Questao[]).map((questao) => [questao.id, questao]),
+    );
+
+    const preparadas = ids
+      .map((id) => mapaQuestoes.get(id))
+      .filter((questao): questao is Questao => Boolean(questao))
+      .map((questao) => ({
+        ...questao,
+        alternativas: [...questao.alternativas].sort((a, b) => a.ordem - b.ordem),
+      }));
+
+    if (preparadas.length === 0) {
+      setMensagemPersonalizada("Não há questões disponíveis para esse filtro.");
+      setCarregandoPersonalizada(false);
+      return;
+    }
+
+    const { data: sessao, error: erroSessao } = await supabase
+      .from("sessoes_estudo")
+      .insert({
+        usuario_id: user.id,
+        matricula_id: matricula.id,
+        nivel_meta: "personalizada",
+        status: "em_andamento",
+        inicio_em: new Date().toISOString(),
+        minutos_revisao: 0,
+        questoes_planejadas: preparadas.length,
+      })
+      .select("id")
+      .single();
+
+    if (erroSessao || !sessao) {
+      setMensagemPersonalizada("Não foi possível iniciar a sessão. Tente novamente.");
+      setCarregandoPersonalizada(false);
+      return;
+    }
+
+    if (preparadas.length < quantidadePersonalizada) {
+      setMensagem(
+        `Só há ${preparadas.length} questão${preparadas.length === 1 ? "" : "ões"} disponível${preparadas.length === 1 ? "" : "eis"} para esse filtro — sessão iniciada com ${preparadas.length}.`
+      );
+    }
+
+    setNivel("personalizada");
+    setQuestoes(preparadas);
+    setSessaoId(sessao.id);
+    setCarregandoPersonalizada(false);
+  }
+
   async function responder() {
     if (!alternativaId || !questaoAtual || !sessaoId) return;
     setCarregando(true);
@@ -321,26 +509,96 @@ export default function Questoes() {
           <h1>Escolha a missão de hoje</h1>
           <span>O importante é não interromper a caminhada.</span>
         </header>
-        <section className="goal-grid" aria-label="Níveis de meta diária">
-          {(Object.keys(metas) as NivelMeta[]).map((meta) => (
-            <button key={meta} type="button" onClick={() => iniciarSessao(meta)} disabled={carregando}>
-              <small>{metas[meta].titulo}</small>
-              <strong>{metas[meta].questoes} questões</strong>
-              <span>+ {metas[meta].revisao} min de revisão</span>
-              <p>{metas[meta].descricao}</p>
+
+        <div className="session-mode-tabs" role="tablist" aria-label="Modo de início da sessão">
+          <button type="button" role="tab" aria-selected={modoInicio === "metas"} className={modoInicio === "metas" ? "selected" : ""} onClick={() => setModoInicio("metas")}>
+            Meta diária
+          </button>
+          <button type="button" role="tab" aria-selected={modoInicio === "personalizada"} className={modoInicio === "personalizada" ? "selected" : ""} onClick={() => setModoInicio("personalizada")}>
+            Sessão personalizada
+          </button>
+        </div>
+
+        {modoInicio === "metas" ? (
+          <>
+            <section className="goal-grid" aria-label="Níveis de meta diária">
+              {(Object.keys(metas) as MetaPreset[]).map((meta) => (
+                <button key={meta} type="button" onClick={() => iniciarSessao(meta)} disabled={carregando}>
+                  <small>{metas[meta].titulo}</small>
+                  <strong>{metas[meta].questoes} questões</strong>
+                  <span>+ {metas[meta].revisao} min de revisão</span>
+                  <p>{metas[meta].descricao}</p>
+                </button>
+              ))}
+            </section>
+            {mensagem && <p className="method-message" role="alert">{mensagem}</p>}
+          </>
+        ) : (
+          <section className="custom-session" aria-label="Sessão personalizada">
+            <div className="custom-session-field">
+              <label htmlFor="materia-select">Matéria</label>
+              <select
+                id="materia-select"
+                value={materiaSelecionada ?? ""}
+                onChange={(evento) => setMateriaSelecionada(evento.target.value ? Number(evento.target.value) : null)}
+                disabled={carregandoMaterias}
+              >
+                <option value="">{carregandoMaterias ? "Carregando..." : "Selecione uma matéria"}</option>
+                {materiasCurso.map((materia) => (
+                  <option key={materia.materia_id} value={materia.materia_id}>
+                    {materia.materia_nome} ({Number(materia.total_questoes)} questões)
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="custom-session-field">
+              <label htmlFor="assunto-select">Assunto (opcional)</label>
+              <select
+                id="assunto-select"
+                value={assuntoSelecionado ?? ""}
+                onChange={(evento) => setAssuntoSelecionado(evento.target.value ? Number(evento.target.value) : null)}
+                disabled={!materiaSelecionada || carregandoAssuntos}
+              >
+                <option value="">{carregandoAssuntos ? "Carregando..." : "Todos os assuntos da matéria"}</option>
+                {assuntosCurso.map((assunto) => (
+                  <option key={assunto.assunto_id} value={assunto.assunto_id}>
+                    {assunto.assunto_nome} ({Number(assunto.total_questoes)} questões)
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="custom-session-field">
+              <label htmlFor="quantidade-input">Quantidade de questões</label>
+              <input
+                id="quantidade-input"
+                type="number"
+                min={1}
+                max={100}
+                value={quantidadePersonalizada}
+                onChange={(evento) => setQuantidadePersonalizada(Math.max(1, Math.min(100, Number(evento.target.value) || 1)))}
+              />
+            </div>
+
+            <button type="button" className="answer-submit" onClick={iniciarSessaoPersonalizada} disabled={!materiaSelecionada || carregandoPersonalizada}>
+              {carregandoPersonalizada ? "Preparando..." : "Iniciar sessão"}
             </button>
-          ))}
-        </section>
-        {mensagem && <p className="method-message" role="alert">{mensagem}</p>}
+
+            {mensagemPersonalizada && <p className="method-message" role="alert">{mensagemPersonalizada}</p>}
+          </section>
+        )}
       </main>
     );
   }
+
+  const tituloSessaoAtual = nivel === "personalizada" ? "Sessão personalizada" : metas[nivel].titulo;
 
   return (
     <main className="method-page question-session">
       <header className="session-topbar">
         <Link href="/painel">PAPIRO</Link>
-        <div><span>{metas[nivel].titulo}</span><strong>{indice + 1} de {questoes.length}</strong></div>
+        <div><span>{tituloSessaoAtual}</span><strong>{indice + 1} de {questoes.length}</strong></div>
       </header>
       <div className="session-progress" aria-label={`${progresso}% concluído`}><span style={{ width: `${progresso}%` }} /></div>
 

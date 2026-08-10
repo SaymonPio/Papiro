@@ -17,14 +17,100 @@
 --     correspondente, o resultado é vazio (nunca cai para "mostra tudo").
 --   - Ordena por curso_questoes.prioridade ascendente (menor número = maior prioridade,
 --     conforme decisão adotada provisoriamente) e, em empate, pelas mais recentes.
+--
+-- EXTENSÃO ADITIVA (sessão personalizada de /questoes: curso ativo -> matéria ->
+-- assunto opcional -> quantidade):
+--   - p_materia_id bigint DEFAULT NULL e p_assunto_id bigint DEFAULT NULL, adicionados
+--     ao final da assinatura (chamadas existentes sem esses parâmetros continuam
+--     funcionando sem alteração).
+--   - NULL em qualquer um dos dois significa "sem filtro nesse nível" — os predicados
+--     novos são só mais AND na mesma cláusula WHERE já escopada por curso ativo; nenhum
+--     JOIN de segurança existente foi alterado.
+--   - Se p_assunto_id for informado, a combinação com p_materia_id é validada: o
+--     assunto precisa pertencer à matéria informada (assuntos.materia_id), e
+--     p_materia_id precisa ter sido informado também. Combinação inválida ->
+--     exceção (rejeitada), nunca um resultado vazio silencioso — isso exigiu migrar a
+--     função de LANGUAGE sql para LANGUAGE plpgsql (necessário para IF/RAISE),
+--     mesmo padrão já usado em registrar_resposta/classificar_erro deste projeto
+--     para validação com exceção.
+--   - Questão inativa e questão de outro curso continuam impossíveis pelos mesmos
+--     mecanismos de sempre (q.ativa = true e o JOIN com curso_questoes/matriculas/
+--     perfis), agora só com dois filtros extras aplicados por cima.
+--
+-- CORREÇÃO (bug reportado na validação visual, mesma causa de
+-- materias_do_curso_ativo/assuntos_do_curso_ativo): quando p_materia_id é
+-- informado, agora também exige que a matéria seja relevante para preparação
+-- no curso ativo (curso_materias.relevante_para_preparacao = true) — sem
+-- essa checagem aqui, alguém poderia contornar os seletores da tela e chamar
+-- a RPC diretamente com p_materia_id de uma matéria histórica/inativa (ex.:
+-- Conhecimentos Gerais, Matemática) e ainda assim receber questões. Quando
+-- p_assunto_id também é informado, exige adicionalmente que ele seja um
+-- curso_conteudos relevante da curso_materia ativa correspondente. Só se
+-- aplica quando o filtro é usado — o fluxo sem filtro (presets
+-- minima/normal/ideal) continua com o comportamento de sempre, sem essa
+-- restrição adicional. Se o usuário não tiver curso_ativo_id, a checagem é
+-- pulada (não gera exceção) para preservar o contrato já documentado acima:
+-- "resultado vazio, nunca erro" quando não há curso ativo.
 -- ============================================================================
 
-create or replace function public.ids_questoes_para_usuario(p_limite integer DEFAULT 10)
+create or replace function public.ids_questoes_para_usuario(
+  p_limite integer DEFAULT 10,
+  p_materia_id bigint DEFAULT NULL,
+  p_assunto_id bigint DEFAULT NULL
+)
 RETURNS TABLE(questao_id bigint)
-LANGUAGE sql
+LANGUAGE plpgsql
 STABLE SECURITY DEFINER
 SET search_path TO 'public'
 AS $function$
+declare
+  v_curso_ativo_id uuid;
+begin
+  if p_assunto_id is not null then
+    if p_materia_id is null then
+      raise exception 'p_assunto_id informado sem p_materia_id';
+    end if;
+
+    if not exists (
+      select 1
+      from public.assuntos a
+      where a.id = p_assunto_id
+        and a.materia_id = p_materia_id
+    ) then
+      raise exception 'Assunto nao pertence a materia informada';
+    end if;
+  end if;
+
+  if p_materia_id is not null then
+    select p.curso_ativo_id into v_curso_ativo_id
+    from public.perfis p
+    where p.usuario_id = auth.uid();
+
+    if v_curso_ativo_id is not null and not exists (
+      select 1
+      from public.curso_materias cm
+      where cm.curso_id = v_curso_ativo_id
+        and cm.materia_id = p_materia_id
+        and cm.relevante_para_preparacao = true
+    ) then
+      raise exception 'Materia nao disponivel para preparacao no curso ativo';
+    end if;
+
+    if p_assunto_id is not null and v_curso_ativo_id is not null and not exists (
+      select 1
+      from public.curso_materias cm
+      join public.curso_conteudos cc on cc.curso_materia_id = cm.id
+      where cm.curso_id = v_curso_ativo_id
+        and cm.materia_id = p_materia_id
+        and cm.relevante_para_preparacao = true
+        and cc.assunto_id = p_assunto_id
+        and cc.relevante_para_preparacao = true
+    ) then
+      raise exception 'Assunto nao disponivel para preparacao no curso ativo';
+    end if;
+  end if;
+
+  return query
   select q.id
   from public.questoes q
   join public.curso_questoes cq on cq.questao_id = q.id
@@ -36,8 +122,11 @@ AS $function$
     on p.usuario_id = auth.uid()
    and p.curso_ativo_id = cq.curso_id
   where q.ativa = true
+    and (p_materia_id is null or q.materia_id = p_materia_id)
+    and (p_assunto_id is null or q.assunto_id = p_assunto_id)
   order by cq.prioridade asc, q.criado_em desc
   limit greatest(1, least(coalesce(p_limite, 10), 100));
+end;
 $function$;
 
 -- ============================================================================
