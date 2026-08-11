@@ -115,7 +115,12 @@ type RevisaoRpc = {
   assunto_nome: string | null;
 };
 
-type Sessao = { data_sessao: string; status: string };
+type Sessao = {
+  data_sessao: string;
+  status: string;
+  inicio_em: string | null;
+  fim_em: string | null;
+};
 
 type TipoBloco = "teoria" | "questoes" | "revisao";
 
@@ -440,7 +445,7 @@ export default function Cronograma() {
 
           supabase
             .from("sessoes_estudo")
-            .select("data_sessao, status")
+            .select("data_sessao, status, inicio_em, fim_em")
             .eq("matricula_id", matricula.id)
             .order("data_sessao", { ascending: true }),
 
@@ -932,6 +937,22 @@ export default function Cronograma() {
   const diasPreparacao = new Set(
     sessoes.filter((sessao) => sessao.status === "concluida").map((sessao) => sessao.data_sessao),
   ).size;
+  const minutosAcumulados = sessoes
+    .filter((sessao) => sessao.status === "concluida" && sessao.inicio_em && sessao.fim_em)
+    .reduce((total, sessao) => {
+      const inicio = new Date(sessao.inicio_em!).getTime();
+      const fim = new Date(sessao.fim_em!).getTime();
+
+      if (!Number.isFinite(inicio) || !Number.isFinite(fim) || fim <= inicio) {
+        return total;
+      }
+
+      return total + Math.round((fim - inicio) / 60_000);
+    }, 0);
+  const horasAcumuladas = Math.floor(minutosAcumulados / 60);
+  const tempoAcumulado = horasAcumuladas > 0
+    ? `${horasAcumuladas.toLocaleString("pt-BR")} ${horasAcumuladas === 1 ? "hora acumulada" : "horas acumuladas"}`
+    : `${minutosAcumulados.toLocaleString("pt-BR")} min acumulados`;
   const semanaPreparacao = Math.floor(diasPreparacao / 7) + 1;
   const sequenciaEstudo = contarSequenciaEstudo(sessoes);
 
@@ -978,10 +999,12 @@ export default function Cronograma() {
               </div>
               <p>
                 <strong>
-                  {diasConcluidos} {diasConcluidos === 1 ? "missão concluída" : "missões concluídas"}
+                  {diasPreparacao} {diasPreparacao === 1
+                    ? "dia de preparação concluído"
+                    : "dias de preparação concluídos"}
                 </strong>
                 <b />
-                <span>{formatarDuracao(Math.round(diasConcluidos * horasDiarias * 60))} previstas nas missões concluídas</span>
+                <span>{tempoAcumulado}</span>
               </p>
             </section>
           </>

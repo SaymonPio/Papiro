@@ -3208,6 +3208,11 @@ footer > small {
 .schedule-journey p,
 .schedule-overview span,
 .schedule-overview small { color: var(--schedule-muted); }
+.schedule-journey p {
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+}
 .schedule-journey p strong { color: var(--schedule-cream); }
 .schedule-journey p b { background: var(--schedule-gold); }
 .schedule-overview article,
