@@ -3173,6 +3173,8 @@ footer > small {
   background: rgba(6, 27, 20, 0.7);
 }
 .schedule-identity {
+  width: max-content;
+  max-width: calc(100% - 374px);
   min-height: 34px;
   padding: 0 14px;
   gap: 18px;
@@ -3180,6 +3182,7 @@ footer > small {
   background: rgba(6, 27, 20, 0.78);
   color: #d8cdb6;
   font-size: 0.74rem;
+  white-space: nowrap;
 }
 .schedule-identity strong {
   display: flex;
@@ -3203,10 +3206,15 @@ footer > small {
   height: 2px;
   background: #d8cdb6;
 }
+@media (max-width: 1180px) {
+  .schedule-identity { max-width: 100%; }
+}
 @media (max-width: 860px) {
   .schedule-identity {
+    width: 100%;
     padding: 8px 12px;
     gap: 8px 14px;
+    white-space: normal;
   }
 }
 .schedule-track { background: #355747; }
