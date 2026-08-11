@@ -13,9 +13,21 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Papiro | Preparação inteligente para concursos",
+  metadataBase: new URL("https://papiro-policial.saymon-fariaspio.chatgpt.site"),
+  title: "Papiro | Preparação inteligente para concursos policiais",
   description:
     "Transforme seu edital em um plano inteligente de estudos, acompanhe seu desempenho e prepare-se para a prova e o TAF.",
+  openGraph: {
+    title: "Papiro | Sua rota até a farda",
+    description: "Cronograma inteligente para concursos policiais.",
+    images: [{ url: "/og.png", width: 1774, height: 887, alt: "Papiro — Sua rota até a farda" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Papiro | Sua rota até a farda",
+    description: "Cronograma inteligente para concursos policiais.",
+    images: ["/og.png"],
+  },
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

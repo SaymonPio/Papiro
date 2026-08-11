@@ -330,6 +330,7 @@ function descreverOrigens(origens: TipoOrigemEvidencia[]): string | null {
 }
 
 export default function Cronograma() {
+  const [nome, setNome] = useState("Aluno");
   const [cursoAtivo, setCursoAtivo] = useState<CursoAtivo | null>(null);
   const [horasDiarias, setHorasDiarias] = useState(1);
   const [materiasCurso, setMateriasCurso] = useState<MateriaCurso[]>([]);
@@ -355,6 +356,8 @@ export default function Cronograma() {
           window.location.replace("/login");
           return;
         }
+
+        setNome(user.user_metadata.nome || user.email?.split("@")[0] || "Aluno");
 
         const { data: perfil } = await supabase
           .from("perfis")
@@ -894,62 +897,89 @@ export default function Cronograma() {
     ? Math.max(0, Math.ceil((prova.getTime() - inicioPlano.getTime()) / 86_400_000))
     : null;
 
+  const primeiroNome = nome.trim().split(/\s+/)[0] || "Aluno";
+  const focoSemana = [...plano].sort((a, b) => b.pontuacaoPrioridade - a.pontuacaoPrioridade)[0];
+  const blocoFoco = focoSemana?.blocos.find((bloco) => bloco.tipo === "questoes");
+  const desempenhoFoco = blocoFoco?.assuntoId
+    ? desempenhoPorAssunto.get(blocoFoco.assuntoId)
+    : null;
+  const percentualFoco = desempenhoFoco?.totalRespondidas
+    ? Math.round((desempenhoFoco.acertos / desempenhoFoco.totalRespondidas) * 100)
+    : null;
+  const materiaFoco = blocoFoco?.detalhe.split(" · ")[0] ?? "Seu conteúdo prioritário";
+  const inicioAno = new Date(new Date().getFullYear(), 0, 1);
+  const numeroSemana = Math.ceil(
+    ((Date.now() - inicioAno.getTime()) / 86_400_000 + inicioAno.getDay() + 1) / 7,
+  );
+  const progressoSemanal = Math.round((diasConcluidos / 7) * 100);
+
   return (
     <main className="schedule-page">
-      <header className="schedule-header">
-        <div>
-          <p className="dashboard-label">CRONOGRAMA INTELIGENTE</p>
+      <div className="schedule-hero" aria-hidden="true" />
+      <div className="schedule-shell">
+        <header className="schedule-header">
+          <div>
+            <p className="dashboard-label">SUA MISSÃO DA SEMANA</p>
+            <h1>{primeiroNome}, esta é a sua<br />rota até a farda.</h1>
+            <span>
+              {cursoAtivo
+                ? `${cursoAtivo.concurso} · ${cursoAtivo.cargo}`
+                : "Configure seu concurso para personalizar ainda mais o plano."}
+            </span>
+          </div>
+          <Link href="/painel">Voltar ao painel principal</Link>
+        </header>
 
-          <h1>Sua próxima semana já tem direção.</h1>
+        {!semContexto && (
+          <>
+            <section className="schedule-identity" aria-label="Identificação do plano">
+              <strong><span aria-hidden="true">✦</span> PAPIRO · BM/RS</strong>
+              <i />
+              <span>Semana {String(numeroSemana).padStart(2, "0")}</span>
+              <i />
+              <span>{diasProva === null ? "Prova sem data definida" : `${diasProva} dias de preparação`}</span>
+              <i />
+              <span>Ritmo: {horasDiarias.toLocaleString("pt-BR")}h por dia</span>
+            </section>
 
-          <span>
-            {cursoAtivo
-              ? `${cursoAtivo.concurso} · ${cursoAtivo.cargo}`
-              : "Configure seu concurso para personalizar ainda mais o plano."}
-          </span>
-        </div>
+            <section className="schedule-journey" aria-label="Progresso até a prova">
+              <div className="schedule-journey-labels"><span>INÍCIO</span><span>PROVA</span></div>
+              <div className="schedule-track">
+                <span style={{ width: `${progressoSemanal}%` }} />
+                {plano.map((dia, indice) => (
+                  <i
+                    key={dia.chave}
+                    className={dia.concluido ? "done" : dia.hoje ? "current" : ""}
+                    style={{ left: `${(indice / 6) * 100}%` }}
+                  />
+                ))}
+              </div>
+              <p>
+                <strong>{diasConcluidos} missões concluídas</strong>
+                <b />
+                <span>{formatarDuracao(Math.round(diasConcluidos * horasDiarias * 60))} acumuladas nesta semana</span>
+              </p>
+            </section>
+          </>
+        )}
 
-        <Link href="/painel">Voltar ao painel</Link>
-      </header>
-
-      {semContexto ? (
-        <p className="method-message" role="alert">
-          {mensagem}
-        </p>
-      ) : (
-        <>
+        {semContexto ? (
+          <p className="method-message" role="alert">{mensagem}</p>
+        ) : (
+          <>
           <section className="schedule-overview">
-            <article>
-              <span>Ritmo diário</span>
-
-              <strong>{horasDiarias.toLocaleString("pt-BR")}h</strong>
-
-              <small>divididas em blocos</small>
-            </article>
-
-            <article>
-              <span>Até a prova</span>
-
-              <strong>{diasProva ?? "—"}</strong>
-
-              <small>{diasProva === null ? "data não definida" : "dias restantes"}</small>
-            </article>
-
-            <article>
-              <span>Revisões na fila</span>
-
-              <strong>{revisoes.length}</strong>
-
-              <small>nos próximos 7 dias</small>
-            </article>
-
-            <article>
-              <span>Progresso semanal</span>
-
-              <strong>{diasConcluidos}/7</strong>
-
-              <small>dias concluídos</small>
-            </article>
+            <article><b aria-hidden="true">◷</b><div>
+              <span>RITMO DIÁRIO</span><strong>{horasDiarias.toLocaleString("pt-BR")}h</strong><small>divididas em blocos</small>
+            </div></article>
+            <article><b aria-hidden="true">⌛</b><div>
+              <span>ATÉ A PROVA</span><strong>{diasProva ?? "—"}</strong><small>{diasProva === null ? "data não definida" : "dias restantes"}</small>
+            </div></article>
+            <article><b aria-hidden="true">☷</b><div>
+              <span>REVISÕES NA FILA</span><strong>{revisoes.length}</strong><small>nos próximos 7 dias</small>
+            </div></article>
+            <article><b aria-hidden="true">↗</b><div>
+              <span>PROGRESSO SEMANAL</span><strong>{diasConcluidos}/7</strong><small>dias concluídos</small>
+            </div></article>
           </section>
 
           {mensagem && (
@@ -966,7 +996,7 @@ export default function Cronograma() {
           ) : (
             <section className="schedule-layout">
               <div className="schedule-days">
-                {plano.map((dia) => (
+                {plano.map((dia, indice) => (
                   <article
                     className={["schedule-day", dia.hoje ? "today" : "", dia.concluido ? "completed" : ""]
                       .filter(Boolean)
@@ -974,25 +1004,22 @@ export default function Cronograma() {
                     key={dia.chave}
                   >
                     <div className="schedule-date">
+                      <p><span aria-hidden="true">✦</span> MISSÃO {String(indice + 1).padStart(2, "0")}</p>
                       <small>{dia.hoje ? "HOJE" : dia.dia}</small>
-
                       <strong>{dia.data}</strong>
-
-                      {dia.concluido && <span>Concluído</span>}
+                      <em>3 blocos · {formatarDuracao(dia.blocos.reduce((total, bloco) => total + bloco.minutos, 0))} · foco: {dia.blocos.find((bloco) => bloco.tipo === "questoes")?.detalhe.split(" · ")[0]}</em>
+                      {dia.concluido && <span>MISSÃO CUMPRIDA ✓</span>}
                     </div>
 
                     <div className="schedule-blocks">
                       {dia.blocos.map((bloco) => (
                         <div className={`schedule-block ${bloco.tipo}`} key={`${dia.chave}-${bloco.tipo}`}>
-                          <i />
-
                           <div>
                             <small>{bloco.tipo}</small>
                             <strong>{bloco.titulo}</strong>
+                            <b>{formatarDuracao(bloco.minutos)}</b>
                             <span>{bloco.detalhe}</span>
                           </div>
-
-                          <b>{formatarDuracao(bloco.minutos)}</b>
                         </div>
                       ))}
                     </div>
@@ -1006,7 +1033,7 @@ export default function Cronograma() {
                           assuntoId: dia.blocos.find((bloco) => bloco.tipo === "questoes")?.assuntoId,
                         })}
                       >
-                        Iniciar missão
+                        {dia.concluido ? "Missão concluída ✓" : "Iniciar missão"}
                       </Link>
                     )}
                   </article>
@@ -1014,51 +1041,41 @@ export default function Cronograma() {
               </div>
 
               <aside className="schedule-rules">
-                <p className="dashboard-label">LÓGICA PAPIRO</p>
+                <div className="schedule-rules-heading">
+                  <div><p className="dashboard-label">SEU PAPIRO</p><h2>Você não está estudando no escuro.</h2></div>
+                  <span aria-hidden="true">✦</span>
+                </div>
+                <p>O Papiro organiza sua preparação usando edital, histórico da banca, importância dos conteúdos e o seu próprio desempenho.</p>
 
-                <h2>Um plano guiado pelo que mais gera pontos.</h2>
+                <section className="schedule-focus">
+                  <p className="dashboard-label">ESTA SEMANA</p>
+                  <article>
+                    <h3>Seu foco é {blocoFoco?.titulo ?? "consolidar a base"}.</h3>
+                    <p>{materiaFoco} está entre os conteúdos de maior impacto no seu plano atual.</p>
+                    <ul>
+                      <li><b>◎</b><span>{focoSemana?.prioridade ?? "Prioridade alta"}</span></li>
+                      <li><b>◔</b><span>{percentualFoco === null ? "Ainda sem histórico de acertos" : `${percentualFoco}% de acertos`}</span></li>
+                      <li><b>▣</b><span>{revisoes.length} revisões na fila</span></li>
+                    </ul>
+                  </article>
+                </section>
 
-                <ol>
-                  <li>
-                    <b>1</b>
+                <section className="schedule-actions">
+                  <p className="dashboard-label">HOJE O SISTEMA QUER QUE VOCÊ:</p>
+                  <ol>
+                    <li><b>1</b><span>Corrija uma fraqueza</span></li>
+                    <li><b>2</b><span>Consolide uma prioridade</span></li>
+                    <li><b>3</b><span>Termine o dia mais preparado</span></li>
+                  </ol>
+                </section>
 
-                    <span>
-                      <strong>Priorizar</strong>
-                      Os conteúdos com maior prioridade estratégica e mais evidências
-                      aparecem mais vezes.
-                    </span>
-                  </li>
-
-                  <li>
-                    <b>2</b>
-
-                    <span>
-                      <strong>Revisar</strong>
-                      Conteúdos errados ou próximos do esquecimento entram primeiro.
-                    </span>
-                  </li>
-
-                  <li>
-                    <b>3</b>
-
-                    <span>
-                      <strong>Praticar</strong>
-                      Os conteúdos mais importantes recebem blocos maiores de questões.
-                    </span>
-                  </li>
-                </ol>
-
-                <p>
-                  A prioridade considera a base programática do curso, evidências de
-                  edital e histórico da banca, e seu desempenho em cada conteúdo.
-                </p>
-
-                <Link href="/configuracao">Ajustar objetivo</Link>
+                <Link href="/configuracao">⌘ &nbsp; Ajustar objetivo</Link>
               </aside>
             </section>
           )}
-        </>
-      )}
+          </>
+        )}
+      </div>
     </main>
   );
 }
