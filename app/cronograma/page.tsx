@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { montarJanelaSemanal } from "@/utils/cronograma.mjs";
 import { createClient } from "@/utils/supabase/client";
 
 type CursoAtivo = {
@@ -747,6 +748,14 @@ export default function Cronograma() {
     if (filaGlobal.length === 0) return [];
 
     const minutosDia = Math.max(30, Math.round(horasDiarias * 60));
+    const inicioJanela = new Date();
+    inicioJanela.setHours(0, 0, 0, 0);
+    const itensDaSemana = montarJanelaSemanal(
+      filaGlobal,
+      itensPriorizados,
+      diasDesdeEpoca(inicioJanela),
+      7
+    );
 
     return Array.from({ length: 7 }, (_, indice) => {
       const data = new Date();
@@ -768,9 +777,8 @@ export default function Cronograma() {
       // janela de 7 dias avance pela fila inteira conforme os dias passam, em
       // vez de sempre mostrar as mesmas primeiras posições. Determinístico —
       // depende só da data real e dos dados carregados, nunca de aleatoriedade.
-      const ancora = diasDesdeEpoca(data);
-      const itemPrincipal = filaGlobal[ancora % filaGlobal.length];
-      const itemSecundario = filaGlobal[(ancora + 1) % filaGlobal.length];
+      const itemPrincipal = itensDaSemana[indice];
+      const itemSecundario = itensDaSemana[(indice + 1) % itensDaSemana.length];
 
       const temRevisao = revisoesDia.length > 0;
 
@@ -849,7 +857,7 @@ export default function Cronograma() {
         blocos,
       };
     });
-  }, [horasDiarias, filaGlobal, revisoes, sessoes]);
+  }, [horasDiarias, filaGlobal, itensPriorizados, revisoes, sessoes]);
 
   const diasConcluidos = useMemo(() => {
     return plano.filter((dia) => dia.concluido).length;
@@ -864,9 +872,10 @@ export default function Cronograma() {
   }
 
   const prova = cursoAtivo?.data_prova ? new Date(`${cursoAtivo.data_prova}T00:00:00`) : null;
+  const inicioPlano = plano[0] ? new Date(`${plano[0].chave}T00:00:00`) : null;
 
-  const diasProva = prova
-    ? Math.max(0, Math.ceil((prova.getTime() - Date.now()) / 86_400_000))
+  const diasProva = prova && inicioPlano
+    ? Math.max(0, Math.ceil((prova.getTime() - inicioPlano.getTime()) / 86_400_000))
     : null;
 
   return (
