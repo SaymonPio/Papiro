@@ -3305,9 +3305,10 @@ footer > small {
   grid-template-columns: minmax(0, 1fr) 330px;
   gap: 52px;
 }
+.schedule-days { gap: 7px; }
 .schedule-day {
-  min-height: 88px;
-  padding: 8px 18px;
+  min-height: 84px;
+  padding: 4px 18px;
 }
 .schedule-date p,
 .schedule-date small,
