@@ -3158,6 +3158,7 @@ footer > small {
 .schedule-shell {
   width: min(1320px, calc(100% - 56px));
   padding: 33px 0 80px;
+  left: 16px;
 }
 .schedule-header {
   min-height: 179px;
@@ -3170,7 +3171,7 @@ footer > small {
 }
 .schedule-header h1,
 .schedule-header h1 > span {
-  color: var(--schedule-cream);
+  color: #efd5aa;
   font-family: Georgia, serif;
   text-shadow: 0 2px 22px rgba(242, 199, 92, 0.1);
 }
@@ -3180,8 +3181,13 @@ footer > small {
   white-space: nowrap;
 }
 .schedule-header > div > span {
-  color: var(--schedule-muted);
+  color: #c7b99e;
   font-size: 0.95rem;
+}
+.schedule-header > a {
+  margin-top: 21px;
+  padding: 14px 24px;
+  font-size: 0.84rem;
 }
 .schedule-header > a,
 .schedule-rules > a {
@@ -3190,7 +3196,7 @@ footer > small {
   background: rgba(6, 27, 20, 0.7);
 }
 .schedule-identity {
-  width: max-content;
+  width: 700px;
   max-width: calc(100% - 382px);
   min-height: 38px;
   padding: 0 16px;
@@ -3271,6 +3277,7 @@ footer > small {
   background: var(--schedule-panel);
 }
 .schedule-overview article {
+  height: 94px;
   min-height: 94px;
   padding: 14px 16px;
   grid-template-columns: 38px 1fr;
@@ -3301,6 +3308,18 @@ footer > small {
 .schedule-day {
   min-height: 88px;
   padding: 10px 18px;
+}
+.schedule-date p,
+.schedule-date small,
+.schedule-date em,
+.schedule-block small,
+.schedule-block span {
+  line-height: 1.2;
+}
+.schedule-date strong,
+.schedule-block strong,
+.schedule-block b {
+  line-height: 1.12;
 }
 .schedule-date strong,
 .schedule-block strong,
@@ -3341,8 +3360,17 @@ footer > small {
   border-color: rgba(242, 199, 92, 0.55);
   background: linear-gradient(150deg, rgba(9, 20, 16, 0.97), rgba(3, 11, 8, 0.99));
 }
+.schedule-rules-heading {
+  position: relative;
+  display: block;
+}
+.schedule-rules-heading > span {
+  position: absolute;
+  top: -4px;
+  right: 0;
+}
 .schedule-rules h2 {
-  max-width: 280px;
+  max-width: 260px;
   font-size: 1.65rem;
 }
 .schedule-rules-heading > span,
@@ -3353,7 +3381,10 @@ footer > small {
 .schedule-focus article { background: rgba(4, 22, 16, 0.52); }
 
 @media (max-width: 860px) {
-  .schedule-shell { width: min(100% - 32px, 760px); }
+  .schedule-shell {
+    width: min(100% - 32px, 760px);
+    left: 0;
+  }
   .schedule-header { min-height: 240px; }
   .schedule-day > a,
   .schedule-mission-status { width: 100%; }
