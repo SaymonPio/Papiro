@@ -3149,10 +3149,10 @@ footer > small {
 }
 .schedule-hero {
   background:
-    linear-gradient(90deg, #061b14 0%, rgba(6, 27, 20, 0.9) 30%, rgba(6, 27, 20, 0.22) 68%, rgba(6, 27, 20, 0.72) 100%),
+    linear-gradient(90deg, #061b14 0%, rgba(6, 27, 20, 0.78) 28%, rgba(6, 27, 20, 0.12) 58%, rgba(6, 27, 20, 0.5) 100%),
     linear-gradient(180deg, rgba(6, 27, 20, 0.04), #061b14 96%),
-    url('/cronograma-hero.png') center top / cover no-repeat;
-  opacity: 0.82;
+    url('/cronograma-hero.png') 55% top / cover no-repeat;
+  opacity: 0.94;
 }
 .schedule-header h1,
 .schedule-header h1 > span {
@@ -3160,7 +3160,11 @@ footer > small {
   font-family: Georgia, serif;
   text-shadow: 0 2px 22px rgba(242, 199, 92, 0.1);
 }
-.schedule-header h1 > span { white-space: nowrap; }
+.schedule-header h1 > span {
+  font: inherit;
+  letter-spacing: inherit;
+  white-space: nowrap;
+}
 .schedule-header > div > span { color: var(--schedule-muted); }
 .schedule-header > a,
 .schedule-rules > a {
