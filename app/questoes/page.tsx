@@ -206,6 +206,10 @@ export default function Questoes() {
           assuntosRecebidos.some((assunto) => assunto.assunto_id === assuntoDaMissao)
         ) {
           setAssuntoSelecionado(assuntoDaMissao);
+        } else if (assuntoDaMissao) {
+          setMensagemPersonalizada(
+            "O assunto específico ainda não possui questões vinculadas. A missão usará questões de toda a matéria."
+          );
         }
         assuntoInicialMissao.current = null;
       }
@@ -558,7 +562,7 @@ export default function Questoes() {
           <h1>{origemCronograma ? "Prepare a missão do cronograma" : "Escolha a missão de hoje"}</h1>
           <span>
             {origemCronograma
-              ? "A matéria e o assunto de hoje já estão selecionados."
+              ? "A matéria e, quando disponível, o assunto de hoje já estão selecionados."
               : "O importante é não interromper a caminhada."}
           </span>
         </header>
