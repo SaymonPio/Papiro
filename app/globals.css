@@ -3171,11 +3171,26 @@ footer > small {
 .schedule-identity {
   border-color: rgba(214, 226, 218, 0.16);
   background: rgba(6, 27, 20, 0.78);
-  color: var(--schedule-muted);
+  color: #d8cdb6;
 }
-.schedule-identity strong { color: var(--schedule-cream); }
-.schedule-identity strong span { color: var(--schedule-gold); }
-.schedule-identity i { background: var(--schedule-green); }
+.schedule-identity strong {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--schedule-cream);
+}
+.schedule-identity .schedule-emblem {
+  display: grid;
+  place-items: center;
+  width: 23px;
+  height: 25px;
+  border: 1px solid rgba(242, 199, 92, 0.75);
+  border-radius: 5px 5px 9px 9px;
+  color: var(--schedule-gold);
+  font-size: 0.68rem;
+  line-height: 1;
+}
+.schedule-identity i { background: #d8cdb6; }
 .schedule-track { background: #355747; }
 .schedule-track > span,
 .schedule-track i.done { background: var(--schedule-gold); }

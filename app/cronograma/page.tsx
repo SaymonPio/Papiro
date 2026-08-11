@@ -154,6 +154,26 @@ function chaveData(data: Date) {
   )}-${String(data.getDate()).padStart(2, "0")}`;
 }
 
+function contarSequenciaEstudo(sessoes: Sessao[]) {
+  const diasConcluidos = new Set(
+    sessoes.filter((sessao) => sessao.status === "concluida").map((sessao) => sessao.data_sessao),
+  );
+  const cursor = new Date();
+  cursor.setHours(0, 0, 0, 0);
+
+  if (!diasConcluidos.has(chaveData(cursor))) {
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  let sequencia = 0;
+  while (diasConcluidos.has(chaveData(cursor))) {
+    sequencia += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  return sequencia;
+}
+
 /**
  * Formata minutos para uma apresentação como:
  * 45 min
@@ -387,8 +407,6 @@ export default function Cronograma() {
           return;
         }
 
-        const hoje = chaveData(new Date());
-
         const fim = new Date();
         fim.setHours(0, 0, 0, 0);
         fim.setDate(fim.getDate() + 6);
@@ -424,8 +442,7 @@ export default function Cronograma() {
             .from("sessoes_estudo")
             .select("data_sessao, status")
             .eq("matricula_id", matricula.id)
-            .gte("data_sessao", hoje)
-            .lte("data_sessao", chaveData(fim)),
+            .order("data_sessao", { ascending: true }),
 
           supabase.rpc("revisoes_do_curso_ativo"),
 
@@ -912,6 +929,11 @@ export default function Cronograma() {
   const materiaFoco = focoSemana?.blocos.find((bloco) => bloco.tipo === "teoria")?.detalhe.split(" · ")[0]
     ?? "Seu conteúdo prioritário";
   const progressoSemanal = Math.round((diasConcluidos / 7) * 100);
+  const diasPreparacao = new Set(
+    sessoes.filter((sessao) => sessao.status === "concluida").map((sessao) => sessao.data_sessao),
+  ).size;
+  const semanaPreparacao = Math.floor(diasPreparacao / 7) + 1;
+  const sequenciaEstudo = contarSequenciaEstudo(sessoes);
 
   return (
     <main className="schedule-page">
@@ -933,13 +955,13 @@ export default function Cronograma() {
         {!semContexto && (
           <>
             <section className="schedule-identity" aria-label="Identificação do plano">
-              <strong><span aria-hidden="true">✦</span> PAPIRO · BM/RS</strong>
+              <strong><span className="schedule-emblem" aria-hidden="true">✦</span> PAPIRO - BM/RS</strong>
               <i />
-              <span>Plano dos próximos 7 dias</span>
+              <span>Semana {String(semanaPreparacao).padStart(2, "0")}</span>
               <i />
-              <span>{diasProva === null ? "Prova sem data definida" : `${diasProva} dias de preparação`}</span>
+              <span>{diasPreparacao} {diasPreparacao === 1 ? "dia" : "dias"} de preparação</span>
               <i />
-              <span>Ritmo: {horasDiarias.toLocaleString("pt-BR")}h por dia</span>
+              <span>Sequência: {sequenciaEstudo} {sequenciaEstudo === 1 ? "dia" : "dias"}</span>
             </section>
 
             <section className="schedule-journey" aria-label="Progresso até a prova">
