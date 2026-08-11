@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import AuditoriaAlternativas from "@/app/admin/auditoria-alternativas";
 import { createClient } from "@/utils/supabase/client";
 
 type Materia = { id: number; nome: string };
@@ -201,6 +202,8 @@ export default function Admin() {
         <label>Explicação da resposta<textarea value={explicacao} onChange={(e) => setExplicacao(e.target.value)} rows={5} placeholder="Explique por que a alternativa está correta e as demais estão erradas." required /></label>
         <button className="admin-publish" disabled={salvando || materias.length === 0}>{salvando ? "Publicando..." : "Publicar questão"}</button>
       </form>
+
+      <AuditoriaAlternativas />
 
       <section className="admin-recent">
         <h2>Questões recentes</h2>

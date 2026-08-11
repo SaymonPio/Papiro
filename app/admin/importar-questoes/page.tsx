@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
 import Papa from "papaparse";
+import { temResiduoImportacao } from "@/utils/higiene-questoes.mjs";
 import { createClient } from "@/utils/supabase/client";
 
 type Curso = { id: string; concurso: string | null; cargo: string | null };
@@ -114,6 +115,16 @@ export default function ImportarQuestoes() {
         }
         if (resultado.data.length === 0) {
           setErroArquivo("O arquivo não tem nenhuma linha de dados.");
+          return;
+        }
+
+        const linhasComResiduo = resultado.data.flatMap((linha, indice) =>
+          Object.values(linha).some((valor) => temResiduoImportacao(valor)) ? [indice + 1] : [],
+        );
+        if (linhasComResiduo.length > 0) {
+          setErroArquivo(
+            `O arquivo contém resíduos de exportação na(s) linha(s) ${linhasComResiduo.join(", ")}. Corrija o CSV antes de validar.`,
+          );
           return;
         }
         setLinhas(resultado.data);
