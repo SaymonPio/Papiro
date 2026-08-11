@@ -3173,28 +3173,42 @@ footer > small {
   background: rgba(6, 27, 20, 0.7);
 }
 .schedule-identity {
+  min-height: 34px;
+  padding: 0 14px;
+  gap: 18px;
   border-color: rgba(214, 226, 218, 0.16);
   background: rgba(6, 27, 20, 0.78);
   color: #d8cdb6;
+  font-size: 0.74rem;
 }
 .schedule-identity strong {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 7px;
   color: var(--schedule-cream);
 }
 .schedule-identity .schedule-emblem {
   display: grid;
   place-items: center;
-  width: 23px;
-  height: 25px;
+  width: 18px;
+  height: 20px;
   border: 1px solid rgba(242, 199, 92, 0.75);
-  border-radius: 5px 5px 9px 9px;
+  border-radius: 4px 4px 7px 7px;
   color: var(--schedule-gold);
-  font-size: 0.68rem;
+  font-size: 0.54rem;
   line-height: 1;
 }
-.schedule-identity i { background: #d8cdb6; }
+.schedule-identity i {
+  width: 2px;
+  height: 2px;
+  background: #d8cdb6;
+}
+@media (max-width: 860px) {
+  .schedule-identity {
+    padding: 8px 12px;
+    gap: 8px 14px;
+  }
+}
 .schedule-track { background: #355747; }
 .schedule-track > span,
 .schedule-track i.done { background: var(--schedule-gold); }
