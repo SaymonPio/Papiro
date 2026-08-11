@@ -40,3 +40,23 @@ export function lerMissaoCronograma(busca) {
     quantidade: inteiroPositivo(parametros.get("quantidade")) ?? 10,
   };
 }
+
+export function podeIniciarMissaoAutomaticamente({
+  origemCronograma,
+  jaIniciada,
+  materiaId,
+  materiasDisponiveis,
+  carregandoMaterias,
+  carregandoAssuntos,
+  assuntoPendente,
+}) {
+  return Boolean(
+    origemCronograma &&
+      !jaIniciada &&
+      materiaId &&
+      !carregandoMaterias &&
+      !carregandoAssuntos &&
+      !assuntoPendente &&
+      materiasDisponiveis.includes(materiaId),
+  );
+}

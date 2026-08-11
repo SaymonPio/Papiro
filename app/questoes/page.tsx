@@ -1,8 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { lerMissaoCronograma } from "@/utils/missao-cronograma.mjs";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import {
+  lerMissaoCronograma,
+  podeIniciarMissaoAutomaticamente,
+} from "@/utils/missao-cronograma.mjs";
 import { createClient } from "@/utils/supabase/client";
 
 type MetaPreset = "minima" | "normal" | "ideal";
@@ -135,7 +138,9 @@ export default function Questoes() {
   const [carregandoPersonalizada, setCarregandoPersonalizada] = useState(false);
   const [mensagemPersonalizada, setMensagemPersonalizada] = useState("");
   const [origemCronograma, setOrigemCronograma] = useState(false);
+  const [autoInicioSolicitado, setAutoInicioSolicitado] = useState(false);
   const assuntoInicialMissao = useRef<number | null>(null);
+  const autoInicioExecutado = useRef(false);
 
   useEffect(() => {
     const agendamento = window.setTimeout(() => {
@@ -174,12 +179,21 @@ export default function Questoes() {
         });
         setMensagemPersonalizada("Não foi possível carregar as matérias deste curso.");
       } else {
-        setMateriasCurso((data as MateriaCursoAtivo[] | null) ?? []);
+        const materiasRecebidas = (data as MateriaCursoAtivo[] | null) ?? [];
+        setMateriasCurso(materiasRecebidas);
+        if (materiasRecebidas.length === 0) {
+          setMensagemPersonalizada("Não há matérias com questões disponíveis neste curso.");
+        } else if (
+          materiaSelecionada &&
+          !materiasRecebidas.some((materia) => materia.materia_id === materiaSelecionada)
+        ) {
+          setMensagemPersonalizada("A matéria desta missão não possui questões disponíveis no curso ativo.");
+        }
       }
       setCarregandoMaterias(false);
     }
     carregarMaterias();
-  }, [modoInicio, materiasCurso.length, carregandoMaterias]);
+  }, [modoInicio, materiasCurso.length, carregandoMaterias, materiaSelecionada]);
 
   useEffect(() => {
     if (!materiaSelecionada) return;
@@ -211,8 +225,8 @@ export default function Questoes() {
             "O assunto específico ainda não possui questões vinculadas. A missão usará questões de toda a matéria."
           );
         }
-        assuntoInicialMissao.current = null;
       }
+      assuntoInicialMissao.current = null;
       setCarregandoAssuntos(false);
     }
     carregarAssuntos();
@@ -336,7 +350,7 @@ export default function Questoes() {
     setCarregando(false);
   }
 
-  async function iniciarSessaoPersonalizada() {
+  const iniciarSessaoPersonalizada = useCallback(async () => {
     if (!materiaSelecionada) {
       setMensagemPersonalizada("Escolha uma matéria para iniciar.");
       return;
@@ -461,7 +475,32 @@ export default function Questoes() {
     setQuestoes(preparadas);
     setSessaoId(sessao.id);
     setCarregandoPersonalizada(false);
-  }
+  }, [assuntoSelecionado, materiaSelecionada, quantidadePersonalizada]);
+
+  useEffect(() => {
+    const podeIniciar = podeIniciarMissaoAutomaticamente({
+      origemCronograma,
+      jaIniciada: autoInicioExecutado.current,
+      materiaId: materiaSelecionada,
+      materiasDisponiveis: materiasCurso.map((materia) => materia.materia_id),
+      carregandoMaterias,
+      carregandoAssuntos,
+      assuntoPendente: assuntoInicialMissao.current !== null,
+    });
+
+    if (!podeIniciar) return;
+
+    autoInicioExecutado.current = true;
+    setAutoInicioSolicitado(true);
+    void iniciarSessaoPersonalizada();
+  }, [
+    carregandoAssuntos,
+    carregandoMaterias,
+    iniciarSessaoPersonalizada,
+    materiaSelecionada,
+    materiasCurso,
+    origemCronograma,
+  ]);
 
   async function responder() {
     if (!alternativaId || !questaoAtual || !sessaoId) return;
@@ -549,6 +588,27 @@ export default function Questoes() {
       fim_em: new Date().toISOString(),
     }).eq("id", sessaoId);
     window.location.replace(`/questoes/resultado?sessao=${sessaoId}`);
+  }
+
+  const materiaDaMissaoDisponivel = Boolean(
+    materiaSelecionada &&
+      materiasCurso.some((materia) => materia.materia_id === materiaSelecionada),
+  );
+
+  if (
+    origemCronograma &&
+    !nivel &&
+    ((!autoInicioSolicitado &&
+      (!mensagemPersonalizada || materiaDaMissaoDisponivel)) ||
+      carregandoMaterias ||
+      carregandoAssuntos ||
+      carregandoPersonalizada)
+  ) {
+    return (
+      <main className="dashboard-loading">
+        <p>Preparando sua missão...</p>
+      </main>
+    );
   }
 
   if (!nivel) {
