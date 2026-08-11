@@ -3175,35 +3175,35 @@ footer > small {
 .schedule-identity {
   width: max-content;
   max-width: calc(100% - 374px);
-  min-height: 34px;
-  padding: 0 14px;
-  gap: 18px;
+  min-height: 38px;
+  padding: 0 16px;
+  gap: 20px;
   border-color: rgba(214, 226, 218, 0.16);
   background: rgba(6, 27, 20, 0.78);
   color: #d8cdb6;
-  font-size: 0.74rem;
+  font-size: 0.82rem;
   white-space: nowrap;
 }
 .schedule-identity strong {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   color: var(--schedule-cream);
 }
 .schedule-identity .schedule-emblem {
   display: grid;
   place-items: center;
-  width: 18px;
-  height: 20px;
+  width: 21px;
+  height: 23px;
   border: 1px solid rgba(242, 199, 92, 0.75);
   border-radius: 4px 4px 7px 7px;
   color: var(--schedule-gold);
-  font-size: 0.54rem;
+  font-size: 0.62rem;
   line-height: 1;
 }
 .schedule-identity i {
-  width: 2px;
-  height: 2px;
+  width: 3px;
+  height: 3px;
   background: #d8cdb6;
 }
 @media (max-width: 1180px) {
