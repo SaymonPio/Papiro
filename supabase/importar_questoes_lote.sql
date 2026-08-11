@@ -23,6 +23,13 @@
 -- motivo — deixa o default do banco aplicar.
 --
 -- Nenhuma tabela é alterada por este arquivo — só as duas funções novas.
+--
+-- Envolvido em BEGIN/COMMIT — ou tudo aplica, ou nada aplica. Necessário aqui
+-- porque a seção 2 faz um DROP FUNCTION seguido de CREATE (ver nota naquela
+-- seção); sem transação, uma falha entre os dois deixaria a função ausente
+-- do schema em vez de na versão antiga ou na nova.
+
+BEGIN;
 
 -- ============================================================================
 -- 1) importar_questoes_dry_run(p_curso_id, p_linhas) — só validação, não escreve
@@ -203,31 +210,67 @@ end;
 $function$;
 
 -- ============================================================================
--- 2) importar_questoes_lote(p_curso_id, p_linhas) — grava de fato. Tudo-ou-nada:
--- uma chamada de função PL/pgSQL já é atômica por padrão, então qualquer RAISE
--- EXCEPTION no meio do laço desfaz tudo que essa chamada já gravou (sem precisar
--- de BEGIN/COMMIT manual, que nem seria válido aqui dentro). Por isso nenhuma
--- questão fica órfã: se uma única linha falhar, nada do lote é gravado.
+-- 2) importar_questoes_lote(p_curso_id, p_linhas) — grava de fato.
+--
+-- Transacional para ERROS REAIS: uma chamada de função PL/pgSQL já é atômica
+-- por padrão, então qualquer RAISE EXCEPTION (materia/assunto inexistente,
+-- alternativas A-D faltando, gabarito invalido, enunciado vazio, ano invalido)
+-- desfaz tudo que essa chamada já gravou (sem precisar de BEGIN/COMMIT manual,
+-- que nem seria válido aqui dentro) — nenhuma questão fica órfã nesses casos.
+--
+-- NÃO aborta para duplicata já vinculada ao curso: essa é a única checagem que
+-- passou a ser "pular a linha e seguir" em vez de "abortar o lote inteiro"
+-- (defesa adicional). Isso cobre dois casos com a MESMA query de sempre (sem
+-- mudar a regra de duplicidade): (a) a questão já existia em curso_questoes
+-- antes desta chamada, e (b) a questão é idêntica a outra linha DESTE MESMO
+-- lote que acabou de ser inserida alguns passos antes no mesmo laço — o
+-- dry-run não enxerga esse segundo caso (só compara contra o banco já
+-- persistido, nunca contra as outras linhas do próprio arquivo sendo
+-- validado), então essa defesa aqui é o que impede um duplicado dentro do
+-- próprio CSV de abortar a importação inteira.
 --
 -- Revalida tudo de novo (nunca confia só no dry-run anterior, que pode estar
 -- desatualizado no momento da confirmação). Mesma resolução exata de
--- materia/assunto, mesma checagem de duplicata (agora só a bloqueante: mesma
--- questão já vinculada a este curso).
+-- materia/assunto de sempre — nenhuma regra de matéria/assunto/curso/permissão
+-- foi alterada, só o tratamento da duplicata e o retorno.
 --
--- Por linha: INSERT em questoes (usuario_id = null, dificuldade omitida -> default
--- 'media' do banco) -> INSERT nas alternativas informadas (2 a 5, conforme A-E
--- preenchidas) marcando correta = true só na que bate com o gabarito -> INSERT em
--- curso_questoes (curso_id, questao_id; prioridade omitida -> default 1 do banco,
--- protegido por sua vez pelo UNIQUE(curso_id, questao_id) já existente).
+-- Por linha (quando não é duplicata): INSERT em questoes (usuario_id = null,
+-- dificuldade omitida -> default 'media' do banco) -> INSERT nas alternativas
+-- informadas (2 a 5, conforme A-E preenchidas) marcando correta = true só na
+-- que bate com o gabarito -> INSERT em curso_questoes (curso_id, questao_id;
+-- prioridade omitida -> default 1 do banco, protegido por sua vez pelo
+-- UNIQUE(curso_id, questao_id) já existente).
+--
+-- Retorno: uma única linha-resumo com contagens (importadas,
+-- ignoradas_por_duplicidade, erros). "erros" é sempre 0 quando a função
+-- retorna normalmente, porque qualquer erro real já aborta a chamada inteira
+-- via RAISE EXCEPTION antes de chegar ao retorno (mantido para o contrato
+-- pedido, não porque erros parciais sejam tolerados).
+--
+-- MUDANÇA DE ASSINATURA: o RETURNS TABLE mudou de (linha integer, questao_id
+-- bigint) para (importadas bigint, ignoradas_por_duplicidade bigint, erros
+-- bigint). O Postgres não permite que CREATE OR REPLACE FUNCTION altere o
+-- tipo de retorno de uma função já existente (erro 42P13 "cannot change
+-- return type of existing function") — por isso a função é removida
+-- explicitamente antes, pela assinatura exata de parâmetros (uuid, jsonb;
+-- nomes de parâmetro não importam para o DROP, só os tipos, e eles não
+-- mudaram entre as versões) e só então recriada. Idempotente: se a função já
+-- estiver na versão nova (ou não existir), o DROP IF EXISTS não falha.
+-- SECURITY DEFINER, SET search_path TO 'public' e a ausência de GRANT/REVOKE
+-- EXECUTE explícito são preservados abaixo, exatamente como na versão
+-- anterior.
 -- ============================================================================
+
+drop function if exists public.importar_questoes_lote(uuid, jsonb);
 
 create or replace function public.importar_questoes_lote(
   p_curso_id uuid,
   p_linhas jsonb
 )
 returns table (
-  linha integer,
-  questao_id bigint
+  importadas bigint,
+  ignoradas_por_duplicidade bigint,
+  erros bigint
 )
 language plpgsql
 security definer
@@ -243,6 +286,8 @@ declare
   v_alternativas text[5];
   v_letras text[5] := array['A','B','C','D','E'];
   v_indice integer;
+  v_importadas bigint := 0;
+  v_ignoradas bigint := 0;
 begin
   if not public.eh_admin() then
     raise exception 'Apenas administradores podem importar questoes';
@@ -311,7 +356,12 @@ begin
         and q.assunto_id is not distinct from v_assunto_id
         and lower(trim(q.enunciado)) = lower(trim(v_linha->>'enunciado'))
     ) then
-      raise exception 'Linha %: questao duplicada ja vinculada a este curso', v_linha_numero;
+      -- Defesa adicional: ignora a linha em vez de abortar o lote inteiro.
+      -- Cobre duplicata pré-existente E duplicata dentro do próprio CSV (a
+      -- questão de uma linha anterior deste mesmo lote, já inserida acima
+      -- neste laço, também é enxergada por este EXISTS).
+      v_ignoradas := v_ignoradas + 1;
+      continue;
     end if;
 
     -- dificuldade omitida: NOT NULL DEFAULT 'media' no banco cobre o valor.
@@ -335,9 +385,31 @@ begin
     insert into public.curso_questoes (curso_id, questao_id)
     values (p_curso_id, v_questao_id);
 
-    linha := v_linha_numero;
-    questao_id := v_questao_id;
-    return next;
+    v_importadas := v_importadas + 1;
   end loop;
+
+  importadas := v_importadas;
+  ignoradas_por_duplicidade := v_ignoradas;
+  erros := 0;
+  return next;
 end;
 $function$;
+
+-- DROP FUNCTION remove todo o ACL da função junto com ela — o CREATE OR
+-- REPLACE acima recria a função com o ACL padrão do Postgres (não com o ACL
+-- anterior). Estes GRANTs restauram exatamente os privilégios já confirmados
+-- na consulta ao pg_proc/information_schema feita antes desta migração (5
+-- entradas, todas com is_grantable=false, grantor=postgres): PUBLIC, anon,
+-- authenticated, postgres, service_role. Nenhum privilégio novo além desses
+-- 5, nenhum WITH GRANT OPTION.
+grant execute on function public.importar_questoes_lote(uuid, jsonb)
+  to public, anon, authenticated, postgres, service_role;
+
+COMMIT;
+
+-- Assinatura de retorno de importar_questoes_lote mudou (ver nota acima) —
+-- notifica o PostgREST para recarregar o cache de schema imediatamente, em
+-- vez de esperar o próprio ciclo de reload automático. Fora da transação de
+-- propósito: NOTIFY só é entregue após o COMMIT de qualquer forma, mas
+-- mantê-lo como statement separado deixa isso explícito.
+NOTIFY pgrst, 'reload schema';
