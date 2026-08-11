@@ -897,7 +897,10 @@ export default function Cronograma() {
     ? Math.max(0, Math.ceil((prova.getTime() - inicioPlano.getTime()) / 86_400_000))
     : null;
 
-  const primeiroNome = nome.trim().split(/\s+/)[0] || "Aluno";
+  const primeiroNomeOriginal = nome.trim().split(/\s+/)[0] || "Aluno";
+  const primeiroNome = `${primeiroNomeOriginal.charAt(0).toLocaleUpperCase("pt-BR")}${primeiroNomeOriginal
+    .slice(1)
+    .toLocaleLowerCase("pt-BR")}`;
   const focoSemana = [...plano].sort((a, b) => b.pontuacaoPrioridade - a.pontuacaoPrioridade)[0];
   const blocoFoco = focoSemana?.blocos.find((bloco) => bloco.tipo === "questoes");
   const desempenhoFoco = blocoFoco?.assuntoId
@@ -906,11 +909,8 @@ export default function Cronograma() {
   const percentualFoco = desempenhoFoco?.totalRespondidas
     ? Math.round((desempenhoFoco.acertos / desempenhoFoco.totalRespondidas) * 100)
     : null;
-  const materiaFoco = blocoFoco?.detalhe.split(" · ")[0] ?? "Seu conteúdo prioritário";
-  const inicioAno = new Date(new Date().getFullYear(), 0, 1);
-  const numeroSemana = Math.ceil(
-    ((Date.now() - inicioAno.getTime()) / 86_400_000 + inicioAno.getDay() + 1) / 7,
-  );
+  const materiaFoco = focoSemana?.blocos.find((bloco) => bloco.tipo === "teoria")?.detalhe.split(" · ")[0]
+    ?? "Seu conteúdo prioritário";
   const progressoSemanal = Math.round((diasConcluidos / 7) * 100);
 
   return (
@@ -920,7 +920,7 @@ export default function Cronograma() {
         <header className="schedule-header">
           <div>
             <p className="dashboard-label">SUA MISSÃO DA SEMANA</p>
-            <h1>{primeiroNome}, esta é a sua<br />rota até a farda.</h1>
+            <h1><span>{primeiroNome}, esta é a sua</span><br />rota até a farda.</h1>
             <span>
               {cursoAtivo
                 ? `${cursoAtivo.concurso} · ${cursoAtivo.cargo}`
@@ -935,7 +935,7 @@ export default function Cronograma() {
             <section className="schedule-identity" aria-label="Identificação do plano">
               <strong><span aria-hidden="true">✦</span> PAPIRO · BM/RS</strong>
               <i />
-              <span>Semana {String(numeroSemana).padStart(2, "0")}</span>
+              <span>Plano dos próximos 7 dias</span>
               <i />
               <span>{diasProva === null ? "Prova sem data definida" : `${diasProva} dias de preparação`}</span>
               <i />
@@ -955,9 +955,11 @@ export default function Cronograma() {
                 ))}
               </div>
               <p>
-                <strong>{diasConcluidos} missões concluídas</strong>
+                <strong>
+                  {diasConcluidos} {diasConcluidos === 1 ? "missão concluída" : "missões concluídas"}
+                </strong>
                 <b />
-                <span>{formatarDuracao(Math.round(diasConcluidos * horasDiarias * 60))} acumuladas nesta semana</span>
+                <span>{formatarDuracao(Math.round(diasConcluidos * horasDiarias * 60))} previstas nas missões concluídas</span>
               </p>
             </section>
           </>
@@ -971,7 +973,7 @@ export default function Cronograma() {
             <article><b aria-hidden="true">◷</b><div>
               <span>RITMO DIÁRIO</span><strong>{horasDiarias.toLocaleString("pt-BR")}h</strong><small>divididas em blocos</small>
             </div></article>
-            <article><b aria-hidden="true">⌛</b><div>
+            <article><b aria-hidden="true">◇</b><div>
               <span>ATÉ A PROVA</span><strong>{diasProva ?? "—"}</strong><small>{diasProva === null ? "data não definida" : "dias restantes"}</small>
             </div></article>
             <article><b aria-hidden="true">☷</b><div>
@@ -1007,7 +1009,7 @@ export default function Cronograma() {
                       <p><span aria-hidden="true">✦</span> MISSÃO {String(indice + 1).padStart(2, "0")}</p>
                       <small>{dia.hoje ? "HOJE" : dia.dia}</small>
                       <strong>{dia.data}</strong>
-                      <em>3 blocos · {formatarDuracao(dia.blocos.reduce((total, bloco) => total + bloco.minutos, 0))} · foco: {dia.blocos.find((bloco) => bloco.tipo === "questoes")?.detalhe.split(" · ")[0]}</em>
+                      <em>3 blocos · {formatarDuracao(dia.blocos.reduce((total, bloco) => total + bloco.minutos, 0))} · foco: {dia.blocos.find((bloco) => bloco.tipo === "teoria")?.detalhe.split(" · ")[0]}</em>
                       {dia.concluido && <span>MISSÃO CUMPRIDA ✓</span>}
                     </div>
 
@@ -1024,7 +1026,7 @@ export default function Cronograma() {
                       ))}
                     </div>
 
-                    {dia.hoje && (
+                    {dia.hoje && !dia.concluido && (
                       <Link
                         href={montarLinkMissao({
                           cursoMateriaId: dia.blocos.find((bloco) => bloco.tipo === "questoes")?.cursoMateriaId,
@@ -1033,8 +1035,11 @@ export default function Cronograma() {
                           assuntoId: dia.blocos.find((bloco) => bloco.tipo === "questoes")?.assuntoId,
                         })}
                       >
-                        {dia.concluido ? "Missão concluída ✓" : "Iniciar missão"}
+                        Iniciar missão
                       </Link>
+                    )}
+                    {dia.hoje && dia.concluido && (
+                      <span className="schedule-mission-status">Missão concluída ✓</span>
                     )}
                   </article>
                 ))}
