@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { lerMissaoCronograma } from "@/utils/missao-cronograma.mjs";
 import { createClient } from "@/utils/supabase/client";
 
 type MetaPreset = "minima" | "normal" | "ideal";
@@ -133,6 +134,23 @@ export default function Questoes() {
   const [quantidadePersonalizada, setQuantidadePersonalizada] = useState(10);
   const [carregandoPersonalizada, setCarregandoPersonalizada] = useState(false);
   const [mensagemPersonalizada, setMensagemPersonalizada] = useState("");
+  const [origemCronograma, setOrigemCronograma] = useState(false);
+  const assuntoInicialMissao = useRef<number | null>(null);
+
+  useEffect(() => {
+    const agendamento = window.setTimeout(() => {
+      const missao = lerMissaoCronograma(window.location.search);
+      if (!missao) return;
+
+      setOrigemCronograma(true);
+      setModoInicio("personalizada");
+      setMateriaSelecionada(missao.materiaId);
+      assuntoInicialMissao.current = missao.assuntoId;
+      setQuantidadePersonalizada(Math.max(1, Math.min(100, missao.quantidade)));
+    }, 0);
+
+    return () => window.clearTimeout(agendamento);
+  }, []);
 
   useEffect(() => {
     async function protegerPagina() {
@@ -164,8 +182,6 @@ export default function Questoes() {
   }, [modoInicio, materiasCurso.length, carregandoMaterias]);
 
   useEffect(() => {
-    setAssuntoSelecionado(null);
-    setAssuntosCurso([]);
     if (!materiaSelecionada) return;
 
     async function carregarAssuntos() {
@@ -182,7 +198,16 @@ export default function Questoes() {
         });
         setMensagemPersonalizada("Não foi possível carregar os assuntos dessa matéria.");
       } else {
-        setAssuntosCurso((data as AssuntoCursoAtivo[] | null) ?? []);
+        const assuntosRecebidos = (data as AssuntoCursoAtivo[] | null) ?? [];
+        setAssuntosCurso(assuntosRecebidos);
+        const assuntoDaMissao = assuntoInicialMissao.current;
+        if (
+          assuntoDaMissao &&
+          assuntosRecebidos.some((assunto) => assunto.assunto_id === assuntoDaMissao)
+        ) {
+          setAssuntoSelecionado(assuntoDaMissao);
+        }
+        assuntoInicialMissao.current = null;
       }
       setCarregandoAssuntos(false);
     }
@@ -526,20 +551,26 @@ export default function Questoes() {
     return (
       <main className="method-page">
         <header className="method-header">
-          <Link href="/painel">← Voltar ao painel</Link>
+          <Link href={origemCronograma ? "/cronograma" : "/painel"}>
+            {origemCronograma ? "← Voltar ao cronograma" : "← Voltar ao painel"}
+          </Link>
           <p className="dashboard-label">MÉTODO PAPIRO</p>
-          <h1>Escolha a missão de hoje</h1>
-          <span>O importante é não interromper a caminhada.</span>
+          <h1>{origemCronograma ? "Prepare a missão do cronograma" : "Escolha a missão de hoje"}</h1>
+          <span>
+            {origemCronograma
+              ? "A matéria e o assunto de hoje já estão selecionados."
+              : "O importante é não interromper a caminhada."}
+          </span>
         </header>
 
-        <div className="session-mode-tabs" role="tablist" aria-label="Modo de início da sessão">
+        {!origemCronograma && <div className="session-mode-tabs" role="tablist" aria-label="Modo de início da sessão">
           <button type="button" role="tab" aria-selected={modoInicio === "metas"} className={modoInicio === "metas" ? "selected" : ""} onClick={() => setModoInicio("metas")}>
             Meta diária
           </button>
           <button type="button" role="tab" aria-selected={modoInicio === "personalizada"} className={modoInicio === "personalizada" ? "selected" : ""} onClick={() => setModoInicio("personalizada")}>
             Sessão personalizada
           </button>
-        </div>
+        </div>}
 
         {modoInicio === "metas" ? (
           <>
@@ -562,7 +593,12 @@ export default function Questoes() {
               <select
                 id="materia-select"
                 value={materiaSelecionada ?? ""}
-                onChange={(evento) => setMateriaSelecionada(evento.target.value ? Number(evento.target.value) : null)}
+                onChange={(evento) => {
+                  setMateriaSelecionada(evento.target.value ? Number(evento.target.value) : null);
+                  setAssuntoSelecionado(null);
+                  setAssuntosCurso([]);
+                  assuntoInicialMissao.current = null;
+                }}
                 disabled={carregandoMaterias}
               >
                 <option value="">{carregandoMaterias ? "Carregando..." : "Selecione uma matéria"}</option>
@@ -604,7 +640,7 @@ export default function Questoes() {
             </div>
 
             <button type="button" className="answer-submit" onClick={iniciarSessaoPersonalizada} disabled={!materiaSelecionada || carregandoPersonalizada}>
-              {carregandoPersonalizada ? "Preparando..." : "Iniciar sessão"}
+              {carregandoPersonalizada ? "Preparando..." : origemCronograma ? "Iniciar missão" : "Iniciar sessão"}
             </button>
 
             {mensagemPersonalizada && <p className="method-message" role="alert">{mensagemPersonalizada}</p>}

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { montarJanelaSemanal } from "@/utils/cronograma.mjs";
+import { montarLinkMissao } from "@/utils/missao-cronograma.mjs";
 import { createClient } from "@/utils/supabase/client";
 
 type CursoAtivo = {
@@ -43,6 +44,7 @@ type ConteudoBruto = {
 
 type MateriaCursoBruta = {
   id: number;
+  materia_id: number | null;
   nome: string;
   peso: number | null;
   prioridade_estrategica: number | null;
@@ -81,6 +83,7 @@ type StatusRevisaoAssunto = "vencida" | "futura";
 
 type MateriaCurso = {
   id: number;
+  materia_id: number | null;
   nome: string;
   prioridade_estrategica: number | null;
   frequencia_historica: number | null;
@@ -94,7 +97,9 @@ type ItemPriorizado = {
   tipo: "conteudo" | "materia_generica";
   materiaId: number;
   materiaNome: string;
+  materiaQuestaoId: number | null;
   conteudoId: number | null;
+  assuntoId: number | null;
   titulo: string;
   prioridade: number;
   nivelPrioridade: NivelPrioridade;
@@ -121,6 +126,8 @@ type Bloco = {
   minutos: number;
   conteudoId?: number;
   cursoMateriaId?: number;
+  materiaId?: number;
+  assuntoId?: number;
 };
 
 // Bônus por presença de cada tipo de evidência — aprovado explicitamente.
@@ -405,7 +412,7 @@ export default function Cronograma() {
 
           supabase
             .from("curso_materias")
-            .select("id, nome, peso, prioridade_estrategica, frequencia_historica, relevante_para_preparacao")
+            .select("id, materia_id, nome, peso, prioridade_estrategica, frequencia_historica, relevante_para_preparacao")
             .eq("curso_id", perfil.curso_ativo_id)
             .eq("relevante_para_preparacao", true)
             .order("nome"),
@@ -499,6 +506,7 @@ export default function Cronograma() {
 
         const materiasCursoMontadas: MateriaCurso[] = materiasCursoBruto.map((materia) => ({
           id: materia.id,
+          materia_id: materia.materia_id,
           nome: materia.nome,
           prioridade_estrategica: materia.prioridade_estrategica,
           frequencia_historica: materia.frequencia_historica,
@@ -672,7 +680,9 @@ export default function Cronograma() {
             tipo: "conteudo",
             materiaId: materia.id,
             materiaNome: materia.nome,
+            materiaQuestaoId: materia.materia_id,
             conteudoId: conteudo.id,
+            assuntoId: conteudo.assunto_id,
             titulo: conteudo.nome,
             prioridade,
             nivelPrioridade: obterNivelPrioridade(prioridade),
@@ -690,7 +700,9 @@ export default function Cronograma() {
           tipo: "materia_generica",
           materiaId: materia.id,
           materiaNome: materia.nome,
+          materiaQuestaoId: materia.materia_id,
           conteudoId: null,
+          assuntoId: null,
           titulo: materia.nome,
           prioridade,
           nivelPrioridade: obterNivelPrioridade(prioridade),
@@ -824,6 +836,8 @@ export default function Cronograma() {
           minutos: minutosTeoria,
           ...(itemPrincipal.conteudoId ? { conteudoId: itemPrincipal.conteudoId } : {}),
           cursoMateriaId: itemPrincipal.materiaId,
+          ...(itemPrincipal.materiaQuestaoId ? { materiaId: itemPrincipal.materiaQuestaoId } : {}),
+          ...(itemPrincipal.assuntoId ? { assuntoId: itemPrincipal.assuntoId } : {}),
         },
         {
           tipo: "questoes",
@@ -835,6 +849,8 @@ export default function Cronograma() {
           minutos: minutosQuestoes,
           ...(itemPrincipal.conteudoId ? { conteudoId: itemPrincipal.conteudoId } : {}),
           cursoMateriaId: itemPrincipal.materiaId,
+          ...(itemPrincipal.materiaQuestaoId ? { materiaId: itemPrincipal.materiaQuestaoId } : {}),
+          ...(itemPrincipal.assuntoId ? { assuntoId: itemPrincipal.assuntoId } : {}),
         },
       ];
 
@@ -981,7 +997,18 @@ export default function Cronograma() {
                       ))}
                     </div>
 
-                    {dia.hoje && <Link href="/questoes">Iniciar missão</Link>}
+                    {dia.hoje && (
+                      <Link
+                        href={montarLinkMissao({
+                          cursoMateriaId: dia.blocos.find((bloco) => bloco.tipo === "questoes")?.cursoMateriaId,
+                          conteudoId: dia.blocos.find((bloco) => bloco.tipo === "questoes")?.conteudoId,
+                          materiaId: dia.blocos.find((bloco) => bloco.tipo === "questoes")?.materiaId,
+                          assuntoId: dia.blocos.find((bloco) => bloco.tipo === "questoes")?.assuntoId,
+                        })}
+                      >
+                        Iniciar missão
+                      </Link>
+                    )}
                   </article>
                 ))}
               </div>
