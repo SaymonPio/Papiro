@@ -42,6 +42,123 @@ type IdentidadeAcademica = {
 type MateriaCursoAtivo = { materia_id: number; materia_nome: string; total_questoes: number | string };
 type AssuntoCursoAtivo = { assunto_id: number; assunto_nome: string; total_questoes: number | string };
 
+// Reflete exatamente o RETURNS TABLE de
+// public.carregar_aula_publicada_da_missao(p_missao_id uuid) em
+// supabase/teoria_leitura_rpc.sql — nada além das colunas realmente
+// retornadas por essa RPC.
+type FonteAula = {
+  material_id: string;
+  material_titulo: string;
+  material_tipo: string;
+  material_versao_id: string;
+  numero_versao: number;
+  titulo_versao: string | null;
+  arquivo_path: string | null;
+  checksum: string | null;
+  vigente_desde: string | null;
+  vigente_ate: string | null;
+  ordem: number | null;
+  observacao: string | null;
+};
+
+// aula_versoes.estrutura (teoria_versionada.sql) só garante, a nível de
+// banco, "é um objeto JSON" — nenhum schema interno é imposto. A única
+// convenção documentada (comentário em teoria_versionada.sql, não validada
+// pelo banco) é: estrutura = { componentes: [...] }, cada componente com um
+// campo `tipo` dentre diagnostico/conceito/recall/questao_resolvida/
+// resumo_visual, já na ordem de apresentação. Nenhum outro campo por
+// componente é garantido — por isso o tipo abaixo não inventa mais nada
+// além de `tipo`.
+type ComponenteAula = {
+  tipo: string;
+  [chave: string]: unknown;
+};
+
+type EstruturaAula = {
+  componentes?: unknown;
+  [chave: string]: unknown;
+};
+
+type AulaPublicada = {
+  missao_id: string;
+  conteudo_id: number;
+  missao_status: string;
+  aula_id: string;
+  aula_titulo: string;
+  aula_versao_id: string;
+  numero_versao: number;
+  publicado_em: string;
+  estrutura: EstruturaAula;
+  fontes: FonteAula[];
+};
+
+type EstadoAula = "carregando" | "erro" | "indisponivel" | "disponivel";
+
+// Só os 5 tipos documentados em teoria_versionada.sql têm rótulo definido;
+// qualquer outro valor de `tipo` é exibido cru, sem inventar um nome.
+const ROTULOS_TIPO_COMPONENTE: Record<string, string> = {
+  diagnostico: "Diagnóstico",
+  conceito: "Conceito",
+  recall: "Recall",
+  questao_resolvida: "Questão resolvida",
+  resumo_visual: "Resumo visual",
+};
+
+function tituloComponente(tipo: string): string {
+  return ROTULOS_TIPO_COMPONENTE[tipo] ?? tipo;
+}
+
+function formatarValorComponente(valor: unknown): string {
+  if (valor === null || valor === undefined) return "";
+  if (typeof valor === "string") return valor;
+  return JSON.stringify(valor);
+}
+
+// estrutura.componentes não tem nenhuma garantia de formato a nível de
+// banco (só estrutura em si é validada como objeto JSON) — nem de ser
+// array, nem de cada item ter o formato de ComponenteAula.
+function ehComponenteAula(valor: unknown): valor is ComponenteAula {
+  return (
+    typeof valor === "object" &&
+    valor !== null &&
+    !Array.isArray(valor) &&
+    typeof (valor as Record<string, unknown>).tipo === "string"
+  );
+}
+
+// Nunca chamar .map direto sobre o valor cru: filtra tanto "não é array"
+// quanto "item individual não tem o formato mínimo esperado" antes de
+// qualquer item chegar em ComponenteAulaView.
+function obterComponentesAula(estrutura: EstruturaAula): ComponenteAula[] {
+  if (!Array.isArray(estrutura?.componentes)) return [];
+  return estrutura.componentes.filter(ehComponenteAula);
+}
+
+// Renderização genérica e mínima: mostra o tipo (rotulado quando
+// conhecido) e, se existirem, os demais campos do componente como pares
+// chave/valor — sem presumir o significado de nenhum campo além de `tipo`,
+// já que não há um schema definido além dele.
+function ComponenteAulaView({ componente }: { componente: ComponenteAula }) {
+  const { tipo, ...outrosCampos } = componente;
+  const chaves = Object.keys(outrosCampos);
+
+  return (
+    <article>
+      <h2>{tituloComponente(String(tipo))}</h2>
+      {chaves.length > 0 && (
+        <dl>
+          {chaves.map((chave) => (
+            <div key={chave}>
+              <dt>{chave}</dt>
+              <dd>{formatarValorComponente(outrosCampos[chave])}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
+    </article>
+  );
+}
+
 export default function Teoria() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
@@ -50,6 +167,8 @@ export default function Teoria() {
   const [quantidade, setQuantidade] = useState(10);
   const [materiaNome, setMateriaNome] = useState("");
   const [assuntoNome, setAssuntoNome] = useState("");
+  const [estadoAula, setEstadoAula] = useState<EstadoAula>("carregando");
+  const [aula, setAula] = useState<AulaPublicada | null>(null);
 
   useEffect(() => {
     async function protegerPagina() {
@@ -198,6 +317,43 @@ export default function Teoria() {
         setAssuntoNome(assunto?.assunto_nome ?? "");
       }
 
+      // Única porta de leitura da aula: a RPC, nunca SELECT direto em
+      // aulas/aula_versoes/aula_versao_fontes/materiais/material_versoes —
+      // essas tabelas não têm SELECT direto concedido a authenticated de
+      // propósito (Fase 2E/2F). Só o id da missão é enviado; usuario_id,
+      // matricula_id, conteudo_id, aula_id e aula_versao_id são todos
+      // derivados no servidor, dentro da própria RPC.
+      const { data: aulaCarregada, error: erroAula } = await supabase.rpc(
+        "carregar_aula_publicada_da_missao",
+        { p_missao_id: missaoCarregada.id },
+      );
+
+      if (erroAula) {
+        // Erro da RPC (rede, banco fora do ar, etc.) não é a mesma coisa
+        // que "missão inválida" — a página continua aberta (cabeçalho,
+        // botão para as questões), só a seção da aula mostra erro
+        // controlado. Detalhe interno só no console, nunca na tela.
+        console.error("Falha ao carregar a aula da missão:", {
+          message: erroAula.message,
+          code: erroAula.code,
+          details: erroAula.details,
+          hint: erroAula.hint,
+        });
+        setEstadoAula("erro");
+      } else {
+        // RETURNS TABLE sempre volta como array (0 ou 1 linha, nunca
+        // mais — garantido por aulas.UNIQUE(conteudo_id) + índice único
+        // parcial de versão publicada, validado na Fase 2F). Zero linhas
+        // não é erro: é "esta missão ainda não tem aula publicada".
+        const linhas = (aulaCarregada as AulaPublicada[] | null) ?? [];
+        if (linhas.length > 0) {
+          setAula(linhas[0]);
+          setEstadoAula("disponivel");
+        } else {
+          setEstadoAula("indisponivel");
+        }
+      }
+
       setCarregando(false);
     }
     protegerPagina();
@@ -234,7 +390,36 @@ export default function Teoria() {
           Revise a teoria de {assuntoNome || materiaNome || "hoje"} antes de praticar. Quando terminar, siga
           para as questões desta mesma missão.
         </p>
-        <p><small>Conteúdo teórico completo chega em uma fase futura — esta tela ainda é um placeholder.</small></p>
+
+        {estadoAula === "carregando" && <p>Carregando a aula desta missão...</p>}
+
+        {estadoAula === "erro" && (
+          <p role="alert">Não foi possível carregar a aula desta missão agora. Tente novamente.</p>
+        )}
+
+        {estadoAula === "indisponivel" && (
+          <div>
+            <h2>Aula ainda não disponível</h2>
+            <p>O conteúdo teórico desta missão ainda não foi publicado. Você já pode seguir para as questões.</p>
+          </div>
+        )}
+
+        {estadoAula === "disponivel" && aula && (() => {
+          const componentes = obterComponentesAula(aula.estrutura);
+          // Aula publicada existe de fato — "sem componentes válidos" não é
+          // o mesmo caso que "sem aula publicada" e não pode reaproveitar a
+          // mensagem de "Aula ainda não disponível".
+          if (componentes.length === 0) {
+            return <p>Esta aula ainda não possui conteúdo para exibição.</p>;
+          }
+          return (
+            <div>
+              {componentes.map((componente, indice) => (
+                <ComponenteAulaView key={componente?.tipo ? `${componente.tipo}-${indice}` : indice} componente={componente} />
+              ))}
+            </div>
+          );
+        })()}
       </section>
 
       <Link
