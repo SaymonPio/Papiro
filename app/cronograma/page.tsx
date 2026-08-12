@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { montarJanelaSemanal } from "@/utils/cronograma.mjs";
-import { montarLinkMissao } from "@/utils/missao-cronograma.mjs";
+import { montarLinkTeoria } from "@/utils/missao-cronograma.mjs";
 import { createClient } from "@/utils/supabase/client";
 
 type CursoAtivo = {
@@ -367,6 +367,8 @@ export default function Cronograma() {
   const [carregando, setCarregando] = useState(true);
   const [mensagem, setMensagem] = useState("");
   const [semContexto, setSemContexto] = useState(false);
+  const [iniciandoMissao, setIniciandoMissao] = useState(false);
+  const [erroMissao, setErroMissao] = useState("");
 
   useEffect(() => {
     async function carregar() {
@@ -904,6 +906,67 @@ export default function Cronograma() {
     return plano.filter((dia) => dia.concluido).length;
   }, [plano]);
 
+  // "Iniciar missão" agora é uma ação, não um <Link> direto: cria/recupera a
+  // missão do dia no servidor (iniciar_ou_recuperar_missao_diaria) e só
+  // depois navega para /teoria com o mission_id retornado. Não altera
+  // geração/prioridade do cronograma nem itemPrincipal — só lê os campos já
+  // computados no bloco "questoes" (mesmos materiaId/assuntoId/cursoMateriaId/
+  // conteudoId do bloco "teoria", origem idêntica em itemPrincipal, ver
+  // construção de `blocos` acima).
+  async function iniciarMissao(bloco: Bloco | undefined) {
+    if (iniciandoMissao) return; // impede clique duplo
+
+    if (!bloco?.conteudoId) {
+      // A RPC exige p_conteudo_id — sem ele não há como identificar a
+      // missão. Não chama a RPC com null nem inventa um conteúdo de
+      // fallback: isso indicaria itemPrincipal sem curso_conteudos.id
+      // resolvido na construção de `blocos` (ver comentário ali) — um
+      // estado inesperado que precisa aparecer como erro, não ser mascarado.
+      setErroMissao("Não foi possível identificar o conteúdo desta missão. Tente novamente mais tarde.");
+      return;
+    }
+
+    setIniciandoMissao(true);
+    setErroMissao("");
+
+    const { data, error } = await createClient().rpc("iniciar_ou_recuperar_missao_diaria", {
+      p_conteudo_id: bloco.conteudoId,
+    });
+
+    if (error) {
+      console.error("iniciar_ou_recuperar_missao_diaria falhou:", {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+        hint: error.hint,
+      });
+      setErroMissao("Não foi possível iniciar a missão agora. Tente novamente.");
+      setIniciandoMissao(false);
+      return;
+    }
+
+    const missao = (data as { id: string }[] | null)?.[0];
+    if (!missao?.id) {
+      setErroMissao("Não foi possível iniciar a missão agora. Tente novamente.");
+      setIniciandoMissao(false);
+      return;
+    }
+
+    // Mesmo padrão de navegação pós-ação já usado em todo o projeto
+    // (window.location.replace, nunca .href = ou .assign) — ver
+    // app/questoes/page.tsx:590 para o caso análogo mais próximo (concluir
+    // uma sessão e seguir para a tela seguinte).
+    window.location.replace(
+      montarLinkTeoria({
+        cursoMateriaId: bloco.cursoMateriaId,
+        conteudoId: bloco.conteudoId,
+        materiaId: bloco.materiaId,
+        assuntoId: bloco.assuntoId,
+        missionId: missao.id,
+      }),
+    );
+  }
+
   if (carregando) {
     return (
       <main className="dashboard-loading">
@@ -1072,16 +1135,18 @@ export default function Cronograma() {
                     </div>
 
                     {dia.hoje && !dia.concluido && (
-                      <Link
-                        href={montarLinkMissao({
-                          cursoMateriaId: dia.blocos.find((bloco) => bloco.tipo === "questoes")?.cursoMateriaId,
-                          conteudoId: dia.blocos.find((bloco) => bloco.tipo === "questoes")?.conteudoId,
-                          materiaId: dia.blocos.find((bloco) => bloco.tipo === "questoes")?.materiaId,
-                          assuntoId: dia.blocos.find((bloco) => bloco.tipo === "questoes")?.assuntoId,
-                        })}
-                      >
-                        Iniciar missão
-                      </Link>
+                      <>
+                        <button
+                          type="button"
+                          className="schedule-mission-status"
+                          style={iniciandoMissao ? { opacity: 0.6, cursor: "not-allowed" } : undefined}
+                          disabled={iniciandoMissao}
+                          onClick={() => iniciarMissao(dia.blocos.find((bloco) => bloco.tipo === "questoes"))}
+                        >
+                          {iniciandoMissao ? "Iniciando missão..." : "Iniciar missão"}
+                        </button>
+                        {erroMissao && <p className="method-message" role="alert">{erroMissao}</p>}
+                      </>
                     )}
                     {dia.hoje && dia.concluido && (
                       <span className="schedule-mission-status">Missão concluída ✓</span>
