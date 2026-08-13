@@ -161,7 +161,11 @@ export default function Admin() {
     <main className="admin-page">
       <header className="admin-header">
         <div><p className="dashboard-label">ADMINISTRAÇÃO PAPIRO</p><h1>Conteúdo do banco de questões</h1><span>Cadastre conteúdo real sem abrir o editor de código.</span></div>
-        <Link href="/painel">Voltar ao painel</Link>
+        <div className="admin-header-actions">
+          <Link className="admin-header-action-active" href="/admin">Questões</Link>
+          <Link href="/admin/aulas">Gerar aulas</Link>
+          <Link href="/painel">Voltar ao painel</Link>
+        </div>
       </header>
 
       {mensagem && <p className="method-message" role="status">{mensagem}</p>}

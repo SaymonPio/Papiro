@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { lerMissaoCronograma, lerMissionId, montarLinkMissao } from "@/utils/missao-cronograma.mjs";
 import { createClient } from "@/utils/supabase/client";
+import ComponenteAulaView, { type ComponenteAula } from "@/components/teoria/ComponenteAulaView";
 
 // Contexto AUXILIAR vindo da URL — nunca a identidade da missão a partir
 // desta etapa. Pode ser null (ex.: URL só com ?missao=<uuid>, sem
@@ -66,14 +67,9 @@ type FonteAula = {
 // convenção documentada (comentário em teoria_versionada.sql, não validada
 // pelo banco) é: estrutura = { componentes: [...] }, cada componente com um
 // campo `tipo` dentre diagnostico/conceito/recall/questao_resolvida/
-// resumo_visual, já na ordem de apresentação. Nenhum outro campo por
-// componente é garantido — por isso o tipo abaixo não inventa mais nada
-// além de `tipo`.
-type ComponenteAula = {
-  tipo: string;
-  [chave: string]: unknown;
-};
-
+// resumo_visual, já na ordem de apresentação. ComponenteAula (o tipo em si)
+// vem de components/teoria/ComponenteAulaView — mesmo shape usado pelo
+// renderer visual, para não haver dois formatos divergentes.
 type EstruturaAula = {
   componentes?: unknown;
   [chave: string]: unknown;
@@ -94,29 +90,12 @@ type AulaPublicada = {
 
 type EstadoAula = "carregando" | "erro" | "indisponivel" | "disponivel";
 
-// Só os 5 tipos documentados em teoria_versionada.sql têm rótulo definido;
-// qualquer outro valor de `tipo` é exibido cru, sem inventar um nome.
-const ROTULOS_TIPO_COMPONENTE: Record<string, string> = {
-  diagnostico: "Diagnóstico",
-  conceito: "Conceito",
-  recall: "Recall",
-  questao_resolvida: "Questão resolvida",
-  resumo_visual: "Resumo visual",
-};
-
-function tituloComponente(tipo: string): string {
-  return ROTULOS_TIPO_COMPONENTE[tipo] ?? tipo;
-}
-
-function formatarValorComponente(valor: unknown): string {
-  if (valor === null || valor === undefined) return "";
-  if (typeof valor === "string") return valor;
-  return JSON.stringify(valor);
-}
-
 // estrutura.componentes não tem nenhuma garantia de formato a nível de
 // banco (só estrutura em si é validada como objeto JSON) — nem de ser
-// array, nem de cada item ter o formato de ComponenteAula.
+// array, nem de cada item ter o formato de ComponenteAula. A apresentação
+// visual em si (títulos, negrito, ícones, BIZU DE PROVA etc.) vive em
+// components/teoria/ComponenteAulaView — este arquivo só carrega/filtra os
+// dados, nunca decide como desenhá-los.
 function ehComponenteAula(valor: unknown): valor is ComponenteAula {
   return (
     typeof valor === "object" &&
@@ -132,31 +111,6 @@ function ehComponenteAula(valor: unknown): valor is ComponenteAula {
 function obterComponentesAula(estrutura: EstruturaAula): ComponenteAula[] {
   if (!Array.isArray(estrutura?.componentes)) return [];
   return estrutura.componentes.filter(ehComponenteAula);
-}
-
-// Renderização genérica e mínima: mostra o tipo (rotulado quando
-// conhecido) e, se existirem, os demais campos do componente como pares
-// chave/valor — sem presumir o significado de nenhum campo além de `tipo`,
-// já que não há um schema definido além dele.
-function ComponenteAulaView({ componente }: { componente: ComponenteAula }) {
-  const { tipo, ...outrosCampos } = componente;
-  const chaves = Object.keys(outrosCampos);
-
-  return (
-    <article>
-      <h2>{tituloComponente(String(tipo))}</h2>
-      {chaves.length > 0 && (
-        <dl>
-          {chaves.map((chave) => (
-            <div key={chave}>
-              <dt>{chave}</dt>
-              <dd>{formatarValorComponente(outrosCampos[chave])}</dd>
-            </div>
-          ))}
-        </dl>
-      )}
-    </article>
-  );
 }
 
 export default function Teoria() {
@@ -413,7 +367,7 @@ export default function Teoria() {
             return <p>Esta aula ainda não possui conteúdo para exibição.</p>;
           }
           return (
-            <div>
+            <div className="teoria-aula">
               {componentes.map((componente, indice) => (
                 <ComponenteAulaView key={componente?.tipo ? `${componente.tipo}-${indice}` : indice} componente={componente} />
               ))}

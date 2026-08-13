@@ -1388,6 +1388,23 @@ footer > small {
   font-weight: 800;
 }
 
+.admin-header-actions {
+  display: flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 24px;
+}
+
+.admin-header-actions a {
+  color: var(--gold-bright);
+  font-weight: 800;
+}
+
+.admin-header-action-active {
+  border-bottom: 2px solid var(--gold-bright);
+  padding-bottom: 3px;
+}
+
 .admin-activation {
   display: grid;
   place-items: center;
@@ -1552,6 +1569,23 @@ footer > small {
 .admin-recent article div span,
 .admin-recent article small { color: #82928a; }
 .admin-recent article p { margin: 0; color: #bec7c2; }
+
+/* Aviso não bloqueante de escopo (Fase 2J-B) — só visível ao admin nesta
+   mesma tela de revisão de rascunho, nunca ao aluno. Discreto: não é um
+   bloqueio, é um sinal para revisar antes de publicar. */
+.admin-recent article small.admin-alerta-escopo {
+  display: block;
+  margin-top: 4px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: var(--gold-bright);
+  background: rgba(216, 173, 76, 0.12);
+  line-height: 1.5;
+}
+
+.admin-alerta-escopo strong {
+  color: var(--gold-bright);
+}
 
 @media (max-width: 760px) {
   .admin-page { padding: 30px 16px 60px; }
@@ -2591,6 +2625,345 @@ footer > small {
 }
 
 .session-score strong { color: var(--gold-bright); }
+
+/* Teoria Interativa — apresentação dos componentes da aula (app/teoria/page.tsx).
+   Cada componente vira um bloco próprio, nunca um dump de chave/valor. */
+
+.teoria-aula {
+  max-width: 880px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.teoria-bloco {
+  padding: clamp(24px, 4vw, 38px);
+  border: 1px solid rgba(216, 173, 76, 0.22);
+  border-radius: 14px;
+  background: rgba(9, 24, 18, 0.94);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.22);
+}
+
+.teoria-bloco-kicker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  color: var(--gold-bright);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.teoria-bloco-kicker svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
+.teoria-bloco h3 {
+  margin: 0 0 14px;
+  font-family: Georgia, serif;
+  font-size: clamp(20px, 2.6vw, 26px);
+  line-height: 1.32;
+  color: var(--cream);
+}
+
+.teoria-texto {
+  margin: 0 0 14px;
+  color: #c3ccc6;
+  line-height: 1.7;
+}
+
+.teoria-texto:last-child {
+  margin-bottom: 0;
+}
+
+.teoria-texto strong {
+  color: var(--gold-bright);
+  font-weight: 800;
+}
+
+.teoria-pergunta {
+  margin: 16px 0;
+  padding: 16px 18px;
+  border-left: 3px solid var(--gold);
+  border-radius: 8px;
+  background: rgba(216, 173, 76, 0.06);
+  color: var(--cream);
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.teoria-pergunta strong {
+  color: var(--gold-bright);
+}
+
+.teoria-dica {
+  margin: 8px 0 0;
+  color: #8fa097;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.teoria-revelar {
+  margin-top: 16px;
+}
+
+.teoria-revelar summary {
+  cursor: pointer;
+  color: var(--gold-bright);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  list-style: none;
+}
+
+.teoria-revelar summary::-webkit-details-marker {
+  display: none;
+}
+
+.teoria-revelar summary::before {
+  content: "▸ ";
+}
+
+.teoria-revelar[open] summary::before {
+  content: "▾ ";
+}
+
+.teoria-revelar-conteudo {
+  margin-top: 10px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  color: #dbe4de;
+  line-height: 1.6;
+}
+
+.teoria-subtitulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  color: var(--gold-bright);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.teoria-subtitulo svg {
+  width: 15px;
+  height: 15px;
+  flex: none;
+}
+
+.teoria-exemplo,
+.teoria-bizu,
+.teoria-alerta {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 10px;
+}
+
+.teoria-exemplo {
+  border: 1px dashed rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.teoria-exemplo .teoria-subtitulo {
+  color: #9fb0a8;
+}
+
+.teoria-bizu {
+  border: 1px solid rgba(216, 173, 76, 0.35);
+  background: rgba(216, 173, 76, 0.07);
+}
+
+.teoria-bizu .teoria-subtitulo svg {
+  color: var(--gold);
+}
+
+.teoria-alerta {
+  border: 1px solid rgba(216, 173, 76, 0.28);
+  background: rgba(8, 20, 16, 0.6);
+}
+
+.teoria-alternativas {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.teoria-alternativa {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.02);
+  transition: border-color 160ms ease, background 160ms ease, opacity 160ms ease;
+}
+
+.teoria-alternativa-corpo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 12px 14px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.teoria-alternativa-corpo:hover:not(:disabled) {
+  background: rgba(216, 173, 76, 0.05);
+}
+
+.teoria-alternativa-corpo:disabled {
+  cursor: default;
+}
+
+/* A "eliminação" (cortar) é uma ação pequena e secundária — separada da
+   área de seleção para nunca competir visualmente com a alternativa em si. */
+.teoria-alternativa-cortar {
+  flex: none;
+  width: 38px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  background: none;
+  color: #6c7a74;
+  cursor: pointer;
+  transition: color 160ms ease, background 160ms ease;
+}
+
+.teoria-alternativa-cortar svg {
+  width: 14px;
+  height: 14px;
+}
+
+.teoria-alternativa-cortar:hover:not(:disabled) {
+  color: var(--gold-bright);
+  background: rgba(216, 173, 76, 0.06);
+}
+
+.teoria-alternativa-cortar:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.teoria-alternativa.selecionada {
+  border-color: var(--gold);
+  background: rgba(216, 173, 76, 0.09);
+}
+
+/* Corte: risca o texto e reduz discretamente a opacidade — a alternativa
+   continua visível e legível, nunca escondida (regra 3). */
+.teoria-alternativa.cortada {
+  opacity: 0.55;
+}
+
+.teoria-alternativa.cortada .teoria-alternativa-corpo span {
+  text-decoration: line-through;
+}
+
+.teoria-alternativa.cortada .teoria-alternativa-cortar {
+  color: var(--gold-bright);
+}
+
+.teoria-alternativa.incorreta {
+  border-color: var(--gold);
+  background: rgba(8, 20, 16, 0.6);
+}
+
+/* .correta vem DEPOIS de .cortada no CSS de propósito: se o aluno cortou
+   justamente o gabarito, o verde de "correta" precisa vencer visualmente o
+   esmaecido do corte (regra 6 — precedência do estado correto). */
+.teoria-alternativa.correta {
+  border-color: #64d394;
+  background: rgba(72, 190, 120, 0.1);
+}
+
+.teoria-alternativa.correta .teoria-alternativa-corpo b {
+  border-color: #64d394;
+  color: #64d394;
+}
+
+.teoria-alternativa.cortada.correta {
+  opacity: 1;
+}
+
+.teoria-alternativa-corpo b {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(216, 173, 76, 0.35);
+  border-radius: 50%;
+  color: var(--gold-bright);
+  font-size: 12px;
+}
+
+.teoria-alternativa-corpo span {
+  padding-top: 4px;
+  color: #dbe4de;
+  line-height: 1.55;
+}
+
+.teoria-gabarito-comentado {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.teoria-gabarito-comentado .teoria-texto {
+  margin: 0;
+  color: #b9c2bd;
+  line-height: 1.6;
+}
+
+.teoria-resumo-lista {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.teoria-resumo-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid rgba(216, 173, 76, 0.18);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.02);
+  color: #dbe4de;
+  line-height: 1.5;
+}
+
+.teoria-resumo-item svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  color: var(--gold);
+}
+
+@media (max-width: 640px) {
+  .teoria-bloco {
+    padding: 20px 18px;
+  }
+}
 
 .result-page {
   display: grid;
