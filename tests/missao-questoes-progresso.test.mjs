@@ -3,12 +3,14 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const sql=await readFile(new URL("../supabase/missao_questoes_rpc.sql",import.meta.url),"utf8");
+const sqlRefazer=await readFile(new URL("../supabase/missao_refazer_rpc.sql",import.meta.url),"utf8");
 const pagina=await readFile(new URL("../app/questoes/page.tsx",import.meta.url),"utf8");
 const resultado=await readFile(new URL("../app/questoes/resultado/page.tsx",import.meta.url),"utf8");
+const cronograma=await readFile(new URL("../app/cronograma/page.tsx",import.meta.url),"utf8");
+const teoria=await readFile(new URL("../app/teoria/page.tsx",import.meta.url),"utf8");
 
-test("sessão fica ligada a uma única missão e congela a lista planejada",()=>{
+test("sessão fica ligada à missão e congela a lista planejada",()=>{
   assert.match(sql,/add column if not exists missao_id uuid/);
-  assert.match(sql,/sessoes_estudo_missao_unica_idx/);
   assert.match(sql,/create table if not exists public\.sessao_questoes_planejadas/);
   assert.match(sql,/array_agg\(sq\.questao_id order by sq\.ordem\)/);
 });
@@ -53,4 +55,14 @@ test("tela usa as RPCs e preserva missionId até o resultado",()=>{
   assert.match(resultado,/MISSÃO CONCLUÍDA/);
   assert.match(resultado,/resultado\.missao_id \? "\/cronograma" : "\/painel"/);
   assert.match(resultado,/resultado\.missao_id \? "Voltar ao cronograma" : "Voltar ao painel"/);
+});
+
+test("missão concluída pode ser refeita sem apagar a tentativa anterior",()=>{
+  assert.match(sqlRefazer,/drop index if exists public\.sessoes_estudo_missao_unica_idx/);
+  assert.match(sqlRefazer,/p_refazer boolean default false/);
+  assert.match(sqlRefazer,/not p_refazer or s\.status='em_andamento'/);
+  assert.match(sqlRefazer,/v_status_missao not in \('questoes_iniciadas','concluida'\)/);
+  assert.match(pagina,/p_refazer: refazerMissao/);
+  assert.match(teoria,/refazer/);
+  assert.match(cronograma,/Refazer missão/);
 });

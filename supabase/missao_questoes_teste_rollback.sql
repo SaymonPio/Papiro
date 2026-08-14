@@ -78,8 +78,8 @@ begin
     ('conclusao_fecha_sessao',v_fim.sessao_status='concluida' and exists(select 1 from public.sessoes_estudo where id=v_sessao and fim_em is not null));
 
   insert into teste_missao_questoes_resultados values
-    ('anon_sem_rpc',not has_function_privilege('anon','public.iniciar_questoes_da_missao(uuid,bigint[])','execute')),
-    ('authenticated_com_rpc',has_function_privilege('authenticated','public.iniciar_questoes_da_missao(uuid,bigint[])','execute')),
+    ('anon_sem_rpc',not has_function_privilege('anon','public.iniciar_questoes_da_missao(uuid,bigint[],boolean)','execute')),
+    ('authenticated_com_rpc',has_function_privilege('authenticated','public.iniciar_questoes_da_missao(uuid,bigint[],boolean)','execute')),
     ('tabela_planejada_fechada',not has_table_privilege('authenticated','public.sessao_questoes_planejadas','select')),
     ('policy_all_legada_removida',not exists(select 1 from pg_policies where schemaname='public' and tablename='sessoes_estudo' and cmd='ALL'));
 end;

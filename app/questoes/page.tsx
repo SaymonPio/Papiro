@@ -148,6 +148,7 @@ export default function Questoes() {
   const [mensagemPersonalizada, setMensagemPersonalizada] = useState("");
   const [origemCronograma, setOrigemCronograma] = useState(false);
   const [missionId, setMissionId] = useState<string | null>(null);
+  const [refazerMissao, setRefazerMissao] = useState(false);
   const [autoInicioSolicitado, setAutoInicioSolicitado] = useState(false);
   const assuntoInicialMissao = useRef<number | null>(null);
   const autoInicioExecutado = useRef(false);
@@ -159,6 +160,7 @@ export default function Questoes() {
 
       setOrigemCronograma(true);
       setMissionId(missao.missionId);
+      setRefazerMissao(missao.refazer);
       setModoInicio("personalizada");
       setMateriaSelecionada(missao.materiaId);
       assuntoInicialMissao.current = missao.assuntoId;
@@ -429,6 +431,7 @@ export default function Questoes() {
       const { data, error } = await supabase.rpc("iniciar_questoes_da_missao", {
         p_missao_id: missionId,
         p_questao_ids: ids,
+        p_refazer: refazerMissao,
       });
       sessaoDaMissao = ((data as SessaoMissao[] | null) ?? [])[0] ?? null;
 
@@ -516,7 +519,7 @@ export default function Questoes() {
     setQuestoes(preparadas);
     setSessaoId(sessaoIdAtual);
     setCarregandoPersonalizada(false);
-  }, [assuntoSelecionado, materiaSelecionada, missionId, quantidadePersonalizada]);
+  }, [assuntoSelecionado, materiaSelecionada, missionId, quantidadePersonalizada, refazerMissao]);
 
   useEffect(() => {
     const podeIniciar = podeIniciarMissaoAutomaticamente({

@@ -914,7 +914,7 @@ export default function Cronograma() {
   // computados no bloco "questoes" (mesmos materiaId/assuntoId/cursoMateriaId/
   // conteudoId do bloco "teoria", origem idêntica em itemPrincipal, ver
   // construção de `blocos` acima).
-  async function iniciarMissao(bloco: Bloco | undefined) {
+  async function iniciarMissao(bloco: Bloco | undefined, refazer = false) {
     if (iniciandoMissao) return; // impede clique duplo
 
     if (!bloco?.conteudoId) {
@@ -964,6 +964,7 @@ export default function Cronograma() {
         materiaId: bloco.materiaId,
         assuntoId: bloco.assuntoId,
         missionId: missao.id,
+        refazer,
       }),
     );
   }
@@ -1150,7 +1151,15 @@ export default function Cronograma() {
                       </>
                     )}
                     {dia.hoje && dia.concluido && (
-                      <span className="schedule-mission-status">Missão concluída ✓</span>
+                      <button
+                        type="button"
+                        className="schedule-mission-status"
+                        style={iniciandoMissao ? { opacity: 0.6, cursor: "not-allowed" } : undefined}
+                        disabled={iniciandoMissao}
+                        onClick={() => iniciarMissao(dia.blocos.find((bloco) => bloco.tipo === "questoes"), true)}
+                      >
+                        {iniciandoMissao ? "Preparando nova tentativa..." : "Refazer missão"}
+                      </button>
                     )}
                   </article>
                 ))}

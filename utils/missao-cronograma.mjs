@@ -10,7 +10,7 @@ const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
 
 const uuidValido = (valor) => (typeof valor === "string" && UUID_REGEX.test(valor) ? valor : null);
 
-function montarParametrosMissao({ cursoMateriaId, conteudoId, materiaId, assuntoId, quantidade = 10, missionId }) {
+function montarParametrosMissao({ cursoMateriaId, conteudoId, materiaId, assuntoId, quantidade = 10, missionId, refazer = false }) {
   const parametros = new URLSearchParams({
     origem: "cronograma",
     materia: String(materiaId),
@@ -23,6 +23,7 @@ function montarParametrosMissao({ cursoMateriaId, conteudoId, materiaId, assunto
   // Ausente/vazio -> não inclui "missao" na URL, mantendo compatibilidade
   // com quem ainda não tem um mission_id (ex.: chamadas antigas dos testes).
   if (missionId) parametros.set("missao", String(missionId));
+  if (refazer) parametros.set("refazer", "1");
 
   return parametros;
 }
@@ -34,9 +35,10 @@ export function montarLinkMissao({
   assuntoId,
   quantidade = 10,
   missionId,
+  refazer = false,
 }) {
   if (!materiaId) return "/questoes";
-  return `/questoes?${montarParametrosMissao({ cursoMateriaId, conteudoId, materiaId, assuntoId, quantidade, missionId }).toString()}`;
+  return `/questoes?${montarParametrosMissao({ cursoMateriaId, conteudoId, materiaId, assuntoId, quantidade, missionId, refazer }).toString()}`;
 }
 
 // Mesmos parâmetros e mesma missão de montarLinkMissao — só muda o destino.
@@ -53,9 +55,10 @@ export function montarLinkTeoria({
   assuntoId,
   quantidade = 10,
   missionId,
+  refazer = false,
 }) {
   if (!materiaId) return "/questoes";
-  return `/teoria?${montarParametrosMissao({ cursoMateriaId, conteudoId, materiaId, assuntoId, quantidade, missionId }).toString()}`;
+  return `/teoria?${montarParametrosMissao({ cursoMateriaId, conteudoId, materiaId, assuntoId, quantidade, missionId, refazer }).toString()}`;
 }
 
 export function lerMissaoCronograma(busca) {
@@ -72,6 +75,7 @@ export function lerMissaoCronograma(busca) {
     conteudoId: inteiroPositivo(parametros.get("conteudo")),
     quantidade: inteiroPositivo(parametros.get("quantidade")) ?? 10,
     missionId: uuidValido(parametros.get("missao")),
+    refazer: parametros.get("refazer") === "1",
   };
 }
 

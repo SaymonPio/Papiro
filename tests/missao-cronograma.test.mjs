@@ -27,6 +27,7 @@ test("leva a matéria e o assunto da missão do cronograma para questões", () =
     conteudoId: 88,
     quantidade: 12,
     missionId: null,
+    refazer: false,
   });
 });
 
@@ -70,6 +71,7 @@ test("montarLinkTeoria com missionId inclui missao=<uuid> e preserva o resto dos
     assuntoId: 19,
     quantidade: 12,
     missionId: MISSION_ID,
+    refazer: false,
   });
 
   assert.match(link, /^\/teoria\?/);
@@ -91,6 +93,7 @@ test("montarLinkTeoria com missionId inclui missao=<uuid> e preserva o resto dos
     conteudoId: 88,
     quantidade: 12,
     missionId: MISSION_ID,
+    refazer: false,
   });
 });
 
@@ -116,6 +119,25 @@ test("montarLinkMissao com missionId também inclui missao=<uuid> (sem regressã
   });
   assert.match(comMissao, /^\/questoes\?/);
   assert.equal(new URLSearchParams(comMissao.split("?")[1]).get("missao"), MISSION_ID);
+});
+
+test("refazer é preservado da teoria até as questões sem contaminar uma missão normal", () => {
+  const teoria = montarLinkTeoria({
+    cursoMateriaId: 40,
+    conteudoId: 88,
+    materiaId: 7,
+    assuntoId: 19,
+    missionId: MISSION_ID,
+    refazer: true,
+  });
+  const contexto = lerMissaoCronograma(teoria.split("?")[1]);
+
+  assert.equal(contexto.refazer, true);
+  assert.equal(new URLSearchParams(teoria.split("?")[1]).get("refazer"), "1");
+
+  const questoes = montarLinkMissao({ ...contexto });
+  assert.equal(new URLSearchParams(questoes.split("?")[1]).get("refazer"), "1");
+  assert.equal(lerMissaoCronograma("origem=cronograma&materia=7").refazer, false);
 });
 
 test("lerMissaoCronograma descarta um parâmetro missao malformado", () => {

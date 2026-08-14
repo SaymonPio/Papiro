@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { lerMissaoCronograma, lerMissionId, montarLinkMissao } from "@/utils/missao-cronograma.mjs";
 import { createClient } from "@/utils/supabase/client";
 import ComponenteAulaView, { type ComponenteAula } from "@/components/teoria/ComponenteAulaView";
@@ -20,6 +20,7 @@ type ContextoAuxiliar = {
   conteudoId: number | null;
   quantidade: number;
   missionId: string | null;
+  refazer: boolean;
 };
 
 // Reflete exatamente o SELECT explícito feito em public.missoes — sem
@@ -160,6 +161,7 @@ export default function Teoria() {
   const [missao, setMissao] = useState<Missao | null>(null);
   const [identidade, setIdentidade] = useState<IdentidadeAcademica | null>(null);
   const [quantidade, setQuantidade] = useState(10);
+  const [refazer, setRefazer] = useState(false);
   const [materiaNome, setMateriaNome] = useState("");
   const [assuntoNome, setAssuntoNome] = useState("");
   const [estadoAula, setEstadoAula] = useState<EstadoAula>("carregando");
@@ -168,7 +170,6 @@ export default function Teoria() {
   const [unidadesConcluidas, setUnidadesConcluidas] = useState<string[]>([]);
   const [salvandoProgresso, setSalvandoProgresso] = useState(false);
   const [mensagemProgresso, setMensagemProgresso] = useState("");
-  const inicioAulaRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     async function protegerPagina() {
@@ -183,6 +184,7 @@ export default function Teoria() {
       // obrigatória para abrir uma missão.
       const missionId = lerMissionId(window.location.search);
       const contextoAuxiliar = lerMissaoCronograma(window.location.search) as ContextoAuxiliar | null;
+      setRefazer(Boolean(contextoAuxiliar?.refazer));
 
       if (!missionId) {
         if (!contextoAuxiliar) {
@@ -364,7 +366,7 @@ export default function Teoria() {
     setMensagemProgresso("");
     setIndiceUnidade(novoIndice);
     window.requestAnimationFrame(() => {
-      inicioAulaRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      document.getElementById("conteudo-unidade-atual")?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   };
 
@@ -379,7 +381,10 @@ export default function Teoria() {
     let statusMissao = missao.status;
     let progressoMissao = missao.progresso_teoria;
 
-    if (!unidadesConcluidas.includes(aulaAtual.unidade_pedagogica_id)) {
+    if (refazer && !unidadesConcluidas.includes(aulaAtual.unidade_pedagogica_id)) {
+      idsConcluidos = [...unidadesConcluidas, aulaAtual.unidade_pedagogica_id];
+      setUnidadesConcluidas(idsConcluidos);
+    } else if (!unidadesConcluidas.includes(aulaAtual.unidade_pedagogica_id)) {
       const supabase = createClient();
       const { data, error } = await supabase.rpc("registrar_unidade_teoria_concluida", {
         p_missao_id: missao.id,
@@ -426,6 +431,7 @@ export default function Teoria() {
       assuntoId: identidade.assuntoId ?? undefined,
       quantidade,
       missionId: missao.id,
+      refazer,
     }));
   };
 
@@ -484,7 +490,7 @@ export default function Teoria() {
             return <p>Esta aula ainda não possui conteúdo para exibição.</p>;
           }
           return (
-            <div ref={inicioAulaRef} className="teoria-unidades">
+            <div className="teoria-unidades">
               <nav className="teoria-unidades-navegacao" aria-label="Unidades desta aula">
                 <div className="teoria-unidades-cabecalho">
                   <div>
@@ -572,6 +578,7 @@ export default function Teoria() {
             assuntoId: identidade.assuntoId ?? undefined,
             quantidade,
             missionId: missao.id,
+            refazer,
           })}
         >
           Ir para as questões
