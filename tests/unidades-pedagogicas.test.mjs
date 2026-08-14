@@ -5,6 +5,7 @@ import { readFile } from "node:fs/promises";
 const migration = await readFile(new URL("../supabase/unidades_pedagogicas.sql", import.meta.url), "utf8");
 const generator = await readFile(new URL("../supabase/functions/gerar-aula/index.ts", import.meta.url), "utf8");
 const reader = await readFile(new URL("../supabase/unidades_pedagogicas_leitura_rpc.sql", import.meta.url), "utf8");
+const publisher = await readFile(new URL("../supabase/unidades_pedagogicas_publicacao_rpc.sql", import.meta.url), "utf8");
 
 test("unidade pertence a um conteúdo real e tem ordem única", () => {
   assert.match(migration, /references public\.curso_conteudos\(id\) on delete restrict/);
@@ -28,4 +29,11 @@ test("leitura do aluno resolve aula por unidade ativa e ordem", () => {
   assert.match(reader, /join public\.aulas a on a\.unidade_pedagogica_id=u\.id/);
   assert.match(reader, /order by u\.ordem/);
   assert.match(reader, /limit 1/);
+});
+
+test("publicação é administrativa, transacional e mantém uma versão publicada", () => {
+  assert.match(publisher, /if not public\.eh_admin\(\)/);
+  assert.match(publisher, /v_status <> 'rascunho'/);
+  assert.match(publisher, /set status='arquivada'/);
+  assert.match(publisher, /set status='publicada', publicado_em=v_publicado_em/);
 });

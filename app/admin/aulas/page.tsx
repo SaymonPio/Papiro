@@ -147,6 +147,7 @@ export default function AdminAulas() {
 
   const [rascunho, setRascunho] = useState<AulaRascunho | null>(null);
   const [carregandoRascunho, setCarregandoRascunho] = useState(false);
+  const [publicando, setPublicando] = useState(false);
 
   useEffect(() => {
     async function verificar() {
@@ -285,6 +286,19 @@ export default function AdminAulas() {
     const linha = (data as AulaRascunho[] | null)?.[0] ?? null;
     setRascunho(linha);
     setCarregandoRascunho(false);
+  }
+
+  async function publicarRascunho() {
+    if (!rascunho || rascunho.status !== "rascunho" || publicando) return;
+    setPublicando(true); setMensagem("Publicando a versão revisada...");
+    const { error } = await createClient().rpc("publicar_aula_versao_admin", {
+      p_aula_versao_id: rascunho.aula_versao_id,
+    });
+    setPublicando(false);
+    if (error) { setMensagem("Não foi possível publicar esta versão."); return; }
+    setMensagem("Aula publicada.");
+    await verRascunho(rascunho.aula_versao_id);
+    if (conteudoId) await carregarGeracoes(conteudoId);
   }
 
   if (verificando) return <main className="dashboard-loading"><p>Verificando acesso administrativo...</p></main>;
@@ -444,7 +458,12 @@ export default function AdminAulas() {
             <section className="admin-foundations">
               <div className="admin-section-heading">
                 <div><p className="dashboard-label">RASCUNHO — status: {rascunho.status}</p><h2>{rascunho.aula_titulo}</h2></div>
-                <span>versão {rascunho.numero_versao}</span>
+            <span>versão {rascunho.numero_versao}</span>
+            {rascunho.status === "rascunho" && (
+              <button type="button" onClick={publicarRascunho} disabled={publicando}>
+                {publicando ? "Publicando..." : "Publicar versão revisada"}
+              </button>
+            )}
               </div>
               <p>
                 Fontes: {rascunho.fontes.length === 0 ? "nenhuma" : rascunho.fontes.map((f) => `${f.material_titulo} (v${f.numero_versao})`).join(", ")}
