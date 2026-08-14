@@ -2715,6 +2715,16 @@ footer > small {
   color: var(--cream);
 }
 
+.teoria-unidades-lista button.concluida {
+  border-color: rgba(111, 190, 140, 0.45);
+  background: rgba(61, 142, 92, 0.1);
+}
+
+.teoria-unidades-lista button.ativa.concluida {
+  border-color: var(--gold);
+  background: linear-gradient(145deg, rgba(216, 173, 76, 0.13), rgba(61, 142, 92, 0.1));
+}
+
 .teoria-unidades-lista button b {
   display: grid;
   width: 26px;
@@ -2731,6 +2741,22 @@ footer > small {
   font-size: 12px;
   font-weight: 750;
   line-height: 1.35;
+}
+
+.teoria-unidades-lista button em {
+  display: block;
+  margin-top: 8px;
+  color: #72857b;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.teoria-unidades-lista button.concluida b,
+.teoria-unidades-lista button.concluida em {
+  color: #8fd0a6;
 }
 
 .teoria-unidade-titulo {
@@ -2770,6 +2796,13 @@ footer > small {
 .teoria-unidades-acoes button:disabled {
   opacity: 0.35;
   cursor: not-allowed;
+}
+
+.teoria-progresso-mensagem {
+  margin: -8px 0 0;
+  color: #f2b8b5;
+  font-size: 13px;
+  text-align: right;
 }
 
 .teoria-bloco {

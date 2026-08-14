@@ -94,6 +94,17 @@ type AulaPublicada = {
 
 type EstadoAula = "carregando" | "erro" | "indisponivel" | "disponivel";
 
+type ResultadoConclusaoUnidade = {
+  missao_id: string;
+  status: string;
+  unidade_pedagogica_id: string;
+  aula_versao_id: string;
+  total_unidades: number;
+  unidades_concluidas: number;
+  teoria_concluida: boolean;
+  progresso_teoria: Record<string, unknown>;
+};
+
 // estrutura.componentes não tem nenhuma garantia de formato a nível de
 // banco (só estrutura em si é validada como objeto JSON) — nem de ser
 // array, nem de cada item ter o formato de ComponenteAula. A apresentação
@@ -117,6 +128,31 @@ function obterComponentesAula(estrutura: EstruturaAula): ComponenteAula[] {
   return estrutura.componentes.filter(ehComponenteAula);
 }
 
+function obterIdsUnidadesConcluidas(
+  progresso: Record<string, unknown>,
+  unidadesAtuais: AulaPublicada[],
+): string[] {
+  if (progresso?.schema_version !== 2 || !Array.isArray(progresso?.unidades_concluidas)) return [];
+
+  return progresso.unidades_concluidas.flatMap((item) => {
+    if (
+      typeof item === "object" &&
+      item !== null &&
+      typeof (item as Record<string, unknown>).unidade_pedagogica_id === "string" &&
+      typeof (item as Record<string, unknown>).aula_versao_id === "string"
+    ) {
+      const registro = item as Record<string, string>;
+      const aindaEhVersaoAtual = unidadesAtuais.some(
+        (unidade) =>
+          unidade.unidade_pedagogica_id === registro.unidade_pedagogica_id &&
+          unidade.aula_versao_id === registro.aula_versao_id,
+      );
+      return aindaEhVersaoAtual ? [registro.unidade_pedagogica_id] : [];
+    }
+    return [];
+  });
+}
+
 export default function Teoria() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
@@ -128,6 +164,9 @@ export default function Teoria() {
   const [estadoAula, setEstadoAula] = useState<EstadoAula>("carregando");
   const [unidadesPublicadas, setUnidadesPublicadas] = useState<AulaPublicada[]>([]);
   const [indiceUnidade, setIndiceUnidade] = useState(0);
+  const [unidadesConcluidas, setUnidadesConcluidas] = useState<string[]>([]);
+  const [salvandoProgresso, setSalvandoProgresso] = useState(false);
+  const [mensagemProgresso, setMensagemProgresso] = useState("");
   const inicioAulaRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -307,6 +346,7 @@ export default function Teoria() {
         const linhas = (aulaCarregada as AulaPublicada[] | null) ?? [];
         if (linhas.length > 0) {
           setUnidadesPublicadas(linhas);
+          setUnidadesConcluidas(obterIdsUnidadesConcluidas(missaoCarregada.progresso_teoria, linhas));
           setEstadoAula("disponivel");
         } else {
           setEstadoAula("indisponivel");
@@ -320,10 +360,72 @@ export default function Teoria() {
 
   const selecionarUnidade = (novoIndice: number) => {
     if (novoIndice < 0 || novoIndice >= unidadesPublicadas.length) return;
+    setMensagemProgresso("");
     setIndiceUnidade(novoIndice);
     window.requestAnimationFrame(() => {
       inicioAulaRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
+  };
+
+  const concluirUnidade = async () => {
+    const aulaAtual = unidadesPublicadas[indiceUnidade];
+    if (!aulaAtual || !missao || !identidade || salvandoProgresso) return;
+
+    setMensagemProgresso("");
+    setSalvandoProgresso(true);
+
+    let idsConcluidos = unidadesConcluidas;
+    let statusMissao = missao.status;
+    let progressoMissao = missao.progresso_teoria;
+
+    if (!unidadesConcluidas.includes(aulaAtual.unidade_pedagogica_id)) {
+      const supabase = createClient();
+      const { data, error } = await supabase.rpc("registrar_unidade_teoria_concluida", {
+        p_missao_id: missao.id,
+        p_aula_versao_id: aulaAtual.aula_versao_id,
+      });
+
+      if (error) {
+        console.error("Falha ao registrar conclusão da unidade:", {
+          message: error.message,
+          code: error.code,
+          details: error.details,
+          hint: error.hint,
+        });
+        setMensagemProgresso("Não foi possível salvar seu progresso agora. Tente novamente.");
+        setSalvandoProgresso(false);
+        return;
+      }
+
+      const resultado = ((data as ResultadoConclusaoUnidade[] | null) ?? [])[0];
+      if (!resultado) {
+        setMensagemProgresso("Não foi possível confirmar a conclusão desta unidade.");
+        setSalvandoProgresso(false);
+        return;
+      }
+
+      idsConcluidos = obterIdsUnidadesConcluidas(resultado.progresso_teoria, unidadesPublicadas);
+      statusMissao = resultado.status;
+      progressoMissao = resultado.progresso_teoria;
+      setUnidadesConcluidas(idsConcluidos);
+      setMissao((atual) => atual ? { ...atual, status: statusMissao, progresso_teoria: progressoMissao } : atual);
+    }
+
+    setSalvandoProgresso(false);
+
+    if (indiceUnidade < unidadesPublicadas.length - 1) {
+      selecionarUnidade(indiceUnidade + 1);
+      return;
+    }
+
+    window.location.assign(montarLinkMissao({
+      cursoMateriaId: identidade.cursoMateriaId,
+      conteudoId: missao.conteudo_id,
+      materiaId: identidade.materiaId,
+      assuntoId: identidade.assuntoId ?? undefined,
+      quantidade,
+      missionId: missao.id,
+    }));
   };
 
   if (carregando) return <main className="dashboard-loading"><p>Preparando a teoria de hoje...</p></main>;
@@ -388,23 +490,27 @@ export default function Teoria() {
                     <p>TRILHA DA AULA</p>
                     <h2>{aula.aula_titulo}</h2>
                   </div>
-                  <span>Unidade {indiceUnidade + 1} de {unidadesPublicadas.length}</span>
+                  <span>{unidadesConcluidas.length} de {unidadesPublicadas.length} concluídas</span>
                 </div>
                 <div className="teoria-unidades-lista" role="tablist" aria-label="Escolha uma unidade">
-                  {unidadesPublicadas.map((unidade, indice) => (
-                    <button
-                      key={unidade.unidade_pedagogica_id}
-                      type="button"
-                      role="tab"
-                      aria-selected={indice === indiceUnidade}
-                      aria-controls="conteudo-unidade-atual"
-                      className={indice === indiceUnidade ? "ativa" : ""}
-                      onClick={() => selecionarUnidade(indice)}
-                    >
-                      <b>{unidade.unidade_ordem}</b>
-                      <span>{unidade.unidade_titulo}</span>
-                    </button>
-                  ))}
+                  {unidadesPublicadas.map((unidade, indice) => {
+                    const concluida = unidadesConcluidas.includes(unidade.unidade_pedagogica_id);
+                    return (
+                      <button
+                        key={unidade.unidade_pedagogica_id}
+                        type="button"
+                        role="tab"
+                        aria-selected={indice === indiceUnidade}
+                        aria-controls="conteudo-unidade-atual"
+                        className={`${indice === indiceUnidade ? "ativa" : ""}${concluida ? " concluida" : ""}`.trim()}
+                        onClick={() => selecionarUnidade(indice)}
+                      >
+                        <b aria-hidden="true">{concluida ? "✓" : unidade.unidade_ordem}</b>
+                        <span>{unidade.unidade_titulo}</span>
+                        <em>{concluida ? "Concluída" : indice === indiceUnidade ? "Em andamento" : "Pendente"}</em>
+                      </button>
+                    );
+                  })}
                 </div>
               </nav>
 
@@ -431,26 +537,24 @@ export default function Teoria() {
                   >
                     Unidade anterior
                   </button>
-                  {indiceUnidade < unidadesPublicadas.length - 1 ? (
-                    <button type="button" className="principal" onClick={() => selecionarUnidade(indiceUnidade + 1)}>
-                      Próxima unidade
-                    </button>
-                  ) : (
-                    <Link
-                      className="principal"
-                      href={montarLinkMissao({
-                        cursoMateriaId: identidade.cursoMateriaId,
-                        conteudoId: missao.conteudo_id,
-                        materiaId: identidade.materiaId,
-                        assuntoId: identidade.assuntoId ?? undefined,
-                        quantidade,
-                        missionId: missao.id,
-                      })}
-                    >
-                      Ir para as questões
-                    </Link>
-                  )}
+                  <button
+                    type="button"
+                    className="principal"
+                    onClick={concluirUnidade}
+                    disabled={salvandoProgresso}
+                  >
+                    {salvandoProgresso
+                      ? "Salvando progresso..."
+                      : indiceUnidade === unidadesPublicadas.length - 1
+                        ? unidadesConcluidas.includes(aula.unidade_pedagogica_id)
+                          ? "Ir para as questões"
+                          : "Concluir teoria e ir para as questões"
+                        : unidadesConcluidas.includes(aula.unidade_pedagogica_id)
+                          ? "Próxima unidade"
+                          : "Concluir unidade e avançar"}
+                  </button>
                 </div>
+                {mensagemProgresso && <p className="teoria-progresso-mensagem" role="alert">{mensagemProgresso}</p>}
               </div>
             </div>
           );

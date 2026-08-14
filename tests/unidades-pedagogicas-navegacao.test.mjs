@@ -29,7 +29,7 @@ test("tela do aluno oferece seletor e navegação entre as unidades", () => {
   assert.match(pagina, /carregar_unidades_publicadas_da_missao/);
   assert.match(pagina, /role="tablist"/);
   assert.match(pagina, /aria-selected=\{indice === indiceUnidade\}/);
-  assert.match(pagina, /Unidade \{indiceUnidade \+ 1\} de \{unidadesPublicadas\.length\}/);
+  assert.match(pagina, /\{unidadesConcluidas\.length\} de \{unidadesPublicadas\.length\} concluídas/);
   assert.match(pagina, /Unidade anterior/);
   assert.match(pagina, /Próxima unidade/);
 });
