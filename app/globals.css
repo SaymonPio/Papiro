@@ -2050,10 +2050,10 @@ footer > small {
 }
 
 .marca-carregando {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
   text-align: center;
 }
 
@@ -2067,11 +2067,15 @@ footer > small {
 }
 
 .marca-carregando-texto {
-  color: rgba(241, 202, 107, 0.62);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 @keyframes marca-papiro-pulso {
@@ -2085,16 +2089,6 @@ footer > small {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .dashboard-loading .marca-carregando-simbolo {
-    animation: marca-papiro-luz 2.4s ease-in-out infinite;
-  }
-}
-
-@keyframes marca-papiro-luz {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.58; }
-}
 
 @media (max-width: 850px) {
   .dashboard-page {

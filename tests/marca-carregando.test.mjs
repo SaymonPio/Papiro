@@ -30,8 +30,12 @@ test("animação reproduz o pulso visível do preview e nunca fica estática",()
   assert.match(estilos,/animation: marca-papiro-pulso 1\.4s ease-in-out infinite/);
   assert.match(estilos,/opacity: 0\.45/);
   assert.match(estilos,/scale\(0\.88\)/);
-  assert.match(estilos,/@media \(prefers-reduced-motion: reduce\)/);
-  assert.match(estilos,/animation: marca-papiro-luz 2\.4s ease-in-out infinite/);
+  assert.doesNotMatch(estilos,/marca-papiro-luz/);
+});
+
+test("texto de apoio fica disponível ao leitor de tela sem aparecer no carregamento",()=>{
+  assert.match(estilos,/\.marca-carregando-texto[\s\S]*position: absolute/);
+  assert.match(estilos,/clip: rect\(0, 0, 0, 0\)/);
 });
 
 test("todas as telas de espera usam o componente compartilhado",async()=>{
