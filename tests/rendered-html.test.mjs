@@ -23,5 +23,5 @@ test("renders Papiro metadata", async () => {
 
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
-  assert.match(await response.text(), /<title>Papiro \| Preparação inteligente para concursos<\/title>/i);
+  assert.match(await response.text(), /<title>Papiro \| Preparação inteligente para concursos policiais<\/title>/i);
 });

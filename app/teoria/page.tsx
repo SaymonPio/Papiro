@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { lerMissaoCronograma, lerMissionId, montarLinkMissao } from "@/utils/missao-cronograma.mjs";
 import { createClient } from "@/utils/supabase/client";
 import ComponenteAulaView, { type ComponenteAula } from "@/components/teoria/ComponenteAulaView";
@@ -45,9 +45,9 @@ type MateriaCursoAtivo = { materia_id: number; materia_nome: string; total_quest
 type AssuntoCursoAtivo = { assunto_id: number; assunto_nome: string; total_questoes: number | string };
 
 // Reflete exatamente o RETURNS TABLE de
-// public.carregar_aula_publicada_da_missao(p_missao_id uuid) em
-// supabase/teoria_leitura_rpc.sql — nada além das colunas realmente
-// retornadas por essa RPC.
+// public.carregar_unidades_publicadas_da_missao(p_missao_id uuid) em
+// supabase/unidades_pedagogicas_navegacao_rpc.sql — nada além das colunas
+// realmente retornadas por essa RPC.
 type FonteAula = {
   material_id: string;
   material_titulo: string;
@@ -80,6 +80,9 @@ type AulaPublicada = {
   missao_id: string;
   conteudo_id: number;
   missao_status: string;
+  unidade_pedagogica_id: string;
+  unidade_titulo: string;
+  unidade_ordem: number;
   aula_id: string;
   aula_titulo: string;
   aula_versao_id: string;
@@ -123,7 +126,9 @@ export default function Teoria() {
   const [materiaNome, setMateriaNome] = useState("");
   const [assuntoNome, setAssuntoNome] = useState("");
   const [estadoAula, setEstadoAula] = useState<EstadoAula>("carregando");
-  const [aula, setAula] = useState<AulaPublicada | null>(null);
+  const [unidadesPublicadas, setUnidadesPublicadas] = useState<AulaPublicada[]>([]);
+  const [indiceUnidade, setIndiceUnidade] = useState(0);
+  const inicioAulaRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     async function protegerPagina() {
@@ -279,7 +284,7 @@ export default function Teoria() {
       // matricula_id, conteudo_id, aula_id e aula_versao_id são todos
       // derivados no servidor, dentro da própria RPC.
       const { data: aulaCarregada, error: erroAula } = await supabase.rpc(
-        "carregar_aula_publicada_da_missao",
+        "carregar_unidades_publicadas_da_missao",
         { p_missao_id: missaoCarregada.id },
       );
 
@@ -296,13 +301,12 @@ export default function Teoria() {
         });
         setEstadoAula("erro");
       } else {
-        // RETURNS TABLE sempre volta como array (0 ou 1 linha, nunca
-        // mais — garantido por aulas.UNIQUE(conteudo_id) + índice único
-        // parcial de versão publicada, validado na Fase 2F). Zero linhas
-        // não é erro: é "esta missão ainda não tem aula publicada".
+        // A RPC devolve uma linha por unidade ativa que tenha versão
+        // publicada, já ordenada pela ordem pedagógica. Zero linhas não é
+        // erro: significa que esta missão ainda não tem aula publicada.
         const linhas = (aulaCarregada as AulaPublicada[] | null) ?? [];
         if (linhas.length > 0) {
-          setAula(linhas[0]);
+          setUnidadesPublicadas(linhas);
           setEstadoAula("disponivel");
         } else {
           setEstadoAula("indisponivel");
@@ -313,6 +317,14 @@ export default function Teoria() {
     }
     protegerPagina();
   }, []);
+
+  const selecionarUnidade = (novoIndice: number) => {
+    if (novoIndice < 0 || novoIndice >= unidadesPublicadas.length) return;
+    setIndiceUnidade(novoIndice);
+    window.requestAnimationFrame(() => {
+      inicioAulaRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
 
   if (carregando) return <main className="dashboard-loading"><p>Preparando a teoria de hoje...</p></main>;
 
@@ -359,7 +371,8 @@ export default function Teoria() {
           </div>
         )}
 
-        {estadoAula === "disponivel" && aula && (() => {
+        {estadoAula === "disponivel" && unidadesPublicadas.length > 0 && (() => {
+          const aula = unidadesPublicadas[indiceUnidade] ?? unidadesPublicadas[0];
           const componentes = obterComponentesAula(aula.estrutura);
           // Aula publicada existe de fato — "sem componentes válidos" não é
           // o mesmo caso que "sem aula publicada" e não pode reaproveitar a
@@ -368,29 +381,97 @@ export default function Teoria() {
             return <p>Esta aula ainda não possui conteúdo para exibição.</p>;
           }
           return (
-            <div className="teoria-aula">
-              {componentes.map((componente, indice) => (
-                <ComponenteAulaView key={componente?.tipo ? `${componente.tipo}-${indice}` : indice} componente={componente} />
-              ))}
-              <ComentariosAula aulaId={aula.aula_id} />
+            <div ref={inicioAulaRef} className="teoria-unidades">
+              <nav className="teoria-unidades-navegacao" aria-label="Unidades desta aula">
+                <div className="teoria-unidades-cabecalho">
+                  <div>
+                    <p>TRILHA DA AULA</p>
+                    <h2>{aula.aula_titulo}</h2>
+                  </div>
+                  <span>Unidade {indiceUnidade + 1} de {unidadesPublicadas.length}</span>
+                </div>
+                <div className="teoria-unidades-lista" role="tablist" aria-label="Escolha uma unidade">
+                  {unidadesPublicadas.map((unidade, indice) => (
+                    <button
+                      key={unidade.unidade_pedagogica_id}
+                      type="button"
+                      role="tab"
+                      aria-selected={indice === indiceUnidade}
+                      aria-controls="conteudo-unidade-atual"
+                      className={indice === indiceUnidade ? "ativa" : ""}
+                      onClick={() => selecionarUnidade(indice)}
+                    >
+                      <b>{unidade.unidade_ordem}</b>
+                      <span>{unidade.unidade_titulo}</span>
+                    </button>
+                  ))}
+                </div>
+              </nav>
+
+              <div
+                id="conteudo-unidade-atual"
+                className="teoria-aula"
+                role="tabpanel"
+                aria-label={`Unidade ${aula.unidade_ordem}: ${aula.unidade_titulo}`}
+              >
+                <div className="teoria-unidade-titulo">
+                  <p>UNIDADE {aula.unidade_ordem}</p>
+                  <h2>{aula.unidade_titulo}</h2>
+                </div>
+                {componentes.map((componente, indice) => (
+                  <ComponenteAulaView key={componente?.tipo ? `${componente.tipo}-${indice}` : indice} componente={componente} />
+                ))}
+                <ComentariosAula aulaId={aula.aula_id} />
+
+                <div className="teoria-unidades-acoes" aria-label="Navegação entre unidades">
+                  <button
+                    type="button"
+                    onClick={() => selecionarUnidade(indiceUnidade - 1)}
+                    disabled={indiceUnidade === 0}
+                  >
+                    Unidade anterior
+                  </button>
+                  {indiceUnidade < unidadesPublicadas.length - 1 ? (
+                    <button type="button" className="principal" onClick={() => selecionarUnidade(indiceUnidade + 1)}>
+                      Próxima unidade
+                    </button>
+                  ) : (
+                    <Link
+                      className="principal"
+                      href={montarLinkMissao({
+                        cursoMateriaId: identidade.cursoMateriaId,
+                        conteudoId: missao.conteudo_id,
+                        materiaId: identidade.materiaId,
+                        assuntoId: identidade.assuntoId ?? undefined,
+                        quantidade,
+                        missionId: missao.id,
+                      })}
+                    >
+                      Ir para as questões
+                    </Link>
+                  )}
+                </div>
+              </div>
             </div>
           );
         })()}
       </section>
 
-      <Link
-        className="answer-submit"
-        href={montarLinkMissao({
-          cursoMateriaId: identidade.cursoMateriaId,
-          conteudoId: missao.conteudo_id,
-          materiaId: identidade.materiaId,
-          assuntoId: identidade.assuntoId ?? undefined,
-          quantidade,
-          missionId: missao.id,
-        })}
-      >
-        Ir para as questões
-      </Link>
+      {estadoAula !== "disponivel" && (
+        <Link
+          className="answer-submit"
+          href={montarLinkMissao({
+            cursoMateriaId: identidade.cursoMateriaId,
+            conteudoId: missao.conteudo_id,
+            materiaId: identidade.materiaId,
+            assuntoId: identidade.assuntoId ?? undefined,
+            quantidade,
+            missionId: missao.id,
+          })}
+        >
+          Ir para as questões
+        </Link>
+      )}
     </main>
   );
 }
