@@ -44,7 +44,9 @@ export default function ResultadoQuestoes() {
         </div>
         <div className="result-actions">
           <Link href="/caderno-de-erros">Revisar meus erros</Link>
-          <Link href="/painel">Voltar ao painel</Link>
+          <Link href={resultado.missao_id ? "/cronograma" : "/painel"}>
+            {resultado.missao_id ? "Voltar ao cronograma" : "Voltar ao painel"}
+          </Link>
         </div>
       </section>
     </main>

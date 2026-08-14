@@ -51,4 +51,6 @@ test("tela usa as RPCs e preserva missionId até o resultado",()=>{
   assert.match(pagina,/setMissionId\(missao\.missionId\)/);
   assert.match(resultado,/missao_id/);
   assert.match(resultado,/MISSÃO CONCLUÍDA/);
+  assert.match(resultado,/resultado\.missao_id \? "\/cronograma" : "\/painel"/);
+  assert.match(resultado,/resultado\.missao_id \? "Voltar ao cronograma" : "Voltar ao painel"/);
 });
