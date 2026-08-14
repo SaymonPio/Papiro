@@ -2959,10 +2959,36 @@ footer > small {
   color: var(--gold);
 }
 
+.teoria-comentarios { margin-top: 10px; padding: clamp(24px,4vw,36px); border: 1px solid rgba(216,173,76,.25); border-radius: 14px; background: rgba(9,24,18,.94); }
+.teoria-comentarios-cabecalho { display:flex; justify-content:space-between; gap:18px; align-items:flex-start; }
+.teoria-comentarios-cabecalho p { margin:0 0 7px; color:var(--gold-bright); font-size:11px; font-weight:900; letter-spacing:.14em; }
+.teoria-comentarios-cabecalho h2 { margin:0; color:var(--cream); font-family:Georgia,serif; font-size:clamp(22px,3vw,28px); }
+.teoria-comentarios-cabecalho span { padding:7px 10px; border-radius:999px; background:rgba(216,173,76,.09); color:var(--gold-bright); font-size:11px; white-space:nowrap; }
+.teoria-comentarios-intro { margin:14px 0 22px; color:#9fb0a8; line-height:1.6; }
+.teoria-comentarios-form { display:grid; gap:9px; }
+.teoria-comentarios-form label { color:var(--cream); font-size:13px; font-weight:800; }
+.teoria-comentarios-form textarea { width:100%; resize:vertical; padding:14px 15px; border:1px solid rgba(255,255,255,.12); border-radius:9px; background:rgba(255,255,255,.035); color:var(--cream); font:inherit; line-height:1.5; }
+.teoria-comentarios-form textarea:focus { outline:2px solid rgba(216,173,76,.35); border-color:var(--gold); }
+.teoria-comentarios-form>div { display:flex; justify-content:space-between; align-items:center; gap:14px; }
+.teoria-comentarios-form small { color:#7f9188; }
+.teoria-comentarios-form button { padding:11px 16px; border:0; border-radius:8px; background:var(--gold); color:#08140f; font-weight:900; cursor:pointer; }
+.teoria-comentarios-form button:disabled { opacity:.45; cursor:not-allowed; }
+.teoria-comentarios-mensagem { color:var(--gold-bright); font-size:13px; }
+.teoria-comentarios-lista { display:grid; gap:12px; margin-top:24px; }
+.teoria-comentarios-lista>p { color:#91a099; }
+.teoria-comentarios-lista article { padding:16px 18px; border:1px solid rgba(255,255,255,.08); border-radius:10px; background:rgba(255,255,255,.025); }
+.teoria-comentarios-lista article header { display:flex; justify-content:space-between; gap:12px; }
+.teoria-comentarios-lista article strong { color:var(--cream); }
+.teoria-comentarios-lista article time { color:#72857b; font-size:11px; }
+.teoria-comentarios-lista article p { margin:10px 0 0; color:#c3ccc6; line-height:1.6; white-space:pre-wrap; overflow-wrap:anywhere; }
+.teoria-comentarios-lista article button { margin-top:10px; padding:0; border:0; background:none; color:#9baca3; font-size:11px; text-decoration:underline; cursor:pointer; }
+
 @media (max-width: 640px) {
   .teoria-bloco {
     padding: 20px 18px;
   }
+  .teoria-comentarios-cabecalho { flex-direction:column; }
+  .teoria-comentarios-form>div { align-items:flex-end; }
 }
 
 .result-page {

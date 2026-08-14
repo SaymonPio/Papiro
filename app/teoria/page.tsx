@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { lerMissaoCronograma, lerMissionId, montarLinkMissao } from "@/utils/missao-cronograma.mjs";
 import { createClient } from "@/utils/supabase/client";
 import ComponenteAulaView, { type ComponenteAula } from "@/components/teoria/ComponenteAulaView";
+import ComentariosAula from "@/components/teoria/ComentariosAula";
 
 // Contexto AUXILIAR vindo da URL — nunca a identidade da missão a partir
 // desta etapa. Pode ser null (ex.: URL só com ?missao=<uuid>, sem
@@ -371,6 +372,7 @@ export default function Teoria() {
               {componentes.map((componente, indice) => (
                 <ComponenteAulaView key={componente?.tipo ? `${componente.tipo}-${indice}` : indice} componente={componente} />
               ))}
+              <ComentariosAula aulaId={aula.aula_id} />
             </div>
           );
         })()}
