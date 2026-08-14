@@ -238,8 +238,12 @@ Deno.serve(async (req) => {
 
     const corpo = await req.json();
     const conteudoId = Number(corpo?.conteudoId);
+    const unidadePedagogicaId = typeof corpo?.unidadePedagogicaId === "string" ? corpo.unidadePedagogicaId : "";
     const materialVersaoIds: string[] = Array.isArray(corpo?.materialVersaoIds) ? corpo.materialVersaoIds : [];
     if (!Number.isFinite(conteudoId) || conteudoId <= 0) return json({ error: "conteudoId inválido." }, 400);
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(unidadePedagogicaId)) {
+      return json({ error: "unidadePedagogicaId inválido." }, 400);
+    }
 
     // Daqui pra frente, toda escrita privilegiada usa service_role — nunca
     // volta pro client do usuário (que não tem SELECT/INSERT direto nas
@@ -268,6 +272,16 @@ Deno.serve(async (req) => {
     const cursoMateriaId = (conteudo as any).curso_materia_id;
 
     if (!cursoMateria || !cursoInfo) return json({ error: "Não foi possível resolver curso/matéria deste conteúdo." }, 422);
+
+    const { data: unidade, error: erroUnidade } = await admin
+      .from("unidades_pedagogicas")
+      .select("id, titulo, ordem, escopo, artigos_esperados, ativa")
+      .eq("id", unidadePedagogicaId)
+      .eq("curso_conteudo_id", conteudoId)
+      .maybeSingle();
+    if (erroUnidade || !unidade) return json({ error: "Unidade pedagógica não encontrada neste conteúdo." }, 404);
+    if (!(unidade as any).ativa) return json({ error: "Esta unidade pedagógica está inativa." }, 422);
+    const unidadeTitulo = (unidade as any).titulo as string;
 
     // Conteúdo marcado como não relevante para preparação nunca gera aula
     // — mesmo critério já usado em iniciar_ou_recuperar_missao_diaria
@@ -309,17 +323,15 @@ Deno.serve(async (req) => {
       .maybeSingle();
     if (erroEscopoAtual) throw new Error("Falha ao carregar o escopo cadastrado para este conteúdo.");
 
-    let escopoAutorizado = conteudoNome;
+    let escopoAutorizado = (unidade as any).escopo as string;
     let grupoEscopoId: string | null = null;
     let parteOrdem: number | null = null;
-    let artigosEsperados: string[] | null = null;
+    let artigosEsperados: string[] | null = ((unidade as any).artigos_esperados ?? null) as string[] | null;
     let partesIrmas: { conteudoId: number; parteOrdem: number | null; titulo: string }[] = [];
 
     if (escopoAtual) {
-      escopoAutorizado = (escopoAtual as any).escopo;
       grupoEscopoId = (escopoAtual as any).grupo_id;
       parteOrdem = (escopoAtual as any).parte_ordem;
-      artigosEsperados = (escopoAtual as any).artigos_esperados;
 
       const { data: irmasData, error: erroIrmas } = await admin
         .from("teoria_escopos_conteudo")
@@ -334,6 +346,24 @@ Deno.serve(async (req) => {
         parteOrdem: linha.parte_ordem,
         titulo: linha.curso_conteudos?.assuntos?.nome ?? `Conteúdo #${linha.curso_conteudo_id}`,
       }));
+    }
+
+    // As demais unidades do MESMO curso_conteudo são agora a fonte
+    // canônica dos recortes que não podem vazar para esta aula.
+    const { data: unidadesIrmas, error: erroUnidadesIrmas } = await admin
+      .from("unidades_pedagogicas")
+      .select("ordem, titulo")
+      .eq("curso_conteudo_id", conteudoId)
+      .eq("ativa", true)
+      .neq("id", unidadePedagogicaId)
+      .order("ordem");
+    if (erroUnidadesIrmas) throw new Error("Falha ao carregar as demais unidades deste conteúdo.");
+    const titulosJaIncluidos = new Set(partesIrmas.map((p) => p.titulo));
+    for (const linha of (unidadesIrmas ?? []) as any[]) {
+      if (!titulosJaIncluidos.has(linha.titulo)) {
+        partesIrmas.push({ conteudoId, parteOrdem: linha.ordem, titulo: linha.titulo });
+        titulosJaIncluidos.add(linha.titulo);
+      }
     }
 
     // Fontes: só material_versoes realmente informadas pelo admin — nunca
@@ -379,12 +409,14 @@ Deno.serve(async (req) => {
       curso_id: cursoMateria.curso_id,
       curso_materia_id: cursoMateriaId,
       conteudo_id: conteudoId,
+      unidade_pedagogica_id: unidadePedagogicaId,
+      unidade_pedagogica: unidadeTitulo,
       concurso: cursoInfo.concurso ?? null,
       cargo: cursoInfo.cargo ?? null,
       banca: cursoInfo.banca ?? null,
       materia: materiaNome,
       conteudo: conteudoNome,
-      escopo_da_parte: escopoAutorizado,
+      escopo_da_unidade: escopoAutorizado,
       curso_evidencias_ids_usadas: listaEvidencias.length,
       material_versao_ids: materiaisSelecionados.map((m) => m.id),
     };
@@ -399,6 +431,7 @@ Deno.serve(async (req) => {
       .from("aula_geracoes")
       .update({ status: "erro", erro: `Geração expirada (travada há mais de ${MINUTOS_GERACAO_EXPIRADA} minutos)`, finalizado_em: new Date().toISOString() })
       .eq("conteudo_id", conteudoId)
+      .eq("unidade_pedagogica_id", unidadePedagogicaId)
       .eq("status", "processando")
       .lt("iniciado_em", new Date(Date.now() - MINUTOS_GERACAO_EXPIRADA * 60_000).toISOString());
 
@@ -410,6 +443,7 @@ Deno.serve(async (req) => {
       .from("aula_geracoes")
       .insert({
         conteudo_id: conteudoId,
+        unidade_pedagogica_id: unidadePedagogicaId,
         status: "processando",
         criado_por: user.id,
         prompt_version: PROMPT_VERSION,
@@ -448,12 +482,12 @@ Deno.serve(async (req) => {
     }
 
     const prompt = montarPromptContexto(
-      { concurso: cursoInfo.concurso, cargo: cursoInfo.cargo, banca: cursoInfo.banca, materiaNome, conteudoNome },
+      { concurso: cursoInfo.concurso, cargo: cursoInfo.cargo, banca: cursoInfo.banca, materiaNome, conteudoNome: unidadeTitulo },
       contextoProgramatico,
       perfilBancaEvidencias,
       fontesTitulos,
       {
-        temMetadata: Boolean(escopoAtual),
+        temMetadata: true,
         escopoAutorizado,
         partesIrmasTitulos: partesIrmas.map((p) => p.titulo),
       },
@@ -538,16 +572,16 @@ ${prompt}`;
     // o aviso no admin).
     const validacaoEscopo = auditarEscopoArtigos(validacao.artigosAbordados, artigosEsperados);
 
-    // aulas.UNIQUE(conteudo_id): reaproveita a aula lógica se já existir,
-    // cria só se for a primeira geração para este conteúdo.
+    // Uma aula lógica por unidade: regenerações criam novas versões da
+    // mesma aula; outra unidade do conteúdo recebe outra aula lógica.
     let aulaId: string;
-    const { data: aulaExistente } = await admin.from("aulas").select("id").eq("conteudo_id", conteudoId).maybeSingle();
+    const { data: aulaExistente } = await admin.from("aulas").select("id").eq("unidade_pedagogica_id", unidadePedagogicaId).maybeSingle();
     if (aulaExistente) {
       aulaId = (aulaExistente as any).id;
     } else {
       const { data: aulaCriada, error: erroAula } = await admin
         .from("aulas")
-        .insert({ conteudo_id: conteudoId, titulo: conteudoNome })
+        .insert({ conteudo_id: conteudoId, unidade_pedagogica_id: unidadePedagogicaId, titulo: unidadeTitulo })
         .select("id")
         .single();
       if (erroAula || !aulaCriada) throw new Error("Não foi possível criar a aula.");

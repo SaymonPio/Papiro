@@ -33,6 +33,14 @@ type ConteudoAdmin = {
   ordem: number;
   relevante_para_preparacao: boolean;
 };
+type UnidadePedagogicaAdmin = {
+  unidade_id: string;
+  titulo: string;
+  ordem: number;
+  escopo: string;
+  artigos_esperados: string[] | null;
+  ativa: boolean;
+};
 type MaterialAdmin = {
   material_id: string;
   titulo: string;
@@ -124,6 +132,8 @@ export default function AdminAulas() {
   const [materiaId, setMateriaId] = useState("");
   const [conteudos, setConteudos] = useState<ConteudoAdmin[]>([]);
   const [conteudoId, setConteudoId] = useState<number | null>(null);
+  const [unidades, setUnidades] = useState<UnidadePedagogicaAdmin[]>([]);
+  const [unidadeId, setUnidadeId] = useState("");
 
   const [materiais, setMateriais] = useState<MaterialAdmin[]>([]);
   const [fontesSelecionadas, setFontesSelecionadas] = useState<Set<string>>(new Set());
@@ -185,7 +195,14 @@ export default function AdminAulas() {
 
   useEffect(() => {
     setRascunho(null); setMensagem("");
+    setUnidades([]); setUnidadeId("");
     if (!conteudoId) { setGeracoes([]); return; }
+    createClient().rpc("listar_unidades_pedagogicas_admin", { p_conteudo_id: conteudoId }).then(({ data }) => {
+      const lista = (data as UnidadePedagogicaAdmin[] | null) ?? [];
+      setUnidades(lista);
+      const primeiraAtiva = lista.find((u) => u.ativa);
+      setUnidadeId(primeiraAtiva?.unidade_id ?? "");
+    });
     carregarMateriais();
     carregarGeracoes(conteudoId);
   }, [conteudoId]);
@@ -239,11 +256,11 @@ export default function AdminAulas() {
   }
 
   async function gerarAula() {
-    if (!conteudoId || gerando) return; // camada 1 de idempotência: bloqueia clique duplo
+    if (!conteudoId || !unidadeId || gerando) return; // camada 1 de idempotência: bloqueia clique duplo
     setGerando(true); setMensagem("Gerando aula — isso pode levar alguns minutos...");
 
     const { data, error } = await createClient().functions.invoke("gerar-aula", {
-      body: { conteudoId, materialVersaoIds: Array.from(fontesSelecionadas) },
+      body: { conteudoId, unidadePedagogicaId: unidadeId, materialVersaoIds: Array.from(fontesSelecionadas) },
     });
 
     setGerando(false);
@@ -327,6 +344,18 @@ export default function AdminAulas() {
               {conteudos.map((c) => (
                 <option key={c.conteudo_id} value={c.conteudo_id}>
                   {c.nome}{!c.relevante_para_preparacao ? " (não relevante)" : ""}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label>
+            Unidade pedagógica
+            <select value={unidadeId} onChange={(e) => setUnidadeId(e.target.value)} disabled={!conteudoId}>
+              <option value="">Selecione uma unidade</option>
+              {unidades.map((u) => (
+                <option key={u.unidade_id} value={u.unidade_id} disabled={!u.ativa}>
+                  {u.ordem}. {u.titulo}{!u.ativa ? " (inativa)" : ""}
                 </option>
               ))}
             </select>
