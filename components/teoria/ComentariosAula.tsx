@@ -47,22 +47,25 @@ export default function ComentariosAula({ aulaId }: { aulaId: string }) {
 
   return <section className="teoria-comentarios" aria-labelledby="comentarios-aula-titulo">
     <div className="teoria-comentarios-cabecalho">
-      <div><p>COMUNIDADE PAPIRO</p><h2 id="comentarios-aula-titulo">Comentários sobre a aula</h2></div>
+      <div><p><span aria-hidden="true">▣</span> COMENTÁRIOS</p><h2 id="comentarios-aula-titulo">Conversa da comunidade</h2></div>
       <span>{comentarios.length} comentário{comentarios.length===1?"":"s"}</span>
     </div>
     <p className="teoria-comentarios-intro">Compartilhe dúvidas, observações e bizus com outros alunos. Mantenha a conversa respeitosa e dentro do tema da aula.</p>
+    <div className="teoria-comentarios-lista">
+      {carregando?<p>Carregando comentários...</p>:comentarios.length===0?<div className="teoria-comentarios-vazio"><h3>Seja o primeiro a comentar!</h3><p>Esta conversa ainda não começou. Compartilhe sua impressão ou uma dúvida sobre a aula.</p></div>:<>
+        <h3>O que os alunos estão dizendo</h3>
+        {comentarios.map(c=><article key={c.comentario_id}>
+          <header><strong>{c.autor_nome}</strong><time dateTime={c.criado_em}>{new Date(c.criado_em).toLocaleString("pt-BR",{dateStyle:"short",timeStyle:"short"})}</time></header>
+          <p>{c.texto}</p>
+          {c.meu&&<button type="button" onClick={()=>remover(c.comentario_id)}>Remover meu comentário</button>}
+        </article>)}
+      </>}
+    </div>
     <form onSubmit={enviar} className="teoria-comentarios-form">
-      <label htmlFor="comentario-aula">Deixe seu comentário</label>
+      <label htmlFor="comentario-aula">{comentarios.length===0?"Comece a conversa":"Participe da conversa"}</label>
       <textarea id="comentario-aula" value={texto} onChange={e=>setTexto(e.target.value)} maxLength={1000} rows={4} placeholder="O que você achou da aula? Ficou alguma dúvida?" />
       <div><small>{texto.length}/1000</small><button type="submit" disabled={enviando||texto.trim().length<2}>{enviando?"Publicando...":"Publicar comentário"}</button></div>
     </form>
     {mensagem&&<p className="teoria-comentarios-mensagem" role="status">{mensagem}</p>}
-    <div className="teoria-comentarios-lista">
-      {carregando?<p>Carregando comentários...</p>:comentarios.length===0?<p>Ainda não há comentários. Seja o primeiro a participar.</p>:comentarios.map(c=><article key={c.comentario_id}>
-        <header><strong>{c.autor_nome}</strong><time dateTime={c.criado_em}>{new Date(c.criado_em).toLocaleString("pt-BR",{dateStyle:"short",timeStyle:"short"})}</time></header>
-        <p>{c.texto}</p>
-        {c.meu&&<button type="button" onClick={()=>remover(c.comentario_id)}>Remover meu comentário</button>}
-      </article>)}
-    </div>
   </section>;
 }
