@@ -23,29 +23,28 @@ type Questao = {
   banca: string | null;
   concurso: string | null;
   ano: number | null;
-  fonte: string | null;
   materias: { nome: string } | null;
   assuntos: { nome: string } | null;
   alternativas: Alternativa[];
 };
 
 // Identificação visual da origem: questão real (banca preenchida e não
-// autoral) mostra banca • concurso • ano, com a fonte (quando útil para achar
-// o número da questão original) numa linha menor abaixo. Sem banca, ou banca
+// autoral) mostra apenas banca • concurso • ano. Metadados internos da fonte,
+// como número e posição no conjunto importado, nunca são enviados ao aluno.
+// Sem banca, ou banca
 // começando com "papiro" (ex.: "Papiro - Teste", "Papiro - estilo Fundatec")
 // = questão autoral Papiro — não existe outro campo no banco para marcar isso
 // explicitamente, então esse prefixo é o próprio sinal.
-function descreverOrigemQuestao(questao: Questao): { linha: string; detalhe: string | null } {
+function descreverOrigemQuestao(questao: Questao): string {
   const banca = questao.banca?.trim();
   const autoral = !banca || banca.toLowerCase().startsWith("papiro");
   if (autoral) {
-    return { linha: "PAPIRO • ESTILO FUNDATEC", detalhe: null };
+    return "PAPIRO • ESTILO FUNDATEC";
   }
   const partes = [banca, questao.concurso?.trim(), questao.ano ? String(questao.ano) : null].filter(
     (parte): parte is string => Boolean(parte),
   );
-  const fonte = questao.fonte?.trim();
-  return { linha: partes.join(" • "), detalhe: fonte || null };
+  return partes.join(" • ");
 }
 
 const metas: Record<MetaPreset, { titulo: string; questoes: number; revisao: number; descricao: string }> = {
@@ -296,7 +295,7 @@ export default function Questoes() {
     // nunca um fallback para o banco global nem para outro curso.
     const { data: bancoQuestoes, error: erroQuestoes } = await supabase
       .from("questoes")
-      .select("id, enunciado, dificuldade, banca, concurso, ano, fonte, materias(nome), assuntos(nome), alternativas(id, texto, ordem)")
+      .select("id, enunciado, dificuldade, banca, concurso, ano, materias(nome), assuntos(nome), alternativas(id, texto, ordem)")
       .in("id", ids);
 
     if (erroQuestoes || !bancoQuestoes?.length) {
@@ -418,7 +417,7 @@ export default function Questoes() {
     // iniciarSessao).
     const { data: bancoQuestoes, error: erroQuestoes } = await supabase
       .from("questoes")
-      .select("id, enunciado, dificuldade, banca, concurso, ano, fonte, materias(nome), assuntos(nome), alternativas(id, texto, ordem)")
+      .select("id, enunciado, dificuldade, banca, concurso, ano, materias(nome), assuntos(nome), alternativas(id, texto, ordem)")
       .in("id", ids);
 
     if (erroQuestoes || !bancoQuestoes?.length) {
@@ -727,8 +726,7 @@ export default function Questoes() {
 
       <article className="question-card">
         <div className="question-origin">
-          <span className="question-origin-main">{origemQuestao.linha}</span>
-          {origemQuestao.detalhe && <span className="question-origin-detail">{origemQuestao.detalhe}</span>}
+          <span className="question-origin-main">{origemQuestao}</span>
         </div>
         <div className="question-meta">
           <span>{questaoAtual.materias?.nome ?? "Matéria geral"}</span>

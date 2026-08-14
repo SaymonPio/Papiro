@@ -2409,11 +2409,6 @@ footer > small {
   text-transform: uppercase;
 }
 
-.question-origin-detail {
-  color: #7f9089;
-  font-size: 12px;
-}
-
 .question-meta {
   display: flex;
   flex-wrap: wrap;
@@ -4457,7 +4452,6 @@ footer > small {
 }
 
 .goal-grid button p,
-.question-origin-detail,
 .session-topbar > div,
 .session-score {
   color: var(--papiro-muted);
