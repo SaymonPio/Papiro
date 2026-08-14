@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import MarcaCarregando from "@/components/ui/MarcaCarregando";
 import { createClient } from "@/utils/supabase/client";
 
-type Resultado = { questoes_respondidas: number; acertos: number; nivel_meta: string; minutos_revisao: number };
+type Resultado = { questoes_respondidas: number; acertos: number; nivel_meta: string; minutos_revisao: number; missao_id: string | null };
 
 export default function ResultadoQuestoes() {
   const [resultado, setResultado] = useState<Resultado | null>(null);
@@ -18,7 +18,7 @@ export default function ResultadoQuestoes() {
       const { data: { user } } = await createClient().auth.getUser();
       if (!user) { window.location.replace("/login"); return; }
       const { data, error } = await createClient().from("sessoes_estudo")
-        .select("questoes_respondidas, acertos, nivel_meta, minutos_revisao")
+        .select("questoes_respondidas, acertos, nivel_meta, minutos_revisao, missao_id")
         .eq("id", sessao).single();
       if (error) setErro("Não foi possível carregar o resultado.");
       else setResultado(data as Resultado);
@@ -33,9 +33,9 @@ export default function ResultadoQuestoes() {
   return (
     <main className="method-page result-page">
       <section className="result-card">
-        <p className="dashboard-label">SESSÃO CONCLUÍDA</p>
-        <h1>Consistência registrada.</h1>
-        <p>Você avançou mais um dia no Método Papiro.</p>
+        <p className="dashboard-label">{resultado.missao_id ? "MISSÃO CONCLUÍDA" : "SESSÃO CONCLUÍDA"}</p>
+        <h1>{resultado.missao_id ? "Missão cumprida." : "Consistência registrada."}</h1>
+        <p>{resultado.missao_id ? "Teoria e questões concluídas com sucesso." : "Você avançou mais um dia no Método Papiro."}</p>
         <div className="result-stats">
           <span><strong>{resultado.questoes_respondidas}</strong>Respondidas</span>
           <span><strong>{resultado.acertos}</strong>Acertos</span>

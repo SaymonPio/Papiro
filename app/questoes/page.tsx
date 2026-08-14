@@ -18,6 +18,13 @@ type CausaErro = "nao_sabia" | "duvida" | "chute" | "atencao" | "interpretacao";
 type Feedback = { acertou: boolean; explicacao: string | null; erroId: number | null };
 type MateriaCursoAtivo = { materia_id: number; materia_nome: string; total_questoes: number | string };
 type AssuntoCursoAtivo = { assunto_id: number; assunto_nome: string; total_questoes: number | string };
+type SessaoMissao = {
+  sessao_id: number | string;
+  sessao_status: string;
+  missao_status: string;
+  questao_ids: Array<number | string>;
+  recuperada: boolean;
+};
 type Questao = {
   id: number;
   enunciado: string;
@@ -140,6 +147,7 @@ export default function Questoes() {
   const [carregandoPersonalizada, setCarregandoPersonalizada] = useState(false);
   const [mensagemPersonalizada, setMensagemPersonalizada] = useState("");
   const [origemCronograma, setOrigemCronograma] = useState(false);
+  const [missionId, setMissionId] = useState<string | null>(null);
   const [autoInicioSolicitado, setAutoInicioSolicitado] = useState(false);
   const assuntoInicialMissao = useRef<number | null>(null);
   const autoInicioExecutado = useRef(false);
@@ -150,6 +158,7 @@ export default function Questoes() {
       if (!missao) return;
 
       setOrigemCronograma(true);
+      setMissionId(missao.missionId);
       setModoInicio("personalizada");
       setMateriaSelecionada(missao.materiaId);
       assuntoInicialMissao.current = missao.assuntoId;
@@ -407,12 +416,38 @@ export default function Questoes() {
       return;
     }
 
-    const ids = ((idsQuestoes as IdQuestao[] | null) ?? []).map((item) => item.questao_id);
+    let ids = ((idsQuestoes as IdQuestao[] | null) ?? []).map((item) => item.questao_id);
 
     if (ids.length === 0) {
       setMensagemPersonalizada("Não há questões disponíveis para esse filtro.");
       setCarregandoPersonalizada(false);
       return;
+    }
+
+    let sessaoDaMissao: SessaoMissao | null = null;
+    if (missionId) {
+      const { data, error } = await supabase.rpc("iniciar_questoes_da_missao", {
+        p_missao_id: missionId,
+        p_questao_ids: ids,
+      });
+      sessaoDaMissao = ((data as SessaoMissao[] | null) ?? [])[0] ?? null;
+
+      if (error || !sessaoDaMissao) {
+        setMensagemPersonalizada(
+          error?.message.toLowerCase().includes("teoria")
+            ? "Conclua todas as unidades da teoria antes de iniciar as questões."
+            : "Não foi possível iniciar as questões desta missão.",
+        );
+        setCarregandoPersonalizada(false);
+        return;
+      }
+
+      if (sessaoDaMissao.sessao_status === "concluida") {
+        window.location.replace(`/questoes/resultado?sessao=${sessaoDaMissao.sessao_id}`);
+        return;
+      }
+
+      ids = sessaoDaMissao.questao_ids.map(Number).filter(Number.isInteger);
     }
 
     // Mesma busca por detalhes só dos IDs já autorizados pela RPC — nunca um
@@ -447,24 +482,28 @@ export default function Questoes() {
       return;
     }
 
-    const { data: sessao, error: erroSessao } = await supabase
-      .from("sessoes_estudo")
-      .insert({
-        usuario_id: user.id,
-        matricula_id: matricula.id,
-        nivel_meta: "personalizada",
-        status: "em_andamento",
-        inicio_em: new Date().toISOString(),
-        minutos_revisao: 0,
-        questoes_planejadas: preparadas.length,
-      })
-      .select("id")
-      .single();
+    let sessaoIdAtual = sessaoDaMissao ? Number(sessaoDaMissao.sessao_id) : null;
+    if (!sessaoIdAtual) {
+      const { data: sessao, error: erroSessao } = await supabase
+        .from("sessoes_estudo")
+        .insert({
+          usuario_id: user.id,
+          matricula_id: matricula.id,
+          nivel_meta: "personalizada",
+          status: "em_andamento",
+          inicio_em: new Date().toISOString(),
+          minutos_revisao: 0,
+          questoes_planejadas: preparadas.length,
+        })
+        .select("id")
+        .single();
 
-    if (erroSessao || !sessao) {
-      setMensagemPersonalizada("Não foi possível iniciar a sessão. Tente novamente.");
-      setCarregandoPersonalizada(false);
-      return;
+      if (erroSessao || !sessao) {
+        setMensagemPersonalizada("Não foi possível iniciar a sessão. Tente novamente.");
+        setCarregandoPersonalizada(false);
+        return;
+      }
+      sessaoIdAtual = sessao.id;
     }
 
     if (preparadas.length < quantidadePersonalizada) {
@@ -475,9 +514,9 @@ export default function Questoes() {
 
     setNivel("personalizada");
     setQuestoes(preparadas);
-    setSessaoId(sessao.id);
+    setSessaoId(sessaoIdAtual);
     setCarregandoPersonalizada(false);
-  }, [assuntoSelecionado, materiaSelecionada, quantidadePersonalizada]);
+  }, [assuntoSelecionado, materiaSelecionada, missionId, quantidadePersonalizada]);
 
   useEffect(() => {
     const podeIniciar = podeIniciarMissaoAutomaticamente({
@@ -597,10 +636,25 @@ export default function Questoes() {
       return;
     }
 
-    await createClient().from("sessoes_estudo").update({
-      status: "concluida",
-      fim_em: new Date().toISOString(),
-    }).eq("id", sessaoId);
+    if (missionId) {
+      const { error } = await createClient().rpc("concluir_questoes_da_missao", {
+        p_missao_id: missionId,
+        p_sessao_id: sessaoId,
+      });
+      if (error) {
+        setMensagem("Não foi possível concluir a missão. Confira se todas as questões foram respondidas e tente novamente.");
+        return;
+      }
+    } else {
+      const { error } = await createClient().from("sessoes_estudo").update({
+        status: "concluida",
+        fim_em: new Date().toISOString(),
+      }).eq("id", sessaoId);
+      if (error) {
+        setMensagem("Não foi possível concluir a sessão.");
+        return;
+      }
+    }
     window.location.replace(`/questoes/resultado?sessao=${sessaoId}`);
   }
 
