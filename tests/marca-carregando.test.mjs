@@ -25,10 +25,13 @@ test("marca de carregamento reutiliza o losango do Papiro e preserva acessibilid
   assert.match(componente,/aria-live="polite"/);
 });
 
-test("animação é sutil e respeita preferência por movimento reduzido",()=>{
+test("animação reproduz o pulso visível do preview e nunca fica estática",()=>{
   assert.match(estilos,/@keyframes marca-papiro-pulso/);
-  assert.match(estilos,/animation: marca-papiro-pulso 1\.8s ease-in-out infinite/);
+  assert.match(estilos,/animation: marca-papiro-pulso 1\.4s ease-in-out infinite/);
+  assert.match(estilos,/opacity: 0\.45/);
+  assert.match(estilos,/scale\(0\.88\)/);
   assert.match(estilos,/@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(estilos,/animation: marca-papiro-luz 2\.4s ease-in-out infinite/);
 });
 
 test("todas as telas de espera usam o componente compartilhado",async()=>{

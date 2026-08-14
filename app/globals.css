@@ -2062,9 +2062,8 @@ footer > small {
   height: 56px;
   border-color: rgba(216, 173, 76, 0.72);
   color: #f1ca6b;
-  font-size: 31px;
-  animation: marca-papiro-pulso 1.8s ease-in-out infinite;
-  box-shadow: 0 0 0 rgba(216, 173, 76, 0);
+  font-size: 30px;
+  animation: marca-papiro-pulso 1.4s ease-in-out infinite;
 }
 
 .marca-carregando-texto {
@@ -2077,19 +2076,24 @@ footer > small {
 
 @keyframes marca-papiro-pulso {
   0%, 100% {
-    opacity: 0.64;
-    transform: rotate(45deg) scale(0.94);
-    box-shadow: 0 0 0 rgba(216, 173, 76, 0);
+    opacity: 1;
+    transform: rotate(45deg) scale(1);
   }
   50% {
-    opacity: 1;
-    transform: rotate(45deg) scale(1.08);
-    box-shadow: 0 0 28px rgba(216, 173, 76, 0.2);
+    opacity: 0.45;
+    transform: rotate(45deg) scale(0.88);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dashboard-loading .marca-carregando-simbolo { animation: none; }
+  .dashboard-loading .marca-carregando-simbolo {
+    animation: marca-papiro-luz 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes marca-papiro-luz {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.58; }
 }
 
 @media (max-width: 850px) {
