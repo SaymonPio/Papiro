@@ -2049,6 +2049,49 @@ footer > small {
   color: #f1ca6b;
 }
 
+.marca-carregando {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  text-align: center;
+}
+
+.dashboard-loading .marca-carregando-simbolo {
+  width: 56px;
+  height: 56px;
+  border-color: rgba(216, 173, 76, 0.72);
+  color: #f1ca6b;
+  font-size: 31px;
+  animation: marca-papiro-pulso 1.8s ease-in-out infinite;
+  box-shadow: 0 0 0 rgba(216, 173, 76, 0);
+}
+
+.marca-carregando-texto {
+  color: rgba(241, 202, 107, 0.62);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+@keyframes marca-papiro-pulso {
+  0%, 100% {
+    opacity: 0.64;
+    transform: rotate(45deg) scale(0.94);
+    box-shadow: 0 0 0 rgba(216, 173, 76, 0);
+  }
+  50% {
+    opacity: 1;
+    transform: rotate(45deg) scale(1.08);
+    box-shadow: 0 0 28px rgba(216, 173, 76, 0.2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-loading .marca-carregando-simbolo { animation: none; }
+}
+
 @media (max-width: 850px) {
   .dashboard-page {
     grid-template-columns: 1fr;

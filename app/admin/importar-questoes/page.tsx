@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
 import Papa from "papaparse";
+import MarcaCarregando from "@/components/ui/MarcaCarregando";
 import { temResiduoImportacao } from "@/utils/higiene-questoes.mjs";
 import { validarLinhaImportacao } from "@/utils/validacao-importacao.mjs";
 import { createClient } from "@/utils/supabase/client";
@@ -285,7 +286,7 @@ export default function ImportarQuestoes() {
     setImportando(false);
   }
 
-  if (verificando) return <main className="dashboard-loading"><p>Verificando acesso administrativo...</p></main>;
+  if (verificando) return <main className="dashboard-loading"><MarcaCarregando texto="Verificando acesso administrativo..." /></main>;
 
   if (!admin) {
     return (

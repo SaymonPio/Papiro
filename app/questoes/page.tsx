@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import ComentariosQuestao from "@/components/questoes/ComentariosQuestao";
+import MarcaCarregando from "@/components/ui/MarcaCarregando";
 import {
   lerMissaoCronograma,
   podeIniciarMissaoAutomaticamente,
@@ -619,7 +620,7 @@ export default function Questoes() {
   ) {
     return (
       <main className="dashboard-loading">
-        <p>Preparando sua missão...</p>
+        <MarcaCarregando texto="Preparando sua missão..." />
       </main>
     );
   }

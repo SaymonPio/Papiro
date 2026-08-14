@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import MarcaCarregando from "@/components/ui/MarcaCarregando";
 import { createClient } from "@/utils/supabase/client";
 
 type Resposta = {
@@ -118,7 +119,7 @@ export default function Estatisticas() {
     return { total, acertos, aproveitamento, diasSemana, sequencia: calcularSequencia(diasUnicos), pendentes, atrasadas, corrigidos, materias, errosPorTipo, ultimosSete, abandonadas: sessoes.filter((s) => s.status === "abandonada").length };
   }, [respostas, sessoes, revisoes, erros]);
 
-  if (carregando) return <main className="dashboard-loading"><p>Calculando sua evolução...</p></main>;
+  if (carregando) return <main className="dashboard-loading"><MarcaCarregando texto="Calculando sua evolução..." /></main>;
 
   return (
     <main className="stats-page">

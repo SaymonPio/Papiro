@@ -6,6 +6,7 @@ import { lerMissaoCronograma, lerMissionId, montarLinkMissao } from "@/utils/mis
 import { createClient } from "@/utils/supabase/client";
 import ComponenteAulaView, { type ComponenteAula } from "@/components/teoria/ComponenteAulaView";
 import ComentariosAula from "@/components/teoria/ComentariosAula";
+import MarcaCarregando from "@/components/ui/MarcaCarregando";
 
 // Contexto AUXILIAR vindo da URL — nunca a identidade da missão a partir
 // desta etapa. Pode ser null (ex.: URL só com ?missao=<uuid>, sem
@@ -428,7 +429,7 @@ export default function Teoria() {
     }));
   };
 
-  if (carregando) return <main className="dashboard-loading"><p>Preparando a teoria de hoje...</p></main>;
+  if (carregando) return <main className="dashboard-loading"><MarcaCarregando texto="Preparando a teoria de hoje..." /></main>;
 
   if (erro || !missao || !identidade) {
     return (

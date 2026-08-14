@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import MarcaCarregando from "@/components/ui/MarcaCarregando";
 import { montarJanelaSemanal } from "@/utils/cronograma.mjs";
 import { montarLinkTeoria } from "@/utils/missao-cronograma.mjs";
 import { createClient } from "@/utils/supabase/client";
@@ -970,7 +971,7 @@ export default function Cronograma() {
   if (carregando) {
     return (
       <main className="dashboard-loading">
-        <p>Montando sua semana...</p>
+        <MarcaCarregando texto="Montando sua semana..." />
       </main>
     );
   }

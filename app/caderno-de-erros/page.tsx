@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import MarcaCarregando from "@/components/ui/MarcaCarregando";
 import { createClient } from "@/utils/supabase/client";
 
 type ErroAluno = {
@@ -74,7 +75,7 @@ export default function CadernoDeErros() {
     carregarErros();
   }, []);
 
-  if (carregando) return <main className="dashboard-loading"><p>Abrindo seu caderno...</p></main>;
+  if (carregando) return <main className="dashboard-loading"><MarcaCarregando texto="Abrindo seu caderno..." /></main>;
 
   return (
     <main className="method-page error-notebook">

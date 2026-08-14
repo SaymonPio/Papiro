@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import MarcaCarregando from "@/components/ui/MarcaCarregando";
 import { createClient } from "@/utils/supabase/client";
 
 type Objetivo = {
@@ -62,7 +63,7 @@ export default function Painel() {
   }
 
   if (carregando) {
-    return <main className="dashboard-loading"><p>Carregando seu plano...</p></main>;
+    return <main className="dashboard-loading"><MarcaCarregando texto="Carregando seu plano..." /></main>;
   }
 
   const objetivoPrincipal = objetivos[0];

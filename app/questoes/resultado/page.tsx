@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import MarcaCarregando from "@/components/ui/MarcaCarregando";
 import { createClient } from "@/utils/supabase/client";
 
 type Resultado = { questoes_respondidas: number; acertos: number; nivel_meta: string; minutos_revisao: number };
@@ -26,7 +27,7 @@ export default function ResultadoQuestoes() {
   }, []);
 
   if (erro) return <main className="method-page result-page"><p className="method-message">{erro}</p><Link href="/painel">Voltar ao painel</Link></main>;
-  if (!resultado) return <main className="dashboard-loading"><p>Calculando seu resultado...</p></main>;
+  if (!resultado) return <main className="dashboard-loading"><MarcaCarregando texto="Calculando seu resultado..." /></main>;
 
   const percentual = resultado.questoes_respondidas ? Math.round((resultado.acertos / resultado.questoes_respondidas) * 100) : 0;
   return (

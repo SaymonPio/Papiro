@@ -5,6 +5,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import ComponenteAulaView, { type ComponenteAula } from "@/components/teoria/ComponenteAulaView";
 import ComentariosAula from "@/components/teoria/ComentariosAula";
+import MarcaCarregando from "@/components/ui/MarcaCarregando";
 
 // crypto.randomUUID() exige um "contexto seguro" do navegador — indisponível
 // em HTTP por IP local (ex.: http://10.0.0.100:5173), só em localhost/HTTPS.
@@ -306,7 +307,7 @@ export default function AdminAulas() {
     if (conteudoId) await carregarGeracoes(conteudoId);
   }
 
-  if (verificando) return <main className="dashboard-loading"><p>Verificando acesso administrativo...</p></main>;
+  if (verificando) return <main className="dashboard-loading"><MarcaCarregando texto="Verificando acesso administrativo..." /></main>;
 
   if (!admin) {
     return (

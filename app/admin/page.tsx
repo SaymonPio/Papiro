@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import AuditoriaAlternativas from "@/app/admin/auditoria-alternativas";
+import MarcaCarregando from "@/components/ui/MarcaCarregando";
 import { createClient } from "@/utils/supabase/client";
 
 type Materia = { id: number; nome: string };
@@ -140,7 +141,7 @@ export default function Admin() {
     setSalvando(false);
   }
 
-  if (verificando) return <main className="dashboard-loading"><p>Verificando acesso administrativo...</p></main>;
+  if (verificando) return <main className="dashboard-loading"><MarcaCarregando texto="Verificando acesso administrativo..." /></main>;
 
   if (!admin) {
     return (
