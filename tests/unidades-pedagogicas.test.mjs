@@ -8,6 +8,7 @@ const reader = await readFile(new URL("../supabase/unidades_pedagogicas_leitura_
 const publisher = await readFile(new URL("../supabase/unidades_pedagogicas_publicacao_rpc.sql", import.meta.url), "utf8");
 const curadoriaMariaPenha = await readFile(new URL("../supabase/curadoria_unidades_lei_maria_penha.sql", import.meta.url), "utf8");
 const adminAulas = await readFile(new URL("../app/admin/aulas/page.tsx", import.meta.url), "utf8");
+const publisherFix = await readFile(new URL("../supabase/unidades_pedagogicas_publicacao_fix.sql", import.meta.url), "utf8");
 
 test("unidade pertence a um conteúdo real e tem ordem única", () => {
   assert.match(migration, /references public\.curso_conteudos\(id\) on delete restrict/);
@@ -58,4 +59,10 @@ test("painel administrativo mostra somente gerações da unidade selecionada", (
   assert.match(adminAulas, /geracoesDaUnidade\.map/);
   assert.match(adminAulas, /geração\(ões\) desta unidade/);
   assert.match(adminAulas, /g\.contexto\?\.unidade_pedagogica \?\? "Unidade pedagógica não registrada"/);
+});
+
+test("publicação qualifica colunas que colidem com os parâmetros de retorno", () => {
+  assert.match(publisherFix, /versao_anterior\.aula_id=v_aula_id/);
+  assert.match(publisherFix, /versao_anterior\.status='publicada'/);
+  assert.match(publisherFix, /versao_revisada\.id=p_aula_versao_id/);
 });
