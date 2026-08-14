@@ -81,7 +81,11 @@ type GeracaoAdmin = {
   // aplicada manualmente pelo usuário; até lá a RPC real ainda não
   // retorna "contexto", por isso toda leitura abaixo é defensiva e trata
   // ausência como "sem alerta", nunca como erro).
-  contexto: { validacao_escopo?: ValidacaoEscopo } | null;
+  contexto: {
+    unidade_pedagogica_id?: string;
+    unidade_pedagogica?: string;
+    validacao_escopo?: ValidacaoEscopo;
+  } | null;
 };
 
 // Nunca lança, nunca presume formato — contexto pode não existir ainda
@@ -318,6 +322,9 @@ export default function AdminAulas() {
   }
 
   const componentesRascunho = Array.isArray(rascunho?.estrutura?.componentes) ? rascunho!.estrutura.componentes! : [];
+  const geracoesDaUnidade = unidadeId
+    ? geracoes.filter((g) => g.contexto?.unidade_pedagogica_id === unidadeId)
+    : [];
 
   return (
     <main className="admin-page">
@@ -419,7 +426,7 @@ export default function AdminAulas() {
           <section className="admin-foundations">
             <div className="admin-section-heading">
               <div><p className="dashboard-label">GERAÇÃO</p><h2>Gerar aula (rascunho)</h2></div>
-              <span>{geracoes.length} geração(ões) anteriores</span>
+              <span>{geracoesDaUnidade.length} geração(ões) desta unidade</span>
             </div>
 
             <button className="admin-publish" type="button" onClick={gerarAula} disabled={gerando}>
@@ -428,13 +435,14 @@ export default function AdminAulas() {
             {mensagem && <p className="upload-message" role="status">{mensagem}</p>}
 
             <div className="admin-recent">
-              {geracoes.map((g) => (
+              {geracoesDaUnidade.map((g) => (
                 <article key={g.geracao_id}>
                   <span className={`notice-status ${g.status}`}>
                     {g.status === "concluida" ? "Concluída" : g.status === "erro" ? "Erro" : "Processando"}
                   </span>
                   <div>
                     <strong>{new Date(g.iniciado_em).toLocaleString("pt-BR")}</strong>
+                    <small>{g.contexto?.unidade_pedagogica ?? "Unidade pedagógica não registrada"}</small>
                     <small>{g.prompt_version} · {g.modelo ?? "modelo não registrado"}</small>
                     {g.erro && <small role="alert">{g.erro}</small>}
                     {artigosForaDoEscopo(g).length > 0 && (

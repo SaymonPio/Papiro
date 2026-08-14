@@ -7,6 +7,7 @@ const generator = await readFile(new URL("../supabase/functions/gerar-aula/index
 const reader = await readFile(new URL("../supabase/unidades_pedagogicas_leitura_rpc.sql", import.meta.url), "utf8");
 const publisher = await readFile(new URL("../supabase/unidades_pedagogicas_publicacao_rpc.sql", import.meta.url), "utf8");
 const curadoriaMariaPenha = await readFile(new URL("../supabase/curadoria_unidades_lei_maria_penha.sql", import.meta.url), "utf8");
+const adminAulas = await readFile(new URL("../app/admin/aulas/page.tsx", import.meta.url), "utf8");
 
 test("unidade pertence a um conteúdo real e tem ordem única", () => {
   assert.match(migration, /references public\.curso_conteudos\(id\) on delete restrict/);
@@ -50,4 +51,11 @@ test("gerador prioriza a redação legal vigente e versiona a mudança de prompt
   assert.match(generator, /const PROMPT_VERSION = "2j-c-v2"/);
   assert.match(generator, /REGRA DE VIGÊNCIA — OBRIGATÓRIA PARA FONTES LEGAIS/);
   assert.match(generator, /ensine SOMENTE a redação vigente mais recente/);
+});
+
+test("painel administrativo mostra somente gerações da unidade selecionada", () => {
+  assert.match(adminAulas, /g\.contexto\?\.unidade_pedagogica_id === unidadeId/);
+  assert.match(adminAulas, /geracoesDaUnidade\.map/);
+  assert.match(adminAulas, /geração\(ões\) desta unidade/);
+  assert.match(adminAulas, /g\.contexto\?\.unidade_pedagogica \?\? "Unidade pedagógica não registrada"/);
 });
