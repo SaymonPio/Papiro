@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import ComentariosQuestao from "@/components/questoes/ComentariosQuestao";
 import {
   lerMissaoCronograma,
   podeIniciarMissaoAutomaticamente,
@@ -117,6 +118,7 @@ export default function Questoes() {
   const [indice, setIndice] = useState(0);
   const [sessaoId, setSessaoId] = useState<number | null>(null);
   const [alternativaId, setAlternativaId] = useState<number | null>(null);
+  const [alternativasEliminadas, setAlternativasEliminadas] = useState<Set<number>>(()=>new Set());
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [acertos, setAcertos] = useState(0);
   const [mensagem, setMensagem] = useState("");
@@ -540,6 +542,17 @@ export default function Questoes() {
     setCarregando(false);
   }
 
+  function alternarAlternativaEliminada(id:number) {
+    if(feedback) return;
+    setAlternativasEliminadas(atuais=>{
+      const proximas=new Set(atuais);
+      if(proximas.has(id)) proximas.delete(id);
+      else proximas.add(id);
+      return proximas;
+    });
+    if(alternativaId===id) setAlternativaId(null);
+  }
+
   async function classificarErro(causa: CausaErro) {
     if (!feedback?.erroId) return;
     setCausaErro(causa);
@@ -573,6 +586,7 @@ export default function Questoes() {
     if (indice < questoes.length - 1) {
       setIndice((valor) => valor + 1);
       setAlternativaId(null);
+      setAlternativasEliminadas(new Set());
       setFeedback(null);
       setCausaErro(null);
       setClassificando(false);
@@ -734,18 +748,28 @@ export default function Questoes() {
         </div>
         <h1>{questaoAtual.enunciado}</h1>
         <div className="answer-list">
-          {questaoAtual.alternativas.map((alternativa) => (
-            <button
-              key={alternativa.id}
-              type="button"
-              className={alternativaId === alternativa.id ? "selected" : ""}
-              onClick={() => !feedback && setAlternativaId(alternativa.id)}
-              disabled={Boolean(feedback)}
-            >
-              <b>{String.fromCharCode(64 + alternativa.ordem)}</b>
-              <span>{alternativa.texto}</span>
-            </button>
-          ))}
+          {questaoAtual.alternativas.map((alternativa) => {
+            const eliminada=alternativasEliminadas.has(alternativa.id);
+            return <div key={alternativa.id} className={`answer-option-row${eliminada?" eliminated":""}`}>
+              <button
+                type="button"
+                className={`answer-choice${alternativaId === alternativa.id ? " selected" : ""}`}
+                onClick={() => !feedback&&!eliminada&&setAlternativaId(alternativa.id)}
+                disabled={Boolean(feedback)||eliminada}
+              >
+                <b>{String.fromCharCode(64 + alternativa.ordem)}</b>
+                <span>{alternativa.texto}</span>
+              </button>
+              <button
+                type="button"
+                className="answer-cut"
+                aria-pressed={eliminada}
+                aria-label={`${eliminada?"Restaurar":"Riscar"} alternativa ${String.fromCharCode(64 + alternativa.ordem)}`}
+                onClick={()=>alternarAlternativaEliminada(alternativa.id)}
+                disabled={Boolean(feedback)}
+              ><span aria-hidden="true">✂</span><span>{eliminada?"Restaurar":"Riscar"}</span></button>
+            </div>;
+          })}
         </div>
 
         {feedback ? (
@@ -791,6 +815,7 @@ export default function Questoes() {
         )}
         {mensagem && <p className="method-message" role="alert">{mensagem}</p>}
       </article>
+      <ComentariosQuestao key={questaoAtual.id} questaoId={questaoAtual.id} />
       <aside className="session-score">Acertos nesta sessão: <strong>{acertos}</strong></aside>
     </main>
   );
