@@ -54,6 +54,13 @@ test("gerador prioriza a redação legal vigente e versiona a mudança de prompt
   assert.match(generator, /ensine SOMENTE a redação vigente mais recente/);
 });
 
+test("gerador permite configurar o modelo e preserva o Luna como padrão", () => {
+  assert.match(generator, /const MODELO_PADRAO = "gpt-5\.6-luna"/);
+  assert.match(generator, /Deno\.env\.get\("OPENAI_MODEL"\)\?\.trim\(\) \|\| MODELO_PADRAO/);
+  assert.match(generator, /model: MODELO/);
+  assert.doesNotMatch(generator, /ainda NÃO aplicada/);
+});
+
 test("painel administrativo mostra somente gerações da unidade selecionada", () => {
   assert.match(adminAulas, /g\.contexto\?\.unidade_pedagogica_id === unidadeId/);
   assert.match(adminAulas, /geracoesDaUnidade\.map/);

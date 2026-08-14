@@ -41,8 +41,8 @@ import { auditarEscopoArtigos } from "./escopo.mjs";
 // vazavam conteúdo de outras partes (recall/questão/resumo citando artigos
 // de partes 2-5).
 //
-// Modelagem (supabase/teoria_escopos_conteudo.sql, migration NOVA, ainda
-// NÃO aplicada no banco neste momento): tabela opcional 1:1 com
+// Modelagem (supabase/teoria_escopos_conteudo.sql, aplicada em produção na
+// Fase 2J-B): tabela opcional 1:1 com
 // curso_conteudos, chave curso_conteudo_id, com grupo_id (agrupa partes do
 // mesmo conjunto pedagógico — a ÚNICA fonte de relação entre partes,
 // nunca nome/substring), parte_ordem, escopo (texto autorizado da parte) e
@@ -64,21 +64,25 @@ import { auditarEscopoArtigos } from "./escopo.mjs";
 // Painel admin: o aviso "ATENÇÃO AO ESCOPO" depende de aula_geracoes.
 // contexto chegar até app/admin/aulas/page.tsx — auditoria confirmou que
 // public.listar_geracoes_conteudo_admin não retornava "contexto" antes
-// desta fase; supabase/teoria_geracoes_admin_contexto.sql (migration NOVA,
-// ainda NÃO aplicada) recria essa RPC (DROP+CREATE — Postgres não permite
+// desta fase; supabase/teoria_geracoes_admin_contexto.sql (aplicada em
+// produção na Fase 2J-B) recria essa RPC (DROP+CREATE — Postgres não permite
 // CREATE OR REPLACE mudar colunas de um RETURNS TABLE) só acrescentando
 // "contexto jsonb" no fim, sem editar a migration histórica
 // teoria_geracao_admin_rpc.sql.
 //
-// Nenhuma das duas migrations novas é aplicada automaticamente por este
-// arquivo — até serem aplicadas manualmente, a Edge Function funciona
-// exatamente como antes (teoria_escopos_conteudo ausente = fallback;
-// contexto sem chegar ao admin = aviso simplesmente não aparece).
+// Este arquivo não aplica migrations automaticamente. O contrato de produção
+// pressupõe as duas migrations acima; a ausência de teoria_escopos_conteudo
+// para um conteúdo específico continua sendo tratada como fallback legítimo.
 
 const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type" };
 
 const PROMPT_VERSION = "2j-c-v2";
-const MODELO = "gpt-5.6-luna";
+// OPENAI_MODEL permite trocar o modelo sem novo deploy. O valor padrão é um
+// identificador oficial da OpenAI, compatível com Responses API e Structured
+// Outputs. String vazia também cai no padrão para evitar configuração inválida
+// por acidente.
+const MODELO_PADRAO = "gpt-5.6-luna";
+const MODELO = Deno.env.get("OPENAI_MODEL")?.trim() || MODELO_PADRAO;
 const MINUTOS_GERACAO_EXPIRADA = 10;
 
 // Trava conservadora de tamanho combinado dos anexos (ver comentário no
