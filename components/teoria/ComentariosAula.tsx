@@ -11,10 +11,10 @@ type Comentario = {
   meu: boolean;
 };
 
-export default function ComentariosAula({ aulaId }: { aulaId: string }) {
+export default function ComentariosAula({ aulaId, modoPrevia=false }: { aulaId: string; modoPrevia?: boolean }) {
   const [comentarios,setComentarios]=useState<Comentario[]>([]);
   const [texto,setTexto]=useState("");
-  const [carregando,setCarregando]=useState(true);
+  const [carregando,setCarregando]=useState(!modoPrevia);
   const [enviando,setEnviando]=useState(false);
   const [mensagem,setMensagem]=useState("");
 
@@ -25,12 +25,12 @@ export default function ComentariosAula({ aulaId }: { aulaId: string }) {
     setCarregando(false);
   }
 
-  useEffect(()=>{ carregar(); },[aulaId]);
+  useEffect(()=>{ if(!modoPrevia) carregar(); },[aulaId,modoPrevia]);
 
   async function enviar(evento:FormEvent) {
     evento.preventDefault();
     const limpo=texto.trim();
-    if(limpo.length<2||limpo.length>1000||enviando) return;
+    if(modoPrevia||limpo.length<2||limpo.length>1000||enviando) return;
     setEnviando(true); setMensagem("");
     const {error}=await createClient().rpc("comentar_aula",{p_aula_id:aulaId,p_texto:limpo});
     setEnviando(false);
@@ -63,8 +63,8 @@ export default function ComentariosAula({ aulaId }: { aulaId: string }) {
     </div>
     <form onSubmit={enviar} className="teoria-comentarios-form">
       <label htmlFor="comentario-aula">{comentarios.length===0?"Comece a conversa":"Participe da conversa"}</label>
-      <textarea id="comentario-aula" value={texto} onChange={e=>setTexto(e.target.value)} maxLength={1000} rows={4} placeholder="O que você achou da aula? Ficou alguma dúvida?" />
-      <div><small>{texto.length}/1000</small><button type="submit" disabled={enviando||texto.trim().length<2}>{enviando?"Publicando...":"Publicar comentário"}</button></div>
+      <textarea id="comentario-aula" value={texto} onChange={e=>setTexto(e.target.value)} maxLength={1000} rows={4} disabled={modoPrevia} placeholder={modoPrevia?"A comunidade será aberta quando esta aula for publicada.":"O que você achou da aula? Ficou alguma dúvida?"} />
+      <div><small>{modoPrevia?"Prévia administrativa":`${texto.length}/1000`}</small><button type="submit" disabled={modoPrevia||enviando||texto.trim().length<2}>{enviando?"Publicando...":"Publicar comentário"}</button></div>
     </form>
     {mensagem&&<p className="teoria-comentarios-mensagem" role="status">{mensagem}</p>}
   </section>;

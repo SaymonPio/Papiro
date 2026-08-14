@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ChangeEvent, useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import ComponenteAulaView, { type ComponenteAula } from "@/components/teoria/ComponenteAulaView";
+import ComentariosAula from "@/components/teoria/ComentariosAula";
 
 // crypto.randomUUID() exige um "contexto seguro" do navegador — indisponível
 // em HTTP por IP local (ex.: http://10.0.0.100:5173), só em localhost/HTTPS.
@@ -474,6 +475,7 @@ export default function AdminAulas() {
                 {componentesRascunho.map((componente, indice) => (
                   <ComponenteAulaView key={componente?.tipo ? `${componente.tipo}-${indice}` : indice} componente={componente} />
                 ))}
+                <ComentariosAula aulaId={rascunho.aula_id} modoPrevia />
               </div>
             </section>
           )}

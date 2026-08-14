@@ -7,3 +7,4 @@ test("comentários pertencem à aula lógica e têm limite",()=>{assert.match(sq
 test("leitura e escrita exigem matrícula ativa",()=>{assert.match(sql,/m\.status='ativa'/);assert.match(sql,/usuario_pode_comentar_aula/);});
 test("aluno remove somente o próprio comentário e admin pode moderar",()=>{assert.match(sql,/usuario_id=v_usuario and status='ativo'/);assert.match(sql,/if not public\.eh_admin\(\)/);});
 test("interface distingue primeira participação de conversa existente",()=>{assert.match(ui,/Seja o primeiro a comentar!/);assert.match(ui,/O que os alunos estão dizendo/);assert.match(ui,/maxLength=\{1000\}/);assert.match(ui,/Remover meu comentário/);});
+test("prévia administrativa mostra a área sem permitir comentário em rascunho",()=>{assert.match(ui,/modoPrevia/);assert.match(ui,/comunidade será aberta quando esta aula for publicada/);});
