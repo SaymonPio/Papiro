@@ -3,6 +3,7 @@ import test from "node:test";
 import {
   lerMissaoCronograma,
   lerMissionId,
+  lerPraticaPapiro,
   montarLinkMissao,
   montarLinkTeoria,
   podeIniciarMissaoAutomaticamente,
@@ -170,6 +171,45 @@ test("inicia automaticamente quando os dados da missão estão prontos", () => {
     }),
     true,
   );
+});
+
+test("montarLinkMissao com unidadePedagogicaId inclui unidade=<uuid> e lerPraticaPapiro lê de volta", () => {
+  const unidadeId = "b2c3d4e5-f6a7-4890-b123-456789abcdef";
+  const link = montarLinkMissao({
+    materiaId: 7,
+    missionId: MISSION_ID,
+    unidadePedagogicaId: unidadeId,
+  });
+
+  assert.equal(new URLSearchParams(link.split("?")[1]).get("unidade"), unidadeId);
+  assert.equal(new URLSearchParams(link.split("?")[1]).has("missaoFinal"), false);
+
+  const pratica = lerPraticaPapiro(link.split("?")[1]);
+  assert.deepEqual(pratica, { unidadePedagogicaId: unidadeId, missaoFinal: false });
+
+  // lerMissaoCronograma continua com a MESMA forma de sempre — unidade/
+  // missaoFinal nunca contaminam esse retorno, testado por igualdade
+  // estrita em outro teste deste arquivo.
+  assert.equal(Object.keys(lerMissaoCronograma(link.split("?")[1])).includes("unidade"), false);
+});
+
+test("montarLinkMissao com missaoFinal inclui missaoFinal=1 e nunca junto de unidade", () => {
+  const link = montarLinkMissao({ materiaId: 7, missionId: MISSION_ID, missaoFinal: true });
+
+  assert.equal(new URLSearchParams(link.split("?")[1]).get("missaoFinal"), "1");
+  assert.equal(new URLSearchParams(link.split("?")[1]).has("unidade"), false);
+
+  const pratica = lerPraticaPapiro(link.split("?")[1]);
+  assert.deepEqual(pratica, { unidadePedagogicaId: null, missaoFinal: true });
+});
+
+test("lerPraticaPapiro sem parâmetros novos devolve o fluxo antigo (nem unidade, nem missaoFinal)", () => {
+  const link = montarLinkMissao({ materiaId: 7, missionId: MISSION_ID });
+  assert.deepEqual(lerPraticaPapiro(link.split("?")[1]), { unidadePedagogicaId: null, missaoFinal: false });
+});
+
+test("lerPraticaPapiro descarta um parametro unidade malformado", () => {
+  assert.deepEqual(lerPraticaPapiro("unidade=nao-e-um-uuid"), { unidadePedagogicaId: null, missaoFinal: false });
 });
 
 test("aguarda o assunto e impede uma segunda sessão automática", () => {

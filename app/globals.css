@@ -2878,6 +2878,30 @@ footer > small {
   text-align: right;
 }
 
+/* Modo Papiro por unidades pedagógicas: aviso de Missão Final liberada,
+   mesma identidade visual dos demais cartões da Teoria Interativa. */
+.teoria-missao-final-liberada {
+  max-width: 720px;
+  margin: 0 auto 32px;
+  padding: clamp(24px, 4vw, 38px);
+  border: 1px solid rgba(216, 173, 76, 0.32);
+  border-radius: 14px;
+  background: rgba(216, 173, 76, 0.06);
+  text-align: center;
+}
+
+.teoria-missao-final-liberada h2 {
+  margin: 6px 0 10px;
+  font-family: Georgia, serif;
+  font-size: clamp(24px, 3vw, 32px);
+  color: var(--cream);
+}
+
+.teoria-missao-final-liberada p:not(.dashboard-label) {
+  margin: 0 0 20px;
+  color: #b9c2bd;
+}
+
 .teoria-bloco {
   padding: clamp(24px, 4vw, 38px);
   border: 1px solid rgba(216, 173, 76, 0.22);

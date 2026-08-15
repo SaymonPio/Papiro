@@ -6,6 +6,7 @@ import ComentariosQuestao from "@/components/questoes/ComentariosQuestao";
 import MarcaCarregando from "@/components/ui/MarcaCarregando";
 import {
   lerMissaoCronograma,
+  lerPraticaPapiro,
   podeIniciarMissaoAutomaticamente,
 } from "@/utils/missao-cronograma.mjs";
 import { createClient } from "@/utils/supabase/client";
@@ -22,6 +23,17 @@ type SessaoMissao = {
   sessao_id: number | string;
   sessao_status: string;
   missao_status: string;
+  questao_ids: Array<number | string>;
+  recuperada: boolean;
+};
+// Retorno de iniciar_pratica_unidade/iniciar_missao_final (missao_pratica_
+// papiro_rpc.sql) — mesmas 4 colunas realmente usadas nesta tela
+// (sessao_id/sessao_status/questao_ids/recuperada); cada RPC devolve uma
+// 5ª coluna própria (unidade_pedagogica_id ou missao_status) que esta tela
+// não precisa ler.
+type SessaoPratica = {
+  sessao_id: number | string;
+  sessao_status: string;
   questao_ids: Array<number | string>;
   recuperada: boolean;
 };
@@ -149,6 +161,8 @@ export default function Questoes() {
   const [origemCronograma, setOrigemCronograma] = useState(false);
   const [missionId, setMissionId] = useState<string | null>(null);
   const [refazerMissao, setRefazerMissao] = useState(false);
+  const [unidadePedagogicaId, setUnidadePedagogicaId] = useState<string | null>(null);
+  const [missaoFinal, setMissaoFinal] = useState(false);
   const [autoInicioSolicitado, setAutoInicioSolicitado] = useState(false);
   const assuntoInicialMissao = useRef<number | null>(null);
   const autoInicioExecutado = useRef(false);
@@ -158,9 +172,13 @@ export default function Questoes() {
       const missao = lerMissaoCronograma(window.location.search);
       if (!missao) return;
 
+      const pratica = lerPraticaPapiro(window.location.search);
+
       setOrigemCronograma(true);
       setMissionId(missao.missionId);
       setRefazerMissao(missao.refazer);
+      setUnidadePedagogicaId(pratica.unidadePedagogicaId);
+      setMissaoFinal(pratica.missaoFinal);
       setModoInicio("personalizada");
       setMateriaSelecionada(missao.materiaId);
       assuntoInicialMissao.current = missao.assuntoId;
@@ -400,57 +418,117 @@ export default function Questoes() {
       return;
     }
 
-    const { data: idsQuestoes, error: erroIds } = await supabase.rpc("ids_questoes_para_usuario", {
-      p_limite: quantidadePersonalizada,
-      p_materia_id: materiaSelecionada,
-      p_assunto_id: assuntoSelecionado,
-    });
+    let ids: number[] = [];
+    let sessaoDaMissao: SessaoMissao | SessaoPratica | null = null;
 
-    if (erroIds) {
-      console.error("ids_questoes_para_usuario (personalizada) falhou:", {
-        message: erroIds.message,
-        code: erroIds.code,
-        details: erroIds.details,
-        hint: erroIds.hint,
-      });
-      setMensagemPersonalizada("Não foi possível carregar as questões para esse filtro.");
-      setCarregandoPersonalizada(false);
-      return;
-    }
-
-    let ids = ((idsQuestoes as IdQuestao[] | null) ?? []).map((item) => item.questao_id);
-
-    if (ids.length === 0) {
-      setMensagemPersonalizada("Não há questões disponíveis para esse filtro.");
-      setCarregandoPersonalizada(false);
-      return;
-    }
-
-    let sessaoDaMissao: SessaoMissao | null = null;
-    if (missionId) {
-      const { data, error } = await supabase.rpc("iniciar_questoes_da_missao", {
+    // Modo Papiro por unidades pedagógicas (Fase 2J-F): quando a URL pede
+    // uma unidade específica ou a Missão Final, a seleção é INTEIRA
+    // responsabilidade do servidor — nenhum id de questão é calculado no
+    // cliente nem enviado como entrada (diferente do fluxo antigo abaixo,
+    // que só valida ids computados no cliente). unidadePedagogicaId e
+    // missaoFinal nunca coexistem (lerPraticaPapiro nunca devolve os dois).
+    if (unidadePedagogicaId) {
+      const { data, error } = await supabase.rpc("iniciar_pratica_unidade", {
         p_missao_id: missionId,
-        p_questao_ids: ids,
+        p_unidade_pedagogica_id: unidadePedagogicaId,
         p_refazer: refazerMissao,
       });
-      sessaoDaMissao = ((data as SessaoMissao[] | null) ?? [])[0] ?? null;
+      const linha = ((data as SessaoPratica[] | null) ?? [])[0] ?? null;
 
-      if (error || !sessaoDaMissao) {
+      if (error || !linha) {
         setMensagemPersonalizada(
           error?.message.toLowerCase().includes("teoria")
-            ? "Conclua todas as unidades da teoria antes de iniciar as questões."
-            : "Não foi possível iniciar as questões desta missão.",
+            ? "Conclua a teoria desta unidade antes de iniciar as questões."
+            : "Não foi possível iniciar a prática desta unidade.",
         );
         setCarregandoPersonalizada(false);
         return;
       }
 
-      if (sessaoDaMissao.sessao_status === "concluida") {
-        window.location.replace(`/questoes/resultado?sessao=${sessaoDaMissao.sessao_id}`);
+      if (linha.sessao_status === "concluida") {
+        window.location.replace(`/questoes/resultado?sessao=${linha.sessao_id}`);
         return;
       }
 
-      ids = sessaoDaMissao.questao_ids.map(Number).filter(Number.isInteger);
+      sessaoDaMissao = linha;
+      ids = linha.questao_ids.map(Number).filter(Number.isInteger);
+    } else if (missaoFinal) {
+      const { data, error } = await supabase.rpc("iniciar_missao_final", {
+        p_missao_id: missionId,
+        p_refazer: refazerMissao,
+      });
+      const linha = ((data as SessaoPratica[] | null) ?? [])[0] ?? null;
+
+      if (error || !linha) {
+        setMensagemPersonalizada(
+          error?.message.toLowerCase().includes("missao final") || error?.message.toLowerCase().includes("pratica")
+            ? "Conclua a teoria e a prática de todas as unidades antes da Missão Final."
+            : "Não foi possível iniciar a Missão Final.",
+        );
+        setCarregandoPersonalizada(false);
+        return;
+      }
+
+      if (linha.sessao_status === "concluida") {
+        window.location.replace(`/questoes/resultado?sessao=${linha.sessao_id}`);
+        return;
+      }
+
+      sessaoDaMissao = linha;
+      ids = linha.questao_ids.map(Number).filter(Number.isInteger);
+    } else {
+      const { data: idsQuestoes, error: erroIds } = await supabase.rpc("ids_questoes_para_usuario", {
+        p_limite: quantidadePersonalizada,
+        p_materia_id: materiaSelecionada,
+        p_assunto_id: assuntoSelecionado,
+      });
+
+      if (erroIds) {
+        console.error("ids_questoes_para_usuario (personalizada) falhou:", {
+          message: erroIds.message,
+          code: erroIds.code,
+          details: erroIds.details,
+          hint: erroIds.hint,
+        });
+        setMensagemPersonalizada("Não foi possível carregar as questões para esse filtro.");
+        setCarregandoPersonalizada(false);
+        return;
+      }
+
+      ids = ((idsQuestoes as IdQuestao[] | null) ?? []).map((item) => item.questao_id);
+
+      if (ids.length === 0) {
+        setMensagemPersonalizada("Não há questões disponíveis para esse filtro.");
+        setCarregandoPersonalizada(false);
+        return;
+      }
+
+      if (missionId) {
+        const { data, error } = await supabase.rpc("iniciar_questoes_da_missao", {
+          p_missao_id: missionId,
+          p_questao_ids: ids,
+          p_refazer: refazerMissao,
+        });
+        const linhaMissao = ((data as SessaoMissao[] | null) ?? [])[0] ?? null;
+        sessaoDaMissao = linhaMissao;
+
+        if (error || !linhaMissao) {
+          setMensagemPersonalizada(
+            error?.message.toLowerCase().includes("teoria")
+              ? "Conclua todas as unidades da teoria antes de iniciar as questões."
+              : "Não foi possível iniciar as questões desta missão.",
+          );
+          setCarregandoPersonalizada(false);
+          return;
+        }
+
+        if (linhaMissao.sessao_status === "concluida") {
+          window.location.replace(`/questoes/resultado?sessao=${linhaMissao.sessao_id}`);
+          return;
+        }
+
+        ids = linhaMissao.questao_ids.map(Number).filter(Number.isInteger);
+      }
     }
 
     // Mesma busca por detalhes só dos IDs já autorizados pela RPC — nunca um
@@ -519,7 +597,7 @@ export default function Questoes() {
     setQuestoes(preparadas);
     setSessaoId(sessaoIdAtual);
     setCarregandoPersonalizada(false);
-  }, [assuntoSelecionado, materiaSelecionada, missionId, quantidadePersonalizada, refazerMissao]);
+  }, [assuntoSelecionado, materiaSelecionada, missionId, quantidadePersonalizada, refazerMissao, unidadePedagogicaId, missaoFinal]);
 
   useEffect(() => {
     const podeIniciar = podeIniciarMissaoAutomaticamente({
@@ -636,6 +714,38 @@ export default function Questoes() {
       setClassificado(false);
       setErroClassificacao("");
       setMensagem("");
+      return;
+    }
+
+    // Modo Papiro por unidades pedagógicas: cada tipo de prática fecha sua
+    // própria RPC e decide seu próprio destino — nunca reaproveita
+    // concluir_questoes_da_missao (que fecha a MISSÃO inteira, não uma
+    // unidade isolada).
+    if (unidadePedagogicaId) {
+      const { data, error } = await createClient().rpc("concluir_pratica_unidade", {
+        p_missao_id: missionId,
+        p_sessao_id: sessaoId,
+      });
+      if (error) {
+        setMensagem("Não foi possível concluir a prática desta unidade. Confira se todas as questões foram respondidas e tente novamente.");
+        return;
+      }
+      const resultado = ((data as { missao_final_liberada: boolean }[] | null) ?? [])[0];
+      const proximaEtapa = resultado?.missao_final_liberada ? "missaoFinal" : "unidade";
+      window.location.replace(`/questoes/resultado?sessao=${sessaoId}&proximo=${proximaEtapa}`);
+      return;
+    }
+
+    if (missaoFinal) {
+      const { error } = await createClient().rpc("concluir_missao_final", {
+        p_missao_id: missionId,
+        p_sessao_id: sessaoId,
+      });
+      if (error) {
+        setMensagem("Não foi possível concluir a Missão Final. Confira se todas as questões foram respondidas e tente novamente.");
+        return;
+      }
+      window.location.replace(`/questoes/resultado?sessao=${sessaoId}`);
       return;
     }
 

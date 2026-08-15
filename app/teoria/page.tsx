@@ -32,6 +32,12 @@ type Missao = {
   data_missao: string;
   status: string;
   progresso_teoria: Record<string, unknown>;
+  // Modo Papiro por unidades pedagógicas (Fase 2J-F) — coluna aditiva de
+  // missoes (questao_unidades_pedagogicas.sql), escrita exclusivamente por
+  // concluir_pratica_unidade/concluir_missao_final. Lida aqui só para saber
+  // se a Missão Final já está liberada quando o aluno volta para /teoria
+  // (nunca para decidir nada de escrita — é só leitura de estado).
+  progresso_questoes: Record<string, unknown>;
 };
 
 // Identidade acadêmica CANÔNICA da missão — derivada de missao.conteudo_id
@@ -155,6 +161,27 @@ function obterIdsUnidadesConcluidas(
   });
 }
 
+// Espelha obterIdsUnidadesConcluidas, mas para a PRÁTICA de questões
+// (missoes.progresso_questoes, schema_version 1 — questao_unidades_
+// pedagogicas.sql/missao_pratica_papiro_rpc.sql) — só leitura, nunca
+// decide nada de escrita aqui. Usado exclusivamente para saber se a
+// Missão Final já está liberada quando o aluno volta para /teoria depois
+// de sair no meio do Modo Papiro por unidades.
+function obterIdsUnidadesPraticadas(progresso: Record<string, unknown>): string[] {
+  if (progresso?.schema_version !== 1 || !Array.isArray(progresso?.unidades_praticadas)) return [];
+
+  return progresso.unidades_praticadas.flatMap((item) => {
+    if (
+      typeof item === "object" &&
+      item !== null &&
+      typeof (item as Record<string, unknown>).unidade_pedagogica_id === "string"
+    ) {
+      return [(item as Record<string, string>).unidade_pedagogica_id];
+    }
+    return [];
+  });
+}
+
 export default function Teoria() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
@@ -168,6 +195,7 @@ export default function Teoria() {
   const [unidadesPublicadas, setUnidadesPublicadas] = useState<AulaPublicada[]>([]);
   const [indiceUnidade, setIndiceUnidade] = useState(0);
   const [unidadesConcluidas, setUnidadesConcluidas] = useState<string[]>([]);
+  const [missaoFinalLiberada, setMissaoFinalLiberada] = useState(false);
   const [salvandoProgresso, setSalvandoProgresso] = useState(false);
   const [mensagemProgresso, setMensagemProgresso] = useState("");
 
@@ -211,7 +239,7 @@ export default function Teoria() {
       // válida: mostra erro controlado.
       const { data: missaoCarregada, error: erroMissao } = await supabase
         .from("missoes")
-        .select("id, matricula_id, conteudo_id, data_missao, status, progresso_teoria")
+        .select("id, matricula_id, conteudo_id, data_missao, status, progresso_teoria, progresso_questoes")
         .eq("id", missionId)
         .maybeSingle();
 
@@ -348,8 +376,21 @@ export default function Teoria() {
         // erro: significa que esta missão ainda não tem aula publicada.
         const linhas = (aulaCarregada as AulaPublicada[] | null) ?? [];
         if (linhas.length > 0) {
+          const concluidas = obterIdsUnidadesConcluidas(missaoCarregada.progresso_teoria, linhas);
+          const praticadas = obterIdsUnidadesPraticadas(missaoCarregada.progresso_questoes);
           setUnidadesPublicadas(linhas);
-          setUnidadesConcluidas(obterIdsUnidadesConcluidas(missaoCarregada.progresso_teoria, linhas));
+          setUnidadesConcluidas(concluidas);
+          // Modo Papiro por unidades pedagógicas: se o aluno já praticou
+          // TODAS as unidades (ex.: saiu antes de fazer a Missão Final e
+          // voltou depois), a página oferece diretamente a Missão Final —
+          // nunca manda ele repetir a prática de uma unidade já concluída.
+          setMissaoFinalLiberada(linhas.length > 1 && praticadas.length >= linhas.length);
+          // Ao voltar de uma prática (Modo Papiro por unidades), pousa na
+          // primeira unidade AINDA pendente — nunca força o aluno a rever a
+          // teoria já concluída. Se todas já estiverem concluídas, fica na
+          // última (só resta a Missão Final).
+          const primeiraPendente = linhas.findIndex((u) => !concluidas.includes(u.unidade_pedagogica_id));
+          setIndiceUnidade(primeiraPendente === -1 ? linhas.length - 1 : primeiraPendente);
           setEstadoAula("disponivel");
         } else {
           setEstadoAula("indisponivel");
@@ -419,6 +460,26 @@ export default function Teoria() {
 
     setSalvandoProgresso(false);
 
+    // Modo Papiro por unidades pedagógicas: mais de uma unidade neste
+    // conteúdo (hoje só a Lei Maria da Penha) — cada unidade tem sua
+    // própria prática de 10 questões, liberada assim que a TEORIA DESSA
+    // unidade é concluída. Nunca espera as demais unidades. Conteúdo com
+    // uma única unidade (a maioria) preserva o fluxo antigo abaixo, sem
+    // nenhuma mudança de comportamento.
+    if (unidadesPublicadas.length > 1) {
+      window.location.assign(montarLinkMissao({
+        cursoMateriaId: identidade.cursoMateriaId,
+        conteudoId: missao.conteudo_id,
+        materiaId: identidade.materiaId,
+        assuntoId: identidade.assuntoId ?? undefined,
+        quantidade,
+        missionId: missao.id,
+        refazer,
+        unidadePedagogicaId: aulaAtual.unidade_pedagogica_id,
+      }));
+      return;
+    }
+
     if (indiceUnidade < unidadesPublicadas.length - 1) {
       selecionarUnidade(indiceUnidade + 1);
       return;
@@ -460,6 +521,30 @@ export default function Teoria() {
         {assuntoNome && <span>{assuntoNome}</span>}
       </header>
 
+      {missaoFinalLiberada && (
+        <section className="teoria-missao-final-liberada">
+          <p className="dashboard-label">TODAS AS UNIDADES CONCLUÍDAS</p>
+          <h2>Hora da Missão Final Papiro.</h2>
+          <p>Você já concluiu a teoria e a prática de todas as unidades. Agora é hora de misturar tudo.</p>
+          <Link
+            className="answer-submit"
+            href={montarLinkMissao({
+              cursoMateriaId: identidade.cursoMateriaId,
+              conteudoId: missao.conteudo_id,
+              materiaId: identidade.materiaId,
+              assuntoId: identidade.assuntoId ?? undefined,
+              quantidade,
+              missionId: missao.id,
+              refazer,
+              missaoFinal: true,
+            })}
+          >
+            Fazer a Missão Final Papiro
+          </Link>
+        </section>
+      )}
+
+      {!missaoFinalLiberada && (
       <section>
         <p role="status">Missão iniciada.</p>
         <p>
@@ -567,6 +652,7 @@ export default function Teoria() {
           );
         })()}
       </section>
+      )}
 
       {estadoAula !== "disponivel" && (
         <Link
