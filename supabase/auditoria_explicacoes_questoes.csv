@@ -1,0 +1,732 @@
+questao_id,materia,assunto,ativa,n_alt,status
+2,Legislação de Guardas Municipais,Estatuto Geral das Guardas Municipais,true,4,EXPLICACAO_INCOMPLETA
+3,Direito Constitucional,Segurança pública,true,4,EXPLICACAO_INCOMPLETA
+4,Legislação de Trânsito,Normas de circulação,true,4,EXPLICACAO_INCOMPLETA
+5,Direito Penal,Crimes contra a Administração Pública,true,4,EXPLICACAO_INCOMPLETA
+6,Língua Portuguesa,Crase,true,4,EXPLICACAO_INCOMPLETA
+7,Direito Processual Penal,Inquérito policial,true,4,EXPLICACAO_INCOMPLETA
+8,Direito Processual Penal,Cadeia de custódia,true,4,EXPLICACAO_INCOMPLETA
+9,Direito Penal,Concurso de pessoas,true,4,EXPLICACAO_INCOMPLETA
+10,Legislação Penal Especial,Abuso de Autoridade,true,4,EXPLICACAO_INCOMPLETA
+11,Informática,Segurança da informação,true,4,EXPLICACAO_INCOMPLETA
+12,Legislação Específica,Hierarquia e disciplina,true,4,EXPLICACAO_INCOMPLETA
+13,Direitos Humanos e Cidadania,Dignidade humana,true,4,EXPLICACAO_INCOMPLETA
+14,Matemática,Porcentagem,true,4,EXPLICACAO_INCOMPLETA
+15,Informática,Segurança da informação,true,4,EXPLICACAO_INCOMPLETA
+16,Língua Portuguesa,Concordância verbal,true,4,EXPLICACAO_INCOMPLETA
+17,Língua Portuguesa,Interpretação de textos,true,5,EXPLICACAO_INCOMPLETA
+18,Língua Portuguesa,Redação oficial,true,5,EXPLICACAO_INCOMPLETA
+19,Legislação Específica,Segurança pública,true,5,EXPLICACAO_INCOMPLETA
+20,Legislação Específica,Estatuto dos Militares Estaduais,true,5,EXPLICACAO_INCOMPLETA
+21,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_INCOMPLETA
+22,Conhecimentos Gerais,Rio Grande do Sul,true,5,EXPLICACAO_INCOMPLETA
+23,Conhecimentos Gerais,Organizações internacionais,true,5,EXPLICACAO_INCOMPLETA
+24,Conhecimentos Gerais,Cidadania digital,true,5,EXPLICACAO_INCOMPLETA
+25,Matemática,Porcentagem,true,5,EXPLICACAO_INCOMPLETA
+26,Matemática,Razão e proporção,true,5,EXPLICACAO_INCOMPLETA
+27,Matemática,Juros simples,true,5,EXPLICACAO_INCOMPLETA
+28,Direitos Humanos e Cidadania,Direitos fundamentais,true,5,EXPLICACAO_INCOMPLETA
+29,Direitos Humanos e Cidadania,Prevenção da tortura,true,5,EXPLICACAO_INCOMPLETA
+30,Direitos Humanos e Cidadania,Pessoa com deficiência,true,5,EXPLICACAO_INCOMPLETA
+31,Informática,Windows,true,5,EXPLICACAO_INCOMPLETA
+32,Informática,Segurança da informação,true,5,EXPLICACAO_INCOMPLETA
+33,Informática,Planilhas eletrônicas,true,5,EXPLICACAO_INCOMPLETA
+34,Língua Portuguesa,"Transitividade Verbal e Termos Integrantes (Objeto Direto e Indireto, Complemento Nominal e Agente da Passiva)",true,4,EXPLICACAO_INCOMPLETA
+38,Legislação Específica,Segurança pública,true,5,EXPLICACAO_GENERICA
+39,Legislação Específica,Constituição do Estado do Rio Grande do Sul,true,5,EXPLICACAO_GENERICA
+40,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+41,Legislação Específica,Segurança pública,true,5,EXPLICACAO_GENERICA
+42,Legislação Específica,Improbidade Administrativa,true,5,EXPLICACAO_GENERICA
+43,Legislação Específica,Lei de Organização Básica da Brigada Militar,true,5,EXPLICACAO_GENERICA
+44,Legislação Específica,Atos administrativos,true,5,EXPLICACAO_GENERICA
+45,Legislação Específica,Hierarquia e disciplina,true,5,EXPLICACAO_GENERICA
+46,Legislação Específica,Direitos e Garantias Fundamentais,true,5,EXPLICACAO_GENERICA
+47,Legislação Específica,Defesa do Estado e das Instituições Democráticas,true,5,EXPLICACAO_GENERICA
+48,Legislação Específica,Constituição Federal de 1988,true,5,EXPLICACAO_GENERICA
+49,Legislação Específica,Improbidade Administrativa,true,5,EXPLICACAO_GENERICA
+50,Legislação Específica,Estatuto do Desarmamento,true,5,EXPLICACAO_GENERICA
+51,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+52,Legislação Específica,Constituição do Estado do Rio Grande do Sul,true,5,EXPLICACAO_GENERICA
+53,Legislação Específica,Estatuto dos Militares Estaduais,true,5,EXPLICACAO_GENERICA
+54,Legislação Específica,Estatuto Nacional da Igualdade Racial,true,5,EXPLICACAO_GENERICA
+55,Direitos Humanos e Cidadania,Pessoa com deficiência,true,5,EXPLICACAO_GENERICA
+56,Direitos Humanos e Cidadania,Pacto de San José da Costa Rica,true,5,EXPLICACAO_GENERICA
+57,Direitos Humanos e Cidadania,Abuso de Autoridade,true,5,EXPLICACAO_GENERICA
+58,Direitos Humanos e Cidadania,Pacto Internacional sobre Direitos Civis e Políticos,true,5,EXPLICACAO_GENERICA
+59,Direitos Humanos e Cidadania,Lei de Tortura,true,5,EXPLICACAO_GENERICA
+60,Informática,Windows,true,5,EXPLICACAO_GENERICA
+61,Informática,Editor de textos,true,5,EXPLICACAO_GENERICA
+62,Informática,Planilhas eletrônicas,true,5,EXPLICACAO_GENERICA
+63,Informática,Internet e navegadores,true,5,EXPLICACAO_GENERICA
+64,Informática,Internet e navegadores,true,5,EXPLICACAO_GENERICA
+65,Língua Portuguesa,Interpretação de textos,true,5,EXPLICACAO_GENERICA
+66,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_GENERICA
+67,Língua Portuguesa,Conectores,true,5,EXPLICACAO_GENERICA
+68,Língua Portuguesa,Significação das palavras,true,5,EXPLICACAO_GENERICA
+69,Língua Portuguesa,Coesão textual,true,5,EXPLICACAO_GENERICA
+70,Língua Portuguesa,Crase,true,5,EXPLICACAO_GENERICA
+71,Língua Portuguesa,Classes de palavras,true,5,EXPLICACAO_GENERICA
+72,Língua Portuguesa,Reescrita de frases e textos,true,5,EXPLICACAO_GENERICA
+73,Língua Portuguesa,Redação oficial,true,5,EXPLICACAO_GENERICA
+74,Raciocínio Lógico,Proposições e conectivos,true,5,EXPLICACAO_INCOMPLETA
+75,Raciocínio Lógico,Tabela-verdade,true,5,EXPLICACAO_INCOMPLETA
+76,Raciocínio Lógico,"Tautologia, contradição e contingência",true,5,EXPLICACAO_INCOMPLETA
+77,Raciocínio Lógico,Leis de De Morgan,true,5,EXPLICACAO_INCOMPLETA
+78,Raciocínio Lógico,Sentenças abertas e conjunto-verdade,true,5,EXPLICACAO_INCOMPLETA
+79,Raciocínio Lógico,Equivalências lógicas,true,5,EXPLICACAO_INCOMPLETA
+80,Raciocínio Lógico,Condicional e contrapositiva,true,5,EXPLICACAO_INCOMPLETA
+81,Raciocínio Lógico,Negação de proposições,true,5,EXPLICACAO_INCOMPLETA
+82,Raciocínio Lógico,Equivalências lógicas,true,5,EXPLICACAO_INCOMPLETA
+83,Raciocínio Lógico,Quantificadores,true,5,EXPLICACAO_INCOMPLETA
+84,Raciocínio Lógico,Condicional e contrapositiva,true,5,EXPLICACAO_INCOMPLETA
+85,Raciocínio Lógico,"Tautologia, contradição e contingência",true,5,EXPLICACAO_INCOMPLETA
+86,Raciocínio Lógico,Negação de proposições,true,5,EXPLICACAO_INCOMPLETA
+87,Raciocínio Lógico,Proposições e conectivos,true,5,EXPLICACAO_INCOMPLETA
+88,Raciocínio Lógico,Leis de De Morgan,true,5,EXPLICACAO_INCOMPLETA
+89,Raciocínio Lógico,Tabela-verdade,true,5,EXPLICACAO_INCOMPLETA
+90,Raciocínio Lógico,Argumentação lógica,true,5,EXPLICACAO_INCOMPLETA
+91,Informática,Editor de textos,true,5,EXPLICACAO_INCOMPLETA
+92,Informática,Editor de textos,true,5,EXPLICACAO_INCOMPLETA
+93,Informática,Planilhas eletrônicas,true,5,EXPLICACAO_INCOMPLETA
+94,Informática,Internet e navegadores,true,5,EXPLICACAO_INCOMPLETA
+95,Informática,Correio eletrônico,true,5,EXPLICACAO_INCOMPLETA
+96,Informática,Editor de textos,true,5,EXPLICACAO_INCOMPLETA
+97,Informática,Planilhas eletrônicas,true,5,EXPLICACAO_INCOMPLETA
+98,Informática,Internet e navegadores,true,5,EXPLICACAO_INCOMPLETA
+99,Informática,Correio eletrônico,true,5,EXPLICACAO_INCOMPLETA
+100,Informática,Correio eletrônico,true,5,EXPLICACAO_INCOMPLETA
+101,Informática,Windows,true,5,EXPLICACAO_INCOMPLETA
+102,Informática,Windows,true,5,EXPLICACAO_INCOMPLETA
+103,Informática,Windows,true,5,EXPLICACAO_INCOMPLETA
+104,Informática,Editor de textos,true,5,EXPLICACAO_INCOMPLETA
+105,Informática,Planilhas eletrônicas,true,5,EXPLICACAO_INCOMPLETA
+106,Informática,Internet e navegadores,true,5,EXPLICACAO_INCOMPLETA
+107,Informática,Internet e navegadores,true,5,EXPLICACAO_INCOMPLETA
+108,Informática,Windows,true,5,EXPLICACAO_INCOMPLETA
+109,Informática,Planilhas eletrônicas,true,5,EXPLICACAO_INCOMPLETA
+110,Informática,Editor de textos,true,5,EXPLICACAO_INCOMPLETA
+111,Legislação Específica,Constituição Federal de 1988,true,5,EXPLICACAO_INCOMPLETA
+112,Legislação Específica,Direitos e Garantias Fundamentais,true,5,EXPLICACAO_INCOMPLETA
+113,Legislação Específica,Defesa do Estado e das Instituições Democráticas,true,5,EXPLICACAO_GENERICA
+114,Língua Portuguesa,Fonemas e dígrafos,true,5,EXPLICACAO_GENERICA
+115,Língua Portuguesa,Crase,true,5,EXPLICACAO_GENERICA
+116,Língua Portuguesa,Concordância verbal,true,5,EXPLICACAO_INCOMPLETA
+117,Língua Portuguesa,Redação oficial,true,5,EXPLICACAO_GENERICA
+118,Língua Portuguesa,Redação oficial,true,5,EXPLICACAO_GENERICA
+119,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_GENERICA
+120,Língua Portuguesa,Regência verbal e nominal,true,5,EXPLICACAO_GENERICA
+121,Língua Portuguesa,Conectores,true,5,EXPLICACAO_GENERICA
+122,Língua Portuguesa,Significação das palavras,true,5,EXPLICACAO_GENERICA
+123,Língua Portuguesa,"Transitividade Verbal e Termos Integrantes (Objeto Direto e Indireto, Complemento Nominal e Agente da Passiva)",true,5,EXPLICACAO_GENERICA
+124,Direitos Humanos e Cidadania,Convenção Interamericana para Prevenir e Punir a Tortura,true,5,EXPLICACAO_GENERICA
+125,Direitos Humanos e Cidadania,"Pacto Internacional sobre Direitos Econômicos, Sociais e Culturais",true,5,EXPLICACAO_GENERICA
+126,Direitos Humanos e Cidadania,Estatuto da Pessoa com Deficiência,true,5,EXPLICACAO_GENERICA
+127,Direitos Humanos e Cidadania,Tratados de Direitos Humanos com força de Emenda Constitucional,true,5,EXPLICACAO_GENERICA
+128,Direitos Humanos e Cidadania,Abuso de Autoridade,true,5,EXPLICACAO_GENERICA
+129,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_INCOMPLETA
+130,Direitos Humanos e Cidadania,Pacto de San José da Costa Rica,true,5,EXPLICACAO_INCOMPLETA
+131,Direitos Humanos e Cidadania,Estatuto da Igualdade Racial,true,5,EXPLICACAO_INCOMPLETA
+132,Legislação Específica,Estatuto Estadual da Igualdade Racial,true,5,EXPLICACAO_INCOMPLETA
+133,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_INCOMPLETA
+134,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_INCOMPLETA
+135,Legislação Específica,Estatuto Nacional da Igualdade Racial,true,5,EXPLICACAO_INCOMPLETA
+136,Legislação Específica,Estatuto Estadual da Igualdade Racial,true,5,EXPLICACAO_INCOMPLETA
+137,Legislação Específica,Improbidade Administrativa,true,5,EXPLICACAO_INCOMPLETA
+138,Direitos Humanos e Cidadania,Lei de Tortura,true,5,EXPLICACAO_INCOMPLETA
+139,Direitos Humanos e Cidadania,Direitos fundamentais,true,5,EXPLICACAO_INCOMPLETA
+140,Direitos Humanos e Cidadania,Pacto de San José da Costa Rica,true,5,EXPLICACAO_INCOMPLETA
+141,Direitos Humanos e Cidadania,Pessoa com deficiência,true,5,EXPLICACAO_INCOMPLETA
+142,Legislação Específica,Estatuto do Desarmamento,true,5,EXPLICACAO_INCOMPLETA
+143,Legislação Específica,Lei de Drogas,true,5,EXPLICACAO_INCOMPLETA
+144,Direitos Humanos e Cidadania,Pacto de San José da Costa Rica,true,5,EXPLICACAO_INCOMPLETA
+145,Direitos Humanos e Cidadania,Declaração Universal dos Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+146,Direitos Humanos e Cidadania,Entendimentos do STF e STJ,true,5,EXPLICACAO_INCOMPLETA
+147,Direitos Humanos e Cidadania,Casos do Brasil na Corte Interamericana de Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+148,Direitos Humanos e Cidadania,Casos do Brasil na Corte Interamericana de Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+149,Direitos Humanos e Cidadania,Casos do Brasil na Corte Interamericana de Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+150,Direitos Humanos e Cidadania,Comissão Interamericana de Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+151,Direitos Humanos e Cidadania,Comissão Interamericana de Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+152,Direitos Humanos e Cidadania,Comissão Interamericana de Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+153,Direitos Humanos e Cidadania,Convenção de Belém do Pará,true,5,EXPLICACAO_INCOMPLETA
+154,Direitos Humanos e Cidadania,Convenção de Belém do Pará,true,5,EXPLICACAO_INCOMPLETA
+155,Direitos Humanos e Cidadania,Convenção de Belém do Pará,true,5,EXPLICACAO_INCOMPLETA
+156,Direitos Humanos e Cidadania,Corte Interamericana de Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+157,Direitos Humanos e Cidadania,Corte Interamericana de Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+158,Direitos Humanos e Cidadania,Corte Interamericana de Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+159,Direitos Humanos e Cidadania,Direito à cidadania na Constituição Federal,true,5,EXPLICACAO_INCOMPLETA
+160,Direitos Humanos e Cidadania,Direito à cidadania na Constituição Federal,true,5,EXPLICACAO_INCOMPLETA
+161,Direitos Humanos e Cidadania,Direito à cidadania na Constituição Federal,true,5,EXPLICACAO_INCOMPLETA
+162,Direitos Humanos e Cidadania,Direitos Humanos no Mercosul,true,5,EXPLICACAO_INCOMPLETA
+163,Direitos Humanos e Cidadania,Direitos Humanos no Mercosul,true,5,EXPLICACAO_INCOMPLETA
+164,Direitos Humanos e Cidadania,Direitos Humanos no Mercosul,true,5,EXPLICACAO_INCOMPLETA
+165,Direitos Humanos e Cidadania,Incorporação de tratados de Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+166,Direitos Humanos e Cidadania,Incorporação de tratados de Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+167,Direitos Humanos e Cidadania,Incorporação de tratados de Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+168,Direitos Humanos e Cidadania,Noções de Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+169,Direitos Humanos e Cidadania,Noções de Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+170,Direitos Humanos e Cidadania,Noções de Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+171,Direitos Humanos e Cidadania,Organização dos Estados Americanos,true,5,EXPLICACAO_INCOMPLETA
+172,Direitos Humanos e Cidadania,Organização dos Estados Americanos,true,5,EXPLICACAO_INCOMPLETA
+173,Direitos Humanos e Cidadania,Organização dos Estados Americanos,true,5,EXPLICACAO_INCOMPLETA
+174,Direitos Humanos e Cidadania,Pactos Internacionais de Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+175,Direitos Humanos e Cidadania,Pactos Internacionais de Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+176,Direitos Humanos e Cidadania,Pactos Internacionais de Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+177,Direitos Humanos e Cidadania,Programa Nacional de Direitos Humanos - PNDH-3,true,5,EXPLICACAO_INCOMPLETA
+178,Direitos Humanos e Cidadania,Programa Nacional de Direitos Humanos - PNDH-3,true,5,EXPLICACAO_INCOMPLETA
+179,Direitos Humanos e Cidadania,Programa Nacional de Direitos Humanos - PNDH-3,true,5,EXPLICACAO_INCOMPLETA
+180,Direitos Humanos e Cidadania,Protocolo de Assunção sobre Direitos Humanos no Mercosul,true,5,EXPLICACAO_INCOMPLETA
+181,Direitos Humanos e Cidadania,Protocolo de Assunção sobre Direitos Humanos no Mercosul,true,5,EXPLICACAO_INCOMPLETA
+182,Direitos Humanos e Cidadania,Protocolo de Assunção sobre Direitos Humanos no Mercosul,true,5,EXPLICACAO_INCOMPLETA
+183,Direitos Humanos e Cidadania,Sistema Interamericano de Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+184,Direitos Humanos e Cidadania,Sistema Interamericano de Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+185,Direitos Humanos e Cidadania,Sistema Interamericano de Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+186,Direitos Humanos e Cidadania,Sistema Internacional de Proteção dos Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+187,Direitos Humanos e Cidadania,Sistema Internacional de Proteção dos Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+188,Direitos Humanos e Cidadania,Sistema Internacional de Proteção dos Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+189,Direitos Humanos e Cidadania,Tratado de Marraqueche,true,5,EXPLICACAO_INCOMPLETA
+190,Direitos Humanos e Cidadania,Tratado de Marraqueche,true,5,EXPLICACAO_INCOMPLETA
+191,Direitos Humanos e Cidadania,Tratado de Marraqueche,true,5,EXPLICACAO_INCOMPLETA
+192,Legislação Específica,Abuso de Autoridade,true,5,EXPLICACAO_INCOMPLETA
+193,Legislação Específica,Abuso de Autoridade,true,5,EXPLICACAO_INCOMPLETA
+194,Legislação Específica,Abuso de Autoridade,true,5,EXPLICACAO_INCOMPLETA
+195,Legislação Específica,Direito Administrativo,true,5,EXPLICACAO_INCOMPLETA
+196,Legislação Específica,Direito Administrativo,true,5,EXPLICACAO_INCOMPLETA
+197,Legislação Específica,Direito Administrativo,true,5,EXPLICACAO_INCOMPLETA
+198,Legislação Específica,Jurisprudência do STF e STJ,true,5,EXPLICACAO_INCOMPLETA
+199,Legislação Específica,Jurisprudência do STF e STJ,true,5,EXPLICACAO_INCOMPLETA
+200,Legislação Específica,Jurisprudência do STF e STJ,true,5,EXPLICACAO_INCOMPLETA
+201,Legislação Específica,Plano de Carreira dos Servidores Militares,true,5,EXPLICACAO_INCOMPLETA
+202,Legislação Específica,Plano de Carreira dos Servidores Militares,true,5,EXPLICACAO_INCOMPLETA
+203,Legislação Específica,Plano de Carreira dos Servidores Militares,true,5,EXPLICACAO_INCOMPLETA
+204,Legislação Específica,Poder de Polícia,true,5,EXPLICACAO_INCOMPLETA
+205,Legislação Específica,Poder de Polícia,true,5,EXPLICACAO_INCOMPLETA
+206,Legislação Específica,Poder de Polícia,true,5,EXPLICACAO_INCOMPLETA
+207,Legislação Específica,Poderes da Administração Pública,true,5,EXPLICACAO_INCOMPLETA
+208,Legislação Específica,Poderes da Administração Pública,true,5,EXPLICACAO_INCOMPLETA
+209,Legislação Específica,Poderes da Administração Pública,true,5,EXPLICACAO_INCOMPLETA
+210,Legislação Específica,Regulamento Disciplinar da Brigada Militar,true,5,EXPLICACAO_INCOMPLETA
+211,Legislação Específica,Regulamento Disciplinar da Brigada Militar,true,5,EXPLICACAO_INCOMPLETA
+212,Legislação Específica,Regulamento Disciplinar da Brigada Militar,true,5,EXPLICACAO_INCOMPLETA
+213,Legislação Específica,Responsabilidade civil do Estado,true,5,EXPLICACAO_INCOMPLETA
+214,Legislação Específica,Responsabilidade civil do Estado,true,5,EXPLICACAO_INCOMPLETA
+215,Legislação Específica,Responsabilidade civil do Estado,true,5,EXPLICACAO_INCOMPLETA
+216,Língua Portuguesa,Acentuação gráfica,true,5,EXPLICACAO_INCOMPLETA
+217,Língua Portuguesa,Acentuação gráfica,true,5,EXPLICACAO_INCOMPLETA
+218,Língua Portuguesa,Acentuação gráfica,true,5,EXPLICACAO_INCOMPLETA
+219,Língua Portuguesa,Colocação pronominal,true,5,EXPLICACAO_INCOMPLETA
+220,Língua Portuguesa,Colocação pronominal,true,5,EXPLICACAO_INCOMPLETA
+221,Língua Portuguesa,Colocação pronominal,true,5,EXPLICACAO_INCOMPLETA
+222,Língua Portuguesa,Concordância nominal,true,5,EXPLICACAO_INCOMPLETA
+223,Língua Portuguesa,Concordância nominal,true,5,EXPLICACAO_INCOMPLETA
+224,Língua Portuguesa,Concordância nominal,true,5,EXPLICACAO_INCOMPLETA
+225,Língua Portuguesa,Coordenação e subordinação,true,5,EXPLICACAO_INCOMPLETA
+226,Língua Portuguesa,Coordenação e subordinação,true,5,EXPLICACAO_INCOMPLETA
+227,Língua Portuguesa,Coordenação e subordinação,true,5,EXPLICACAO_INCOMPLETA
+228,Língua Portuguesa,Denotação e conotação,true,5,EXPLICACAO_INCOMPLETA
+229,Língua Portuguesa,Denotação e conotação,true,5,EXPLICACAO_INCOMPLETA
+230,Língua Portuguesa,Denotação e conotação,true,5,EXPLICACAO_INCOMPLETA
+231,Língua Portuguesa,Estrutura e formação de palavras,true,5,EXPLICACAO_INCOMPLETA
+232,Língua Portuguesa,Estrutura e formação de palavras,true,5,EXPLICACAO_INCOMPLETA
+233,Língua Portuguesa,Estrutura e formação de palavras,true,5,EXPLICACAO_INCOMPLETA
+234,Língua Portuguesa,Implícitos e subentendidos,true,5,EXPLICACAO_INCOMPLETA
+235,Língua Portuguesa,Implícitos e subentendidos,true,5,EXPLICACAO_INCOMPLETA
+236,Língua Portuguesa,Implícitos e subentendidos,true,5,EXPLICACAO_INCOMPLETA
+237,Língua Portuguesa,Pontuação,true,5,EXPLICACAO_INCOMPLETA
+238,Língua Portuguesa,Pontuação,true,5,EXPLICACAO_INCOMPLETA
+239,Língua Portuguesa,Pontuação,true,5,EXPLICACAO_INCOMPLETA
+240,Língua Portuguesa,Tempos e modos verbais,true,5,EXPLICACAO_INCOMPLETA
+241,Língua Portuguesa,Tempos e modos verbais,true,5,EXPLICACAO_INCOMPLETA
+242,Língua Portuguesa,Tempos e modos verbais,true,5,EXPLICACAO_INCOMPLETA
+243,Língua Portuguesa,Vozes verbais,true,5,EXPLICACAO_INCOMPLETA
+244,Língua Portuguesa,Vozes verbais,true,5,EXPLICACAO_INCOMPLETA
+245,Língua Portuguesa,Vozes verbais,true,5,EXPLICACAO_INCOMPLETA
+246,Raciocínio Lógico,Diagramas lógicos,true,5,EXPLICACAO_INCOMPLETA
+247,Raciocínio Lógico,Diagramas lógicos,true,5,EXPLICACAO_INCOMPLETA
+248,Raciocínio Lógico,Diagramas lógicos,true,5,EXPLICACAO_INCOMPLETA
+249,Direitos Humanos e Cidadania,Convenção Interamericana para Prevenir e Punir a Tortura,true,5,EXPLICACAO_INCOMPLETA
+250,Direitos Humanos e Cidadania,Convenção Interamericana para Prevenir e Punir a Tortura,true,5,EXPLICACAO_INCOMPLETA
+251,Direitos Humanos e Cidadania,Declaração Universal dos Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+252,Direitos Humanos e Cidadania,Declaração Universal dos Direitos Humanos,true,5,EXPLICACAO_INCOMPLETA
+253,Direitos Humanos e Cidadania,Entendimentos do STF e STJ,true,5,EXPLICACAO_INCOMPLETA
+254,Direitos Humanos e Cidadania,Entendimentos do STF e STJ,true,5,EXPLICACAO_INCOMPLETA
+255,Direitos Humanos e Cidadania,Estatuto da Igualdade Racial,true,5,EXPLICACAO_INCOMPLETA
+256,Direitos Humanos e Cidadania,Estatuto da Igualdade Racial,true,5,EXPLICACAO_INCOMPLETA
+257,Direitos Humanos e Cidadania,Estatuto da Pessoa com Deficiência,true,5,EXPLICACAO_INCOMPLETA
+258,Direitos Humanos e Cidadania,Estatuto da Pessoa com Deficiência,true,5,EXPLICACAO_INCOMPLETA
+259,Direitos Humanos e Cidadania,Pacto Internacional sobre Direitos Civis e Políticos,true,5,EXPLICACAO_INCOMPLETA
+260,Direitos Humanos e Cidadania,Pacto Internacional sobre Direitos Civis e Políticos,true,5,EXPLICACAO_INCOMPLETA
+261,Direitos Humanos e Cidadania,"Pacto Internacional sobre Direitos Econômicos, Sociais e Culturais",true,5,EXPLICACAO_INCOMPLETA
+262,Direitos Humanos e Cidadania,"Pacto Internacional sobre Direitos Econômicos, Sociais e Culturais",true,5,EXPLICACAO_INCOMPLETA
+263,Direitos Humanos e Cidadania,Prevenção da tortura,true,5,EXPLICACAO_INCOMPLETA
+264,Direitos Humanos e Cidadania,Prevenção da tortura,true,5,EXPLICACAO_INCOMPLETA
+265,Direitos Humanos e Cidadania,Tratados de Direitos Humanos com força de Emenda Constitucional,true,5,EXPLICACAO_INCOMPLETA
+266,Direitos Humanos e Cidadania,Tratados de Direitos Humanos com força de Emenda Constitucional,true,5,EXPLICACAO_INCOMPLETA
+267,Legislação Específica,Atos administrativos,true,5,EXPLICACAO_INCOMPLETA
+268,Legislação Específica,Atos administrativos,true,5,EXPLICACAO_INCOMPLETA
+269,Legislação Específica,Lei de Drogas,true,5,EXPLICACAO_INCOMPLETA
+270,Legislação Específica,Lei de Drogas,true,5,EXPLICACAO_INCOMPLETA
+271,Legislação Específica,Lei de Organização Básica da Brigada Militar,true,5,EXPLICACAO_INCOMPLETA
+272,Legislação Específica,Lei de Organização Básica da Brigada Militar,true,5,EXPLICACAO_INCOMPLETA
+273,Língua Portuguesa,Classes de palavras,true,5,EXPLICACAO_INCOMPLETA
+274,Língua Portuguesa,Classes de palavras,true,5,EXPLICACAO_INCOMPLETA
+275,Língua Portuguesa,Coesão textual,true,5,EXPLICACAO_INCOMPLETA
+276,Língua Portuguesa,Coesão textual,true,5,EXPLICACAO_INCOMPLETA
+277,Língua Portuguesa,Fonemas e dígrafos,true,5,EXPLICACAO_INCOMPLETA
+278,Língua Portuguesa,Fonemas e dígrafos,true,5,EXPLICACAO_INCOMPLETA
+279,Língua Portuguesa,Reescrita de frases e textos,true,5,EXPLICACAO_INCOMPLETA
+280,Língua Portuguesa,Reescrita de frases e textos,true,5,EXPLICACAO_INCOMPLETA
+281,Língua Portuguesa,Regência verbal e nominal,true,5,EXPLICACAO_INCOMPLETA
+282,Língua Portuguesa,Regência verbal e nominal,true,5,EXPLICACAO_INCOMPLETA
+283,Língua Portuguesa,"Transitividade Verbal e Termos Integrantes (Objeto Direto e Indireto, Complemento Nominal e Agente da Passiva)",true,5,EXPLICACAO_INCOMPLETA
+284,Língua Portuguesa,"Transitividade Verbal e Termos Integrantes (Objeto Direto e Indireto, Complemento Nominal e Agente da Passiva)",true,5,EXPLICACAO_INCOMPLETA
+285,Raciocínio Lógico,Argumentação lógica,true,5,EXPLICACAO_INCOMPLETA
+286,Raciocínio Lógico,Argumentação lógica,true,5,EXPLICACAO_INCOMPLETA
+287,Raciocínio Lógico,Quantificadores,true,5,EXPLICACAO_INCOMPLETA
+288,Raciocínio Lógico,Quantificadores,true,5,EXPLICACAO_INCOMPLETA
+289,Raciocínio Lógico,Sentenças abertas e conjunto-verdade,true,5,EXPLICACAO_INCOMPLETA
+290,Raciocínio Lógico,Sentenças abertas e conjunto-verdade,true,5,EXPLICACAO_INCOMPLETA
+291,Direitos Humanos e Cidadania,Abuso de Autoridade,true,5,EXPLICACAO_INCOMPLETA
+292,Direitos Humanos e Cidadania,Direitos fundamentais,true,5,EXPLICACAO_INCOMPLETA
+293,Direitos Humanos e Cidadania,Lei de Tortura,true,5,EXPLICACAO_INCOMPLETA
+294,Informática,Segurança da informação,true,5,EXPLICACAO_INCOMPLETA
+295,Legislação Específica,Constituição do Estado do Rio Grande do Sul,true,5,EXPLICACAO_INCOMPLETA
+296,Legislação Específica,Constituição Federal de 1988,true,5,EXPLICACAO_INCOMPLETA
+297,Legislação Específica,Defesa do Estado e das Instituições Democráticas,true,5,EXPLICACAO_INCOMPLETA
+298,Legislação Específica,Direitos e Garantias Fundamentais,true,5,EXPLICACAO_INCOMPLETA
+299,Legislação Específica,Estatuto do Desarmamento,true,5,EXPLICACAO_INCOMPLETA
+300,Legislação Específica,Estatuto dos Militares Estaduais,true,5,EXPLICACAO_INCOMPLETA
+301,Legislação Específica,Estatuto Estadual da Igualdade Racial,true,5,EXPLICACAO_INCOMPLETA
+302,Legislação Específica,Estatuto Nacional da Igualdade Racial,true,5,EXPLICACAO_INCOMPLETA
+303,Legislação Específica,Hierarquia e disciplina,true,5,EXPLICACAO_INCOMPLETA
+304,Língua Portuguesa,Concordância verbal,true,5,EXPLICACAO_INCOMPLETA
+305,Língua Portuguesa,Conectores,true,5,EXPLICACAO_INCOMPLETA
+306,Língua Portuguesa,Interpretação de textos,true,5,EXPLICACAO_INCOMPLETA
+307,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_INCOMPLETA
+308,Língua Portuguesa,Significação das palavras,true,5,EXPLICACAO_INCOMPLETA
+309,Raciocínio Lógico,Condicional e contrapositiva,true,5,EXPLICACAO_INCOMPLETA
+310,Raciocínio Lógico,Equivalências lógicas,true,5,EXPLICACAO_INCOMPLETA
+311,Raciocínio Lógico,Leis de De Morgan,true,5,EXPLICACAO_INCOMPLETA
+312,Raciocínio Lógico,Negação de proposições,true,5,EXPLICACAO_INCOMPLETA
+313,Raciocínio Lógico,Proposições e conectivos,true,5,EXPLICACAO_INCOMPLETA
+314,Raciocínio Lógico,Tabela-verdade,true,5,EXPLICACAO_INCOMPLETA
+315,Raciocínio Lógico,"Tautologia, contradição e contingência",true,5,EXPLICACAO_INCOMPLETA
+316,Língua Portuguesa,Conectores,true,5,EXPLICACAO_INCOMPLETA
+317,Língua Portuguesa,Significação das palavras,true,5,EXPLICACAO_INCOMPLETA
+318,Língua Portuguesa,Concordância verbal,true,5,EXPLICACAO_INCOMPLETA
+319,Língua Portuguesa,Coesão textual,true,5,EXPLICACAO_INCOMPLETA
+320,Língua Portuguesa,Fonemas e dígrafos,true,5,EXPLICACAO_INCOMPLETA
+321,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_INCOMPLETA
+322,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_INCOMPLETA
+323,Língua Portuguesa,Classes de palavras,true,5,EXPLICACAO_INCOMPLETA
+324,Língua Portuguesa,Coesão textual,true,5,EXPLICACAO_INCOMPLETA
+325,Língua Portuguesa,Classes de palavras,true,5,EXPLICACAO_INCOMPLETA
+326,Legislação Específica,Direitos e Garantias Fundamentais,true,5,EXPLICACAO_INCOMPLETA
+327,Legislação Específica,Constituição Federal de 1988,true,5,EXPLICACAO_INCOMPLETA
+328,Língua Portuguesa,Crase,true,5,EXPLICACAO_GENERICA
+329,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_GENERICA
+330,Língua Portuguesa,Classes de palavras,true,5,EXPLICACAO_GENERICA
+331,Língua Portuguesa,Classes de palavras,true,5,EXPLICACAO_GENERICA
+332,Língua Portuguesa,"Transitividade Verbal e Termos Integrantes (Objeto Direto e Indireto, Complemento Nominal e Agente da Passiva)",true,5,EXPLICACAO_GENERICA
+333,Língua Portuguesa,Coesão textual,true,5,EXPLICACAO_GENERICA
+334,Língua Portuguesa,Conectores,true,5,EXPLICACAO_GENERICA
+335,Língua Portuguesa,Classes de palavras,true,5,EXPLICACAO_GENERICA
+336,Língua Portuguesa,Estrutura e formação de palavras,true,5,EXPLICACAO_GENERICA
+337,Raciocínio Lógico,Negação de proposições,true,5,EXPLICACAO_GENERICA
+338,Informática,Windows,true,5,EXPLICACAO_GENERICA
+339,Informática,Windows,true,5,EXPLICACAO_GENERICA
+340,Informática,Planilhas eletrônicas,true,5,EXPLICACAO_GENERICA
+341,Informática,Editor de textos,true,5,EXPLICACAO_GENERICA
+342,Direitos Humanos e Cidadania,Direitos fundamentais,true,5,EXPLICACAO_GENERICA
+343,Direitos Humanos e Cidadania,Direitos fundamentais,true,5,EXPLICACAO_GENERICA
+344,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+345,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+346,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+347,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+348,Legislação Específica,Estatuto Nacional da Igualdade Racial,true,5,EXPLICACAO_GENERICA
+349,Direitos Humanos e Cidadania,Declaração Universal dos Direitos Humanos,true,5,EXPLICACAO_GENERICA
+350,Legislação Específica,Estatuto Nacional da Igualdade Racial,true,5,EXPLICACAO_GENERICA
+351,Direitos Humanos e Cidadania,Tratados de Direitos Humanos com força de Emenda Constitucional,true,5,EXPLICACAO_GENERICA
+352,Direitos Humanos e Cidadania,Pessoa com deficiência,true,5,EXPLICACAO_GENERICA
+353,Direitos Humanos e Cidadania,Pessoa com deficiência,true,5,EXPLICACAO_GENERICA
+354,Direitos Humanos e Cidadania,Abuso de Autoridade,true,5,EXPLICACAO_GENERICA
+355,Legislação Específica,Constituição do Estado do Rio Grande do Sul,true,5,EXPLICACAO_GENERICA
+356,Legislação Específica,Constituição do Estado do Rio Grande do Sul,true,5,EXPLICACAO_GENERICA
+357,Legislação Específica,Constituição do Estado do Rio Grande do Sul,true,5,EXPLICACAO_GENERICA
+358,Legislação Específica,Atos administrativos,true,5,EXPLICACAO_GENERICA
+359,Legislação Específica,Constituição do Estado do Rio Grande do Sul,true,5,EXPLICACAO_GENERICA
+360,Legislação Específica,Poderes da Administração Pública,true,5,EXPLICACAO_GENERICA
+361,Legislação Específica,Improbidade Administrativa,true,5,EXPLICACAO_GENERICA
+362,Legislação Específica,Estatuto dos Militares Estaduais,true,5,EXPLICACAO_GENERICA
+363,Legislação Específica,Estatuto dos Militares Estaduais,true,5,EXPLICACAO_GENERICA
+364,Legislação Específica,Plano de Carreira dos Servidores Militares,true,5,EXPLICACAO_GENERICA
+365,Legislação Específica,Estatuto Estadual da Igualdade Racial,true,5,EXPLICACAO_GENERICA
+366,Legislação Específica,Estatuto Estadual da Igualdade Racial,true,5,EXPLICACAO_GENERICA
+367,Legislação Específica,Estatuto Estadual da Igualdade Racial,true,5,EXPLICACAO_GENERICA
+368,Legislação Específica,Regulamento Disciplinar da Brigada Militar,true,5,EXPLICACAO_GENERICA
+369,Legislação Específica,Regulamento Disciplinar da Brigada Militar,true,5,EXPLICACAO_GENERICA
+370,Legislação Específica,Regulamento Disciplinar da Brigada Militar,true,5,EXPLICACAO_GENERICA
+492,Informática,Planilhas eletrônicas,true,5,EXPLICACAO_GENERICA
+493,Informática,Planilhas eletrônicas,true,5,EXPLICACAO_GENERICA
+494,Informática,Windows,true,5,EXPLICACAO_GENERICA
+495,Informática,Planilhas eletrônicas,true,5,EXPLICACAO_GENERICA
+496,Informática,Internet e navegadores,true,5,EXPLICACAO_GENERICA
+497,Informática,Internet e navegadores,true,5,EXPLICACAO_GENERICA
+498,Informática,Planilhas eletrônicas,true,5,EXPLICACAO_GENERICA
+499,Informática,Planilhas eletrônicas,true,5,EXPLICACAO_GENERICA
+623,Direitos Humanos e Cidadania,Noções de Direitos Humanos,true,5,EXPLICACAO_GENERICA
+624,Direitos Humanos e Cidadania,Noções de Direitos Humanos,true,5,EXPLICACAO_GENERICA
+625,Direitos Humanos e Cidadania,Programa Nacional de Direitos Humanos - PNDH-3,true,5,EXPLICACAO_GENERICA
+626,Informática,Correio eletrônico,true,5,EXPLICACAO_GENERICA
+627,Informática,Editor de textos,true,5,EXPLICACAO_GENERICA
+628,Informática,Editor de textos,true,5,EXPLICACAO_GENERICA
+629,Informática,Editor de textos,true,5,EXPLICACAO_GENERICA
+630,Informática,Internet e navegadores,true,5,EXPLICACAO_GENERICA
+631,Informática,Internet e navegadores,true,5,EXPLICACAO_GENERICA
+632,Informática,Internet e navegadores,true,5,EXPLICACAO_GENERICA
+633,Informática,Internet e navegadores,true,5,EXPLICACAO_GENERICA
+634,Informática,Internet e navegadores,true,5,EXPLICACAO_GENERICA
+635,Informática,Internet e navegadores,true,5,EXPLICACAO_GENERICA
+636,Informática,Internet e navegadores,true,5,EXPLICACAO_GENERICA
+637,Informática,Planilhas eletrônicas,true,5,EXPLICACAO_GENERICA
+638,Informática,Planilhas eletrônicas,true,5,EXPLICACAO_GENERICA
+639,Informática,Segurança da informação,true,5,EXPLICACAO_GENERICA
+640,Informática,Segurança da informação,true,5,EXPLICACAO_GENERICA
+641,Informática,Segurança da informação,true,5,EXPLICACAO_GENERICA
+642,Informática,Segurança da informação,true,5,EXPLICACAO_GENERICA
+643,Informática,Windows,true,5,EXPLICACAO_GENERICA
+644,Informática,Windows,true,5,EXPLICACAO_GENERICA
+645,Informática,Windows,true,5,EXPLICACAO_GENERICA
+646,Legislação Específica,Atos administrativos,true,5,EXPLICACAO_GENERICA
+647,Legislação Específica,Constituição Federal de 1988,true,5,EXPLICACAO_GENERICA
+648,Direitos Humanos e Cidadania,Dignidade humana,true,5,EXPLICACAO_GENERICA
+649,Legislação Específica,Constituição Federal de 1988,true,5,EXPLICACAO_GENERICA
+650,Legislação Específica,Constituição Federal de 1988,true,5,EXPLICACAO_GENERICA
+651,Legislação Específica,Constituição Federal de 1988,true,5,EXPLICACAO_GENERICA
+652,Legislação Específica,Constituição Federal de 1988,true,5,EXPLICACAO_GENERICA
+653,Legislação Específica,Constituição Federal de 1988,true,5,EXPLICACAO_GENERICA
+654,Legislação Específica,Defesa do Estado e das Instituições Democráticas,true,5,EXPLICACAO_GENERICA
+655,Legislação Específica,Defesa do Estado e das Instituições Democráticas,true,5,EXPLICACAO_GENERICA
+656,Legislação Específica,Defesa do Estado e das Instituições Democráticas,true,5,EXPLICACAO_GENERICA
+657,Legislação Específica,Direitos e Garantias Fundamentais,true,5,EXPLICACAO_GENERICA
+658,Legislação Específica,Direitos e Garantias Fundamentais,true,5,EXPLICACAO_GENERICA
+659,Legislação Específica,Direitos e Garantias Fundamentais,true,5,EXPLICACAO_GENERICA
+660,Legislação Específica,Direitos e Garantias Fundamentais,true,5,EXPLICACAO_GENERICA
+661,Legislação Específica,Direitos e Garantias Fundamentais,true,5,EXPLICACAO_GENERICA
+662,Legislação Específica,Direitos e Garantias Fundamentais,true,5,EXPLICACAO_GENERICA
+663,Legislação Específica,Direitos e Garantias Fundamentais,true,5,EXPLICACAO_GENERICA
+664,Legislação Específica,Estatuto do Desarmamento,true,5,EXPLICACAO_GENERICA
+665,Legislação Específica,Improbidade Administrativa,true,5,EXPLICACAO_GENERICA
+666,Legislação Específica,Improbidade Administrativa,true,5,EXPLICACAO_GENERICA
+667,Legislação Específica,Improbidade Administrativa,true,5,EXPLICACAO_GENERICA
+668,Legislação Específica,Improbidade Administrativa,true,5,EXPLICACAO_GENERICA
+669,Legislação Específica,Improbidade Administrativa,true,5,EXPLICACAO_GENERICA
+670,Legislação Específica,Jurisprudência do STF e STJ,true,5,EXPLICACAO_GENERICA
+671,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+672,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+673,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+674,Legislação Específica,Lei de Drogas,true,5,EXPLICACAO_GENERICA
+675,Legislação Específica,Segurança pública,true,5,EXPLICACAO_GENERICA
+676,Legislação Específica,Segurança pública,true,5,EXPLICACAO_GENERICA
+677,Legislação Específica,Segurança pública,true,5,EXPLICACAO_GENERICA
+678,Legislação Específica,Segurança pública,true,5,EXPLICACAO_GENERICA
+679,Língua Portuguesa,Acentuação gráfica,true,5,EXPLICACAO_GENERICA
+680,Língua Portuguesa,Acentuação gráfica,true,5,EXPLICACAO_GENERICA
+681,Língua Portuguesa,Acentuação gráfica,true,5,EXPLICACAO_GENERICA
+682,Língua Portuguesa,Classes de palavras,true,5,EXPLICACAO_GENERICA
+683,Língua Portuguesa,Classes de palavras,true,5,EXPLICACAO_GENERICA
+684,Língua Portuguesa,Classes de palavras,true,5,EXPLICACAO_GENERICA
+685,Língua Portuguesa,Estrutura e formação de palavras,true,5,EXPLICACAO_GENERICA
+686,Língua Portuguesa,Fonemas e dígrafos,true,5,EXPLICACAO_GENERICA
+687,Língua Portuguesa,Fonemas e dígrafos,true,5,EXPLICACAO_GENERICA
+688,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_GENERICA
+689,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_GENERICA
+690,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_GENERICA
+691,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_GENERICA
+692,Língua Portuguesa,Tempos e modos verbais,true,5,EXPLICACAO_GENERICA
+693,Língua Portuguesa,Tempos e modos verbais,true,5,EXPLICACAO_GENERICA
+694,Direitos Humanos e Cidadania,Direito à cidadania na Constituição Federal,true,5,EXPLICACAO_GENERICA
+695,Direitos Humanos e Cidadania,Estatuto da Igualdade Racial,true,5,EXPLICACAO_GENERICA
+696,Direitos Humanos e Cidadania,Noções de Direitos Humanos,true,5,EXPLICACAO_GENERICA
+697,Direitos Humanos e Cidadania,Noções de Direitos Humanos,true,5,EXPLICACAO_GENERICA
+698,Informática,Correio eletrônico,true,5,EXPLICACAO_GENERICA
+699,Informática,Correio eletrônico,true,5,EXPLICACAO_GENERICA
+700,Informática,Correio eletrônico,true,5,EXPLICACAO_GENERICA
+701,Informática,Editor de textos,true,5,EXPLICACAO_GENERICA
+702,Informática,Internet e navegadores,true,5,EXPLICACAO_GENERICA
+703,Informática,Internet e navegadores,true,5,EXPLICACAO_GENERICA
+704,Informática,Internet e navegadores,true,5,EXPLICACAO_GENERICA
+705,Informática,Internet e navegadores,true,5,EXPLICACAO_GENERICA
+706,Informática,Segurança da informação,true,5,EXPLICACAO_GENERICA
+707,Informática,Segurança da informação,true,5,EXPLICACAO_GENERICA
+708,Informática,Segurança da informação,true,5,EXPLICACAO_GENERICA
+709,Informática,Segurança da informação,true,5,EXPLICACAO_GENERICA
+710,Informática,Segurança da informação,true,5,EXPLICACAO_GENERICA
+711,Informática,Windows,true,5,EXPLICACAO_GENERICA
+712,Legislação Específica,Abuso de Autoridade,true,5,EXPLICACAO_GENERICA
+713,Legislação Específica,Abuso de Autoridade,true,5,EXPLICACAO_GENERICA
+714,Legislação Específica,Atos administrativos,true,5,EXPLICACAO_GENERICA
+715,Direitos Humanos e Cidadania,Dignidade humana,true,5,EXPLICACAO_GENERICA
+716,Legislação Específica,Constituição Federal de 1988,true,5,EXPLICACAO_GENERICA
+717,Legislação Específica,Constituição Federal de 1988,true,5,EXPLICACAO_GENERICA
+718,Legislação Específica,Constituição do Estado do Rio Grande do Sul,true,5,EXPLICACAO_GENERICA
+719,Legislação Específica,Constituição do Estado do Rio Grande do Sul,true,5,EXPLICACAO_GENERICA
+720,Legislação Específica,Constituição do Estado do Rio Grande do Sul,true,5,EXPLICACAO_GENERICA
+721,Legislação Específica,Direito Administrativo,true,5,EXPLICACAO_GENERICA
+722,Legislação Específica,Direito Administrativo,true,5,EXPLICACAO_GENERICA
+723,Legislação Específica,Direitos e Garantias Fundamentais,true,5,EXPLICACAO_GENERICA
+724,Legislação Específica,Direitos e Garantias Fundamentais,true,5,EXPLICACAO_GENERICA
+725,Legislação Específica,Direitos e Garantias Fundamentais,true,5,EXPLICACAO_GENERICA
+726,Legislação Específica,Direitos e Garantias Fundamentais,true,5,EXPLICACAO_GENERICA
+727,Legislação Específica,Direitos e Garantias Fundamentais,true,5,EXPLICACAO_GENERICA
+728,Legislação Específica,Estatuto do Desarmamento,true,5,EXPLICACAO_GENERICA
+729,Legislação Específica,Estatuto do Desarmamento,true,5,EXPLICACAO_GENERICA
+730,Legislação Específica,Estatuto do Desarmamento,true,5,EXPLICACAO_GENERICA
+731,Legislação Específica,Improbidade Administrativa,true,5,EXPLICACAO_GENERICA
+732,Legislação Específica,Improbidade Administrativa,true,5,EXPLICACAO_GENERICA
+733,Legislação Específica,Jurisprudência do STF e STJ,true,5,EXPLICACAO_GENERICA
+734,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+735,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+736,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+737,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+738,Legislação Específica,Lei Maria da Penha,false,5,EXPLICACAO_GENERICA
+739,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+740,Legislação Específica,Lei de Drogas,true,5,EXPLICACAO_GENERICA
+741,Legislação Específica,Lei de Drogas,true,5,EXPLICACAO_GENERICA
+742,Legislação Específica,Lei de Drogas,true,5,EXPLICACAO_GENERICA
+743,Legislação Específica,Segurança pública,true,5,EXPLICACAO_GENERICA
+744,Língua Portuguesa,Acentuação gráfica,true,5,EXPLICACAO_GENERICA
+745,Língua Portuguesa,Acentuação gráfica,true,5,EXPLICACAO_GENERICA
+746,Língua Portuguesa,Acentuação gráfica,true,5,EXPLICACAO_GENERICA
+747,Língua Portuguesa,Acentuação gráfica,true,5,EXPLICACAO_GENERICA
+748,Língua Portuguesa,Acentuação gráfica,true,5,EXPLICACAO_GENERICA
+749,Língua Portuguesa,Classes de palavras,true,5,EXPLICACAO_GENERICA
+750,Língua Portuguesa,Classes de palavras,true,5,EXPLICACAO_GENERICA
+751,Língua Portuguesa,Classes de palavras,true,5,EXPLICACAO_GENERICA
+752,Língua Portuguesa,Classes de palavras,true,5,EXPLICACAO_GENERICA
+753,Língua Portuguesa,Estrutura e formação de palavras,true,5,EXPLICACAO_GENERICA
+754,Língua Portuguesa,Estrutura e formação de palavras,true,5,EXPLICACAO_GENERICA
+755,Língua Portuguesa,Estrutura e formação de palavras,true,5,EXPLICACAO_GENERICA
+756,Língua Portuguesa,Fonemas e dígrafos,true,5,EXPLICACAO_GENERICA
+757,Língua Portuguesa,Fonemas e dígrafos,true,5,EXPLICACAO_GENERICA
+758,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_GENERICA
+759,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_GENERICA
+760,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_GENERICA
+761,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_GENERICA
+762,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_GENERICA
+763,Língua Portuguesa,Tempos e modos verbais,true,5,EXPLICACAO_GENERICA
+764,Língua Portuguesa,Tempos e modos verbais,true,5,EXPLICACAO_GENERICA
+765,Língua Portuguesa,Tempos e modos verbais,true,5,EXPLICACAO_GENERICA
+766,Língua Portuguesa,Tempos e modos verbais,true,5,EXPLICACAO_GENERICA
+767,Língua Portuguesa,Tempos e modos verbais,true,5,EXPLICACAO_GENERICA
+768,Informática,Correio eletrônico,true,5,EXPLICACAO_GENERICA
+769,Informática,Editor de textos,true,5,EXPLICACAO_GENERICA
+770,Informática,Internet e navegadores,true,5,EXPLICACAO_GENERICA
+771,Legislação Específica,Abuso de Autoridade,true,5,EXPLICACAO_GENERICA
+772,Legislação Específica,Abuso de Autoridade,true,5,EXPLICACAO_GENERICA
+773,Legislação Específica,Constituição Federal de 1988,true,5,EXPLICACAO_GENERICA
+774,Legislação Específica,Direito Administrativo,true,5,EXPLICACAO_GENERICA
+775,Legislação Específica,Direitos e Garantias Fundamentais,true,5,EXPLICACAO_GENERICA
+776,Legislação Específica,Estatuto do Desarmamento,true,5,EXPLICACAO_GENERICA
+777,Legislação Específica,Estatuto do Desarmamento,true,5,EXPLICACAO_GENERICA
+778,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+779,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+780,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+781,Legislação Específica,Lei de Drogas,true,5,EXPLICACAO_GENERICA
+782,Legislação Específica,Lei de Drogas,true,5,EXPLICACAO_GENERICA
+783,Legislação Específica,Lei de Drogas,true,5,EXPLICACAO_GENERICA
+784,Língua Portuguesa,Classes de palavras,true,5,EXPLICACAO_GENERICA
+785,Língua Portuguesa,Fonemas e dígrafos,true,5,EXPLICACAO_GENERICA
+786,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_GENERICA
+787,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_GENERICA
+788,Direitos Humanos e Cidadania,Declaração Universal dos Direitos Humanos,true,5,EXPLICACAO_GENERICA
+789,Direitos Humanos e Cidadania,Direito à cidadania na Constituição Federal,true,5,EXPLICACAO_GENERICA
+790,Direitos Humanos e Cidadania,Estatuto da Igualdade Racial,true,5,EXPLICACAO_GENERICA
+791,Informática,Editor de textos,true,5,EXPLICACAO_GENERICA
+792,Informática,Internet e navegadores,true,5,EXPLICACAO_GENERICA
+793,Legislação Específica,Abuso de Autoridade,true,5,EXPLICACAO_GENERICA
+794,Legislação Específica,Constituição Federal de 1988,true,5,EXPLICACAO_GENERICA
+795,Legislação Específica,Constituição do Estado do Rio Grande do Sul,true,5,EXPLICACAO_GENERICA
+796,Legislação Específica,Direito Administrativo,true,5,EXPLICACAO_GENERICA
+797,Legislação Específica,Direitos e Garantias Fundamentais,true,5,EXPLICACAO_GENERICA
+798,Legislação Específica,Estatuto Estadual da Igualdade Racial,true,5,EXPLICACAO_GENERICA
+799,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+800,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+801,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+802,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+803,Legislação Específica,Lei de Drogas,true,5,EXPLICACAO_GENERICA
+804,Legislação Específica,Lei de Drogas,true,5,EXPLICACAO_GENERICA
+805,Legislação Específica,Segurança pública,true,5,EXPLICACAO_GENERICA
+806,Língua Portuguesa,Classes de palavras,true,5,EXPLICACAO_GENERICA
+807,Língua Portuguesa,Estrutura e formação de palavras,true,5,EXPLICACAO_GENERICA
+808,Língua Portuguesa,Fonemas e dígrafos,true,5,EXPLICACAO_GENERICA
+809,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_GENERICA
+810,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_GENERICA
+811,Língua Portuguesa,Tempos e modos verbais,true,5,EXPLICACAO_GENERICA
+812,Direitos Humanos e Cidadania,Declaração Universal dos Direitos Humanos,true,4,EXPLICACAO_GENERICA
+813,Direitos Humanos e Cidadania,Estatuto da Igualdade Racial,true,5,EXPLICACAO_GENERICA
+814,Direitos Humanos e Cidadania,Estatuto da Igualdade Racial,true,4,EXPLICACAO_GENERICA
+815,Direitos Humanos e Cidadania,Estatuto da Igualdade Racial,true,5,EXPLICACAO_GENERICA
+816,Direitos Humanos e Cidadania,Estatuto da Igualdade Racial,true,5,EXPLICACAO_GENERICA
+817,Direitos Humanos e Cidadania,Lei de Tortura,true,5,EXPLICACAO_GENERICA
+818,Direitos Humanos e Cidadania,Lei de Tortura,true,5,EXPLICACAO_GENERICA
+819,Direitos Humanos e Cidadania,Pacto de San José da Costa Rica,true,4,EXPLICACAO_GENERICA
+820,Direitos Humanos e Cidadania,Pacto de San José da Costa Rica,true,4,EXPLICACAO_GENERICA
+821,Direitos Humanos e Cidadania,Pacto de San José da Costa Rica,true,4,EXPLICACAO_GENERICA
+822,Direitos Humanos e Cidadania,Pacto de San José da Costa Rica,true,5,EXPLICACAO_GENERICA
+823,Direitos Humanos e Cidadania,Pacto de San José da Costa Rica,true,5,EXPLICACAO_GENERICA
+824,Direitos Humanos e Cidadania,Pacto de San José da Costa Rica,true,5,EXPLICACAO_GENERICA
+825,Direitos Humanos e Cidadania,Pacto de San José da Costa Rica,true,5,EXPLICACAO_GENERICA
+826,Direitos Humanos e Cidadania,Corte Interamericana de Direitos Humanos,true,5,EXPLICACAO_GENERICA
+827,Direitos Humanos e Cidadania,Pessoa com deficiência,true,5,EXPLICACAO_GENERICA
+828,Direitos Humanos e Cidadania,Pessoa com deficiência,true,5,EXPLICACAO_GENERICA
+829,Direitos Humanos e Cidadania,Pessoa com deficiência,true,5,EXPLICACAO_GENERICA
+830,Informática,Correio eletrônico,true,5,EXPLICACAO_GENERICA
+831,Informática,Editor de textos,true,5,EXPLICACAO_GENERICA
+832,Informática,Editor de textos,true,5,EXPLICACAO_GENERICA
+833,Informática,Internet e navegadores,true,5,EXPLICACAO_GENERICA
+834,Informática,Planilhas eletrônicas,true,5,EXPLICACAO_GENERICA
+835,Informática,Windows,true,5,EXPLICACAO_GENERICA
+836,Informática,Windows,true,5,EXPLICACAO_GENERICA
+837,Legislação Específica,Abuso de Autoridade,true,5,EXPLICACAO_GENERICA
+838,Legislação Específica,Abuso de Autoridade,true,4,EXPLICACAO_GENERICA
+839,Legislação Específica,Abuso de Autoridade,true,5,EXPLICACAO_GENERICA
+840,Legislação Específica,Atos administrativos,true,4,EXPLICACAO_GENERICA
+841,Legislação Específica,Atos administrativos,true,5,EXPLICACAO_GENERICA
+842,Legislação Específica,Constituição do Estado do Rio Grande do Sul,true,5,EXPLICACAO_GENERICA
+843,Legislação Específica,Constituição do Estado do Rio Grande do Sul,true,5,EXPLICACAO_GENERICA
+844,Legislação Específica,Constituição do Estado do Rio Grande do Sul,true,5,EXPLICACAO_GENERICA
+845,Legislação Específica,Direito Administrativo,true,5,EXPLICACAO_GENERICA
+846,Legislação Específica,Direitos e Garantias Fundamentais,true,4,EXPLICACAO_GENERICA
+847,Legislação Específica,Direitos e Garantias Fundamentais,true,5,EXPLICACAO_GENERICA
+848,Legislação Específica,Direitos e Garantias Fundamentais,true,5,EXPLICACAO_GENERICA
+849,Legislação Específica,Direitos e Garantias Fundamentais,true,5,EXPLICACAO_GENERICA
+850,Legislação Específica,Estatuto Estadual da Igualdade Racial,true,5,EXPLICACAO_GENERICA
+851,Legislação Específica,Estatuto Estadual da Igualdade Racial,true,5,EXPLICACAO_GENERICA
+852,Legislação Específica,Estatuto Estadual da Igualdade Racial,true,5,EXPLICACAO_GENERICA
+853,Legislação Específica,Estatuto do Desarmamento,true,5,EXPLICACAO_GENERICA
+854,Legislação Específica,Estatuto do Desarmamento,true,5,EXPLICACAO_GENERICA
+855,Legislação Específica,Estatuto do Desarmamento,true,5,EXPLICACAO_GENERICA
+856,Legislação Específica,Improbidade Administrativa,true,4,EXPLICACAO_GENERICA
+857,Legislação Específica,Improbidade Administrativa,true,5,EXPLICACAO_GENERICA
+858,Legislação Específica,Improbidade Administrativa,true,5,EXPLICACAO_GENERICA
+859,Legislação Específica,Improbidade Administrativa,true,5,EXPLICACAO_GENERICA
+860,Legislação Específica,Improbidade Administrativa,true,5,EXPLICACAO_GENERICA
+861,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+862,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+863,Legislação Específica,Lei Maria da Penha,false,5,EXPLICACAO_GENERICA
+864,Legislação Específica,Lei Maria da Penha,false,5,EXPLICACAO_GENERICA
+865,Legislação Específica,Lei Maria da Penha,false,5,EXPLICACAO_GENERICA
+866,Legislação Específica,Lei Maria da Penha,true,5,EXPLICACAO_GENERICA
+867,Legislação Específica,Lei de Drogas,true,5,EXPLICACAO_GENERICA
+868,Legislação Específica,Lei de Drogas,true,4,EXPLICACAO_GENERICA
+869,Legislação Específica,Lei de Drogas,true,5,EXPLICACAO_GENERICA
+870,Legislação Específica,Lei de Drogas,true,5,EXPLICACAO_GENERICA
+871,Legislação Específica,Poder de Polícia,true,5,EXPLICACAO_GENERICA
+872,Língua Portuguesa,Acentuação gráfica,true,5,EXPLICACAO_GENERICA
+873,Língua Portuguesa,Acentuação gráfica,true,5,EXPLICACAO_GENERICA
+874,Língua Portuguesa,Acentuação gráfica,true,5,EXPLICACAO_GENERICA
+875,Língua Portuguesa,Acentuação gráfica,true,5,EXPLICACAO_GENERICA
+876,Língua Portuguesa,Classes de palavras,true,5,EXPLICACAO_GENERICA
+877,Língua Portuguesa,Classes de palavras,true,4,EXPLICACAO_GENERICA
+878,Língua Portuguesa,Classes de palavras,true,5,EXPLICACAO_GENERICA
+879,Língua Portuguesa,Classes de palavras,true,5,EXPLICACAO_GENERICA
+880,Língua Portuguesa,Estrutura e formação de palavras,true,5,EXPLICACAO_GENERICA
+881,Língua Portuguesa,Estrutura e formação de palavras,true,5,EXPLICACAO_GENERICA
+882,Língua Portuguesa,Estrutura e formação de palavras,true,4,EXPLICACAO_GENERICA
+883,Língua Portuguesa,Estrutura e formação de palavras,true,5,EXPLICACAO_GENERICA
+884,Língua Portuguesa,Fonemas e dígrafos,true,5,EXPLICACAO_GENERICA
+885,Língua Portuguesa,Fonemas e dígrafos,true,5,EXPLICACAO_GENERICA
+886,Língua Portuguesa,Fonemas e dígrafos,true,5,EXPLICACAO_GENERICA
+887,Língua Portuguesa,Fonemas e dígrafos,true,5,EXPLICACAO_GENERICA
+888,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_GENERICA
+889,Língua Portuguesa,Ortografia,true,4,EXPLICACAO_GENERICA
+890,Língua Portuguesa,Ortografia,true,4,EXPLICACAO_GENERICA
+891,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_GENERICA
+892,Língua Portuguesa,Ortografia,true,5,EXPLICACAO_GENERICA
+893,Língua Portuguesa,Tempos e modos verbais,true,5,EXPLICACAO_GENERICA
+894,Língua Portuguesa,Tempos e modos verbais,true,5,EXPLICACAO_GENERICA
+1291,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1292,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1293,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1294,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1295,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1296,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1297,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1298,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1299,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1300,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1301,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1302,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1303,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1304,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1305,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1306,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1307,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1308,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1309,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1310,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1311,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1312,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1313,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1314,Legislação Específica,Lei Maria da Penha,true,2,SEM_EXPLICACAO
+1315,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1316,Legislação Específica,Lei Maria da Penha,true,2,SEM_EXPLICACAO
+1317,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1318,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1319,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1320,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1321,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1322,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1323,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1324,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1325,Legislação Específica,Lei Maria da Penha,true,2,SEM_EXPLICACAO
+1326,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1327,Legislação Específica,Lei Maria da Penha,true,2,SEM_EXPLICACAO
+1328,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1329,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1330,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1331,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1332,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1333,Legislação Específica,Lei Maria da Penha,true,2,SEM_EXPLICACAO
+1334,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1335,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1336,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1337,Legislação Específica,Lei Maria da Penha,true,2,SEM_EXPLICACAO
+1338,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1339,Legislação Específica,Lei Maria da Penha,true,2,SEM_EXPLICACAO
+1340,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1341,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1342,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1343,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1344,Legislação Específica,Lei Maria da Penha,true,2,SEM_EXPLICACAO
+1345,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1346,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1347,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1348,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1349,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1350,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1351,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1352,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1353,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1354,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1355,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1356,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1357,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1358,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1359,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1360,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1361,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1362,Legislação Específica,Lei Maria da Penha,true,2,SEM_EXPLICACAO
+1363,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1364,Legislação Específica,Lei Maria da Penha,true,2,SEM_EXPLICACAO
+1365,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1366,Legislação Específica,Lei Maria da Penha,true,2,SEM_EXPLICACAO
+1367,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1368,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1369,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1370,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1371,Legislação Específica,Lei Maria da Penha,true,2,SEM_EXPLICACAO
+1372,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1373,Legislação Específica,Lei Maria da Penha,true,5,SEM_EXPLICACAO
+1374,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
+1375,Legislação Específica,Lei Maria da Penha,true,4,SEM_EXPLICACAO
