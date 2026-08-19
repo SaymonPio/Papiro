@@ -1,0 +1,195 @@
+[
+  {
+    "cadernoNumero": 410,
+    "tecId": 2976888,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 412,
+    "tecId": 2925122,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 413,
+    "tecId": 2891542,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 414,
+    "tecId": 2890917,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 416,
+    "tecId": 2885524,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 417,
+    "tecId": 2885113,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 418,
+    "tecId": 2881886,
+    "categoria": "PROBLEMATICA",
+    "motivo": "Erro de gabarito da banca de origem (EDUCA PB, Pilões-PB/2023), confirmado na propria grade oficial extraida do PDF (\"418) C\"). O enunciado lista \"IV. A violencia social\" como um dos itens candidatos e o gabarito C marca TODOS os 6 itens (I-VI) como corretos, incluindo o item IV -- mas \"violencia social\" nunca foi categoria do art.7 da LMP, nem antes nem depois da Lei 15.384/2026 (que acrescentou vicaria, nao social). Nao e questao de vicaria/atualizacao legislativa -- e erro de premissa/gabarito da fonte original. Nao importar com este gabarito."
+  },
+  {
+    "cadernoNumero": 419,
+    "tecId": 2880201,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 420,
+    "tecId": 2873346,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 421,
+    "tecId": 2872545,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 422,
+    "tecId": 2872477,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 423,
+    "tecId": 2872471,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 425,
+    "tecId": 2852647,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 426,
+    "tecId": 2844317,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 427,
+    "tecId": 2844316,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 430,
+    "tecId": 2832645,
+    "categoria": "DADOS_INSUFICIENTES_VISUAL",
+    "motivo": "DADOS_INSUFICIENTES_VISUAL: enunciado depende de \"Figura 1\", print de noticia do Jornal Pioneiro (24/10/2017), referenciada mas nao extraivel do PDF. Confirmado no .txt bruto (supabase/_lote2_txt/caderno_401 ao 600.txt, linhas 549-561): a linha \"430) Leia a noticia da Figura 1 abaixo:\" e seguida apenas por \"Figura 1 / Fonte: Jornal Pioneiro (24/10/2017)\" sem nenhum texto da noticia em si -- imagem sem camada de texto/OCR. Gabarito A (Sexual) nao pode ser confirmado nem refutado sem o conteudo visual. NAO IMPORTAR. Preservada no inventario para eventual recuperacao futura."
+  },
+  {
+    "cadernoNumero": 432,
+    "tecId": 2832187,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 433,
+    "tecId": 2832030,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 434,
+    "tecId": 2831105,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 435,
+    "tecId": 2830572,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 437,
+    "tecId": 2828648,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 438,
+    "tecId": 2824698,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 439,
+    "tecId": 2822362,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 440,
+    "tecId": 2813039,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 443,
+    "tecId": 2755533,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 444,
+    "tecId": 2749394,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 445,
+    "tecId": 2739031,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 446,
+    "tecId": 2736918,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 447,
+    "tecId": 2736792,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 448,
+    "tecId": 2736747,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 449,
+    "tecId": 2735885,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 450,
+    "tecId": 2666495,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 451,
+    "tecId": 2664350,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 454,
+    "tecId": 2641353,
+    "categoria": "DESATUALIZADA",
+    "motivo": "DESATUALIZADA: o enunciado pede explicitamente a alternativa que representa \"TODAS AS FORMAS de violencia domestica... DE ACORDO COM OS REFERIDOS INCISOS DO ART. 7\" -- uma alegacao de completude que e o proprio nucleo testado, nao um detalhe periferico. O gabarito B lista apenas as 5 modalidades classicas; nenhuma das 4 alternativas inclui a violencia vicaria (inciso VI, Lei 15.384/2026), entao NAO HA alternativa totalmente correta sob a lei vigente em 2026 -- mesmo padrao do caderno 226 do sub-lote 1."
+  },
+  {
+    "cadernoNumero": 455,
+    "tecId": 2641121,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 456,
+    "tecId": 2634262,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 457,
+    "tecId": 2634226,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 459,
+    "tecId": 2629049,
+    "categoria": "VALIDA"
+  }
+]

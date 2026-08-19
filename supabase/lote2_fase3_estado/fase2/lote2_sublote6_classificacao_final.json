@@ -1,0 +1,196 @@
+[
+  {
+    "cadernoNumero": 460,
+    "tecId": 2622322,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 461,
+    "tecId": 2614560,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 463,
+    "tecId": 2596117,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 464,
+    "tecId": 2596087,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 465,
+    "tecId": 2593846,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 466,
+    "tecId": 2591112,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 469,
+    "tecId": 2582271,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 471,
+    "tecId": 2561017,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 473,
+    "tecId": 2542430,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 474,
+    "tecId": 2542301,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 475,
+    "tecId": 2540801,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 477,
+    "tecId": 2538852,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 478,
+    "tecId": 2509323,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 479,
+    "tecId": 2507084,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 480,
+    "tecId": 2505220,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 483,
+    "tecId": 2465385,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 486,
+    "tecId": 2459962,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 487,
+    "tecId": 2456904,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 488,
+    "tecId": 2439366,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 490,
+    "tecId": 2433362,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 491,
+    "tecId": 2427258,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 492,
+    "tecId": 2421550,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 493,
+    "tecId": 2421358,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 494,
+    "tecId": 2402566,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Questao interpretativa sobre se as 5 formas classicas sao exemplificativas (\"entre outras\"). Gabarito nao factualmente errado, mas conceitualmente confuso (violencia politica de genero tem lei propria; violencia espiritual ja e coberta por psicologica via \"crencas\"). Precisa de explicacao cuidadosa."
+  },
+  {
+    "cadernoNumero": 495,
+    "tecId": 2401831,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 496,
+    "tecId": 2394908,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 499,
+    "tecId": 2377110,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 500,
+    "tecId": 2348578,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 503,
+    "tecId": 2284098,
+    "categoria": "PROBLEMATICA_GABARITO_AMBIGUO",
+    "motivo": "PROBLEMATICA_GABARITO_AMBIGUO: reauditoria especifica confirmou que as alternativas D (\"vitima exige genero feminino, que nao se confunde com sexo feminino\") e E (\"agressor sem restricao de genero\", gabarito original) sao AMBAS verdadeiras sob a jurisprudencia vigente em 2026 (aplicacao da LMP a mulheres trans; irrelevancia do genero do agressor). Nao ha detalhe textual em D que a torne falsa. Questao de resposta unica com duas alternativas corretas -- gabarito ambiguo da fonte original (IDECAN, Sold PM CE/2023). Retirada do lote valido."
+  },
+  {
+    "cadernoNumero": 504,
+    "tecId": 1864840,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 505,
+    "tecId": 2257406,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Artefato de OCR em alternativa distratora: \"Lei no 741, de 01/10/2003\" faltando prefixo \"10.\" (deveria ser 10.741/2003). Nao afeta o gabarito (C). Precisa de limpeza de texto."
+  },
+  {
+    "cadernoNumero": 506,
+    "tecId": 2267556,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 508,
+    "tecId": 2294132,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 509,
+    "tecId": 3369909,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 510,
+    "tecId": 2299772,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 511,
+    "tecId": 2315573,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 512,
+    "tecId": 2433843,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Enunciado cita \"Lei complementar n. 150/2015\" (trabalho domestico, sem relacao com o conteudo testado) -- provavel erro de citacao da fonte. Gabarito (B, transcricao literal do art.5 caput) continua correto."
+  },
+  {
+    "cadernoNumero": 514,
+    "tecId": 2325983,
+    "categoria": "VALIDA"
+  }
+]

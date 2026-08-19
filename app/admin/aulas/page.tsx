@@ -338,6 +338,7 @@ export default function AdminAulas() {
         <div className="admin-header-actions">
           <Link href="/admin">Questões</Link>
           <Link className="admin-header-action-active" href="/admin/aulas">Gerar aulas</Link>
+          <Link href="/admin/aulas/preview">Prévia da aula publicada</Link>
           <Link href="/painel">Voltar ao painel</Link>
         </div>
       </header>

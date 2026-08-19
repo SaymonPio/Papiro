@@ -1,0 +1,199 @@
+[
+  {
+    "cadernoNumero": 849,
+    "tecId": 2048497,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 852,
+    "tecId": 972388,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 853,
+    "tecId": 3882721,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 854,
+    "tecId": 341627,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 856,
+    "tecId": 857904,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 857,
+    "tecId": 279250,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Enunciado afirma \"sao descritos CINCO TIPOS de violencia\" antes de pedir a definicao especifica de patrimonial (gabarito D). Nucleo testado nao depende do total ser 5 ou 6 -- mesmo criterio de 556/649/708."
+  },
+  {
+    "cadernoNumero": 858,
+    "tecId": 792974,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 859,
+    "tecId": 265894,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 861,
+    "tecId": 165367,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 862,
+    "tecId": 480350,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 866,
+    "tecId": 279277,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 867,
+    "tecId": 203731,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Assertiva III usa o termo \"A VIOLACAO domestica contra a mulher constitui uma das formas de violacao dos direitos humanos\" (confirmado no .txt bruto e na grade de gabarito -- nao e erro de parser) -- \"violacao domestica\" nao e termo definido pela lei (o termo correto e \"violencia domestica\"). O gabarito (B, apenas item II) exclui III, sugerindo que a troca de palavra e o motivo. Precisa de nota explicando essa nuance de terminologia antes de fundamentar a explicacao."
+  },
+  {
+    "cadernoNumero": 868,
+    "tecId": 846397,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Lista fechada das 5 modalidades classicas sem hedge (\"sao legalmente consideradas como tipos de violencia\"). Gabarito D permanece o unico plausivel (demais opcoes tem termos fake: matrimonial, etico-moral, opressao). Precisa de nota sobre o inciso VI."
+  },
+  {
+    "cadernoNumero": 870,
+    "tecId": 495253,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 872,
+    "tecId": 496087,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Typo no enunciado: \"O Artigo 50\" ao inves de \"Artigo 5o\" (leitura incorreta de OCR do simbolo de grau). Conteudo e gabarito (D) corretos; precisa de correcao antes de importar."
+  },
+  {
+    "cadernoNumero": 874,
+    "tecId": 655963,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 875,
+    "tecId": 390507,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 876,
+    "tecId": 190643,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 878,
+    "tecId": 157050,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 879,
+    "tecId": 3243557,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 880,
+    "tecId": 3243658,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 881,
+    "tecId": 156749,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 885,
+    "tecId": 3500525,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 886,
+    "tecId": 118034,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 888,
+    "tecId": 495261,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 890,
+    "tecId": 113946,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 891,
+    "tecId": 1247792,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 894,
+    "tecId": 695273,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 895,
+    "tecId": 935683,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Lista fechada das 5 modalidades sem hedge (\"formas de violencia domestica... previstas nesta lei\"). Gabarito E permanece o unico plausivel. Precisa de nota sobre o inciso VI."
+  },
+  {
+    "cadernoNumero": 896,
+    "tecId": 695269,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 897,
+    "tecId": 262768,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 899,
+    "tecId": 2762921,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 900,
+    "tecId": 552858,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 903,
+    "tecId": 579133,
+    "categoria": "FORA_ESCOPO_LMP",
+    "motivo": "FORA_ESCOPO_LMP -- fundamentacao corrigida. O enunciado trata GENERICAMENTE (sem especificar genero) da violencia sexual contra criancas e adolescentes, situando o fenomeno na decada de 1990. O ECA e exatamente de 1990 e corresponde cronologica e tematicamente ao contexto descrito; a LMP e de 2006. Por isso, NESTA questao especifica, a alternativa ECA (b) e compativel com o enunciado e o gabarito LMP (a) e inadequado -- confirmado contra a grade de gabarito oficial extraida do PDF (nao e erro de parser). IMPORTANTE: essa conclusao NAO se apoia na premissa de que a LMP se restringe a mulheres adultas -- pelo Tema Repetitivo 1.186/STJ, ja estabelecido nesta auditoria (base das exclusoes de ids 1337 e 1340 no Lote 1), a LMP pode sim incidir em violencia domestica e familiar contra vitima do genero feminino mesmo sendo crianca ou adolescente. A exclusao aqui e por descompasso cronologico e tematico do enunciado especifico (que fala de criancas e adolescentes em geral, nos anos 1990, remetendo ao ECA), nao por incompatibilidade categorica entre LMP e vitimas menores de idade."
+  },
+  {
+    "cadernoNumero": 904,
+    "tecId": 1015282,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 905,
+    "tecId": 330684,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 909,
+    "tecId": 1569268,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "\"a lei conceitua expressamente as SEGUINTES formas de violencia\" -- lista fechada sem hedge quanto ao total de modalidades. Gabarito C permanece o unico plausivel. Precisa de nota sobre o inciso VI."
+  },
+  {
+    "cadernoNumero": 910,
+    "tecId": 835467,
+    "categoria": "VALIDA"
+  }
+]

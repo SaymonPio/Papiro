@@ -1,0 +1,195 @@
+[
+  {
+    "cadernoNumero": 356,
+    "tecId": 3595917,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 357,
+    "tecId": 3596067,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 359,
+    "tecId": 2966706,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 360,
+    "tecId": 3630576,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 361,
+    "tecId": 2962308,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 362,
+    "tecId": 3630969,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 364,
+    "tecId": 2955765,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 365,
+    "tecId": 3682521,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 366,
+    "tecId": 2955256,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 368,
+    "tecId": 2941057,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 369,
+    "tecId": 2847969,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Lista fechada das 5 modalidades classicas sem hedge (\"entre outras\"/\"algumas\") -- gabarito A permanece o unico plausivel entre as opcoes dadas (as demais sao falsas por outros motivos, nenhuma menciona vicaria); precisa de nota sobre o inciso VI (Lei 15.384/2026)."
+  },
+  {
+    "cadernoNumero": 372,
+    "tecId": 2932376,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 373,
+    "tecId": 2932194,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 374,
+    "tecId": 2932188,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 375,
+    "tecId": 2847886,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 376,
+    "tecId": 2924320,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 379,
+    "tecId": 2919563,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 380,
+    "tecId": 2910137,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 381,
+    "tecId": 2904890,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 383,
+    "tecId": 2898378,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 384,
+    "tecId": 2842551,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 385,
+    "tecId": 2859577,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 386,
+    "tecId": 2859690,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 387,
+    "tecId": 2861901,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 389,
+    "tecId": 2890074,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 390,
+    "tecId": 2862259,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 391,
+    "tecId": 2840121,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 392,
+    "tecId": 2877475,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 394,
+    "tecId": 2718877,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Artefato de OCR/extracao: numeros romanos II e III aparecem grafados \"Il\" e \"llI\" no enunciado e nas alternativas (\"Il e IlI, apenas.\" etc). Conteudo e gabarito corretos; precisa so de limpeza de texto (normalizar numeracao romana) antes de importar."
+  },
+  {
+    "cadernoNumero": 396,
+    "tecId": 3622849,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 399,
+    "tecId": 3603257,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 401,
+    "tecId": 3534524,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 402,
+    "tecId": 3260966,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 403,
+    "tecId": 3169677,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 404,
+    "tecId": 3093006,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 406,
+    "tecId": 3062789,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 407,
+    "tecId": 3057596,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Artefato de OCR/extracao no enunciado: \"Janice esta sofrendo escola d violencia domestica\" -- trecho \"escola d\" e residuo de extracao, provavel colisao com texto de layout do PDF. Conteudo e gabarito (E, patrimonial) corretos e claros pelo resto do enunciado; precisa de limpeza de texto antes de importar."
+  },
+  {
+    "cadernoNumero": 408,
+    "tecId": 3000783,
+    "categoria": "VALIDA"
+  }
+]

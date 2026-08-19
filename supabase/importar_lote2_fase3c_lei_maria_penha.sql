@@ -19,7 +19,7 @@
 --
 -- Reconciliacao contra o Supabase (assunto_id=19, 117 questoes existentes
 -- antes desta importacao) feita nesta rodada, com comparacao robusta de
--- enunciado/alternativas (no minimo 3 metodos: tec_id citado no campo
+-- enunciado/alternativas (no minimo 3 metodos: tec_id citado no campo  
 -- fonte, hash exato do enunciado normalizado, e similaridade de palavras
 -- Jaccard >= 0.5 com verificacao manual de cada par sinalizado):
 --   - 3 duplicatas CONFIRMADAS (mesmo enunciado e mesmas alternativas de um

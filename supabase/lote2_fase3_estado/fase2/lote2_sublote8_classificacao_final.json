@@ -1,0 +1,194 @@
+[
+  {
+    "cadernoNumero": 568,
+    "tecId": 1940683,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 569,
+    "tecId": 2185202,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 570,
+    "tecId": 2189154,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 571,
+    "tecId": 2193756,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 573,
+    "tecId": 2201325,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 575,
+    "tecId": 2748613,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 576,
+    "tecId": 2506653,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 578,
+    "tecId": 2505524,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 579,
+    "tecId": 2230482,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 580,
+    "tecId": 2233524,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 583,
+    "tecId": 2797871,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 584,
+    "tecId": 2488487,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 585,
+    "tecId": 1903198,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 586,
+    "tecId": 2065314,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 587,
+    "tecId": 3098121,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 588,
+    "tecId": 2233844,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Typo na alternativa correta (gabarito): \"bens, valores e direitos AOS recursos economicos\" -- deveria ser \"OU recursos economicos\". Nao afeta a compreensao nem o gabarito (A, patrimonial), mas precisa de correcao de texto antes de importar."
+  },
+  {
+    "cadernoNumero": 589,
+    "tecId": 2233923,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 590,
+    "tecId": 2472313,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Lista fechada das 5 modalidades classicas sem hedge (\"Fisica, psicologica, sexual, patrimonial e moral, ocorrida entre relacoes pessoais, independente de orientacao sexual\"). Gabarito C permanece o unico plausivel entre as opcoes (as demais negam categorias ou impoem condicoes falsas), mas precisa de nota sobre o inciso VI."
+  },
+  {
+    "cadernoNumero": 592,
+    "tecId": 2252856,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 593,
+    "tecId": 1882009,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 594,
+    "tecId": 1876273,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 595,
+    "tecId": 1865334,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 597,
+    "tecId": 1748369,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 598,
+    "tecId": 1725434,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 599,
+    "tecId": 1748372,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 600,
+    "tecId": 1978066,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 601,
+    "tecId": 1975391,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 602,
+    "tecId": 1632410,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 603,
+    "tecId": 1748613,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 605,
+    "tecId": 2608460,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 608,
+    "tecId": 3092375,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 609,
+    "tecId": 1729002,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 610,
+    "tecId": 1922765,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 612,
+    "tecId": 1677930,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 613,
+    "tecId": 1682434,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 614,
+    "tecId": 1697143,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 616,
+    "tecId": 1703864,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 617,
+    "tecId": 2476827,
+    "categoria": "VALIDA"
+  }
+]

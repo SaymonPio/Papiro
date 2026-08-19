@@ -1,0 +1,195 @@
+[
+  {
+    "cadernoNumero": 618,
+    "tecId": 1767323,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 620,
+    "tecId": 1789562,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 621,
+    "tecId": 1820927,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 622,
+    "tecId": 1819323,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 625,
+    "tecId": 1818982,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 626,
+    "tecId": 1817995,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 627,
+    "tecId": 2371648,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 629,
+    "tecId": 1817277,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 630,
+    "tecId": 1725316,
+    "categoria": "DESATUALIZADA",
+    "motivo": "DESATUALIZADA: enunciado pergunta explicitamente \"Quais sao TODAS AS FORMAS POSSIVEIS de violencia domestica e familiar ELENCADAS NESTE ARTIGO?\" -- alegacao de completude que e o nucleo do que e testado. Gabarito B lista apenas as 5 classicas; nenhuma das 5 alternativas inclui violencia vicaria (inciso VI, Lei 15.384/2026). Mesmo padrao dos cadernos 226 (sub-lote1) e 454 (sub-lote5)."
+  },
+  {
+    "cadernoNumero": 631,
+    "tecId": 3381120,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 632,
+    "tecId": 2222540,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 634,
+    "tecId": 1522392,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 635,
+    "tecId": 1746968,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 636,
+    "tecId": 2144537,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 638,
+    "tecId": 2041005,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 640,
+    "tecId": 1472244,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 641,
+    "tecId": 1759848,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 644,
+    "tecId": 1728363,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Cenario descreve 3 colegas de trabalho dividindo aluguel por conveniencia financeira (\"Em comum acordo com dois colegas, decidiram residir juntos, dividindo as despesas\"), sem qualquer mencao a consideracao de parentesco. O gabarito C afirma que a violencia \"pode ser configurada... no ambito da familia E DA UNIDADE DOMESTICA\" -- mas os fatos dados so sustentam claramente o ambito UNIDADE DOMESTICA (convivio permanente, com ou sem vinculo familiar); a extensao ao ambito FAMILIA nao e apoiada pelos fatos (nao ha indicio de que se consideram aparentados). A conclusao central (LMP se aplica) e a rejeicao das demais alternativas permanecem corretas; so a dupla fundamentacao em ambos os ambitos precisa de nota cuidadosa."
+  },
+  {
+    "cadernoNumero": 645,
+    "tecId": 1410147,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 647,
+    "tecId": 1256097,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 649,
+    "tecId": 1121086,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Item III afirma que \"a legislacao estipula como tipologias de violencia domestica a fisica, a psicologica, a sexual, a moral e a patrimonial\" sem hedge (\"entre outras\"/\"algumas\"). Gabarito (apenas III correto) permanece valido pois III nao afirma que essas sao as UNICAS tipologias, so as lista como tipologias reais -- mesmo criterio usado no caderno 240 do sub-lote 1. Precisa de nota sobre o inciso VI."
+  },
+  {
+    "cadernoNumero": 650,
+    "tecId": 1972388,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 651,
+    "tecId": 1221585,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 654,
+    "tecId": 1501575,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 655,
+    "tecId": 1317126,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 657,
+    "tecId": 3844720,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 658,
+    "tecId": 1501361,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 661,
+    "tecId": 1326308,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 662,
+    "tecId": 1292573,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 663,
+    "tecId": 1107602,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 666,
+    "tecId": 1282163,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 667,
+    "tecId": 1284855,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 668,
+    "tecId": 1288406,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 669,
+    "tecId": 1289766,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 671,
+    "tecId": 1598117,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 672,
+    "tecId": 1597203,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 673,
+    "tecId": 1724591,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 674,
+    "tecId": 1334760,
+    "categoria": "VALIDA"
+  }
+]

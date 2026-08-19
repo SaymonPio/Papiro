@@ -1,0 +1,196 @@
+[
+  {
+    "cadernoNumero": 304,
+    "tecId": 3315926,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Lista fechada das 5 modalidades classicas sem hedge -- gabarito A permanece o unico plausivel; precisa de nota sobre o inciso VI (violencia vicaria, Lei 15.384/2026)."
+  },
+  {
+    "cadernoNumero": 305,
+    "tecId": 3321050,
+    "categoria": "DADOS_INSUFICIENTES_VISUAL",
+    "motivo": "DADOS_INSUFICIENTES_VISUAL: enunciado depende de uma \"manchete\" (imagem/print de noticia) referenciada mas nao extraivel do PDF de origem. Busca confirmada: (1) nenhum arquivo .pdf existe em lugar nenhum do repositorio local (Glob **/*.pdf = 0 resultados); (2) o .txt bruto extraido por pdftotext -layout (supabase/_lote2_txt/caderno_201 ao 400.txt, linhas 1767-1780) mostra que a linha \"305) Analise a manchete abaixo:\" salta direto para o enunciado da pergunta, sem nenhum texto intermediario -- a imagem nao tem camada de texto (nao foi OCRizada). Gabarito C (Fisica) nao pode ser confirmado nem refutado sem o conteudo visual. NAO IMPORTAR. Preservada no inventario para eventual recuperacao futura (ex.: se o PDF original for localizado/re-adquirido e puder ser OCRizado)."
+  },
+  {
+    "cadernoNumero": 306,
+    "tecId": 3322429,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 308,
+    "tecId": 3324743,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 309,
+    "tecId": 3085547,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Achado da reaudit do sub-lote 2 da Fase 3B: o enunciado parafraseia o art. 7o, caput (\"sao formas de violencia contra a mulher: a fisica, psicologica, sexual, patrimonial, e ___\"), omitindo o \"entre outras\" que consta do texto legal original, apresentando a lista de 5 modalidades como se fosse fechada. Questao de 2024, anterior a Lei 15.384/2026 (violencia vicaria, art. 7o, VI). Gabarito D (moral) permanece correto e unico -- nenhuma alternativa oferece \"vicaria\" ou testa a completude do rol. Upgrade de VALIDA para VALIDA_COM_RESSALVA; nao afeta APROVADA_PARA_PROXIMA_FASE (continua true)."
+  },
+  {
+    "cadernoNumero": 310,
+    "tecId": 3324785,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 311,
+    "tecId": 3083884,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 312,
+    "tecId": 3324796,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 314,
+    "tecId": 3338000,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 315,
+    "tecId": 3077866,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 316,
+    "tecId": 3073912,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 319,
+    "tecId": 3392823,
+    "categoria": "VALIDA_COM_RESSALVA"
+  },
+  {
+    "cadernoNumero": 320,
+    "tecId": 3415068,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 321,
+    "tecId": 3072118,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 324,
+    "tecId": 3417429,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 325,
+    "tecId": 2759639,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 326,
+    "tecId": 2770925,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 327,
+    "tecId": 2789972,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 328,
+    "tecId": 3449398,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 329,
+    "tecId": 3055885,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 330,
+    "tecId": 3055293,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 332,
+    "tecId": 3050257,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 333,
+    "tecId": 3039026,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 334,
+    "tecId": 3031784,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 335,
+    "tecId": 2812702,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Preambulo do enunciado cita erroneamente \"Estatuto da Crianca e do Adolescente, Lei no 8.069/1990\" como lei de referencia, mas todo o conteudo e sobre Lei Maria da Penha. Gabarito (Errado -- lista do art.7 e exemplificativa, nao taxativa) fica ainda mais solido com o inciso VI de 2026."
+  },
+  {
+    "cadernoNumero": 337,
+    "tecId": 3021691,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 338,
+    "tecId": 3014724,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 341,
+    "tecId": 3007260,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 342,
+    "tecId": 3509833,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 345,
+    "tecId": 2826549,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 346,
+    "tecId": 2826587,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 347,
+    "tecId": 3532980,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 349,
+    "tecId": 3575952,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 350,
+    "tecId": 2983066,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 351,
+    "tecId": 2983038,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 352,
+    "tecId": 2983032,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 354,
+    "tecId": 3595916,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 355,
+    "tecId": 2968027,
+    "categoria": "VALIDA"
+  }
+]

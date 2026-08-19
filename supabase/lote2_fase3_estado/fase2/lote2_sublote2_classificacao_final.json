@@ -1,0 +1,195 @@
+[
+  {
+    "cadernoNumero": 252,
+    "tecId": 3363055,
+    "categoria": "VALIDA_COM_RESSALVA"
+  },
+  {
+    "cadernoNumero": 253,
+    "tecId": 3349908,
+    "categoria": "VALIDA_COM_RESSALVA"
+  },
+  {
+    "cadernoNumero": 254,
+    "tecId": 3340738,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 257,
+    "tecId": 3259252,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 258,
+    "tecId": 3238223,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 259,
+    "tecId": 3237915,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 261,
+    "tecId": 3824093,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 262,
+    "tecId": 3168457,
+    "categoria": "VALIDA_COM_RESSALVA"
+  },
+  {
+    "cadernoNumero": 263,
+    "tecId": 3168235,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 265,
+    "tecId": 3167673,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 266,
+    "tecId": 3164311,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 267,
+    "tecId": 3169874,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 268,
+    "tecId": 3171586,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 271,
+    "tecId": 3163946,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 272,
+    "tecId": 3163528,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 273,
+    "tecId": 3178706,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 276,
+    "tecId": 3138220,
+    "categoria": "FORA_ESCOPO_LMP",
+    "motivo": "Bloco IGEDUC/Tuparetama-PE sobre violencia contra pessoa com deficiencia (texto-base + abandono em hospitais/casas de saude, materia do art. 90 da Lei 13.146/2015 - LBI); classificado no site de origem como Conhecimentos Gerais/Seguranca, nao como conteudo especifico da LMP. Preservado para eventual reaproveitamento futuro em conteudo de Pessoa com Deficiencia/Conhecimentos Gerais -- nao descartado definitivamente, apenas excluido deste lote de Lei Maria da Penha."
+  },
+  {
+    "cadernoNumero": 277,
+    "tecId": 3138219,
+    "categoria": "FORA_ESCOPO_LMP",
+    "motivo": "Bloco IGEDUC/Tuparetama-PE sobre violencia contra pessoa com deficiencia (texto-base + abandono em hospitais/casas de saude, materia do art. 90 da Lei 13.146/2015 - LBI); classificado no site de origem como Conhecimentos Gerais/Seguranca, nao como conteudo especifico da LMP. Preservado para eventual reaproveitamento futuro em conteudo de Pessoa com Deficiencia/Conhecimentos Gerais -- nao descartado definitivamente, apenas excluido deste lote de Lei Maria da Penha."
+  },
+  {
+    "cadernoNumero": 278,
+    "tecId": 3138217,
+    "categoria": "FORA_ESCOPO_LMP",
+    "motivo": "Bloco IGEDUC/Tuparetama-PE sobre violencia contra pessoa com deficiencia (texto-base + abandono em hospitais/casas de saude, materia do art. 90 da Lei 13.146/2015 - LBI); classificado no site de origem como Conhecimentos Gerais/Seguranca, nao como conteudo especifico da LMP. Preservado para eventual reaproveitamento futuro em conteudo de Pessoa com Deficiencia/Conhecimentos Gerais -- nao descartado definitivamente, apenas excluido deste lote de Lei Maria da Penha."
+  },
+  {
+    "cadernoNumero": 280,
+    "tecId": 3135241,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 281,
+    "tecId": 3179836,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 282,
+    "tecId": 3126303,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 283,
+    "tecId": 3125995,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 285,
+    "tecId": 3124680,
+    "categoria": "VALIDA_COM_RESSALVA"
+  },
+  {
+    "cadernoNumero": 286,
+    "tecId": 3181496,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 287,
+    "tecId": 3105580,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 288,
+    "tecId": 3105199,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 289,
+    "tecId": 3199401,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 291,
+    "tecId": 3097617,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 292,
+    "tecId": 3097103,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 293,
+    "tecId": 3223384,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 294,
+    "tecId": 3096883,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 295,
+    "tecId": 3229673,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 298,
+    "tecId": 3278936,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 299,
+    "tecId": 3279521,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 300,
+    "tecId": 3299190,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 301,
+    "tecId": 3094833,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 303,
+    "tecId": 3299442,
+    "categoria": "VALIDA"
+  }
+]

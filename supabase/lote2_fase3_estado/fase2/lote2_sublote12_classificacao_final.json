@@ -1,0 +1,193 @@
+[
+  {
+    "cadernoNumero": 795,
+    "tecId": 450311,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 796,
+    "tecId": 1910402,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 797,
+    "tecId": 324465,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 798,
+    "tecId": 1550212,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 800,
+    "tecId": 1376661,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 801,
+    "tecId": 2145965,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 802,
+    "tecId": 451012,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 803,
+    "tecId": 383459,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 805,
+    "tecId": 581287,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 806,
+    "tecId": 1035445,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 807,
+    "tecId": 431992,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 810,
+    "tecId": 1170994,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 812,
+    "tecId": 1074239,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 813,
+    "tecId": 1193737,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Erro de citacao de dispositivo no enunciado: diz \"em seu artigo 6, elenca as distintas formas em que se pode materializar a violencia\" -- mas quem elenca as formas de violencia (fisica, psicologica, sexual, patrimonial, moral, e agora vicaria) e o ART.7, nao o art.6 (que trata apenas de \"constitui uma das formas de violacao dos direitos humanos\"). O conteudo testado (definicao de violencia moral = calunia/difamacao/injuria, gabarito C) permanece correto; precisa so de correcao do numero do artigo antes de importar."
+  },
+  {
+    "cadernoNumero": 814,
+    "tecId": 2155906,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 815,
+    "tecId": 329092,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 817,
+    "tecId": 284952,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 819,
+    "tecId": 301540,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 820,
+    "tecId": 317011,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 824,
+    "tecId": 328682,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 825,
+    "tecId": 490443,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 827,
+    "tecId": 519856,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 828,
+    "tecId": 522597,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 829,
+    "tecId": 752666,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 832,
+    "tecId": 1207493,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 833,
+    "tecId": 1216016,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 835,
+    "tecId": 2004977,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 836,
+    "tecId": 2642067,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 837,
+    "tecId": 2642131,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 839,
+    "tecId": 3089749,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 840,
+    "tecId": 3089752,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 841,
+    "tecId": 3089753,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 842,
+    "tecId": 3089754,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 843,
+    "tecId": 3089935,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 845,
+    "tecId": 3089951,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 846,
+    "tecId": 3089967,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 847,
+    "tecId": 3089970,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 848,
+    "tecId": 553711,
+    "categoria": "VALIDA"
+  }
+]

@@ -1,0 +1,201 @@
+[
+  {
+    "cadernoNumero": 911,
+    "tecId": 316649,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 913,
+    "tecId": 1254876,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 914,
+    "tecId": 2035405,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 915,
+    "tecId": 1254877,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 917,
+    "tecId": 579386,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Typo no enunciado: \"Lei no 1.340/2006\" -- falta o \"1\" inicial (deveria ser 11.340/2006). Conteudo e gabarito (A) corretos; precisa de correcao de texto."
+  },
+  {
+    "cadernoNumero": 918,
+    "tecId": 432450,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 919,
+    "tecId": 1247793,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 920,
+    "tecId": 1254845,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 922,
+    "tecId": 802381,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 923,
+    "tecId": 1750994,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 924,
+    "tecId": 1020587,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 925,
+    "tecId": 3255691,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 927,
+    "tecId": 2951436,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Lista fechada das 5 modalidades sem hedge (\"tem por objetivo coibir a violencia domestica... em suas formas fisica, psicologica, sexual, patrimonial e moral\"), mas nenhuma das outras 4 alternativas sequer tenta listar tipos de violencia (tratam de mercado de trabalho, perseguicao politica, guerra, representacao politica) -- D continua o unico topicamente correto. Precisa de nota sobre o inciso VI."
+  },
+  {
+    "cadernoNumero": 928,
+    "tecId": 455025,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 929,
+    "tecId": 247646,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 930,
+    "tecId": 2810408,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 932,
+    "tecId": 455024,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 933,
+    "tecId": 490369,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 934,
+    "tecId": 1513998,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 935,
+    "tecId": 2723775,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Gabarito D (\"politica publica... conjunto articulado de acoes da Uniao, Estados, DF e Municipios e acoes nao-governamentais\", art.8 caput) esta correto, mas a alternativa E (\"respeito, nos meios de comunicacao social, dos valores eticos... constitui um objetivo da politica publica\") tambem parece um resumo razoavelmente fiel do art.8, III (uma das diretrizes). A diferenca entre as duas nao e tao nitida quanto pareceu a primeira vista -- precisa de atencao ao redigir a explicacao para justificar D sobre E sem tratar E como simplesmente errada."
+  },
+  {
+    "cadernoNumero": 936,
+    "tecId": 814013,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 937,
+    "tecId": 1714665,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 938,
+    "tecId": 1517396,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 939,
+    "tecId": 1850573,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 942,
+    "tecId": 1714489,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 944,
+    "tecId": 686025,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 948,
+    "tecId": 1060353,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 958,
+    "tecId": 3949276,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 959,
+    "tecId": 3986713,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 963,
+    "tecId": 3542689,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 966,
+    "tecId": 3606498,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 968,
+    "tecId": 3606496,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 977,
+    "tecId": 3750104,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 986,
+    "tecId": 3764647,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "O enunciado descreve o gatilho do afastamento do agressor (art.12-C) apenas como \"risco atual ou iminente a vida ou a integridade fisica ou psicologica\" -- essa e a redacao anterior a ampliacao de 2026. A redacao vigente (Lei 15.411/2026) ampliou o rol de riscos cobertos para integridade fisica, sexual, psicologica, moral ou patrimonial -- uma enumeracao especifica dessas cinco modalidades, NAO uma referencia generica a \"todas as formas do art.7\". A violencia vicaria (inciso VI) NAO aparece nominalmente nesse rol ampliado. Isso nao muda o nucleo testado pelo gabarito (A, competencia do delegado de policia quando o municipio nao for sede de comarca, que permanece inalterada pela emenda de 2026 -- ela mudou o rol de riscos cobertos, nao a quem compete a medida), mas o enunciado precisa de nota atualizando a descricao do criterio de risco com precisao (fisica, sexual, psicologica, moral, patrimonial -- sem incluir vicaria nessa lista especifica) antes de fundamentar a futura explicacao."
+  },
+  {
+    "cadernoNumero": 988,
+    "tecId": 3623830,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 990,
+    "tecId": 3852897,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 993,
+    "tecId": 3559251,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 997,
+    "tecId": 3746791,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 998,
+    "tecId": 3746495,
+    "categoria": "VALIDA"
+  }
+]

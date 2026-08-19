@@ -1,0 +1,194 @@
+[
+  {
+    "cadernoNumero": 735,
+    "tecId": 715864,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 736,
+    "tecId": 609444,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 737,
+    "tecId": 715436,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 740,
+    "tecId": 692312,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 744,
+    "tecId": 1410217,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 746,
+    "tecId": 2474830,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 747,
+    "tecId": 641989,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 748,
+    "tecId": 1453101,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 750,
+    "tecId": 1336891,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 752,
+    "tecId": 609855,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 753,
+    "tecId": 593247,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 754,
+    "tecId": 700539,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Enunciado \"esta lei estabelece as SEGUINTES formas de violencia\" (sem hedge). Gabarito B (fisica,psicologica,sexual,patrimonial,moral) permanece o unico plausivel -- as demais alternativas incluem termos fake (biologica, homofobica, bullying). Precisa de nota sobre o inciso VI."
+  },
+  {
+    "cadernoNumero": 758,
+    "tecId": 824300,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 759,
+    "tecId": 1159254,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 760,
+    "tecId": 659284,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 762,
+    "tecId": 590553,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 763,
+    "tecId": 693760,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 764,
+    "tecId": 1742664,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 765,
+    "tecId": 1742605,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 768,
+    "tecId": 1838228,
+    "categoria": "PROBLEMATICA",
+    "motivo": "PROBLEMATICA -- erro de gabarito confirmado contra a fonte oficial. Conferida a grade de gabarito extraida do PDF (supabase/_lote2_txt/caderno_601 ao 800.txt, linha 3871: \"768) D\") -- nao e erro de parsing, e o proprio exame original (PRORH UFTM) que marca \"d) Privacao de liberdade\" como correta, em vez de \"c) Violencia patrimonial\", que e literalmente uma das formas NOMEADAS pelo art.7 (inciso IV). \"Privacao de liberdade\" nao e nome de nenhuma categoria do art.7 -- na melhor leitura possivel, seria uma parafrase solta de \"limitacao do direito de ir e vir\", que e apenas UM dos meios listados dentro da definicao de violencia PSICOLOGICA (art.7,II), nao um nome de forma. Nao importar com este gabarito."
+  },
+  {
+    "cadernoNumero": 769,
+    "tecId": 692699,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 770,
+    "tecId": 898922,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 772,
+    "tecId": 899211,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 773,
+    "tecId": 700121,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 777,
+    "tecId": 733044,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 778,
+    "tecId": 2412513,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 779,
+    "tecId": 690078,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 781,
+    "tecId": 1742568,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 782,
+    "tecId": 927126,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 783,
+    "tecId": 515305,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 784,
+    "tecId": 567933,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 787,
+    "tecId": 631048,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 788,
+    "tecId": 656448,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 789,
+    "tecId": 611952,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 790,
+    "tecId": 595063,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 791,
+    "tecId": 573818,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 792,
+    "tecId": 1242331,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 793,
+    "tecId": 1060218,
+    "categoria": "VALIDA"
+  }
+]

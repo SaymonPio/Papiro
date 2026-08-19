@@ -1,0 +1,193 @@
+[
+  {
+    "cadernoNumero": 201,
+    "tecId": 3627565,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 202,
+    "tecId": 3612926,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 203,
+    "tecId": 3607836,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 204,
+    "tecId": 3605267,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 207,
+    "tecId": 3597162,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 208,
+    "tecId": 3596630,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 209,
+    "tecId": 3850498,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 211,
+    "tecId": 3588587,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 212,
+    "tecId": 3586559,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 213,
+    "tecId": 3585297,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 215,
+    "tecId": 3574305,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 217,
+    "tecId": 3564240,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 218,
+    "tecId": 3543629,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 219,
+    "tecId": 3543432,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 220,
+    "tecId": 3528682,
+    "categoria": "VALIDA_COM_RESSALVA"
+  },
+  {
+    "cadernoNumero": 222,
+    "tecId": 3520358,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 223,
+    "tecId": 3517979,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 225,
+    "tecId": 3502460,
+    "categoria": "PROBLEMATICA_GABARITO_AMBIGUO",
+    "motivo": "Reaudit solicitado pelo usuario: a alternativa D (\"namorado divulga fotos intimas da namorada sem o consentimento dela\") tambem se enquadra em \"violacao de sua intimidade\", meio expressamente listado na definicao de violencia psicologica do art. 7o, II, na redacao vigente (pos Lei 13.772/2018). O enunciado pede a UNICA alternativa que configura violencia psicologica, mas tanto A (humilhacao/diminuicao de autoestima) quanto D (violacao de intimidade) satisfazem objetivamente essa definicao, sem criterio textual que preserve a unicidade de A. Gabarito original (A) nao sustentavel isoladamente -- questao ambigua, excluida da importacao."
+  },
+  {
+    "cadernoNumero": 226,
+    "tecId": 3501428,
+    "categoria": "DESATUALIZADA"
+  },
+  {
+    "cadernoNumero": 227,
+    "tecId": 3500154,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 228,
+    "tecId": 3497447,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 229,
+    "tecId": 3496113,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 231,
+    "tecId": 3486856,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 232,
+    "tecId": 3486853,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 235,
+    "tecId": 3467391,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 236,
+    "tecId": 3464975,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 237,
+    "tecId": 3459059,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 238,
+    "tecId": 3453660,
+    "categoria": "VALIDA_COM_RESSALVA"
+  },
+  {
+    "cadernoNumero": 240,
+    "tecId": 3424637,
+    "categoria": "VALIDA_COM_RESSALVA"
+  },
+  {
+    "cadernoNumero": 241,
+    "tecId": 3407936,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 242,
+    "tecId": 3379851,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 243,
+    "tecId": 3379836,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 244,
+    "tecId": 3375655,
+    "categoria": "VALIDA_COM_RESSALVA"
+  },
+  {
+    "cadernoNumero": 245,
+    "tecId": 3374318,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 246,
+    "tecId": 3371310,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 248,
+    "tecId": 3370534,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 249,
+    "tecId": 3849975,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 251,
+    "tecId": 3366976,
+    "categoria": "VALIDA"
+  }
+]

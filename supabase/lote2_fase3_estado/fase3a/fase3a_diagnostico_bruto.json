@@ -1,0 +1,32 @@
+{
+  "achadosContaminacao": {
+    "enunciado": [],
+    "alternativas": [],
+    "topico": [
+      3528682,
+      3374318,
+      2789972,
+      2880201,
+      2736918,
+      2402566,
+      2367602,
+      1940683,
+      2065314,
+      2283191,
+      595063,
+      814013
+    ]
+  },
+  "alternativasQuebradas": [
+    {
+      "tecId": 3682521,
+      "indice": 3,
+      "motivo": "texto residual (<3 caracteres): \"I.\""
+    },
+    {
+      "tecId": 814013,
+      "indice": 0,
+      "motivo": "texto residual (<3 caracteres): \"3\""
+    }
+  ]
+}

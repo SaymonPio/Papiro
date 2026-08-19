@@ -1,0 +1,193 @@
+[
+  {
+    "cadernoNumero": 676,
+    "tecId": 1357302,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 677,
+    "tecId": 1045390,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 678,
+    "tecId": 1376386,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 679,
+    "tecId": 1376388,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 680,
+    "tecId": 2283191,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 681,
+    "tecId": 1404259,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 682,
+    "tecId": 1212588,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 685,
+    "tecId": 1046929,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 686,
+    "tecId": 1494137,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 687,
+    "tecId": 1176323,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 688,
+    "tecId": 1046931,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 690,
+    "tecId": 1121194,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 691,
+    "tecId": 1529642,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 692,
+    "tecId": 1746129,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 694,
+    "tecId": 1120050,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 695,
+    "tecId": 900149,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 697,
+    "tecId": 908463,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 699,
+    "tecId": 916362,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 700,
+    "tecId": 880260,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 701,
+    "tecId": 878134,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 702,
+    "tecId": 864454,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 704,
+    "tecId": 930933,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 705,
+    "tecId": 864404,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 708,
+    "tecId": 1553250,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Enunciado afirma \"A Lei Maria da Penha configura CINCO formas de violencia..., entre elas a violencia patrimonial\" antes de pedir um EXEMPLO especifico de violencia patrimonial (gabarito B, retencao de documentos pessoais). O nucleo testado (identificar um exemplo de patrimonial) nao depende do total ser 5 ou 6 -- mesmo criterio dos cadernos 556 e 649. Precisa de nota sobre o inciso VI."
+  },
+  {
+    "cadernoNumero": 709,
+    "tecId": 945439,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 710,
+    "tecId": 1109990,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 714,
+    "tecId": 2561747,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 715,
+    "tecId": 1592281,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 716,
+    "tecId": 2083452,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 718,
+    "tecId": 1102992,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 719,
+    "tecId": 1650406,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 721,
+    "tecId": 1068583,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 723,
+    "tecId": 1016975,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 725,
+    "tecId": 1028270,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 727,
+    "tecId": 1270278,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 731,
+    "tecId": 1284278,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 732,
+    "tecId": 732886,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 734,
+    "tecId": 605453,
+    "categoria": "VALIDA"
+  }
+]

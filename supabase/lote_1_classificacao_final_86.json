@@ -1,0 +1,776 @@
+[
+  {
+    "caderno_numero": "216",
+    "tec_id": "3564240",
+    "unidades": "U4",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "221",
+    "tec_id": "3520358",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "260",
+    "tec_id": "3824093",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "275",
+    "tec_id": "3138220",
+    "unidades": "U4",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "284",
+    "tec_id": "3124680",
+    "unidades": "U4+U5",
+    "confianca": "media",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "370",
+    "tec_id": "2936068",
+    "unidades": "U4",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "378",
+    "tec_id": "2919563",
+    "unidades": "U1+U2",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "393",
+    "tec_id": "2718877",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "395",
+    "tec_id": "3622849",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "411",
+    "tec_id": "2925122",
+    "unidades": "U1",
+    "confianca": "media",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "429",
+    "tec_id": "2832645",
+    "unidades": "U2",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "436",
+    "tec_id": "2828648",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "441",
+    "tec_id": "2769196",
+    "unidades": "",
+    "confianca": "baixa",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "468",
+    "tec_id": "2582271",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "470",
+    "tec_id": "2561017",
+    "unidades": "",
+    "confianca": "media",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "481",
+    "tec_id": "2480489",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "484",
+    "tec_id": "2460051",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "534",
+    "tec_id": "2028910",
+    "unidades": "U1+U2",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "561",
+    "tec_id": "3095842",
+    "unidades": "U2",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "574",
+    "tec_id": "2748613",
+    "unidades": "",
+    "confianca": "media",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "577",
+    "tec_id": "2505524",
+    "unidades": "U5",
+    "confianca": "media",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "606",
+    "tec_id": "1752622",
+    "unidades": "U5",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "619",
+    "tec_id": "1789562",
+    "unidades": "U1+U4",
+    "confianca": "media",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "646",
+    "tec_id": "1256097",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "653",
+    "tec_id": "1501575",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "664",
+    "tec_id": "1479113",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "696",
+    "tec_id": "908463",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "706",
+    "tec_id": "861698",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "711",
+    "tec_id": "838571",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "726",
+    "tec_id": "1270278",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "728",
+    "tec_id": "1273091",
+    "unidades": "U1+U3",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "730",
+    "tec_id": "1284278",
+    "unidades": "U1+U5",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "738",
+    "tec_id": "714814",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "739",
+    "tec_id": "692312",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "741",
+    "tec_id": "612958",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "749",
+    "tec_id": "1336891",
+    "unidades": "U1",
+    "confianca": "media",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "774",
+    "tec_id": "1742016",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "786",
+    "tec_id": "631048",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "804",
+    "tec_id": "581287",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "818",
+    "tec_id": "301540",
+    "unidades": "U1",
+    "confianca": "media",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "823",
+    "tec_id": "328682",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "851",
+    "tec_id": "972388",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "863",
+    "tec_id": "215155",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "864",
+    "tec_id": "492358",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "871",
+    "tec_id": "496087",
+    "unidades": "U4",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "884",
+    "tec_id": "3500525",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "889",
+    "tec_id": "113946",
+    "unidades": "U4",
+    "confianca": "media",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "908",
+    "tec_id": "1569268",
+    "unidades": "",
+    "confianca": "media",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "912",
+    "tec_id": "1254876",
+    "unidades": "U1",
+    "confianca": "media",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "921",
+    "tec_id": "802381",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "926",
+    "tec_id": "2951436",
+    "unidades": "",
+    "confianca": "media",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "941",
+    "tec_id": "1714489",
+    "unidades": "",
+    "confianca": "media",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "943",
+    "tec_id": "686025",
+    "unidades": "",
+    "confianca": "media",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "945",
+    "tec_id": "2184657",
+    "unidades": "U4",
+    "confianca": "media",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "947",
+    "tec_id": "1060353",
+    "unidades": "U1",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "949",
+    "tec_id": "3803406",
+    "unidades": "U2",
+    "confianca": "media",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "950",
+    "tec_id": "3818504",
+    "unidades": "U2",
+    "confianca": "alta",
+    "status": "PROBLEMATICA",
+    "motivo": "TEC ID 3818504 colide com questoes.id=671 no banco, mas o enunciado e as alternativas sao INTEIRAMENTE diferentes (671 = deveres da autoridade policial no atendimento imediato, art. 11; caderno 950 = diretrizes da politica publica do art. 8o) -- indica residuo do mesmo bug de deslocamento de metadados ja identificado na auditoria (item 0), agora batendo em cima de um tec_id que ja existe no banco por outra questao. Nao pode ser tratado como JA_EXISTE (perderia uma questao nova) nem como NOVA_CONFIRMADA (importaria com tec_id duplicado/nao confiavel). Requer checagem visual manual direta no PDF antes de qualquer decisao.",
+    "revisao_manual": true
+  },
+  {
+    "caderno_numero": "954",
+    "tec_id": "3791633",
+    "unidades": "U3",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "955",
+    "tec_id": "3771993",
+    "unidades": "U3",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "956",
+    "tec_id": "4042000",
+    "unidades": "",
+    "confianca": "baixa",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "957",
+    "tec_id": "3949276",
+    "unidades": "U3",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "960",
+    "tec_id": "3803957",
+    "unidades": "U2",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "961",
+    "tec_id": "3475690",
+    "unidades": "U3",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "962",
+    "tec_id": "3542689",
+    "unidades": "U3",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "964",
+    "tec_id": "3462034",
+    "unidades": "U3",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "965",
+    "tec_id": "3606498",
+    "unidades": "U2",
+    "confianca": "media",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "967",
+    "tec_id": "3606496",
+    "unidades": "U3",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "969",
+    "tec_id": "3605442",
+    "unidades": "U2",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "970",
+    "tec_id": "3719812",
+    "unidades": "U3+U4",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "971",
+    "tec_id": "3675819",
+    "unidades": "U3",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Revisao manual (Camada C, Jaccard 0.36 vs questoes.id=51): mesmo campo semantico (art. 10-A, atendimento policial especializado) mas testam pontos distintos -- id=51 e um bloco amplo pedindo a alternativa INCORRETA entre varios direitos (matricula escolar, remocao, atendimento, vedacao de afastar agressor); caderno 971 testa especificamente as diretrizes de inquirição do o do art. 10-A (degravacao em midia, retirada de pertences, inquiricao intermediada por profissional). Similaridade lexical alta por vocabulario juridico repetitivo do mesmo artigo, nao por serem a mesma questao. Confirmado NOVA.",
+    "revisao_manual": true
+  },
+  {
+    "caderno_numero": "972",
+    "tec_id": "3559254",
+    "unidades": "U2",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "974",
+    "tec_id": "3237914",
+    "unidades": "U2",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "975",
+    "tec_id": "3339061",
+    "unidades": "U3",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "976",
+    "tec_id": "3750104",
+    "unidades": "",
+    "confianca": "media",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "980",
+    "tec_id": "3749202",
+    "unidades": "U3",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "981",
+    "tec_id": "3500155",
+    "unidades": "U3",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Revisao manual (Camada C, Jaccard 0.36 vs questoes.id=133): ambas usam o molde \"prazo de ___ horas\" com as mesmas 4-5 alternativas numericas, mas testam atores e dispositivos diferentes -- id=133 e o prazo do JUIZ para decidir sobre a medida protetiva (art. 18, 48h); caderno 981 e o prazo da AUTORIDADE POLICIAL para remeter o expediente ao juiz (art. 12, o, 48h). Mesmo gabarito numerico (48h) por coincidencia de ambos os prazos legais serem 48h, mas pontos de direito distintos. Confirmado NOVA.",
+    "revisao_manual": true
+  },
+  {
+    "caderno_numero": "982",
+    "tec_id": "3674860",
+    "unidades": "U2",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "983",
+    "tec_id": "3417035",
+    "unidades": "U3",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "984",
+    "tec_id": "3597170",
+    "unidades": "U2+U3",
+    "confianca": "media",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "985",
+    "tec_id": "3764647",
+    "unidades": "U2",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "987",
+    "tec_id": "3623830",
+    "unidades": "U2",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "989",
+    "tec_id": "3852897",
+    "unidades": "U3",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "991",
+    "tec_id": "3399155",
+    "unidades": "U2",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "992",
+    "tec_id": "3559251",
+    "unidades": "U2",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "994",
+    "tec_id": "3364927",
+    "unidades": "U2",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  },
+  {
+    "caderno_numero": "995",
+    "tec_id": "3746930",
+    "unidades": "U2",
+    "confianca": "alta",
+    "status": "NOVA_CONFIRMADA",
+    "motivo": "Nenhum match em TEC ID, enunciado exato ou similaridade >= 0.35",
+    "revisao_manual": false
+  }
+]

@@ -1570,6 +1570,16 @@ footer > small {
 .admin-recent article small { color: #82928a; }
 .admin-recent article p { margin: 0; color: #bec7c2; }
 
+/* Lista de questões candidatas na prévia de /admin/aulas/preview (percurso
+   completo do Modo Papiro) — cada item empilha um cabeçalho de metadados
+   sobre o MESMO .teoria-bloco--questao_resolvida usado pela aula, nunca o
+   grid rígido de 3 colunas de .admin-recent article (feito para linhas
+   curtas de log, não para enunciado + alternativas). */
+.admin-candidatas-lista { display: grid; gap: 22px; margin-top: 16px; }
+.admin-candidata-questao { display: grid; gap: 8px; }
+.admin-candidata-cabecalho { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.admin-candidata-cabecalho small { color: #82928a; }
+
 /* Aviso não bloqueante de escopo (Fase 2J-B) — só visível ao admin nesta
    mesma tela de revisão de rascunho, nunca ao aluno. Discreto: não é um
    bloqueio, é um sinal para revisar antes de publicar. */

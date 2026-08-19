@@ -1,0 +1,197 @@
+[
+  {
+    "cadernoNumero": 515,
+    "tecId": 2335471,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 516,
+    "tecId": 2362857,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Artefato de OCR: caractere \"|\" solto no meio da definicao de familia (\"comunidade | formada\"). Conteudo e gabarito (A) corretos, precisa de limpeza de texto."
+  },
+  {
+    "cadernoNumero": 517,
+    "tecId": 2367602,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 518,
+    "tecId": 2670955,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 519,
+    "tecId": 2432000,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Typo no enunciado: \"Lei Marinha da Penha\" ao inves de \"Lei Maria da Penha\". Nao afeta compreensao nem gabarito (B, fisica), mas precisa de correcao antes de importar."
+  },
+  {
+    "cadernoNumero": 520,
+    "tecId": 2382101,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 521,
+    "tecId": 2041592,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 523,
+    "tecId": 2385631,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 524,
+    "tecId": 2386767,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 525,
+    "tecId": 2758525,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 526,
+    "tecId": 2388014,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 528,
+    "tecId": 2402474,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 529,
+    "tecId": 2394305,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 532,
+    "tecId": 2065317,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 533,
+    "tecId": 2027140,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 536,
+    "tecId": 1938847,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 537,
+    "tecId": 2028702,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Lista fechada das 5 modalidades classicas sem hedge (\"apresenta as formas... prevista na Lei\"). Gabarito C permanece o unico plausivel (demais opcoes sao garbage/categorias fake), mas precisa de nota sobre o inciso VI."
+  },
+  {
+    "cadernoNumero": 538,
+    "tecId": 1938433,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 541,
+    "tecId": 2075466,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 542,
+    "tecId": 1928354,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 543,
+    "tecId": 2075819,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 545,
+    "tecId": 2882851,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 546,
+    "tecId": 2835434,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 547,
+    "tecId": 2747380,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 548,
+    "tecId": 1916562,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 550,
+    "tecId": 2142842,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 551,
+    "tecId": 2547891,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 552,
+    "tecId": 2142851,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 553,
+    "tecId": 2155740,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 554,
+    "tecId": 2547846,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 556,
+    "tecId": 3095409,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Enunciado afirma explicitamente que o art.7 \"define CINCO formas de violencia\" -- alegacao de contagem desatualizada desde a Lei 15.384/2026 (sao 6). Mas o NUCLEO testado e um exercicio de correspondencia (sequencia numerica) entre 5 definicoes especificas e seus nomes, que nao depende do total ser 5 ou 6 -- nenhuma das 5 categorias trabalhadas muda, e vicaria nao aparece como opcao. Mesmo criterio usado no caderno 240 do sub-lote 1: gabarito da sequencia continua correto, mas a frase de abertura precisa de nota explicando que hoje sao 6 formas."
+  },
+  {
+    "cadernoNumero": 557,
+    "tecId": 2063625,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 559,
+    "tecId": 3095795,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 560,
+    "tecId": 2167453,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 562,
+    "tecId": 3095842,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 565,
+    "tecId": 2176431,
+    "categoria": "VALIDA"
+  },
+  {
+    "cadernoNumero": 566,
+    "tecId": 2180185,
+    "categoria": "VALIDA_COM_RESSALVA",
+    "motivo": "Typo no enunciado: \"Lei no 11.340/2016\" -- ano errado (a LMP e de 2006, nao 2016). Conteudo (definicoes I-III) e gabarito (E, todas corretas) permanecem certos; precisa de correcao da data antes de importar."
+  },
+  {
+    "cadernoNumero": 567,
+    "tecId": 1912214,
+    "categoria": "VALIDA"
+  }
+]
