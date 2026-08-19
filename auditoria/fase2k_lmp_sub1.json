@@ -1,0 +1,402 @@
+[
+  {
+    "id": 21,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Para os efeitos da Lei Maria da Penha, configura violência doméstica e familiar contra a mulher:",
+    "alternativas": [
+      { "ordem": 1, "texto": "A ação ou omissão baseada no gênero que cause os danos previstos na lei", "correta": true },
+      { "ordem": 2, "texto": "Somente a agressão física que produza incapacidade permanente", "correta": false },
+      { "ordem": 3, "texto": "Apenas a conduta praticada por pessoa casada com a vítima", "correta": false },
+      { "ordem": 4, "texto": "Exclusivamente a violência ocorrida dentro da residência", "correta": false },
+      { "ordem": 5, "texto": "Somente o fato previamente comunicado à autoridade policial", "correta": false }
+    ],
+    "gabarito": "A",
+    "explicacao_atual": "GABARITO: alternativa A\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ CORRETA:\r\nO art. 5º, caput, da Lei 11.340/2006 define que configura violência doméstica e familiar contra a mulher qualquer ação ou omissão baseada no gênero que lhe cause morte, lesão, sofrimento físico, sexual ou psicológico e dano moral ou patrimonial — exatamente a definição reproduzida pela alternativa.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\nRestringe indevidamente a violência doméstica à agressão física com incapacidade permanente — a Lei reconhece 6 modalidades de violência (física, psicológica, sexual, patrimonial, moral e, desde a Lei 15.384/2026, a violência vicária), e mesmo dentro da violência física não há exigência de incapacidade permanente.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nO art. 5º não exige casamento — abrange a unidade doméstica (inciso I), a família por laços naturais, afinidade ou vontade expressa (inciso II) e qualquer relação íntima de afeto, com ou sem coabitação (inciso III).\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nNenhum dos três âmbitos do art. 5º exige que a violência ocorra dentro da residência — a relação íntima de afeto, por exemplo, independe de coabitação.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\nA configuração da violência doméstica e familiar, para os efeitos da Lei, não depende de comunicação prévia à autoridade policial — isso é uma condição de registro/procedimento, não um elemento da definição do art. 5º.\r\n\r\nBIZU DE PROVA:\r\nA definição do art. 5º tem 3 elementos: ação OU omissão + baseada no gênero + um dos 3 âmbitos (unidade doméstica, família, relação íntima de afeto). Nenhum deles exige casamento, coabitação ou comunicação prévia à polícia.",
+    "fonte": null,
+    "banca": "Papiro - estilo Fundatec",
+    "concurso": "Brigada Militar do Rio Grande do Sul",
+    "ano": null,
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-02T04:32Z) — parte do lote-base de 32 questões mais antigas do assunto Lei Maria da Penha. Nunca passou por auditoria jurídica documentada; só validação estrutural."
+  },
+  {
+    "id": 40,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "A Lei nº 11.340/2006 (Lei Maria da Penha) trata sobre a criação de mecanismos para coibir a violência doméstica e familiar contra a mulher. A polícia militar, nesse contexto, possui atuação imprescindível à efetivação das medidas protetivas. Assinale a alternativa correta em relação à atuação da policial em situações reguladas por essa lei.",
+    "alternativas": [
+      { "ordem": 1, "texto": "A mulher em situação de violência doméstica e familiar tem prioridade para matricular seus dependentes em instituição de educação básica mais próxima de seu domicílio, ou transferi-los para essa instituição, independentemente da apresentação dos documentos comprobatórios do registro da ocorrência policial ou do processo de violência doméstica e familiar em curso.", "correta": false },
+      { "ordem": 2, "texto": "Na hipótese da iminência ou da prática de violência doméstica e familiar contra a mulher, a autoridade policial que tomar conhecimento da ocorrência adotará, mediante autorização judicial, as providências legais cabíveis.", "correta": false },
+      { "ordem": 3, "texto": "É direito da mulher em situação de violência doméstica e familiar o atendimento policial e pericial especializado, ininterrupto e prestado por servidores – obrigatoriamente do sexo feminino – previamente capacitados.", "correta": false },
+      { "ordem": 4, "texto": "No atendimento à mulher em situação de violência doméstica e familiar, a autoridade policial deverá, entre outras providências, garantir proteção policial, quando necessário, comunicando de imediato ao Ministério Público e ao Poder Judiciário.", "correta": true },
+      { "ordem": 5, "texto": "A autoridade policial poderá requisitar, através do Ministério Público, os serviços públicos necessários à defesa da mulher em situação de violência doméstica e familiar e de seus dependentes.", "correta": false }
+    ],
+    "gabarito": "D",
+    "explicacao_atual": "GABARITO: alternativa D\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ CORRETA:\r\nO art. 11, I, da Lei determina que, no atendimento à mulher em situação de violência doméstica e familiar, a autoridade policial deverá, entre outras providências, garantir proteção policial, quando necessário, comunicando de imediato ao Ministério Público e ao Poder Judiciário — exatamente como descreve a alternativa.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nInverte a regra do art. 9º, §7º: a prioridade de matrícula/transferência dos dependentes na instituição de educação básica mais próxima do domicílio é condicionada à apresentação dos documentos comprobatórios do registro da ocorrência ou do processo em curso — não é \"independentemente\" disso.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\nO art. 10 determina que a autoridade policial adote as providências legais cabíveis DE IMEDIATO ao tomar conhecimento da iminência ou da prática de violência doméstica — não há exigência de autorização judicial prévia para essa atuação inicial.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nO art. 10-A, caput, garante atendimento policial e pericial especializado prestado por servidores PREFERENCIALMENTE do sexo feminino — não \"obrigatoriamente\".\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\nO art. 12-B, §3º, autoriza a autoridade policial a requisitar diretamente os serviços públicos necessários à defesa da mulher e de seus dependentes — não há intermediação do Ministério Público para esse ato.\r\n\r\nBIZU DE PROVA:\r\n\"Preferencialmente do sexo feminino\" (nunca \"obrigatoriamente\") e \"de imediato\" (nunca \"mediante autorização judicial\") são as trocas de palavra mais cobradas sobre os arts. 10 a 11 — decore essas duas.",
+    "fonte": "Fundatec — BM RS Soldado Nível III 2022 — Questão 19",
+    "banca": "Fundatec",
+    "concurso": "Brigada Militar RS - Soldado",
+    "ano": "2022",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T02:50Z) — lote-base de 32 questões mais antigas do assunto. Nunca passou por auditoria jurídica documentada; só validação estrutural."
+  },
+  {
+    "id": 51,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Considerando o disposto na Lei nº 11.340/2006 (conhecida como Lei Maria da Penha), assinale a alternativa INCORRETA.",
+    "alternativas": [
+      { "ordem": 1, "texto": "A política pública que visa coibir a violência doméstica e familiar contra a mulher far-se-á por meio de um conjunto articulado de ações da União, dos Estados, do Distrito Federal e dos Municípios e de ações não governamentais, tendo dentre suas diretrizes a implementação de atendimento policial especializado para as mulheres, em particular nas Delegacias de Atendimento à Mulher.", "correta": false },
+      { "ordem": 2, "texto": "A mulher em situação de violência doméstica e familiar tem prioridade para matricular seus dependentes em instituição de educação básica mais próxima de seu domicílio, ou transferi-los para essa instituição, mediante a apresentação dos documentos comprobatórios do registro da ocorrência policial ou do processo de violência doméstica e familiar em curso.", "correta": false },
+      { "ordem": 3, "texto": "Na hipótese da iminência ou da prática de violência doméstica e familiar contra a mulher, a autoridade policial que tomar conhecimento da ocorrência adotará, de imediato, as providências legais cabíveis.", "correta": false },
+      { "ordem": 4, "texto": "É direito da mulher em situação de violência doméstica e familiar o atendimento policial e pericial especializado, ininterrupto e prestado por servidores – preferencialmente do sexo feminino – previamente capacitados.", "correta": false },
+      { "ordem": 5, "texto": "Ainda que verificada a existência de risco atual ou iminente à vida ou à integridade física ou psicológica da mulher em situação de violência doméstica e familiar, ou de seus dependentes, é vedado ao policial afastar o agressor do lar, domicílio ou local de convivência com a ofendida, em qualquer hipótese.", "correta": true }
+    ],
+    "gabarito": "E",
+    "explicacao_atual": "GABARITO: alternativa E\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ CORRETA (é a alternativa INCORRETA, pedida pelo enunciado):\r\nDizer que é \"vedado ao policial afastar o agressor... em qualquer hipótese\" contraria diretamente o art. 12-C, III, que autoriza expressamente o policial a determinar o afastamento imediato do agressor quando o Município não for sede de comarca e não houver delegado disponível no momento da denúncia — não se trata de vedação absoluta.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA (é verdadeira, não a exceção pedida):\r\nReproduz corretamente o art. 8º, IV, sobre a implementação de atendimento policial especializado, em particular nas Delegacias de Atendimento à Mulher, como diretriz da política pública de prevenção.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA (é verdadeira, não a exceção pedida):\r\nReproduz o art. 9º, §7º, sobre a prioridade de matrícula/transferência dos dependentes mediante apresentação dos documentos comprobatórios.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA (é verdadeira, não a exceção pedida):\r\nReproduz o art. 10, caput, sobre a atuação de imediato da autoridade policial diante da iminência ou prática de violência doméstica.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA (é verdadeira, não a exceção pedida):\r\nReproduz o art. 10-A, caput, sobre o direito a atendimento policial e pericial especializado, preferencialmente por servidores do sexo feminino.\r\n\r\nBIZU DE PROVA:\r\nNota sobre a redação da alternativa E: ela usa a fórmula antiga do art. 12-C (\"risco... à integridade física ou psicológica\"). A redação vigente, desde a Lei 15.411/2026, ampliou esse critério para física, sexual, psicológica, moral ou patrimonial. Isso não muda o gabarito — o erro da alternativa está em dizer \"vedado em qualquer hipótese\", não na extensão do risco —, mas fica o registro: hoje o rol de riscos que autorizam o afastamento é mais amplo do que a alternativa reproduz.",
+    "fonte": "Fundatec — BM RS Soldado de Primeira Classe 2025 — Questão 16",
+    "banca": "Fundatec",
+    "concurso": "Brigada Militar RS - Soldado de Primeira Classe",
+    "ano": "2025",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T03:03Z) — lote-base de 32 questões mais antigas do assunto. Nunca passou por auditoria jurídica documentada. Nota: a própria explicação já registra uma ressalva sobre a Lei 15.411/2026 no texto de apoio — checar se a ressalva está redigida com precisão suficiente."
+  },
+  {
+    "id": 129,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "De acordo com a Lei Maria da Penha, a inquirição de mulher em situação de violência doméstica e familiar ou de testemunha de violência doméstica, quando se tratar de crime contra a mulher, obedecerá às seguintes diretrizes: I. Salvaguarda da integridade física, psíquica e emocional da depoente, considerada a sua condição peculiar de pessoa em situação de violência doméstica e familiar. II. Garantia de proteção policial, quando necessário, comunicando de imediato ao Ministério Público e ao Poder Judiciário. III. Não revitimização da depoente, evitando sucessivas inquirições sobre o mesmo fato nos âmbitos criminal, cível e administrativo, bem como questionamentos sobre a vida privada. Quais estão corretas?",
+    "alternativas": [
+      { "ordem": 1, "texto": "Apenas I.", "correta": false },
+      { "ordem": 2, "texto": "Apenas II.", "correta": false },
+      { "ordem": 3, "texto": "Apenas I e II.", "correta": false },
+      { "ordem": 4, "texto": "Apenas I e III.", "correta": true },
+      { "ordem": 5, "texto": "I, II e III.", "correta": false }
+    ],
+    "gabarito": "D",
+    "explicacao_atual": "GABARITO: alternativa D\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ CORRETA:\r\nAs assertivas I e III reproduzem, respectivamente, os incisos I e III do art. 10-A, §1º, da Lei: I — salvaguarda da integridade física, psíquica e emocional da depoente; III — não revitimização, evitando sucessivas inquirições sobre o mesmo fato nos âmbitos criminal, cível e administrativo, bem como questionamentos sobre a vida privada.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nConsidera apenas a assertiva I, mas a III também está correta.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\nConsidera apenas a assertiva II, que não integra o rol do art. 10-A, §1º — \"garantia de proteção policial, comunicando ao Ministério Público e ao Poder Judiciário\" é providência do art. 11, I, não uma diretriz de inquirição.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nInclui a assertiva II, que é falsa pelo motivo acima, e ainda assim omite a assertiva III, que é verdadeira.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\nInclui todas as três assertivas, mas a II não é uma diretriz de inquirição do art. 10-A, §1º.\r\n\r\nBIZU DE PROVA:\r\nAs diretrizes de inquirição do art. 10-A, §1º são só 3: salvaguarda da integridade (I), vedação de contato direto com investigados/suspeitos (II — não confundir com \"proteção policial\"!) e não revitimização (III). \"Garantir proteção policial, comunicando ao MP e Judiciário\" é do art. 11, um dispositivo diferente.",
+    "fonte": "Fundatec — SUSEPE RS Agente Penitenciário 2022 — Questão 31",
+    "banca": "Fundatec",
+    "concurso": "SUSEPE RS - Agente Penitenciário",
+    "ano": "2022",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T03:42Z) — lote-base de 32 questões mais antigas do assunto. Nunca passou por auditoria jurídica documentada; só validação estrutural."
+  },
+  {
+    "id": 133,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Relativamente à Lei Maria da Penha, recebido o expediente com o pedido de medida protetiva de urgência, requerido pela ofendida, caberá ao juiz, no prazo de ________ horas, conhecer do expediente e do pedido e decidir sobre as medidas protetivas de urgência.",
+    "alternativas": [
+      { "ordem": 1, "texto": "12 horas.", "correta": false },
+      { "ordem": 2, "texto": "18 horas.", "correta": false },
+      { "ordem": 3, "texto": "24 horas.", "correta": false },
+      { "ordem": 4, "texto": "36 horas.", "correta": false },
+      { "ordem": 5, "texto": "48 horas.", "correta": true }
+    ],
+    "gabarito": "E",
+    "explicacao_atual": "GABARITO: alternativa E\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ CORRETA:\r\nO art. 18, caput, da Lei determina que, recebido o expediente com o pedido da ofendida, caberá ao juiz, no prazo de 48 (quarenta e oito) horas, conhecer do expediente e do pedido e decidir sobre as medidas protetivas de urgência.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\n12 horas não corresponde a nenhum prazo previsto na Lei para essa decisão.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\n18 horas não corresponde a nenhum prazo previsto na Lei para essa decisão.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\n24 horas é o prazo de outro dispositivo — a comunicação ao juiz do afastamento provisório do agressor decretado pelo delegado ou pelo policial (art. 12-C, §1º), não o prazo do art. 18 para decidir sobre as medidas protetivas.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\n36 horas não corresponde a nenhum prazo previsto na Lei para essa decisão.\r\n\r\nBIZU DE PROVA:\r\n48 horas = prazo do juiz para decidir sobre medidas protetivas (art. 18) E prazo da autoridade policial para remeter o expediente com o pedido da ofendida (art. 12, III). 24 horas = prazo de comunicação ao juiz quando o afastamento é decretado por delegado ou policial (art. 12-C, §1º). São números fáceis de trocar — sempre identifique QUEM está fazendo o quê antes de escolher o prazo.",
+    "fonte": "Fundatec — SUSEPE RS Agente Penitenciário 2022 — Questão 37",
+    "banca": "Fundatec",
+    "concurso": "SUSEPE RS - Agente Penitenciário",
+    "ano": "2022",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T03:42Z) — lote-base de 32 questões mais antigas do assunto. Nunca passou por auditoria jurídica documentada; só validação estrutural."
+  },
+  {
+    "id": 134,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "De acordo com a Lei Maria da Penha, o juiz assegurará à mulher em situação de violência doméstica e familiar, para preservar sua integridade física e psicológica: I. Acesso prioritário à remoção quando servidora pública, integrante da administração direta ou indireta. II. Encaminhamento à assistência judiciária, quando for o caso, inclusive para eventual ajuizamento da ação de separação judicial, de divórcio, de anulação de casamento ou de dissolução de união estável perante o juízo competente. III. Manutenção do vínculo trabalhista, quando necessário o afastamento do local de trabalho, por até três meses. Quais estão corretas?",
+    "alternativas": [
+      { "ordem": 1, "texto": "Apenas I.", "correta": false },
+      { "ordem": 2, "texto": "Apenas II.", "correta": false },
+      { "ordem": 3, "texto": "Apenas I e II.", "correta": true },
+      { "ordem": 4, "texto": "Apenas II e III.", "correta": false },
+      { "ordem": 5, "texto": "I, II e III.", "correta": false }
+    ],
+    "gabarito": "C",
+    "explicacao_atual": "GABARITO: alternativa C\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ CORRETA:\r\nAs assertivas I e II reproduzem o art. 9º, §2º, incisos I e III: I — acesso prioritário à remoção quando servidora pública, integrante da administração direta ou indireta; II — encaminhamento à assistência judiciária, inclusive para eventual ajuizamento de ação de separação judicial, divórcio, anulação de casamento ou dissolução de união estável.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nConsidera apenas a assertiva I, mas a II também está correta.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\nConsidera apenas a assertiva II, mas a I também está correta.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nInclui a assertiva III, que é falsa: o art. 9º, §2º, II, prevê manutenção do vínculo trabalhista quando necessário o afastamento do local de trabalho por até SEIS meses, não três.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\nInclui a assertiva III, que é falsa pelo mesmo motivo acima.\r\n\r\nBIZU DE PROVA:\r\nO art. 9º, §2º, tem 3 incisos: I — remoção prioritária (servidora pública); II — assistência judiciária; III — manutenção do vínculo trabalhista por até SEIS meses (não três, não doze — bancas adoram trocar esse número).",
+    "fonte": "Fundatec — SUSEPE RS Agente Penitenciário Administrativo 2022 — Questão 31",
+    "banca": "Fundatec",
+    "concurso": "SUSEPE RS - Agente Penitenciário Administrativo",
+    "ano": "2022",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T03:45Z) — lote-base de 32 questões mais antigas do assunto. Nunca passou por auditoria jurídica documentada; só validação estrutural."
+  },
+  {
+    "id": 344,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Considerando o previsto na referida Lei, analise as seguintes assertivas e assinale V, \nse verdadeiras, ou F, se falsas. \n \n(  ) A política pública que visa coibir a violência doméstica e familiar contra a mulher tem por diretriz, \nentre outras, a integração operacional do Poder Judiciário, do Ministério Público e da Defensoria \nPública com as áreas de segurança pública, assistência social, saúde, educação, trabalho e \nhabitação. \n(  ) A assistência à mulher em  situação de violência doméstica e familiar será prestada em caráter \nprioritário no Sistema Único de Saúde (SUS) e no Sistema Único de Segurança Pública (Susp), de \nforma articulada e conforme os princípios e as diretrizes previstos na Lei n º 8.742/1993 (Lei \nOrgânica da Assistência Social), e em outras normas e políticas públicas de proteção, e \nemergencialmente, quando for o caso. \n(  ) Os dispositivos de segurança destinados ao uso em caso de perigo iminente e disponibilizados \npara o monitoramento das vítimas de violência doméstica ou familiar amparadas por medidas \nprotetivas terão seus custos ressarcidos pelo agressor. \n \nA ordem correta de preenchimento dos parênteses, de cima para baixo, é:",
+    "alternativas": [
+      { "ordem": 1, "texto": "V – V – F.", "correta": false },
+      { "ordem": 2, "texto": "V – F – F.", "correta": false },
+      { "ordem": 3, "texto": "V – V – V.", "correta": true },
+      { "ordem": 4, "texto": "F – F – V.", "correta": false },
+      { "ordem": 5, "texto": "F – V – V.", "correta": false }
+    ],
+    "gabarito": "C",
+    "explicacao_atual": "GABARITO: alternativa C\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ CORRETA:\r\nAs três assertivas são verdadeiras. A primeira reproduz o art. 8º, I (integração operacional do Poder Judiciário, Ministério Público e Defensoria Pública com as áreas de segurança pública, assistência social, saúde, educação, trabalho e habitação). A segunda reproduz literalmente o caput vigente do art. 9º, na redação dada pela Lei 14.887/2024 (assistência prestada em caráter prioritário no SUS e no Susp). A terceira reproduz o art. 9º, §5º (dispositivos de segurança para monitoramento de vítimas amparadas por medidas protetivas, com custos ressarcidos pelo agressor).\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nMarca a terceira assertiva como falsa, quando na verdade é verdadeira (art. 9º, §5º).\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\nMarca a segunda e a terceira assertivas como falsas, quando ambas são verdadeiras.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nMarca a primeira e a segunda assertivas como falsas, quando ambas são verdadeiras.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\nMarca a primeira assertiva como falsa, quando na verdade é verdadeira (art. 8º, I).\r\n\r\nBIZU DE PROVA:\r\nEssa questão já cobra a redação vigente do art. 9º, caput (Lei 14.887/2024): \"caráter prioritário no SUS e no Susp\" — decore essa expressão exata, é a mais cobrada em provas recentes sobre esse artigo.",
+    "fonte": "Fundatec — CBMRS Soldado de Primeira Classe 2025 — Questão 54",
+    "banca": "Fundatec",
+    "concurso": "Corpo de Bombeiros Militar RS - Soldado de Primeira Classe",
+    "ano": "2025",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T04:41Z) — lote-base de 32 questões mais antigas do assunto. Nunca passou por auditoria jurídica documentada; só validação estrutural."
+  },
+  {
+    "id": 345,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Considerando o disposto na referida Lei, a integralidade da abrangência da proteção \nda mulher outorgada por referida norma se expressa da seguinte forma: t oda mulher, \nindependentemente de classe, raça, etnia, orientação sexual, renda, cultura, nível educacional, idade \ne religião, goza dos direitos fundamentais inerentes à pessoa humana, sendo -lhe asseguradas as \noportunidades e facilidades para viver sem violência, preservar sua saúde física e mental e seu \naperfeiçoamento: \n \nI. Moral. \nII. Intelectual. \nIII. Social. \n \nQuais estão corretos?",
+    "alternativas": [
+      { "ordem": 1, "texto": "Apenas I.", "correta": false },
+      { "ordem": 2, "texto": "Apenas II.", "correta": false },
+      { "ordem": 3, "texto": "Apenas I e II.", "correta": false },
+      { "ordem": 4, "texto": "Apenas II e III.", "correta": false },
+      { "ordem": 5, "texto": "I, II e III.", "correta": true }
+    ],
+    "gabarito": "E",
+    "explicacao_atual": "GABARITO: alternativa E\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ CORRETA:\r\nO art. 2º da Lei assegura a toda mulher as oportunidades e facilidades para viver sem violência, preservar sua saúde física e mental e seu aperfeiçoamento MORAL, INTELECTUAL e SOCIAL — as três assertivas reproduzem exatamente esses três termos.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nConsidera apenas a assertiva I, mas II e III também estão corretas.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\nConsidera apenas a assertiva II, mas I e III também estão corretas.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nConsidera apenas I e II, mas a III também está correta.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nConsidera apenas II e III, mas a I também está correta.\r\n\r\nBIZU DE PROVA:\r\nO art. 2º fecha com a tríade \"aperfeiçoamento moral, intelectual e social\" — decore os três juntos, é comum a banca pedir só um ou dois para testar se você lembra do trio completo.",
+    "fonte": "Fundatec — CBMRS Soldado de Primeira Classe 2025 — Questão 55",
+    "banca": "Fundatec",
+    "concurso": "Corpo de Bombeiros Militar RS - Soldado de Primeira Classe",
+    "ano": "2025",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T04:41Z) — lote-base de 32 questões mais antigas do assunto. Nunca passou por auditoria jurídica documentada; só validação estrutural."
+  },
+  {
+    "id": 346,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Considerando o disposto na referida Lei, analise as assertivas a seguir e assinale a \nalternativa correta. \n \nI. A violência familiar contra a mulher pode ser configurada quando verificada uma omissão baseada \nno gênero que lhe cause dano patrimonial, em qualquer relação íntima de afeto, na qual o agressor \ntenha convivido com a ofendida, desde que verificada a coabitação. \nII. Verifica-se violência doméstica contra a mulher quando praticada ação baseada no gênero que \nlhe cause sofrimento psicológico, no âmbito da família, desde que unida por laços sanguíneos. \nIII. Resta configurada violência doméstica contra a mulher a ação que lhe cause lesão, no âmbito da \nunidade doméstica, compreendida como espaço de convívio permanente de pessoas, com ou sem \nvínculo familiar, inclusive as esporadicamente agregadas.",
+    "alternativas": [
+      { "ordem": 1, "texto": "Todas as assertivas estão corretas.", "correta": false },
+      { "ordem": 2, "texto": "Todas as assertivas estão incorretas.", "correta": false },
+      { "ordem": 3, "texto": "Apenas a assertiva I está correta.", "correta": false },
+      { "ordem": 4, "texto": "Apenas a assertiva II está correta.", "correta": false },
+      { "ordem": 5, "texto": "Apenas a assertiva III está correta.", "correta": true }
+    ],
+    "gabarito": "E",
+    "explicacao_atual": "GABARITO: alternativa E\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ CORRETA:\r\nSomente a assertiva III está correta: reproduz o art. 5º, I, que define o âmbito da unidade doméstica como o espaço de convívio permanente de pessoas, com ou sem vínculo familiar, inclusive as esporadicamente agregadas.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nA assertiva I é falsa: o art. 5º, III, exige relação íntima de afeto, mas dispensa expressamente a coabitação — a assertiva inverte a regra ao exigi-la.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\nAfirmar que todas as assertivas estão incorretas ignora que a III é verdadeira.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nA assertiva I é falsa, pelo motivo já explicado (coabitação não é exigida na relação íntima de afeto).\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nA assertiva II é falsa: o art. 5º, II, define família como a comunidade formada por indivíduos unidos por laços naturais, por afinidade OU por vontade expressa — a assertiva restringe indevidamente a \"laços sanguíneos\", excluindo afinidade e vontade expressa.\r\n\r\nBIZU DE PROVA:\r\nDuas pegadinhas clássicas nessa questão: exigir coabitação na relação íntima de afeto (art. 5º, III — não exige) e restringir \"família\" a laços sanguíneos (art. 5º, II — também inclui afinidade e vontade expressa).",
+    "fonte": "Fundatec — CBMRS Soldado de Primeira Classe 2025 — Questão 56",
+    "banca": "Fundatec",
+    "concurso": "Corpo de Bombeiros Militar RS - Soldado de Primeira Classe",
+    "ano": "2025",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T04:41Z) — lote-base de 32 questões mais antigas do assunto. Nunca passou por auditoria jurídica documentada; só validação estrutural."
+  },
+  {
+    "id": 347,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "De acordo com o disposto na referida Lei sobre as condutas perpetradas no contexto \nda violência doméstica e familiar contra a mulher, relacione a Coluna 1 à Coluna 2, associando cada \nespécie de violência à situação apresentada em que se enquadra. \n \nColuna 1 \n1. Sexual. \n2. Psicológica. \n3. Patrimonial. \n4. Física. \n \nColuna 2 \n(  ) Causar dano emocional e diminuição da autoestima ou que lhe prejudique e perturbe o pleno \ndesenvolvimento ou que vise degradar ou controlar suas ações. \n(  ) Constranger a presenciar relação sexual não desejada. \n(  ) Ofender sua integridade ou saúde corporal. \n(  ) Destruir parcial ou totalmente seus objetos. \n \nA ordem correta de preenchimento dos parênteses, de cima para baixo, é:",
+    "alternativas": [
+      { "ordem": 1, "texto": "2 – 1 – 4 – 3.", "correta": true },
+      { "ordem": 2, "texto": "2 – 3 – 1 – 4.", "correta": false },
+      { "ordem": 3, "texto": "1 – 2 – 4 – 3.", "correta": false },
+      { "ordem": 4, "texto": "3 – 4 – 2 – 1.", "correta": false },
+      { "ordem": 5, "texto": "4 – 2 – 3 – 1.", "correta": false }
+    ],
+    "gabarito": "A",
+    "explicacao_atual": "GABARITO: alternativa A\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ CORRETA:\r\nA sequência correta é 2-1-4-3, associando cada descrição à modalidade de violência do art. 7º: \"causar dano emocional e diminuição da autoestima...\" é violência PSICOLÓGICA (2, art. 7º, II); \"constranger a presenciar relação sexual não desejada\" é violência SEXUAL (1, art. 7º, III); \"ofender sua integridade ou saúde corporal\" é violência FÍSICA (4, art. 7º, I); \"destruir parcial ou totalmente seus objetos\" é violência PATRIMONIAL (3, art. 7º, IV).\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\nTroca a terceira e a quarta posições, associando incorretamente \"ofender integridade ou saúde corporal\" à violência patrimonial e \"destruir objetos\" à violência física.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nTroca a primeira e a segunda posições, associando \"dano emocional\" à violência sexual e \"presenciar relação sexual\" à violência psicológica.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nInverte quase toda a sequência, associando \"dano emocional\" à violência patrimonial.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\nAssocia \"dano emocional\" à violência física, quando na verdade define violência psicológica.\r\n\r\nBIZU DE PROVA:\r\nDecore o núcleo de cada modalidade do art. 7º: física = corpo; psicológica = emoção/controle; sexual = liberdade sexual; patrimonial = bens/objetos; moral = calúnia/difamação/injúria (não cobrada nesta questão, mas faz parte do mesmo rol — hoje ampliado com a violência vicária, art. 7º, VI, Lei 15.384/2026).",
+    "fonte": "Fundatec — CBMRS Soldado de Primeira Classe 2025 — Questão 57",
+    "banca": "Fundatec",
+    "concurso": "Corpo de Bombeiros Militar RS - Soldado de Primeira Classe",
+    "ano": "2025",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T04:41Z) — lote-base de 32 questões mais antigas do assunto. Nunca passou por auditoria jurídica documentada; só validação estrutural."
+  },
+  {
+    "id": 671,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "São condutas que deverão ser adotadas pela autoridade policial de imediato em todos os casos de violência doméstica e familiar contra a mulher, EXCETO:",
+    "alternativas": [
+      { "ordem": 1, "texto": "Colher todas as provas que servirem para o esclarecimento do fato e de suas circunstâncias.", "correta": false },
+      { "ordem": 2, "texto": "Determinar que se proceda ao exame de corpo de delito da ofendida e requisitar outros exames periciais necessários.", "correta": false },
+      { "ordem": 3, "texto": "Garantir que a mulher em situação de violência doméstica e familiar tenha contato direto com investigados ou suspeitos e pessoas a eles relacionadas.", "correta": true },
+      { "ordem": 4, "texto": "Ouvir a ofendida, lavrar o boletim de ocorrência e tomar a representação a termo, se apresentada.", "correta": false },
+      { "ordem": 5, "texto": "Ouvir o agressor e as testemunhas.", "correta": false }
+    ],
+    "gabarito": "C",
+    "explicacao_atual": "GABARITO: alternativa C\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ CORRETA (é a alternativa INCORRETA, pedida pelo enunciado \"EXCETO\"):\r\nO art. 10-A, §1º, II, garante justamente o oposto: a garantia de que, em nenhuma hipótese, a mulher em situação de violência doméstica e familiar, familiares e testemunhas terão contato direto com investigados ou suspeitos e pessoas a eles relacionadas. A alternativa inverte essa regra.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA (é uma conduta imediata prevista, não a exceção pedida):\r\nReproduz o art. 12, II — colher todas as provas que servirem para o esclarecimento do fato e de suas circunstâncias.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA (é uma conduta imediata prevista, não a exceção pedida):\r\nReproduz o art. 12, IV — determinar o exame de corpo de delito da ofendida e requisitar outros exames periciais necessários.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA (é uma conduta imediata prevista, não a exceção pedida):\r\nReproduz o art. 12, I — ouvir a ofendida, lavrar o boletim de ocorrência e tomar a representação a termo, se apresentada.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA (é uma conduta imediata prevista, não a exceção pedida):\r\nReproduz o art. 12, V — ouvir o agressor e as testemunhas.\r\n\r\nBIZU DE PROVA:\r\nO rol do art. 12 é extenso e todas as providências são cabíveis \"em todos os casos\" — a pegadinha típica é inverter uma regra de proteção (como a vedação de contato direto com investigados) transformando-a no seu oposto.",
+    "fonte": "TEC Concursos — questão 3818504 — FUNDATEC — posição 870 no conjunto de 1.000 questões",
+    "banca": "Fundatec",
+    "concurso": "GM (Pref Araquari)/Pref Araquari/2026",
+    "ano": "2026",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T06:10Z) — lote-base de 32 questões mais antigas do assunto. Nunca passou por auditoria jurídica documentada; só validação estrutural."
+  },
+  {
+    "id": 672,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Considerando as disposições Lei nº 11.340/2006 (Lei Maria da Penha), assinale a alternativa correta.",
+    "alternativas": [
+      { "ordem": 1, "texto": "A mulher em situação de violência doméstica e familiar não tem direito a atendimento policial prestado preferencialmente por mulheres.", "correta": false },
+      { "ordem": 2, "texto": "A inquirição de mulher em situação de violência doméstica será obrigatoriamente feita em recinto especialmente projetado para esse fim.", "correta": false },
+      { "ordem": 3, "texto": "A autoridade policial não poderá requisitar serviços públicos para a defesa da mulher em situação de violência doméstica e familiar.", "correta": false },
+      { "ordem": 4, "texto": "No atendimento à mulher em situação de violência doméstica, a autoridade policial não deverá fornecer transporte para a ofendida e seus dependentes paraabrigo ou local seguro, mesmo que haja risco de vida.", "correta": false },
+      { "ordem": 5, "texto": "Nos casos de risco à integridade física da ofendida ou à efetividade da medida protetiva de urgência, não será concedida liberdade provisória ao preso.", "correta": true }
+    ],
+    "gabarito": "E",
+    "explicacao_atual": "GABARITO: alternativa E\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ CORRETA:\r\nO art. 12-C, §2º, determina que, nos casos de risco à integridade física da ofendida ou à efetividade da medida protetiva de urgência, não será concedida liberdade provisória ao preso.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nO art. 10-A, caput, garante justamente o oposto: é direito da mulher em situação de violência doméstica e familiar o atendimento policial e pericial especializado, prestado preferencialmente por servidores do sexo feminino.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\nO art. 10-A, §2º, prevê esse recinto especialmente projetado como procedimento PREFERENCIAL, não obrigatório em toda e qualquer inquirição.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nO art. 12-B, §3º, autoriza expressamente a autoridade policial a requisitar os serviços públicos necessários à defesa da mulher e de seus dependentes.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nO art. 11, III, determina exatamente o oposto: fornecer transporte para a ofendida e seus dependentes para abrigo ou local seguro, quando houver risco de vida.\r\n\r\nBIZU DE PROVA:\r\n\"Não será concedida liberdade provisória\" nos casos de risco à integridade física ou à efetividade da medida protetiva (art. 12-C, §2º) é uma das regras mais cobradas sobre prisão/liberdade na Lei — decore essa vedação.",
+    "fonte": "TEC Concursos — questão 3818507 — FUNDATEC — posição 871 no conjunto de 1.000 questões",
+    "banca": "Fundatec",
+    "concurso": "GM (Pref Araquari)/Pref Araquari/2026",
+    "ano": "2026",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T06:10Z) — lote-base de 32 questões mais antigas do assunto. Nunca passou por auditoria jurídica documentada; só validação estrutural."
+  },
+  {
+    "id": 673,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Considerando as disposições da Lei Maria da Penha, assinale a alternativa correta.",
+    "alternativas": [
+      { "ordem": 1, "texto": "As relações pessoais que podem configurar violência doméstica ou familiar dependem de orientação sexual.", "correta": false },
+      { "ordem": 2, "texto": "Não cabe à família criar as condições necessárias para o efetivo exercício do direito à cultura e aos esportes pelas mulheres.", "correta": false },
+      { "ordem": 3, "texto": "A assistência à mulher em situação de violência doméstica e familiar será prestada em caráter prioritário apenas no SUS.", "correta": false },
+      { "ordem": 4, "texto": "Entre as diretrizes expressamente previstas para as políticas públicas que visam coibir a violência doméstica e familiar contra a mulher, está a capacitaçãopermanente da Guarda Municipal quanto às questões de gênero e de raça ou etnia.", "correta": true },
+      { "ordem": 5, "texto": "Apesar de sua severidade, a violência doméstica e familiar contra a mulher não constitui de forma expressa uma das formas de violação dos direitos humanos.", "correta": false }
+    ],
+    "gabarito": "D",
+    "explicacao_atual": "GABARITO: alternativa D\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ CORRETA:\r\nO art. 8º, VII, inclui, entre as diretrizes da política pública de prevenção, a capacitação permanente das Polícias Civil e Militar, da Guarda Municipal, do Corpo de Bombeiros e dos profissionais das áreas enunciadas no inciso I, quanto às questões de gênero e de raça ou etnia.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nO art. 5º, parágrafo único, dispõe exatamente o oposto: as relações pessoais enunciadas no artigo independem de orientação sexual.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\nO art. 3º, §2º, atribui à família, à sociedade e ao poder público o dever de criar as condições necessárias para o efetivo exercício dos direitos do caput, incluindo cultura e esporte.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nDesde a Lei 14.887/2024, o caput do art. 9º prevê caráter prioritário tanto no SUS quanto no Susp (Sistema Único de Segurança Pública) — não apenas no SUS.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\nO art. 6º dispõe exatamente o oposto: a violência doméstica e familiar contra a mulher constitui uma das formas de violação dos direitos humanos.\r\n\r\nBIZU DE PROVA:\r\nDesde 2024, o art. 9º fala em \"SUS e Susp\" — qualquer alternativa que restrinja essa prioridade só ao SUS está desatualizada/errada. E o art. 8º, VII, inclui expressamente a Guarda Municipal na capacitação, não só as polícias.",
+    "fonte": "TEC Concursos — questão 3818518 — FUNDATEC — posição 872 no conjunto de 1.000 questões",
+    "banca": "Fundatec",
+    "concurso": "GM (Pref Araquari)/Pref Araquari/2026",
+    "ano": "2026",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T06:10Z) — lote-base de 32 questões mais antigas do assunto. Nunca passou por auditoria jurídica documentada; só validação estrutural."
+  },
+  {
+    "id": 734,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Aline é casada com Arthur há 7 anos, e desde a pandemia está trabalhando quase integralmente em sua casa, indo até o escritório apenas uma ou duas vezes porsemana para concluir relatórios. Ocorre que, enciumado pelo fato de a esposa sair de casa, Arthur quebrou o computador e a impressora, e pôs fogo em todos osdocumentos de trabalho de Aline. Estarrecida com o ocorrido, Aline decide buscar auxílio de uma amiga que é advogada, a qual lhe orienta que é necessário ser feito umboletim de ocorrência, pois o que Arthur fez configura um caso de violência doméstica e familiar. Com base na situação apresentada, é correto afirmar que Arthur praticoucontra Aline violência do tipo:",
+    "alternativas": [
+      { "ordem": 1, "texto": "Psicológica.", "correta": false },
+      { "ordem": 2, "texto": "Patrimonial.", "correta": true },
+      { "ordem": 3, "texto": "Moral.", "correta": false },
+      { "ordem": 4, "texto": "Sexual.", "correta": false },
+      { "ordem": 5, "texto": "Física.", "correta": false }
+    ],
+    "gabarito": "B",
+    "explicacao_atual": "GABARITO: alternativa B\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ CORRETA:\r\nDestruir o computador, a impressora e os documentos de trabalho de Aline configura violência patrimonial, nos termos do art. 7º, IV — conduta que configure retenção, subtração, destruição parcial ou total de objetos, instrumentos de trabalho, documentos, bens, valores e recursos econômicos.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nNão há relato de conduta que cause dano emocional, controle ou degradação psicológica — o episódio narrado é especificamente sobre destruição de bens e instrumentos de trabalho.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nNão há calúnia, difamação ou injúria descrita na situação — elementos que caracterizariam violência moral (art. 7º, V).\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nNão há conduta de natureza sexual descrita no caso.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\nNão há relato de agressão à integridade física ou saúde corporal de Aline — a conduta de Arthur recaiu sobre bens materiais, não sobre o corpo dela.\r\n\r\nBIZU DE PROVA:\r\nDestruir instrumentos de trabalho e documentos é o exemplo mais clássico de violência patrimonial (art. 7º, IV) nas provas — sempre que o enunciado descrever dano a objetos/bens/documentos, pense primeiro em patrimonial.",
+    "fonte": "TEC Concursos — questão 3293650 — FUNDATEC — posição 865 no conjunto de 1.000 questões",
+    "banca": "Fundatec",
+    "concurso": "GM (Pref Porto Alegre)/Pref Porto Alegre/2025",
+    "ano": "2025",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T06:10Z) — lote-base de 32 questões mais antigas do assunto. Nunca passou por auditoria jurídica documentada; só validação estrutural."
+  },
+  {
+    "id": 735,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "No interior do prédio de uma repartição pública do Município, ocorreu uma discussão entre um casal que estava aguardando o atendimento. O casal era constituídopor duas mulheres em relação homoafetiva. A partir da discussão, a situação se agravou, e uma delas agrediu a outra fisicamente. Assinale a alternativa que indicacorretamente se a situação se enquadra para aplicação da Lei Maria da Penha e o motivo previsto em Lei.",
+    "alternativas": [
+      { "ordem": 1, "texto": "Sim, pois foi agressão contra mulher em relação íntima de afeto.", "correta": true },
+      { "ordem": 2, "texto": "Sim, pois a agressão ocorreu em local público.", "correta": false },
+      { "ordem": 3, "texto": "Não, pois não foi situação domiciliar.", "correta": false },
+      { "ordem": 4, "texto": "Não, pois a Lei trata somente de crime doloso.", "correta": false },
+      { "ordem": 5, "texto": "Não, pois não violou os Direitos Humanos.", "correta": false }
+    ],
+    "gabarito": "A",
+    "explicacao_atual": "GABARITO: alternativa A\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ CORRETA:\r\nA situação se enquadra na Lei Maria da Penha porque houve agressão física entre duas mulheres em relação íntima de afeto (casal em relação homoafetiva) — nos termos do art. 5º, III, combinado com o parágrafo único, que dispensa expressamente qualquer exigência quanto à orientação sexual das envolvidas.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\nO local público não é o fundamento da aplicação da Lei — o que importa é a relação entre agressora e ofendida (relação íntima de afeto), não o local da agressão.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nA aplicação da Lei não depende de a situação ser domiciliar — o art. 5º também abrange a relação íntima de afeto, independentemente de coabitação.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nA Lei não se restringe a crimes dolosos — trata da violência doméstica e familiar em suas diferentes formas e contextos, sem essa limitação.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\nO art. 6º dispõe que a violência doméstica e familiar contra a mulher constitui uma das formas de violação dos direitos humanos — a alternativa afirma justamente o contrário do texto legal.\r\n\r\nBIZU DE PROVA:\r\nRelação íntima de afeto independe de orientação sexual (art. 5º, parágrafo único) e de coabitação (art. 5º, III) — a Lei protege a mulher enquanto vítima de violência de gênero em qualquer desses vínculos, incluindo relações homoafetivas entre mulheres.",
+    "fonte": "TEC Concursos — questão 3293688 — FUNDATEC — posição 866 no conjunto de 1.000 questões",
+    "banca": "Fundatec",
+    "concurso": "GM (Pref Porto Alegre)/Pref Porto Alegre/2025",
+    "ano": "2025",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T06:10Z) — lote-base de 32 questões mais antigas do assunto. Nunca passou por auditoria jurídica documentada; só validação estrutural."
+  },
+  {
+    "id": 736,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Durante o seu turno de serviço em uma praça pública de esportes e jardins, um guarda municipal foi informado, por um morador das proximidades, que um homemestava agredindo a esposa em um prédio próximo à praça. O guarda municipal foi até o local e, após apartar as partes envolvidas e fazer o registro dos fatos junto comuma autoridade policial, as demais providências para o caso foram tomadas. Além das ações mencionadas anteriormente, qual será a outra providência a ser requerida nasituação apresentada?",
+    "alternativas": [
+      { "ordem": 1, "texto": "Comunicar de imediato ao religioso local para conciliação.", "correta": false },
+      { "ordem": 2, "texto": "Encaminhar a ofendida ao hospital e ao Instituto Médico Legal.", "correta": true },
+      { "ordem": 3, "texto": "Encaminhar a ofendida ao cartório para imediato divórcio.", "correta": false },
+      { "ordem": 4, "texto": "Proceder audiência pública entre os familiares.", "correta": false },
+      { "ordem": 5, "texto": "Acionar judicialmente o síndico por omissão de socorro.", "correta": false }
+    ],
+    "gabarito": "B",
+    "explicacao_atual": "GABARITO: alternativa B\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ CORRETA:\r\nAlém de apartar as partes e registrar os fatos, o art. 11, II, determina que a autoridade policial encaminhe a ofendida ao hospital ou posto de saúde e ao Instituto Médico Legal, como uma das providências no atendimento à mulher em situação de violência doméstica.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nNão há previsão legal de comunicação a autoridade religiosa para fins de conciliação — pelo contrário, a Lei afasta mecanismos de conciliação/mediação nesses casos (art. 41 c/c a vedação da Lei 9.099/1995).\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nNão há previsão de encaminhamento da ofendida ao cartório para divórcio imediato como providência do atendimento inicial — o encaminhamento à assistência judiciária (art. 11, V) é o caminho correto, não um \"divórcio imediato\" no cartório.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nNão há previsão de audiência pública entre familiares como providência de atendimento — isso contrariaria, inclusive, a proteção e o sigilo devidos à ofendida.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\nNão há previsão de acionamento de síndico por omissão de socorro como providência da Lei Maria da Penha.\r\n\r\nBIZU DE PROVA:\r\nO rol de providências do art. 11 inclui encaminhar ao hospital/posto de saúde E ao IML — decore essa dupla, é uma das mais cobradas junto com \"transporte para abrigo quando há risco de vida\".",
+    "fonte": "TEC Concursos — questão 3293689 — FUNDATEC — posição 873 no conjunto de 1.000 questões",
+    "banca": "Fundatec",
+    "concurso": "GM (Pref Porto Alegre)/Pref Porto Alegre/2025",
+    "ano": "2025",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T06:10Z) — lote-base de 32 questões mais antigas do assunto. Nunca passou por auditoria jurídica documentada; só validação estrutural."
+  },
+  {
+    "id": 737,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Qual é o órgão responsável por dar atenção especial e prioridade às situações dispostas na Lei Maria da Penha?",
+    "alternativas": [
+      { "ordem": 1, "texto": "Departamento de Ordem Pública e Social.", "correta": false },
+      { "ordem": 2, "texto": "Divisão Policial das Relações Sexuais e de Gênero.", "correta": false },
+      { "ordem": 3, "texto": "Delegacia Especializada de Atendimento à Mulher.", "correta": true },
+      { "ordem": 4, "texto": "Setor Criminal de Perícia Alternativa.", "correta": false },
+      { "ordem": 5, "texto": "Secretaria Municipal da Assistência e Promoção Produtiva.", "correta": false }
+    ],
+    "gabarito": "C",
+    "explicacao_atual": "GABARITO: alternativa C\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ CORRETA:\r\nO art. 8º, IV, estabelece como diretriz da política pública de prevenção a implementação de atendimento policial especializado para as mulheres, em particular nas Delegacias de Atendimento à Mulher (DEAMs) — reforçado pelo art. 12-A, que determina aos Estados e ao Distrito Federal dar prioridade, no âmbito da Polícia Civil, à criação dessas delegacias especializadas.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\n\"Departamento de Ordem Pública e Social\" não é órgão previsto na Lei Maria da Penha.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\n\"Divisão Policial das Relações Sexuais e de Gênero\" não é órgão previsto na Lei Maria da Penha — nome fantasioso.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\n\"Setor Criminal de Perícia Alternativa\" não é órgão previsto na Lei Maria da Penha.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\n\"Secretaria Municipal da Assistência e Promoção Produtiva\" não é órgão previsto na Lei Maria da Penha.\r\n\r\nBIZU DE PROVA:\r\nSempre que a questão perguntar pelo órgão especializado no atendimento à mulher em situação de violência doméstica, a resposta-padrão é a Delegacia Especializada de Atendimento à Mulher (DEAM), citada nos arts. 8º, IV e 12-A.",
+    "fonte": "TEC Concursos — questão 3293690 — FUNDATEC — posição 861 no conjunto de 1.000 questões",
+    "banca": "Fundatec",
+    "concurso": "GM (Pref Porto Alegre)/Pref Porto Alegre/2025",
+    "ano": "2025",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T06:10Z) — lote-base de 32 questões mais antigas do assunto. Nunca passou por auditoria jurídica documentada; só validação estrutural."
+  },
+  {
+    "id": 739,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Marido descobre uma traição da esposa, com quem tem união estável há muitos anos. Estando ela grávida, ele a obriga a realizar um aborto, afirmando que se elanão concordasse, iria retirar sua ajuda com moradia e alimentos para os demais familiares. Qual legislação específica protege a mulher dessa coação e chantagem?",
+    "alternativas": [
+      { "ordem": 1, "texto": "Decreto-Lei “João Traído”.", "correta": false },
+      { "ordem": 2, "texto": "Lei da Vergonha Pública.", "correta": false },
+      { "ordem": 3, "texto": "Lei Maria da Penha.", "correta": true },
+      { "ordem": 4, "texto": "Código de Defesa Familiar.", "correta": false },
+      { "ordem": 5, "texto": "Lei do Ventre Livre.", "correta": false }
+    ],
+    "gabarito": "C",
+    "explicacao_atual": "GABARITO: alternativa C\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ CORRETA:\r\nA conduta de Arthur — forçar a esposa ao aborto mediante ameaça de retirar apoio financeiro — configura violência sexual, nos termos do art. 7º, III, que expressamente prevê como violência sexual a conduta que force a mulher ao aborto mediante coação, chantagem, suborno ou manipulação. A Lei Maria da Penha é a legislação específica que protege a mulher nessa hipótese.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\n\"Decreto-Lei 'João Traído'\" não existe como legislação brasileira — nome fantasioso.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\n\"Lei da Vergonha Pública\" não existe como legislação brasileira — nome fantasioso.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\n\"Código de Defesa Familiar\" não existe como legislação brasileira — nome fantasioso.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\n\"Lei do Ventre Livre\" é uma lei histórica de 1871, sobre a condição dos filhos de mulheres escravizadas — não tem relação com a proteção da mulher contra violência doméstica.\r\n\r\nBIZU DE PROVA:\r\nForçar a mulher ao aborto, à gravidez, ao matrimônio ou impedi-la de usar método contraceptivo, mediante coação, chantagem, suborno ou manipulação, é violência SEXUAL pelo art. 7º, III — não pense automaticamente em violência física só porque envolve o corpo da vítima.",
+    "fonte": "TEC Concursos — questão 3744367 — FUNDATEC — posição 867 no conjunto de 1.000 questões",
+    "banca": "Fundatec",
+    "concurso": "GCM (Pref St'a Livramento)/Pref St'a Livramento/2025",
+    "ano": "2025",
+    "observacao_origem": "Nota: o enunciado descreve o agressor como marido de \"Aline\" mas o texto o nomeia \"Arthur\" na alternativa correta — possível resíduo de reaproveitamento de outra questão (ver id 734, mesmo nome Arthur/Aline). Verificar coerência de nomes na auditoria. Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T06:10Z) — lote-base de 32 questões mais antigas do assunto. Nunca passou por auditoria jurídica documentada."
+  },
+  {
+    "id": 778,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Uma mulher pediu ajuda para a Guarda Municipal, pois estava se sentindo violentada pelo marido, já que ele retirou dela sua máquina de costura e seusdocumentos pessoais de registro profissional. Como ela é costureira profissional, não consegue mais obter recursos econômicos para atender às suas necessidades. Essasituação de violência doméstica e familiar contra a mulher está tipificada como violência patrimonial. Qual legislação específica protege a mulher, destacadamente visandoà proteção contra a violência?",
+    "alternativas": [
+      { "ordem": 1, "texto": "Lei do Ventre Livre.", "correta": false },
+      { "ordem": 2, "texto": "Código de Proteção Familiar.", "correta": false },
+      { "ordem": 3, "texto": "Lei Estadual das Mulheres.", "correta": false },
+      { "ordem": 4, "texto": "Lei Maria da Penha.", "correta": true },
+      { "ordem": 5, "texto": "Código de Trânsito Profissional.", "correta": false }
+    ],
+    "gabarito": "D",
+    "explicacao_atual": "GABARITO: alternativa D\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ CORRETA:\r\nA retirada da máquina de costura e dos documentos pessoais de registro profissional da vítima, impedindo-a de exercer sua profissão e obter recursos econômicos, configura violência patrimonial (art. 7º, IV), e a Lei Maria da Penha é a legislação específica de proteção da mulher nessa hipótese.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\n\"Lei do Ventre Livre\" é uma lei histórica de 1871, sem relação com a proteção da mulher contra violência doméstica.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\n\"Código de Proteção Familiar\" não existe como legislação brasileira — nome fantasioso.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\n\"Lei Estadual das Mulheres\" não existe como legislação brasileira — nome fantasioso.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\n\"Código de Trânsito Profissional\" não existe como legislação brasileira — nome fantasioso.\r\n\r\nBIZU DE PROVA:\r\nRetenção, subtração ou destruição de objetos, instrumentos de trabalho, documentos pessoais, bens, valores ou recursos econômicos da mulher é sempre violência patrimonial (art. 7º, IV) — e a legislação específica de proteção é sempre a Lei Maria da Penha.",
+    "fonte": "TEC Concursos — questão 3299442 — FUNDATEC — posição 868 no conjunto de 1.000 questões",
+    "banca": "Fundatec",
+    "concurso": "GM (Pref Foz do Iguaçu)/Pref Foz do Iguaçu/2024",
+    "ano": "2024",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T06:10Z) — lote-base de 32 questões mais antigas do assunto. Nunca passou por auditoria jurídica documentada. Nota: mesmo tecId (3299442) já apareceu documentado em ESTADO_ATUAL.md como a duplicata excluída do caderno 303 (sub-lote 2 do Lote 2) — esta é a questão original id 778 preservada; confirmar que não há conflito ao processar este sub-lote."
+  },
+  {
+    "id": 779,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Quando do atendimento à mulher em situação de violência doméstica e familiar, a autoridade policial pode tomar as seguintes providências, EXCETO:",
+    "alternativas": [
+      { "ordem": 1, "texto": "Comunicar o fato de imediato ao Ministério Público e ao Poder Judiciário.", "correta": false },
+      { "ordem": 2, "texto": "Encaminhar a ofendida ao hospital ou posto de saúde e ao Instituto Médico Legal.", "correta": false },
+      { "ordem": 3, "texto": "Fornecer transporte para a ofendida e seus dependentes para abrigo ou local seguro, quando houver risco de vida.", "correta": false },
+      { "ordem": 4, "texto": "Informar à ofendida sobre a impossibilidade de conseguir assistência judiciária para eventual dissolução de união estável.", "correta": true },
+      { "ordem": 5, "texto": "Garantir proteção policial, quando necessário.", "correta": false }
+    ],
+    "gabarito": "D",
+    "explicacao_atual": "GABARITO: alternativa D\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ CORRETA (é a alternativa INCORRETA, pedida pelo enunciado \"EXCETO\"):\r\nO art. 11, V, determina justamente o oposto: informar à ofendida os direitos a ela conferidos na Lei e os serviços disponíveis, inclusive os de assistência judiciária para eventual ajuizamento de ação de separação judicial, divórcio, anulação de casamento ou dissolução de união estável. A alternativa inverte essa obrigação em uma suposta \"impossibilidade\".\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA (é uma providência prevista, não a exceção pedida):\r\nReproduz o art. 11, I — garantir proteção policial, quando necessário, comunicando de imediato ao Ministério Público e ao Poder Judiciário.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA (é uma providência prevista, não a exceção pedida):\r\nReproduz o art. 11, II — encaminhar a ofendida ao hospital ou posto de saúde e ao Instituto Médico Legal.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA (é uma providência prevista, não a exceção pedida):\r\nReproduz o art. 11, III — fornecer transporte para a ofendida e seus dependentes para abrigo ou local seguro, quando houver risco de vida.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA (é uma providência prevista, não a exceção pedida):\r\nReproduz o art. 11, I — garantir proteção policial, quando necessário.\r\n\r\nBIZU DE PROVA:\r\nO art. 11 tem 5 incisos de providências no atendimento — memorize o rol completo (proteção, IML, transporte, retirada de pertences, informação de direitos) para identificar rápido quando a banca inverte uma delas em \"impossibilidade\" ou \"vedação\".",
+    "fonte": "TEC Concursos — questão 3299443 — FUNDATEC — posição 875 no conjunto de 1.000 questões",
+    "banca": "Fundatec",
+    "concurso": "GM (Pref Foz do Iguaçu)/Pref Foz do Iguaçu/2024",
+    "ano": "2024",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T06:10Z) — lote-base de 32 questões mais antigas do assunto. Nunca passou por auditoria jurídica documentada; só validação estrutural."
+  }
+]

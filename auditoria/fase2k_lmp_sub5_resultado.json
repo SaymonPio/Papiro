@@ -1,0 +1,92 @@
+{
+  "sublote": "fase2k_lmp_sub5",
+  "fonte_dados": "auditoria/fase2k_lmp_sub5.json",
+  "data_auditoria": "2026-08-19",
+  "observacao": "Este é o ÚLTIMO sub-lote das questões pré-Lote 2 de Lei Maria da Penha — fecha a auditoria jurídica integral das 117 questões originalmente identificadas.",
+  "metodologia": "Verificação direcionada contra o texto consolidado/atualizado da Lei 11.340/2006 (Câmara dos Deputados), cruzada com busca independente (WebSearch) sempre que uma resposta de fetch pareceu inconsistente com conhecimento jurídico consolidado (caso do art. 12-B, ver questão 1358). Planalto permaneceu inacessível nesta sessão.",
+  "resumo_classificacoes": {
+    "OK": 18,
+    "CORRECAO_EXPLICACAO": 2,
+    "GABARITO_DESATUALIZADO": 0,
+    "QUESTAO_DESATUALIZADA": 0,
+    "RESSALVA_JURIDICA": 0
+  },
+  "resultados": [
+    { "id": 1355, "classificacao": "OK", "gabarito_historico": "B", "gabarito_valido_na_epoca": true, "gabarito_valido_hoje": true, "fundamento": "Art. 9º, §4º (ressarcimento ao SUS, Lei 13.871/2019) confirmado — não tocado pela Lei 15.383/2026 (que só afetou o art. 22).", "problemas_encontrados": [], "correcao_sugerida": null, "fontes_oficiais": [{ "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 9º, §4º", "dispositivo": "confirmado em rodadas anteriores desta auditoria" }] },
+    { "id": 1356, "classificacao": "OK", "gabarito_historico": "A", "gabarito_valido_na_epoca": true, "gabarito_valido_hoje": true, "fundamento": "Art. 12, I, III, IV, V confirmados.", "problemas_encontrados": [], "correcao_sugerida": null, "fontes_oficiais": [{ "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 12", "dispositivo": "confirmado em rodadas anteriores" }] },
+    { "id": 1357, "classificacao": "OK", "gabarito_historico": "D", "gabarito_valido_na_epoca": true, "gabarito_valido_hoje": true, "fundamento": "Art. 8º caput e VII confirmados.", "problemas_encontrados": [], "correcao_sugerida": null, "fontes_oficiais": [{ "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 8º", "dispositivo": "confirmado em rodadas anteriores" }] },
+    {
+      "id": 1358,
+      "classificacao": "CORRECAO_EXPLICACAO",
+      "gabarito_historico": "E",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "O gabarito (E — as três assertivas corretas) permanece válido: a assertiva I é substantivamente verdadeira (a autoridade policial pode afastar o agressor sem autorização judicial prévia em casos excepcionais), a assertiva II é verdadeira (art. 42 da Lei alterou o art. 313, III, do CPP) e a assertiva III é verdadeira (medidas protetivas independem de inquérito/ação penal/BO formalizados). O problema está isolado na citação de artigo da assertiva I.",
+      "problemas_encontrados": [
+        "A explicação atribui à assertiva I o fundamento 'art. 12-B'. Confirmado por busca independente (corrigindo um primeiro resultado de fetch que se mostrou inconsistente e foi descartado) que o art. 12-B trata de outro assunto (requisição de serviços públicos pela autoridade policial — já usado corretamente na questão 672 do Sub-lote 2). O dispositivo que efetivamente autoriza o policial a afastar o agressor sem autorização judicial prévia, em casos excepcionais (Município que não é sede de comarca e sem delegado disponível), é o art. 12-C, incluído pela Lei 13.827/2019 e com constitucionalidade confirmada pelo STF na ADI 6.138 — usado corretamente em várias outras questões do banco (348, 1352, 1353, 1371)."
+      ],
+      "correcao_sugerida": "Trocar 'o art. 12-B autoriza a autoridade policial a afastar provisoriamente o agressor do lar...' por 'o art. 12-C autoriza a autoridade policial a afastar provisoriamente o agressor do lar...'. Nenhuma outra alteração necessária.",
+      "fontes_oficiais": [
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 12-C (Lei 13.827/2019)", "dispositivo": "afastamento do agressor pela autoridade policial em casos excepcionais — confirmado em múltiplas questões já auditadas" },
+        { "tipo": "Jurisprudência STF", "referencia": "ADI 6.138-DF", "dispositivo": "validou a constitucionalidade da atuação de delegados e policiais para afastamento do agressor nos termos do art. 12-C" },
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 12-B", "dispositivo": "trata de requisição de serviços públicos pela autoridade policial (conteúdo diferente do afastamento do agressor) — confirmado no contexto da questão 672" }
+      ]
+    },
+    {
+      "id": 1359,
+      "classificacao": "OK",
+      "gabarito_historico": "B",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "Art. 10-A, §1º, I e II confirmados literalmente — mesmos dispositivos já verificados nas questões 129 e 671.",
+      "problemas_encontrados": [
+        "RESÍDUO DE OCR/SCRAPING (não é problema jurídico, registrado separadamente conforme pedido): o enunciado usa '$ 8º' em vez de '§ 8º' (duas ocorrências) e está majoritariamente em minúsculas, diferente do padrão normal de capitalização das demais questões do banco. Não afeta o gabarito nem a compreensão central da questão, mas é um defeito de dado a considerar para correção textual separada."
+      ],
+      "correcao_sugerida": null,
+      "fontes_oficiais": [{ "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 10-A, §1º", "dispositivo": "confirmado em rodadas anteriores" }]
+    },
+    { "id": 1360, "classificacao": "OK", "gabarito_historico": "A", "gabarito_valido_na_epoca": true, "gabarito_valido_hoje": true, "fundamento": "Art. 8º, I, II, V, VII confirmados.", "problemas_encontrados": [], "correcao_sugerida": null, "fontes_oficiais": [{ "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 8º", "dispositivo": "confirmado em rodadas anteriores" }] },
+    { "id": 1361, "classificacao": "OK", "gabarito_historico": "C", "gabarito_valido_na_epoca": true, "gabarito_valido_hoje": true, "fundamento": "Distinção entre art. 8º (diretrizes de prevenção) e art. 9º, §3º (assistência) confirmada — dispositivos já verificados.", "problemas_encontrados": [], "correcao_sugerida": null, "fontes_oficiais": [{ "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 8º e art. 9º, §3º", "dispositivo": "confirmados em rodadas anteriores" }] },
+    { "id": 1362, "classificacao": "OK", "gabarito_historico": "CERTO", "gabarito_valido_na_epoca": true, "gabarito_valido_hoje": true, "fundamento": "Art. 12, V confirmado.", "problemas_encontrados": [], "correcao_sugerida": null, "fontes_oficiais": [{ "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 12, V", "dispositivo": "confirmado em rodadas anteriores" }] },
+    {
+      "id": 1363,
+      "classificacao": "CORRECAO_EXPLICACAO",
+      "gabarito_historico": "E",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "O gabarito (E) permanece integralmente válido e é sustentado por um fundamento totalmente independente da controvérsia sobre 'de ofício': o art. 10 exige providências 'de imediato', não 'em até 48 horas' como a alternativa E afirma — esse é o único erro que precisa existir para o gabarito se sustentar. A alternativa A (que menciona 'de ofício') é uma das 4 alternativas verdadeiras (não pedidas pelo enunciado 'INCORRETA'), então sua exatidão sobre a controvérsia do art. 20 não determina o gabarito.",
+      "problemas_encontrados": [
+        "A explicação afirma, sobre a alternativa A, que 'o STJ já decidiu que o juiz não pode decretá-la de ofício, nem mesmo em contexto de violência doméstica' — uma afirmação de certeza que a pesquisa já feita para a questão 1335 (Sub-lote 4) não confirma: há decisões nesse sentido, mas a jurisprudência do STJ permanece dividida (Enunciado 51 do FONAVID sustenta a posição contrária, pela especialidade do art. 20). A formulação atual da explicação apresenta como resolvida uma controvérsia que continua em aberto."
+      ],
+      "correcao_sugerida": "Suavizar a frase para reconhecer a divisão: substituir 'e o STJ já decidiu que o juiz não pode decretá-la de ofício, nem mesmo em contexto de violência doméstica' por algo como 'e parte da jurisprudência do STJ entende que o juiz não pode decretá-la de ofício mesmo em contexto de violência doméstica, embora o tema não esteja pacificado (há entendimento em sentido contrário, amparado no princípio da especialidade — Enunciado 51 do FONAVID)'. Não altera o gabarito nem a estrutura da explicação.",
+      "fontes_oficiais": [
+        { "tipo": "Corroboração de busca (não fonte primária)", "referencia": "diversas fontes doutrinárias e jornalísticas jurídicas, já usadas na auditoria da questão 1335", "dispositivo": "confirmam divisão de entendimento no STJ sobre a subsistência do 'de ofício' do art. 20 após o Pacote Anticrime" },
+        { "tipo": "Enunciado doutrinário/administrativo", "referencia": "FONAVID, Enunciado 51", "dispositivo": "sustenta a não revogação tácita do art. 20 por especialidade" }
+      ]
+    },
+    { "id": 1364, "classificacao": "OK", "gabarito_historico": "ERRADO", "gabarito_valido_na_epoca": true, "gabarito_valido_hoje": true, "fundamento": "Art. 12, V confirmado (providência obrigatória, não discricionária).", "problemas_encontrados": [], "correcao_sugerida": null, "fontes_oficiais": [{ "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 12, V", "dispositivo": "confirmado em rodadas anteriores" }] },
+    { "id": 1365, "classificacao": "OK", "gabarito_historico": "D", "gabarito_valido_na_epoca": true, "gabarito_valido_hoje": true, "fundamento": "Art. 12, III (48h) confirmado, distinguido do art. 12-C (24h) — mesmo padrão já verificado em 133, 866, 1350.", "problemas_encontrados": [], "correcao_sugerida": null, "fontes_oficiais": [{ "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 12, III", "dispositivo": "confirmado em rodadas anteriores" }] },
+    { "id": 1366, "classificacao": "OK", "gabarito_historico": "ERRADO", "gabarito_valido_na_epoca": true, "gabarito_valido_hoje": true, "fundamento": "Art. 8º, I confirmado literalmente (lista termina em 'habitação', não 'transporte').", "problemas_encontrados": [], "correcao_sugerida": null, "fontes_oficiais": [{ "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 8º, I", "dispositivo": "confirmado em rodadas anteriores" }] },
+    { "id": 1368, "classificacao": "OK", "gabarito_historico": "D", "gabarito_valido_na_epoca": true, "gabarito_valido_hoje": true, "fundamento": "Art. 9º §4º (correto, distinto do erro de citação §5º da questão 344/1346), art. 10-A caput, art. 12 III, art. 12-C, art. 9º §2º II confirmados.", "problemas_encontrados": [], "correcao_sugerida": null, "fontes_oficiais": [{ "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 9º, §4º", "dispositivo": "citação correta, contrastando com o erro já identificado nas questões 344 e 1346" }] },
+    {
+      "id": 1369,
+      "classificacao": "OK",
+      "gabarito_historico": "B",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "Art. 8º, I, art. 41, art. 8º caput confirmados. A justificativa do item 4 (capacitação de profissionais de saúde/educação/assistência social) é mais cautelosa do que precisaria ser — o art. 8º, VII, já inclui expressamente 'os profissionais das áreas enunciadas no inciso I' (confirmado na questão 673, sub-lote 2), não só as forças de segurança — mas isso não é um erro, apenas uma explicação subdimensionada em relação ao que o texto legal já garante.",
+      "problemas_encontrados": [],
+      "correcao_sugerida": null,
+      "fontes_oficiais": [{ "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 8º, VII", "dispositivo": "confirmado na questão 673 (sub-lote 2): inclui 'os profissionais das áreas enunciadas no inciso I'" }]
+    },
+    { "id": 1370, "classificacao": "OK", "gabarito_historico": "D", "gabarito_valido_na_epoca": true, "gabarito_valido_hoje": true, "fundamento": "Art. 9º §2º II, art. 17, art. 21, art. 10-A caput confirmados.", "problemas_encontrados": [], "correcao_sugerida": null, "fontes_oficiais": [{ "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 21", "dispositivo": "notificação da ofendida cumulativa (não exclusiva) com a de seu advogado/defensor" }] },
+    { "id": 1371, "classificacao": "OK", "gabarito_historico": "ERRADO", "gabarito_valido_na_epoca": true, "gabarito_valido_hoje": true, "fundamento": "Art. 12-C (cadeia de competência) confirmado, gabarito não depende da lista de riscos. Explicação já inclui ressalva própria e correta sobre a Lei 15.411/2026, mesmo padrão de boa prática das questões 51 e 866.", "problemas_encontrados": [], "correcao_sugerida": null, "fontes_oficiais": [{ "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 12-C", "dispositivo": "confirmado em rodadas anteriores" }] },
+    { "id": 1372, "classificacao": "OK", "gabarito_historico": "B", "gabarito_valido_na_epoca": true, "gabarito_valido_hoje": true, "fundamento": "Art. 9º §2º I e II confirmados, distinção remoção/redistribuição correta.", "problemas_encontrados": [], "correcao_sugerida": null, "fontes_oficiais": [{ "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 9º, §2º, I", "dispositivo": "confirmado em rodadas anteriores" }] },
+    { "id": 1373, "classificacao": "OK", "gabarito_historico": "D", "gabarito_valido_na_epoca": true, "gabarito_valido_hoje": true, "fundamento": "Art. 9º §7º confirmado (já verificado na questão 40). Distinção com art. 23, V ('independentemente da existência de vaga') confirmada em fonte oficial nesta rodada.", "problemas_encontrados": [], "correcao_sugerida": null, "fontes_oficiais": [
+      { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 9º, §7º", "dispositivo": "confirmado em rodada anterior (questão 40)" },
+      { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 23, V", "dispositivo": "\"determinar a matrícula dos dependentes da ofendida em instituição de educação básica mais próxima do seu domicílio... independentemente da existência de vaga\"" }
+    ] },
+    { "id": 1374, "classificacao": "OK", "gabarito_historico": "B", "gabarito_valido_na_epoca": true, "gabarito_valido_hoje": true, "fundamento": "Art. 8º, IV, VIII e IX confirmados literalmente (art. 8º, IX verificado nesta rodada pela primeira vez).", "problemas_encontrados": [], "correcao_sugerida": null, "fontes_oficiais": [{ "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 8º, IX", "dispositivo": "\"o destaque, nos currículos escolares de todos os níveis de ensino, para os conteúdos relativos aos direitos humanos, à equidade de gênero e de raça ou etnia e ao problema da violência doméstica...\"" }] },
+    { "id": 1375, "classificacao": "OK", "gabarito_historico": "C", "gabarito_valido_na_epoca": true, "gabarito_valido_hoje": true, "fundamento": "Art. 9º §3º confirmado extensivamente (mesmo dispositivo já verificado em 799, 1323, 1351, 1361, 1375).", "problemas_encontrados": [], "correcao_sugerida": null, "fontes_oficiais": [{ "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 9º, §3º", "dispositivo": "confirmado em rodadas anteriores" }] }
+  ]
+}

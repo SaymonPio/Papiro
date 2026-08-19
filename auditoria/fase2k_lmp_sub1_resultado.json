@@ -1,0 +1,62 @@
+{
+  "sublote": "fase2k_lmp_sub1",
+  "fonte_dados": "auditoria/fase2k_lmp_sub1.json",
+  "data_auditoria": "2026-08-19T18:23:08Z",
+  "escopo": "Auditoria jurídica e semântica independente das 20 questões pré-existentes (anteriores ao Lote 1 e ao Lote 2 Fase 3C) do assunto Lei Maria da Penha, verificadas contra a legislação vigente em 19/08/2026.",
+  "metodologia": "Leitura de cada enunciado/alternativas/gabarito/explicação. Verificação de dispositivos citados por checagem direcionada (perguntas objetivas, não transcrição literal por restrição do processador de conteúdo) contra documentos oficiais da Câmara dos Deputados (texto consolidado/atualizado da Lei 11.340/2006 e publicação original da Lei 15.383/2026), com corroboração cruzada entre dois documentos independentes. O Planalto (fonte primária preferencial) ficou inacessível neste ambiente (ECONNRESET em 4 tentativas, com e sem https, para l11340.htm e l15383.htm) — registrado como limitação. Nenhuma conclusão de divergência foi fechada só com snippet de busca; buscas foram usadas somente para localizar e depois confirmar via fetch direto dos documentos.",
+  "limitacoes": [
+    "Planalto (planalto.gov.br) inacessível nesta sessão (ECONNRESET) — fonte primária preferencial não pôde ser lida diretamente.",
+    "WebFetch usa um modelo auxiliar para processar o conteúdo das páginas; para reduzir risco de paráfrase incorreta, as perguntas sobre dispositivos foram feitas de forma objetiva (existe/não existe, cite trecho curto) em vez de pedir resumos livres, e os achados centrais (art. 22 §5º revogado pela Lei 15.383/2026; art. 9º §5º trata de outro assunto) foram confirmados de forma convergente em duas páginas oficiais distintas (consolidado da Lei 11.340/2006 e publicação original da Lei 15.383/2026)."
+  ],
+  "resumo_classificacoes": {
+    "OK": 18,
+    "CORRECAO_EXPLICACAO": 1,
+    "GABARITO_DESATUALIZADO": 1,
+    "QUESTAO_DESATUALIZADA": 0
+  },
+  "resultados": [
+    { "id": 21, "classificacao": "OK", "justificativa": "Art. 5º, caput, corretamente aplicado. A explicação já incorpora a violência vicária (art. 7º, VI, incluído pela Lei 15.384/2026) na justificativa da alternativa B, sem depender dela para o gabarito. Nenhum dispositivo citado está desatualizado." },
+    { "id": 40, "classificacao": "OK", "justificativa": "Arts. 11, I; 9º, §7º; 10; 10-A, caput; 12-B, §3º — todos confirmados na verificação, sem alteração legislativa nesses pontos entre 2022 (data da prova) e 2026." },
+    { "id": 51, "classificacao": "OK", "justificativa": "Art. 12-C corretamente aplicado. A explicação já contém ressalva própria e correta sobre a ampliação do rol de riscos do art. 12-C pela Lei 15.411/2026 (física, sexual, psicológica, moral ou patrimonial), deixando claro que isso não altera o gabarito (o erro da alternativa E está na vedação absoluta, não na extensão do risco). Nenhuma ação necessária." },
+    { "id": 129, "classificacao": "OK", "justificativa": "Art. 10-A, §1º, I e III confirmados. Gabarito e fundamentação corretos." },
+    { "id": 133, "classificacao": "OK", "justificativa": "Prazo de 48h do art. 18 e distinção do prazo de 24h do art. 12-C, §1º, confirmados. Nenhuma mudança legislativa nesses prazos." },
+    { "id": 134, "classificacao": "OK", "justificativa": "Art. 9º, §2º, I/II/III — citação internamente consistente e confirmada (I = remoção prioritária, II = manutenção do vínculo trabalhista por até 6 meses, III = assistência judiciária). Nenhuma alteração legislativa nesse parágrafo." },
+    {
+      "id": 344,
+      "classificacao": "GABARITO_DESATUALIZADO",
+      "justificativa": "A assertiva III do enunciado ('Os dispositivos de segurança destinados ao uso em caso de perigo iminente e disponibilizados para o monitoramento das vítimas de violência doméstica ou familiar amparadas por medidas protetivas terão seus custos ressarcidos pelo agressor') foi julgada VERDADEIRA pela banca (gabarito V-V-V, alternativa C) e a explicação a atribui ao 'art. 9º, §5º'. Essa citação está e sempre esteve incorreta: o art. 9º, §5º da Lei 11.340/2006 trata de assunto totalmente diferente — ressarcimento ao SUS de custos de saúde pelo agressor, incluído pela Lei nº 13.871/2019. O dispositivo que a assertiva III realmente parafraseia é o art. 22, §5º (incluído pela Lei nº 15.125/2025, que previa a cumulação da medida protetiva com monitoramento eletrônico do agressor e disponibilização à vítima de dispositivo de segurança de alerta). Esse art. 22, §5º foi EXPRESSAMENTE REVOGADO pelo art. 5º da Lei nº 15.383, de 9 de abril de 2026 (publicada e em vigor desde 10/04/2026 — mais de 4 meses antes da data de corte desta auditoria, 19/08/2026). A mesma lei substituiu o regime por um novo inciso VIII no art. 22 e pelos §§6º a 9º, estabelecendo a monitoração eletrônica como medida protetiva autônoma, custeada com recursos públicos (art. 3º da Lei 15.383/2026, destinando ao menos 6% dos recursos do Fundo Nacional de Segurança Pública para aquisição/manutenção dos equipamentos; e novo art. 39 da Lei 11.340/2006 dando prioridade orçamentária ao mesmo fim) — não há, no regime vigente em 19/08/2026, nenhuma previsão de ressarcimento desses custos pelo agressor. Consequência: a assertiva III não é mais verdadeira hoje. Como o gabarito da banca (V-V-V) depende das três assertivas serem verdadeiras, e a alternativa que seria juridicamente correta sob a lei vigente hoje ('V-V-F') é uma alternativa DIFERENTE da marcada pela banca (ordem 1, não ordem 3), a divergência afeta o próprio gabarito, não apenas o texto de apoio — por isso a classificação é GABARITO_DESATUALIZADO e não CORRECAO_EXPLICACAO. Esta situação é estruturalmente análoga ao precedente já documentado no projeto para as questões 1337/1340 (Tema 1186/STJ): o gabarito era correto na data da prova (2025, anterior à Lei 15.383/2026) e deixou de ser juridicamente sustentável depois de uma mudança legislativa superveniente.",
+      "evidencias": [
+        {
+          "fonte": "Câmara dos Deputados — texto consolidado/atualizado da Lei 11.340/2006",
+          "url": "https://www2.camara.leg.br/legin/fed/lei/2006/lei-11340-7-agosto-2006-545133-normaatualizada-pl.html",
+          "achado": "Art. 22, VIII: 'monitoração eletrônica, disponibilizando-se à vítima aplicação ou dispositivo de segurança que alerte sobre eventual aproximação do agressor' (inciso acrescido pela Lei nº 15.383, de 9/4/2026). Art. 22, §5º: nota '(Parágrafo acrescido pela Lei nº 15.125, de 24/4/2025, e revogado pela Lei nº 15.383, de 9/4/2026)'. §§6º a 9º do art. 22, todos incluídos pela Lei nº 15.383/2026, tratando de prioridade de aplicação em caso de descumprimento (§6º), instalação/instrução do agressor (§7º), alerta automático à vítima (§8º) e fundamentação expressa em caso de não aplicação (§9º). Art. 9º, §5º: trata de ressarcimento de custos de saúde (SUS) pelo agressor, incluído pela Lei nº 13.871/2019 — assunto distinto do citado na explicação da questão 344."
+        },
+        {
+          "fonte": "Câmara dos Deputados — publicação original da Lei nº 15.383, de 9 de abril de 2026",
+          "url": "https://www2.camara.leg.br/legin/fed/lei/2026/lei-15383-9-abril-2026-798938-publicacaooriginal-178826-pl.html",
+          "achado": "Confirma de forma independente: a lei NÃO altera o art. 9º da Lei 11.340/2006 (altera arts. 12-D, 22, 24-A e 35, conforme seu art. 2º). Art. 5º: 'Fica revogado o § 5º do art. 22 da Lei nº 11.340, de 7 de agosto de 2006'. Custeio: art. 3º (alterando a Lei 13.756/2018) reserva ao menos 6% dos recursos do Fundo Nacional de Segurança Pública para ações de enfrentamento à violência contra a mulher, incluindo aquisição/manutenção de equipamentos de monitoração; novo art. 39 da Lei 11.340/2006 dá prioridade orçamentária ao mesmo fim. Publicação: 10/04/2026 (Diário Oficial). Vigência: na data da publicação (art. 6º)."
+        }
+      ],
+      "acao_recomendada": "NÃO decidida nesta etapa — apenas diagnóstico. Duas rotas possíveis, a decidir pelo usuário antes de qualquer escrita: (a) seguir o precedente das questões 1337/1340 e desativar a questão (ativa=false), preservando o gabarito histórico da banca sem reescrevê-lo nem ensinar como atual um estado de direito superado; ou (b) manter ativa com nota pedagógica explícita de que a assertiva III refletia a lei vigente em 2025 (data da prova) mas foi alterada pela Lei 15.383/2026, deixando claro ao aluno que o gabarito histórico da banca não corresponde mais à lei atual. Nenhuma das duas envolve alterar o gabarito armazenado (a alternativa marcada 'correta' no banco permanece a escolhida pela banca)."
+    },
+    { "id": 345, "classificacao": "OK", "justificativa": "Art. 2º corretamente aplicado (tríade moral/intelectual/social). Sem alteração legislativa aplicável." },
+    { "id": 346, "classificacao": "OK", "justificativa": "Art. 5º, I/II/III corretamente aplicados e distinguidos. Sem alteração legislativa aplicável." },
+    { "id": 347, "classificacao": "OK", "justificativa": "Art. 7º corretamente aplicado; BIZU já menciona corretamente a ampliação para violência vicária (art. 7º, VI, Lei 15.384/2026) sem depender dela para o gabarito." },
+    { "id": 671, "classificacao": "OK", "justificativa": "Mistura art. 10-A, §1º, II (vedação de contato direto com investigados) com art. 12 (I, II, IV, V) — é o desenho original da questão da banca, mas cada citação da explicação está correta para a alternativa a que se refere. Nenhuma correção necessária." },
+    { "id": 672, "classificacao": "OK", "justificativa": "Art. 12-C, §2º (vedação de liberdade provisória em caso de risco à integridade física ou à efetividade da medida protetiva) confirmado. Demais dispositivos (10-A caput, 10-A §2º, 12-B §3º, 11 III) também confirmados." },
+    { "id": 673, "classificacao": "OK", "justificativa": "Art. 8º, VII; 5º, parágrafo único; 3º, §2º; 9º, caput (SUS e Susp, atualizado pela Lei 14.887/2024); 6º — todos confirmados e já corretamente atualizados." },
+    { "id": 734, "classificacao": "OK", "justificativa": "Art. 7º, IV (violência patrimonial) corretamente aplicado ao caso concreto. Sem questão de atualidade." },
+    { "id": 735, "classificacao": "OK", "justificativa": "Art. 5º, III c/c parágrafo único (independe de orientação sexual) corretamente aplicado. Regra não afetada por nenhuma mudança legislativa recente." },
+    { "id": 736, "classificacao": "OK", "justificativa": "Art. 11, II e V confirmados." },
+    { "id": 737, "classificacao": "OK", "justificativa": "Art. 8º, IV, e 12-A confirmados." },
+    {
+      "id": 739,
+      "classificacao": "CORRECAO_EXPLICACAO",
+      "justificativa": "Defeito textual confirmado, não jurídico. O enunciado não nomeia o agressor ('Marido descobre uma traição da esposa...'), mas a explicação afirma 'A conduta de Arthur — forçar a esposa ao aborto...'. 'Arthur' não existe nesta questão; é resíduo de reaproveitamento de contexto da questão 734 (que tem um casal chamado Arthur/Aline), de fonte totalmente diferente (TEC 3744367, GCM Sant'Ana do Livramento/2025, vs. TEC 3293650, GM Porto Alegre/2025, da questão 734). O gabarito (C — Lei Maria da Penha) e o fundamento jurídico (art. 7º, III — forçar a mulher ao aborto mediante coação/chantagem/suborno/manipulação é violência sexual) estão corretos e não são afetados pela mudança de nome. Nenhuma mudança legislativa 2024-2026 atinge o art. 7º, III nesse ponto.",
+      "correcao_sugerida": "Substituir as duas ocorrências de 'Arthur' no texto da explicação por uma referência genérica ('o marido' ou 'o companheiro'), sem qualquer outra alteração de conteúdo, artigo citado, gabarito ou estrutura.",
+      "evidencias": []
+    },
+    { "id": 778, "classificacao": "OK", "justificativa": "Art. 7º, IV corretamente aplicado. O tecId 3299442 desta questão já é citado em supabase/lote2_fase3_estado/ESTADO_ATUAL.md como a duplicata identificada e excluída do caderno 303 do Lote 2 — confirma que a questão 778 é a original legitimamente preservada, sem conflito." },
+    { "id": 779, "classificacao": "OK", "justificativa": "Art. 11, V confirmado (mesma base de sustentação da questão 736)." }
+  ]
+}

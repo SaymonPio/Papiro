@@ -1,0 +1,295 @@
+{
+  "sublote": "fase2k_lmp_sub2",
+  "fonte_dados": "auditoria/fase2k_lmp_sub2.json",
+  "data_auditoria": "2026-08-19",
+  "metodologia": "Verificação direcionada (perguntas objetivas com citação curta, não transcrição literal por restrição do processador de conteúdo) contra o texto consolidado/atualizado da Lei 11.340/2006 mantido pela Câmara dos Deputados (fonte quase-primária, já que o Planalto ficou inacessível nesta sessão — ECONNRESET repetido, mesmo padrão da auditoria do Sub-lote 1). Para o Código Penal (arts. 147-A e 147-B), a tentativa de leitura de fonte primária/quase-primária falhou (Planalto inacessível, PDFs do Senado ilegíveis pelo processador, jusbrasil bloqueado 403) — nesse ponto específico (questão 1292) a conclusão fica registrada como incerta, não forçada, conforme instruído.",
+  "limitacoes": [
+    "Planalto (planalto.gov.br) inacessível nesta sessão (ECONNRESET) para Lei 11.340/2006 e para o Código Penal.",
+    "Para o Código Penal (arts. 147-A/147-B, questão 1292), não foi possível ler um documento primário ou quase-primário íntegro — dois PDFs do Senado retornaram binário ilegível e o jusbrasil bloqueou o acesso (403). A conclusão sobre essa questão fica como RESSALVA_JURIDICA, não como divergência confirmada.",
+    "Verificações feitas via WebFetch usam um modelo auxiliar para processar o conteúdo das páginas — para reduzir risco de paráfrase incorreta, as perguntas foram feitas de forma objetiva (existe/não existe, cite trecho curto) em vez de resumos livres."
+  ],
+  "resumo_classificacoes": {
+    "OK": 17,
+    "CORRECAO_EXPLICACAO": 2,
+    "GABARITO_DESATUALIZADO": 0,
+    "QUESTAO_DESATUALIZADA": 0,
+    "RESSALVA_JURIDICA": 1
+  },
+  "resultados": [
+    {
+      "id": 780,
+      "classificacao": "OK",
+      "gabarito_historico": "B",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "A alternativa correta usa o verbo 'erradicar', que não é a redação literal do art. 1º ('coibir e prevenir'). A própria explicação já reconhece essa imprecisão de forma explícita e correta, explicando por que ainda assim é a única alternativa alinhada ao propósito da Lei diante das demais opções (nenhuma relacionada ao tema). Não há erro jurídico, apenas transparência sobre uma alternativa que não é cópia literal do artigo.",
+      "problemas_encontrados": [],
+      "correcao_sugerida": null,
+      "fontes_oficiais": [
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 1º (Câmara dos Deputados, texto atualizado)", "dispositivo": "\"Esta Lei cria mecanismos para coibir e prevenir a violência doméstica e familiar contra a mulher...\"" }
+      ]
+    },
+    {
+      "id": 799,
+      "classificacao": "OK",
+      "gabarito_historico": "D",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "Assertiva II (art. 5º, I — unidade doméstica) e assertiva III (art. 9º, §3º — acesso a benefícios do desenvolvimento científico e tecnológico) confirmadas literalmente. Assertiva I falsa (art. 8º, IV continua vigente, nunca foi revogado). Nenhum dos dispositivos citados foi alterado por legislação recente.",
+      "problemas_encontrados": [],
+      "correcao_sugerida": null,
+      "fontes_oficiais": [
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 9º, §3º", "dispositivo": "\"A assistência à mulher em situação de violência doméstica e familiar compreenderá o acesso aos benefícios decorrentes do desenvolvimento científico e tecnológico.\"" }
+      ]
+    },
+    {
+      "id": 800,
+      "classificacao": "OK",
+      "gabarito_historico": "B",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "Explicação corretamente reconhece que a alternativa correta não é reprodução literal de nenhum artigo dos arts. 10-12 (fundamento institucional dos arts. 8º, IV e 12-A). Art. 17-A (sigilo do nome, usado para descartar a alternativa C) confirmado vigente.",
+      "problemas_encontrados": [],
+      "correcao_sugerida": null,
+      "fontes_oficiais": [
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 17-A", "dispositivo": "\"O nome da ofendida ficará sob sigilo nos processos em que se apuram crimes praticados no contexto de violência doméstica.\"" }
+      ]
+    },
+    {
+      "id": 801,
+      "classificacao": "OK",
+      "gabarito_historico": "D",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "CHECAGEM PRIORITÁRIA CONCLUÍDA: art. 22, §2º (restrição de porte de arma, comunicação ao órgão/corporação quando o agressor está nas condições do art. 6º da Lei 10.826/2003) confirmado LITERALMENTE, sem nenhuma nota de alteração recente. A Lei 15.383/2026 alterou apenas o §5º (revogado), acrescentou o inciso VIII e os §§6º-9º (monitoração eletrônica) — nenhum desses pontos toca o §2º citado nesta questão. Não repete o problema da questão 344 (que dependia justamente do §5º revogado).",
+      "problemas_encontrados": [],
+      "correcao_sugerida": null,
+      "fontes_oficiais": [
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 22, §2º", "dispositivo": "\"Na hipótese de aplicação do inciso I, encontrando-se o agressor nas condições mencionadas no caput e incisos do art. 6º da Lei nº 10.826...\" — sem nota de alteração por lei de 2024-2026" },
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 22, §§5º-9º", "dispositivo": "§5º revogado pela Lei 15.383/2026; incisoVIII e §§6º-9º (monitoração eletrônica) incluídos pela mesma lei — não afetam o §2º" }
+      ]
+    },
+    {
+      "id": 802,
+      "classificacao": "OK",
+      "gabarito_historico": "B",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "Alternativa correta reproduz literalmente o art. 1º ('coibir e prevenir a violência doméstica e familiar contra a mulher'). Confirmado palavra por palavra.",
+      "problemas_encontrados": [],
+      "correcao_sugerida": null,
+      "fontes_oficiais": [
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 1º", "dispositivo": "\"Esta Lei cria mecanismos para coibir e prevenir a violência doméstica e familiar contra a mulher...\"" }
+      ]
+    },
+    {
+      "id": 861,
+      "classificacao": "OK",
+      "gabarito_historico": "E",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "Rol de resultados lesivos do art. 5º, caput (morte, sofrimento sexual, dano moral, entre outros) confirmado. As três assertivas (morte, sofrimento sexual, dano moral) estão de fato no rol legal.",
+      "problemas_encontrados": [],
+      "correcao_sugerida": null,
+      "fontes_oficiais": [
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 5º, caput", "dispositivo": "\"...que lhe cause morte, lesão, sofrimento físico, sexual ou psicológico e dano moral ou patrimonial\"" }
+      ]
+    },
+    {
+      "id": 862,
+      "classificacao": "OK",
+      "gabarito_historico": "C",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "Induzir a mulher a comercializar/utilizar a sexualidade mediante coação é violência sexual pelo art. 7º, III — conteúdo consistente com a redação confirmada em outras questões do mesmo sub-lote (1293) e do sub-lote 1. Sem alteração legislativa aplicável a este ponto.",
+      "problemas_encontrados": [],
+      "correcao_sugerida": null,
+      "fontes_oficiais": [
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 7º, III", "dispositivo": "confirmado via redação integral do art. 7º lida na questão 1293 do mesmo sub-lote" }
+      ]
+    },
+    {
+      "id": 866,
+      "classificacao": "OK",
+      "gabarito_historico": "C",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "Prazo de 24h do art. 12-C, §1º confirmado, não alterado por nenhuma lei recente (só o rol de riscos do caput do art. 12-C mudou, pela Lei 15.411/2026, e a própria explicação já registra essa ressalva corretamente sem que ela afete o gabarito, que depende só do prazo).",
+      "problemas_encontrados": [],
+      "correcao_sugerida": null,
+      "fontes_oficiais": [
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 12-C, §1º", "dispositivo": "prazo de 24h para comunicação ao juiz — confirmado, sem alteração" }
+      ]
+    },
+    {
+      "id": 1291,
+      "classificacao": "OK",
+      "gabarito_historico": "A",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "Medidas protetivas independem de processo criminal em curso (arts. 18-24); art. 19, §1º confirmado literalmente (concessão imediata, independe de audiência das partes e do MP); Súmula 542/STJ (lesão corporal, ação penal pública incondicionada) confirmada; art. 5º, III (independe de vínculo formal) confirmado.",
+      "problemas_encontrados": [],
+      "correcao_sugerida": null,
+      "fontes_oficiais": [
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 19, §1º", "dispositivo": "\"As medidas protetivas de urgência poderão ser concedidas de imediato, independentemente de audiência das partes e de manifestação do Ministério Público...\"" },
+        { "tipo": "Súmula STJ", "referencia": "Súmula 542/STJ (Terceira Seção, 26/08/2015, DJe 31/08/2015)", "dispositivo": "\"A ação penal relativa ao crime de lesão corporal resultante de violência doméstica contra a mulher é pública incondicionada.\"" }
+      ]
+    },
+    {
+      "id": 1292,
+      "classificacao": "RESSALVA_JURIDICA",
+      "gabarito_historico": "E",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "A parte de Lei Maria da Penha está integralmente confirmada e correta: violência psicológica por meios virtuais (art. 7º, II), dispensa de coabitação (art. 5º, III) e inaplicabilidade da Lei 9.099/95 (art. 41) — todos verificados literalmente contra fonte oficial. O gabarito (E) permanece válido por esse fundamento sozinho, independentemente da dúvida abaixo.",
+      "problemas_encontrados": [
+        "DÚVIDA NÃO RESOLVIDA (registrada, não corrigida): a explicação cita 'art. 147-B, §1º, II, CP' como fundamento do aumento de pena 'por razões da condição de sexo feminino'. Buscas (não fontes primárias) sugerem que essa causa de aumento por razão de sexo feminino pertence ao art. 147-A (crime de perseguição/stalking, Lei 14.132/2021), enquanto o art. 147-B (violência psicológica contra a mulher, Lei 14.188/2021) teria uma causa de aumento diferente (uso de tecnologia/IA para alterar imagem ou som da vítima, Lei 15.123/2025). Não consegui confirmar isso em fonte primária ou quase-primária nesta sessão (Planalto inacessível; PDFs do Senado ilegíveis pelo processador de conteúdo; jusbrasil bloqueado). O crime em si (art. 147-B, violência psicológica) parece corretamente aplicável ao caso — a dúvida é só sobre a citação específica do dispositivo de aumento de pena."
+      ],
+      "correcao_sugerida": null,
+      "fontes_oficiais": [
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 7º, II; art. 5º, III; art. 41", "dispositivo": "confirmados literalmente" },
+        { "tipo": "Não confirmado (buscas apenas, sem fonte primária)", "referencia": "Código Penal, arts. 147-A e 147-B", "dispositivo": "conteúdo do §1º de cada artigo não verificado em fonte primária — recomenda-se nova tentativa de acesso ao Planalto ou a um PDF legível antes de qualquer correção" }
+      ]
+    },
+    {
+      "id": 1293,
+      "classificacao": "CORRECAO_EXPLICACAO",
+      "gabarito_historico": "E",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "Definição de violência psicológica (art. 7º, II) e das demais 4 modalidades citadas para descartar as outras alternativas estão corretas e confirmadas literalmente. O gabarito não é afetado pela violência vicária (não é uma das 5 alternativas oferecidas).",
+      "problemas_encontrados": [
+        "BIZU DE PROVA diz 'O art. 7º lista 5 formas de violência' — desde a Lei 15.384/2026 (art. 7º, VI, violência vicária, confirmada em fonte oficial), são 6 modalidades, não 5. Não afeta o gabarito (a questão não pergunta sobre o total de modalidades, só pede a classificação correta de uma conduta específica), mas é uma afirmação hoje incompleta/desatualizada no texto de apoio."
+      ],
+      "correcao_sugerida": "Ajustar o BIZU DE PROVA para refletir as 6 modalidades atuais (física, psicológica, sexual, patrimonial, moral e, desde a Lei 15.384/2026, violência vicária), mesmo padrão já usado nas questões 21 e 347 do Sub-lote 1.",
+      "fontes_oficiais": [
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 7º, VI", "dispositivo": "\"violência vicária, entendida como qualquer forma de violência praticada contra descendente, ascendente, dependente...\" (Lei nº 15.384, de 9/4/2026)" }
+      ]
+    },
+    {
+      "id": 1294,
+      "classificacao": "OK",
+      "gabarito_historico": "B",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "Art. 1º (na parte da ementa, não só a finalidade) e art. 14 preveem expressamente a criação dos Juizados de Violência Doméstica e Familiar — confirmado (a redação completa do art. 1º, vista na questão 1299 do mesmo sub-lote, inclui 'dispõe sobre a criação dos Juizados...'). Distinção entre violência moral (calúnia/difamação/injúria, art. 7º, V) e psicológica (art. 7º, II) confirmada corretamente.",
+      "problemas_encontrados": [],
+      "correcao_sugerida": null,
+      "fontes_oficiais": [
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 1º e art. 14", "dispositivo": "art. 1º menciona expressamente 'dispõe sobre a criação dos Juizados de Violência Doméstica e Familiar contra a Mulher'" }
+      ]
+    },
+    {
+      "id": 1295,
+      "classificacao": "OK",
+      "gabarito_historico": "B",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "Conteúdo jurídico integralmente confirmado: Juizados com competência de processar/julgar e equipe multidisciplinar (arts. 14, 29); medidas protetivas do art. 22 (afastamento do lar, restrição de porte de armas, alimentos provisórios); dispensa de coabitação (art. 5º, III). Gabarito B correto e válido hoje.",
+      "problemas_encontrados": [
+        "PROBLEMA NÃO JURÍDICO (integridade de dado, fora do escopo desta auditoria de conteúdo legal, mas registrado conforme pedido): o enunciado termina com o fragmento solto '17/42' (parece paginação de caderno de questões vazada para o texto) e a alternativa de ordem 2 (a correta) tem uma URL colada ao final do texto: 'https://www.tecconcursos.com.br/questoes/cadernos/100938882/imprimir'. É resíduo de scraping/importação, análogo ao padrão já tratado por utils/higiene-questoes.mjs para outros tipos de resíduo — não é erro jurídico, mas afeta a apresentação ao aluno e merece correção textual separada (do enunciado e da alternativa, não da explicação)."
+      ],
+      "correcao_sugerida": "Fora do escopo jurídico: remover '17/42' do final do enunciado e a URL colada ao final da alternativa de ordem 2. Gabarito, artigos citados e explicação não precisam de nenhuma alteração.",
+      "fontes_oficiais": [
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, arts. 14, 29, 22, 5º III", "dispositivo": "confirmados literalmente" }
+      ]
+    },
+    {
+      "id": 1296,
+      "classificacao": "OK",
+      "gabarito_historico": "B",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "CHECAGEM PRIORITÁRIA CONCLUÍDA: art. 22, I (suspensão da posse ou restrição do porte de armas) confirmado literalmente, sem nota de alteração — aplicável independentemente da profissão do agressor. Art. 14-A (competência cível para divórcio/dissolução de união estável no Juizado de Violência Doméstica) confirmado, incluído pela Lei 13.894/2019 (não tocado por leis de 2024-2026). Art. 5º, III (namoro já terminado) e art. 7º, IV (violência patrimonial/esbulho) confirmados. Não repete o problema da questão 344 — o inciso I e o art. 14-A não foram afetados pela Lei 15.383/2026 (que só tocou o §5º revogado e os novos §§6º-9º/inciso VIII).",
+      "problemas_encontrados": [],
+      "correcao_sugerida": null,
+      "fontes_oficiais": [
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 22, I", "dispositivo": "\"suspensão da posse ou restrição do porte de armas, com comunicação ao órgão competente, nos termos da Lei nº 10.826\" — sem nota de alteração recente" },
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 14-A", "dispositivo": "\"A ofendida tem a opção de propor ação de divórcio ou de dissolução de união estável no Juizado\" (incluído pela Lei 13.894/2019)" }
+      ]
+    },
+    {
+      "id": 1297,
+      "classificacao": "OK",
+      "gabarito_historico": "B",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "Art. 6º e art. 8º, caput confirmados literalmente (afirmativa I verdadeira). Art. 5º, caput confirmado — a afirmativa II é de fato incompleta frente ao texto legal (falta 'psicológico' e 'dano moral/patrimonial'), tornando-a falsa para fins de prova, exatamente como a explicação sustenta.",
+      "problemas_encontrados": [],
+      "correcao_sugerida": null,
+      "fontes_oficiais": [
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 6º", "dispositivo": "\"A violência doméstica e familiar contra a mulher constitui uma das formas de violação dos direitos humanos.\"" },
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 8º, caput", "dispositivo": "\"...por meio de um conjunto articulado de ações da União, dos Estados, do Distrito Federal e dos Municípios e de ações não-governamentais.\"" }
+      ]
+    },
+    {
+      "id": 1298,
+      "classificacao": "OK",
+      "gabarito_historico": "B",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "Art. 5º, III ('conviva ou tenha convivido', independente de coabitação) confirmado literalmente. Súmula 542/STJ (lesão corporal, incondicionada) confirmada. A distinção feita pela explicação entre lesão corporal (incondicionada) e ameaça isolada (art. 147 CP, condicionada à representação) é doutrinariamente cautelosa ('isoladamente') e não contrariada por nenhuma fonte consultada.",
+      "problemas_encontrados": [],
+      "correcao_sugerida": null,
+      "fontes_oficiais": [
+        { "tipo": "Súmula STJ", "referencia": "Súmula 542/STJ", "dispositivo": "mesma fonte da questão 1291" },
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 5º, III", "dispositivo": "\"conviva ou tenha convivido com a ofendida, independentemente de coabitação\" — confirmado" }
+      ]
+    },
+    {
+      "id": 1299,
+      "classificacao": "OK",
+      "gabarito_historico": "C",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "Alternativa correta reproduz literalmente o art. 5º, caput. Confirmado palavra por palavra contra fonte oficial.",
+      "problemas_encontrados": [],
+      "correcao_sugerida": null,
+      "fontes_oficiais": [
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 5º, caput", "dispositivo": "\"qualquer ação ou omissão baseada no gênero que lhe cause morte, lesão, sofrimento físico, sexual ou psicológico e dano moral ou patrimonial\"" }
+      ]
+    },
+    {
+      "id": 1301,
+      "classificacao": "OK",
+      "gabarito_historico": "C",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "Art. 9º, §2º, II (6 meses) confirmado — mesmo dispositivo já validado na questão 134 do Sub-lote 1, agora reconfirmado de forma independente. Art. 9º, §1º ('por tempo certo', não 'incerto') confirmado literalmente, invalidando a alternativa B como a explicação sustenta. Art. 7º, V (moral=calúnia/difamação/injúria) e art. 10-A (vedação de contato direto, não autorização) confirmados.",
+      "problemas_encontrados": [],
+      "correcao_sugerida": null,
+      "fontes_oficiais": [
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 9º, §1º", "dispositivo": "\"O juiz determinará, por prazo certo, a inclusão da mulher em situação de violência doméstica e familiar no cadastro de programas assistenciais.\"" }
+      ]
+    },
+    {
+      "id": 1302,
+      "classificacao": "OK",
+      "gabarito_historico": "D",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "Art. 5º, II (família por laços naturais) corretamente aplicado ao caso mãe-filho. Nenhuma exigência legal de vulnerabilidade econômica ou de hierarquia como excludente — consistente com o art. 2º (proteção independe de classe/renda/cultura), já confirmado no Sub-lote 1 (questão 345).",
+      "problemas_encontrados": [],
+      "correcao_sugerida": null,
+      "fontes_oficiais": [
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 5º, II", "dispositivo": "confirmado no Sub-lote 1 e reaplicado aqui" }
+      ]
+    },
+    {
+      "id": 1303,
+      "classificacao": "CORRECAO_EXPLICACAO",
+      "gabarito_historico": "A",
+      "gabarito_valido_na_epoca": true,
+      "gabarito_valido_hoje": true,
+      "fundamento": "A alternativa correta (histórica, da banca) lista 5 formas de violência criminalizadas — isso continua verdadeiro hoje (essas 5 continuam criminalizadas; a alternativa não afirma que são as ÚNICAS 5), então o gabarito permanece válido mesmo com a violência vicária adicionada em 2026. Art. 41 (afasta 9.099/95), art. 24, III (procuração da ofendida ao agressor, não o contrário) e art. 17 (veda cesta básica/multa isolada) confirmados literalmente para descartar as demais alternativas.",
+      "problemas_encontrados": [
+        "Mesma observação da questão 1293: o BIZU não menciona a violência vicária (art. 7º, VI, Lei 15.384/2026). Não afeta o gabarito (ver fundamento), mas é uma omissão que pode ensinar como fechado um rol que hoje tem 6 itens."
+      ],
+      "correcao_sugerida": "Mesmo ajuste da questão 1293: atualizar a menção às modalidades de violência no texto de apoio para refletir as 6 atuais, sem tocar no gabarito nem nos demais fundamentos (art. 41, art. 24 III, art. 17), que permanecem corretos.",
+      "fontes_oficiais": [
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 24, III; art. 17; art. 41", "dispositivo": "confirmados literalmente" },
+        { "tipo": "Legislação consolidada", "referencia": "Lei 11.340/2006, art. 7º, VI", "dispositivo": "mesma fonte da questão 1293 (Lei 15.384/2026)" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,394 @@
+[
+  {
+    "id": 780,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "A Lei nº 11.340/2006, conhecida como Lei Maria da Penha, foi criada com qual finalidade?",
+    "alternativas": [
+      { "ordem": 1, "texto": "Controlar e punir a utilização de drogas ilícitas.", "correta": false },
+      { "ordem": 2, "texto": "Erradicar a violência doméstica e familiar contra a mulher.", "correta": true },
+      { "ordem": 3, "texto": "Punir a discriminação de raças e cor entre as pessoas.", "correta": false },
+      { "ordem": 4, "texto": "Prevenir os acidentes de trânsito em área urbana.", "correta": false },
+      { "ordem": 5, "texto": "Defender a prática da liberdade sexual de todas as formas.", "correta": false }
+    ],
+    "gabarito": "B",
+    "explicacao_atual": "GABARITO: alternativa B\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ CORRETA:\r\nEntre as 5 opções, \"erradicar a violência doméstica e familiar contra a mulher\" é a que melhor traduz a finalidade da Lei. É importante registrar, porém, que a redação literal do art. 1º usa outros verbos: a Lei \"cria mecanismos para COIBIR E PREVENIR a violência doméstica e familiar contra a mulher\" — \"erradicar\" não é a palavra exata do texto legal, mas, diante das demais alternativas (claramente desconectadas do tema), é a única que capta corretamente o propósito da norma.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nA Lei Maria da Penha não trata de controle ou punição ao uso de drogas ilícitas — esse é objeto de legislação distinta (Lei de Drogas).\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nA Lei Maria da Penha não trata de discriminação racial — esse é objeto de legislação distinta (Estatuto da Igualdade Racial, entre outras).\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nA Lei Maria da Penha não trata de acidentes de trânsito — tema alheio ao seu objeto.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\nA Lei Maria da Penha não \"defende a prática da liberdade sexual de todas as formas\" — ela protege a mulher contra a violência doméstica e familiar, inclusive a violência sexual praticada contra ela, o que é diferente de promover liberdade sexual em geral.\r\n\r\nBIZU DE PROVA:\r\nSe a prova pedir a redação LITERAL do art. 1º, a resposta é \"coibir e prevenir\" — não \"erradicar\". Mas se todas as outras opções forem visivelmente erradas (como aqui), \"erradicar a violência doméstica\" ainda é a única alternativa alinhada ao propósito da Lei, mesmo sem ser cópia literal do texto.",
+    "fonte": "TEC Concursos — questão 3448185 — FUNDATEC — posição 862 no conjunto de 1.000 questões",
+    "banca": "Fundatec",
+    "concurso": "GCM (Pref Bagé)/Pref Bagé/2024",
+    "ano": "2024",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T06:10Z). Nunca auditada juridicamente. Observação de extração (não é auditoria): a própria explicação já reconhece que a alternativa correta usa 'erradicar', palavra diferente da literal do art. 1º ('coibir e prevenir') — candidata a checar na auditoria jurídica se isso é tratado com precisão suficiente."
+  },
+  {
+    "id": 799,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Com referência na Lei Maria da Penha, analise as assertivas abaixo: I. A lei deixou de prever a implementação de atendimento policial especializado para as mulheres. II. O espaço de convívio permanente de pessoas, com ou sem vínculo familiar, inclusive as esporadicamente agregadas, é compreendido como âmbito da unidadedoméstica. III. A assistência à mulher em situação de violência doméstica e familiar compreenderá o acesso aos benefícios decorrentes do desenvolvimento científico etecnológico. Quais estão corretas?",
+    "alternativas": [
+      { "ordem": 1, "texto": "Apenas III.", "correta": false },
+      { "ordem": 2, "texto": "Apenas I e II.", "correta": false },
+      { "ordem": 3, "texto": "Apenas I e III.", "correta": false },
+      { "ordem": 4, "texto": "Apenas II e III.", "correta": true },
+      { "ordem": 5, "texto": "I, II e III.", "correta": false }
+    ],
+    "gabarito": "D",
+    "explicacao_atual": "GABARITO: alternativa D\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ CORRETA:\r\nAs assertivas II e III estão corretas: II reproduz o art. 5º, I (unidade doméstica como espaço de convívio permanente de pessoas, com ou sem vínculo familiar, inclusive as esporadicamente agregadas); III reproduz o art. 9º, §3º (assistência compreende acesso aos benefícios decorrentes do desenvolvimento científico e tecnológico).\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nConsidera apenas a assertiva III, mas a II também está correta.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\nInclui a assertiva I, que é falsa: a Lei NÃO deixou de prever a implementação de atendimento policial especializado — essa diretriz continua expressamente prevista no art. 8º, IV.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nInclui a assertiva I, que é falsa pelo mesmo motivo acima.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\nInclui a assertiva I, que é falsa pelo mesmo motivo acima.\r\n\r\nBIZU DE PROVA:\r\nCuidado com assertivas que dizem que a Lei \"deixou de prever\" ou \"revogou\" algo central como o atendimento policial especializado — isso nunca aconteceu; o art. 8º, IV, permanece em vigor desde a redação original de 2006.",
+    "fonte": "TEC Concursos — questão 2459967 — FUNDATEC — posição 882 no conjunto de 1.000 questões",
+    "banca": "Fundatec",
+    "concurso": "GCM (Uruguaiana)/Pref Uruguaiana/2023",
+    "ano": "2023",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T06:10Z). Nunca auditada juridicamente."
+  },
+  {
+    "id": 800,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "A Lei nº 11.340/2006, também conhecida como Lei Maria da Penha, estabelece características específicas, sobretudo na conduta dos agentes que atuam nosmomentos iniciais da ocorrência. Nesses casos, dentre as condutas abaixo apresentadas, qual delas é a correta conforme essa Lei?",
+    "alternativas": [
+      { "ordem": 1, "texto": "Registrar ocorrência conforme disposto no ECA.", "correta": false },
+      { "ordem": 2, "texto": "Conduzir para Delegacia de Atendimento à Mulher.", "correta": true },
+      { "ordem": 3, "texto": "Comunicar imediatamente aos meios de comunicação.", "correta": false },
+      { "ordem": 4, "texto": "Solicitar a intervenção imediata de familiares.", "correta": false },
+      { "ordem": 5, "texto": "Solicitar apoio especializado na área de vias urbanas.", "correta": false }
+    ],
+    "gabarito": "B",
+    "explicacao_atual": "GABARITO: alternativa B\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ CORRETA:\r\nConduzir a vítima à Delegacia de Atendimento à Mulher é a alternativa que melhor reflete o modelo de atendimento especializado da Lei. Vale o registro de precisão: não existe, nos arts. 10 a 12 (que tratam das condutas imediatas da autoridade policial), uma regra literal dizendo \"conduza a vítima à DEAM\" — o fundamento correto é institucional, arts. 8º, IV, e 12-A, que estabelecem a implementação de atendimento policial especializado e a prioridade na criação de Delegacias Especializadas de Atendimento à Mulher como diretrizes da política pública de prevenção. Entre as 5 alternativas oferecidas, é a única alinhada ao modelo da Lei.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nO registro da ocorrência de violência doméstica contra a mulher segue os próprios arts. 10 a 12 da Lei Maria da Penha, não o Estatuto da Criança e do Adolescente — lei distinta, que trata de outro sujeito de proteção.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nComunicar imediatamente aos meios de comunicação viola o sigilo assegurado à ofendida pelo art. 17-A, que determina que seu nome fique sob sigilo nos processos que apuram crimes de violência doméstica.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nNão há previsão legal de intervenção imediata de familiares como conduta padrão da autoridade policial — a Lei estrutura o atendimento em torno de profissionais especializados, não de familiares.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\n\"Apoio especializado na área de vias urbanas\" não corresponde a nenhuma providência prevista na Lei.\r\n\r\nBIZU DE PROVA:\r\nA DEAM é o símbolo do atendimento especializado da Lei Maria da Penha (arts. 8º, IV e 12-A) — mas lembre que essa é uma diretriz institucional de política pública, não uma \"conduta imediata\" citada literalmente nos arts. 10 a 12. Nas demais alternativas, o erro está em outro lugar: lei errada (A), violação de sigilo (C), ou ausência total de previsão legal (D, E).",
+    "fonte": "TEC Concursos — questão 2459996 — FUNDATEC — posição 876 no conjunto de 1.000 questões",
+    "banca": "Fundatec",
+    "concurso": "GCM (Uruguaiana)/Pref Uruguaiana/2023",
+    "ano": "2023",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T06:10Z). Nunca auditada juridicamente. Observação de extração: a própria explicação já reconhece que a alternativa correta não é reprodução literal de nenhum artigo (é inferência institucional a partir dos arts. 8º, IV e 12-A) — candidata a checar com atenção na auditoria."
+  },
+  {
+    "id": 801,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Em um conflito familiar no qual o marido agrediu fisicamente e gerou lesões na mulher, se o marido for policial, o juiz poderá aplicar, de imediato, ao agressor, qualmedida punitiva?",
+    "alternativas": [
+      { "ordem": 1, "texto": "Proibição de práticas trabalhistas.", "correta": false },
+      { "ordem": 2, "texto": "Retirada da CNH por prazo indeterminado.", "correta": false },
+      { "ordem": 3, "texto": "Declaração formal e pública de pedido de desculpas.", "correta": false },
+      { "ordem": 4, "texto": "Restrição do porte de arma.", "correta": true },
+      { "ordem": 5, "texto": "Suspensão do convívio da ofendida com seus filhos.", "correta": false }
+    ],
+    "gabarito": "D",
+    "explicacao_atual": "GABARITO: alternativa D\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ CORRETA:\r\nEncontrando-se o agressor nas condições do art. 6º da Lei 10.826/2003 (Estatuto do Desarmamento) — o que inclui policiais —, o art. 22, §2º, determina que o juiz comunique ao órgão, corporação ou instituição responsável as medidas protetivas concedidas e determine a restrição do porte de armas, cabendo ao superior imediato do agressor zelar pelo cumprimento, sob pena de prevaricação ou desobediência.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nNão há previsão de \"proibição de práticas trabalhistas\" como medida protetiva de urgência na Lei.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\nNão há previsão de retirada da CNH por prazo indeterminado entre as medidas protetivas do art. 22.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nNão há previsão de \"declaração formal e pública de pedido de desculpas\" como medida protetiva de urgência na Lei.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\nA suspensão do convívio da ofendida com os próprios filhos não é uma medida protetiva prevista contra o agressor — pelo contrário, a Lei protege a convivência da ofendida com seus dependentes.\r\n\r\nBIZU DE PROVA:\r\nQuando o agressor for agente com porte de arma (ex.: policial), a medida específica é a restrição do porte de armas, com comunicação à corporação e responsabilização do superior imediato (art. 22, §2º) — uma regra específica dentro do rol geral de medidas protetivas.",
+    "fonte": "TEC Concursos — questão 2459997 — FUNDATEC — posição 880 no conjunto de 1.000 questões",
+    "banca": "Fundatec",
+    "concurso": "GCM (Uruguaiana)/Pref Uruguaiana/2023",
+    "ano": "2023",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T06:10Z). Nunca auditada juridicamente. Observação de extração: art. 22 é o mesmo artigo alterado pela Lei 15.383/2026 (achado da questão 344, sub-lote 1) — merece checagem prioritária se o §2º citado aqui foi tocado por essa ou outra lei recente."
+  },
+  {
+    "id": 802,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "A Lei nº 11.340/2006, denominada “Lei Maria da Penha”, foi criada com qual finalidade?",
+    "alternativas": [
+      { "ordem": 1, "texto": "Consolidar e proteger o direito do cidadão de bem.", "correta": false },
+      { "ordem": 2, "texto": "Coibir e prevenir a violência doméstica e familiar contra a mulher.", "correta": true },
+      { "ordem": 3, "texto": "Ampliar a proteção ecológica nas áreas rurais.", "correta": false },
+      { "ordem": 4, "texto": "Defender e proteger os menores infratores.", "correta": false },
+      { "ordem": 5, "texto": "Proteger o ataque e a depredação do patrimônio das igrejas.", "correta": false }
+    ],
+    "gabarito": "B",
+    "explicacao_atual": "GABARITO: alternativa B\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ CORRETA:\r\nO art. 1º da Lei estabelece, em sua redação literal, que ela \"cria mecanismos para coibir e prevenir a violência doméstica e familiar contra a mulher\" — exatamente a finalidade descrita pela alternativa.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nA Lei Maria da Penha não trata de proteção ao \"cidadão de bem\" de forma genérica — seu objeto é especificamente a violência doméstica e familiar contra a mulher.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nA Lei Maria da Penha não trata de proteção ecológica ou ambiental.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nA Lei Maria da Penha não trata de menores infratores — esse é objeto do Estatuto da Criança e do Adolescente.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\nA Lei Maria da Penha não trata de proteção patrimonial de instituições religiosas.\r\n\r\nBIZU DE PROVA:\r\n\"Coibir e prevenir a violência doméstica e familiar contra a mulher\" é a redação literal do art. 1º — decore essas duas palavras (coibir + prevenir) para reconhecer de cara quando a alternativa é uma citação exata do artigo.",
+    "fonte": "TEC Concursos — questão 2839184 — FUNDATEC — posição 863 no conjunto de 1.000 questões",
+    "banca": "Fundatec",
+    "concurso": "GM (Pref Imbé)/Pref Imbé/2023",
+    "ano": "2023",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T06:10Z). Nunca auditada juridicamente."
+  },
+  {
+    "id": 861,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Segundo a Lei Maria da Penha, configura violência doméstica e familiar contra a mulher qualquer ação ou omissão baseada no gênero, no âmbito da família,compreendida como a comunidade formada por indivíduos que são ou se consideram aparentados, unidos por laços naturais, por afinidade ou por vontade expressa, quelhe cause: I. Morte.II. Sofrimento sexual.III. Dano moral. Quais estão corretas?",
+    "alternativas": [
+      { "ordem": 1, "texto": "Apenas II.", "correta": false },
+      { "ordem": 2, "texto": "Apenas I e II.", "correta": false },
+      { "ordem": 3, "texto": "Apenas I e III.", "correta": false },
+      { "ordem": 4, "texto": "Apenas II e III.", "correta": false },
+      { "ordem": 5, "texto": "I, II e III.", "correta": true }
+    ],
+    "gabarito": "E",
+    "explicacao_atual": "GABARITO: alternativa E\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ CORRETA:\r\nAs três assertivas reproduzem o rol de resultados lesivos do art. 5º, caput: morte, lesão, sofrimento físico, sexual ou psicológico e dano moral ou patrimonial — morte (I), sofrimento sexual (II) e dano moral (III) estão todos expressamente previstos.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nConsidera apenas a assertiva II, mas I e III também estão corretas.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\nConsidera apenas I e II, mas a III também está correta.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nConsidera apenas I e III, mas a II também está correta.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nConsidera apenas II e III, mas a I também está correta.\r\n\r\nBIZU DE PROVA:\r\nO art. 5º, caput, lista 5 resultados possíveis: morte, lesão, sofrimento físico, sofrimento sexual, sofrimento psicológico, dano moral OU dano patrimonial — qualquer um desses, presente em um dos 3 âmbitos (doméstico, familiar, relação íntima de afeto), configura violência doméstica.",
+    "fonte": "TEC Concursos — questão 2385631 — FUNDATEC — posição 869 no conjunto de 1.000 questões",
+    "banca": "Fundatec",
+    "concurso": "Tec (Pref Viamão)/Pref Viamão/Agrícola/2022",
+    "ano": "2022",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T06:10Z). Nunca auditada juridicamente."
+  },
+  {
+    "id": 862,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Um homem morava com uma mulher numa relação estável há mais de cinco anos, e, precisando de dinheiro, forçou esta mulher a se prostituir com outros amigos.Esta mulher procurou socorro, pois estava sofrendo esta violência, sem capacidade de reação, inclusive com ameaças de agressão. Neste caso, a legislação específica aser aplicada para tipificar o fato procedido pelo homem contra a mulher e para protegê-la será a:",
+    "alternativas": [
+      { "ordem": 1, "texto": "Lei do Livre matrimônio.", "correta": false },
+      { "ordem": 2, "texto": "Lei sexual – “Lei Amarildo Santos”.", "correta": false },
+      { "ordem": 3, "texto": "Lei Maria da Penha.", "correta": true },
+      { "ordem": 4, "texto": "Lei da Estabilidade no Casamento.", "correta": false },
+      { "ordem": 5, "texto": "Lei de Exceção.", "correta": false }
+    ],
+    "gabarito": "C",
+    "explicacao_atual": "GABARITO: alternativa C\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ CORRETA:\r\nForçar a companheira a se prostituir com terceiros, mediante ameaça, configura violência sexual, nos termos do art. 7º, III, que prevê como tal a conduta que induza a mulher a comercializar ou utilizar, de qualquer modo, a sua sexualidade, mediante coação, chantagem, suborno ou manipulação. A Lei Maria da Penha é a legislação específica de proteção nessa hipótese.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\n\"Lei do Livre Matrimônio\" não existe como legislação brasileira — nome fantasioso.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\n\"Lei sexual – 'Lei Amarildo Santos'\" não existe como legislação brasileira — nome fantasioso.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\n\"Lei da Estabilidade no Casamento\" não existe como legislação brasileira — nome fantasioso.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\n\"Lei de Exceção\" não existe como legislação brasileira nesse contexto — nome fantasioso.\r\n\r\nBIZU DE PROVA:\r\nInduzir a mulher a comercializar ou utilizar sua sexualidade mediante coação, chantagem, suborno ou manipulação é violência SEXUAL pelo art. 7º, III — mesmo sem contato físico direto do agressor, a coação em si já caracteriza a violência.",
+    "fonte": "TEC Concursos — questão 2386690 — FUNDATEC — posição 864 no conjunto de 1.000 questões",
+    "banca": "Fundatec",
+    "concurso": "GM (Pref Viamão)/Pref Viamão/2022",
+    "ano": "2022",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T06:10Z). Nunca auditada juridicamente."
+  },
+  {
+    "id": 866,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Segundo a Lei Maria da Penha, verificada a existência de risco atual ou iminente à vida ou à integridade física ou psicológica da mulher em situação de violênciadoméstica e familiar, ou de seus dependentes, o agressor será imediatamente afastado do lar, domicílio ou local de convivência com a ofendida, pelo policial, quando oMunicípio não for sede de comarca e não houver delegado disponível no momento da denúncia. Nesta hipótese, o juiz será comunicado no prazo máximo de ______horas, e decidirá, em igual prazo, sobre a manutenção ou a revogação da medida aplicada, devendo dar ciência ao Ministério Público concomitantemente. Assinale a alternativa que preenche corretamente a lacuna do trecho acima.",
+    "alternativas": [
+      { "ordem": 1, "texto": "12 (doze)", "correta": false },
+      { "ordem": 2, "texto": "18 (dezoito)", "correta": false },
+      { "ordem": 3, "texto": "24 (vinte e quatro)", "correta": true },
+      { "ordem": 4, "texto": "36 (trinta e seis)", "correta": false },
+      { "ordem": 5, "texto": "48 (quarenta e oito)", "correta": false }
+    ],
+    "gabarito": "C",
+    "explicacao_atual": "GABARITO: alternativa C\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ CORRETA:\r\nO art. 12-C, §1º, determina que, nas hipóteses de afastamento do agressor decretado pelo delegado de polícia ou, como no caso descrito, pelo próprio policial (quando o Município não for sede de comarca e não houver delegado disponível), o juiz será comunicado no prazo máximo de 24 (vinte e quatro) horas e decidirá, em igual prazo, sobre a manutenção ou a revogação da medida, dando ciência ao Ministério Público concomitantemente.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\n12 horas não corresponde ao prazo previsto no art. 12-C, §1º.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\n18 horas não corresponde ao prazo previsto no art. 12-C, §1º.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\n36 horas não corresponde ao prazo previsto no art. 12-C, §1º.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\n48 horas é o prazo de outro dispositivo (remessa do expediente com pedido de medidas protetivas ao juiz, art. 12, III), não o prazo de comunicação do art. 12-C, §1º.\r\n\r\nBIZU DE PROVA:\r\nNota sobre a redação do enunciado: ele reproduz a fórmula antiga do art. 12-C (\"integridade física ou psicológica\"). A redação vigente, desde a Lei 15.411/2026, ampliou esse critério de risco para física, sexual, psicológica, moral ou patrimonial — isso não muda o gabarito (a pergunta é sobre o prazo de 24 horas, que não foi alterado), mas fica o registro da redação atual, mais abrangente.",
+    "fonte": "TEC Concursos — questão 2575920 — FUNDATEC — posição 879 no conjunto de 1.000 questões",
+    "banca": "Fundatec",
+    "concurso": "Pol Pen (PP RS)/PP RS/2022",
+    "ano": "2022",
+    "observacao_origem": "Pré-existente ao Lote 1 e ao Lote 2 Fase 3C (criado_em 2026-08-10T06:10Z). Nunca auditada juridicamente. Já contém ressalva própria sobre a Lei 15.411/2026, mesmo padrão observado na questão 51 do sub-lote 1 — checar se está tecnicamente precisa."
+  },
+  {
+    "id": 1291,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "A Lei Maria da Penha foi criada para prevenir, punir e erradicar a violência doméstica e familiar contra a mulher no Brasil, estabelecendo mecanismos para garantir a proteção das vítimas e a responsabilização dos agressores. Sobre essa legislação, assinale a alternativa correta.",
+    "alternativas": [
+      { "ordem": 1, "texto": "A Lei Maria da Penha prevê medidas protetivas de urgência que podem ser concedidas independentemente da existência de processo criminal contra o agressor.", "correta": true },
+      { "ordem": 2, "texto": "A Lei Maria da Penha prevê que, para garantir a proteção da vítima, o juiz deve ouvir obrigatoriamente o agressor antes da concessão de medidas protetivas.", "correta": false },
+      { "ordem": 3, "texto": "A Lei Maria da Penha determina que a pena do agressor só poderá ser aplicada caso a vítima registre boletim de ocorrência e solicite expressamente a punição.", "correta": false },
+      { "ordem": 4, "texto": "A aplicação da Lei Maria da Penha depende da comprovação de que a vítima e o agressor possuem vínculo matrimonial ou relação estável, não se aplicando a relacionamentos casuais.", "correta": false }
+    ],
+    "gabarito": "A",
+    "explicacao_atual": "GABARITO: alternativa A\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ CORRETA:\r\nAs medidas protetivas de urgência (arts. 18 a 24 da Lei 11.340/2006) são providências autônomas e urgentes, concedidas pelo juiz para proteger a integridade da mulher em situação de risco. Elas não dependem da existência de um processo criminal já instaurado contra o agressor — podem ser requeridas e deferidas de forma independente, inclusive antes do oferecimento de qualquer denúncia, justamente porque seu objetivo é afastar o risco imediato, e não punir.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\nO art. 19, §1º, da Lei permite que as medidas protetivas sejam concedidas de imediato, independentemente de audiência das partes e de manifestação do Ministério Público. Não há exigência de oitiva prévia do agressor — pelo contrário, essa exigência inverteria a lógica de urgência e proteção da vítima.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nA punição do agressor não depende de a vítima \"solicitar expressamente\" a punição. Diversos crimes praticados com violência doméstica são de ação penal pública incondicionada (a exemplo da lesão corporal, conforme a Súmula 542 do STJ), processando-se independentemente da vontade da vítima quanto à punição.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nO art. 5º, III, da Lei estende a proteção a \"qualquer relação íntima de afeto, na qual o agressor conviva ou tenha convivido com a ofendida, independentemente de coabitação\" — não há exigência de casamento ou união estável formal.\r\n\r\nBIZU DE PROVA:\r\nA Lei Maria da Penha não exige processo criminal em andamento, nem vínculo formal (casamento/união estável), nem coabitação para conceder medidas protetivas — o critério é a relação de afeto (mesmo passada) e o risco à mulher.",
+    "fonte": "TEC Concursos — questão 3564240 — IGEDUC — ASoc (Pref Japaratinga)/Pref Japaratinga/2025",
+    "banca": "IGEDUC",
+    "concurso": "ASoc (Pref Japaratinga)/Pref Japaratinga/2025",
+    "ano": "2025",
+    "observacao_origem": "Primeira questão do lote-base 'Lote 1' (85 questões, criado_em 2026-08-17T02:21Z). Nunca auditada juridicamente. Só 4 alternativas (não 5) — estrutura normal para este lote."
+  },
+  {
+    "id": 1292,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Paula registrou boletim de ocorrência contra seu ex-companheiro, Fábio, com quem conviveu em união estável por cinco anos. Segundo o relato dela, ele passou a enviar dezenas de mensagens diárias com xingamentos, humilhações e ameaças veladas, além de vigiá-la nas redes sociais e comparecer repetidamente em seu trabalho. Diante da situação, foi requerido o reconhecimento da prática de violência psicológica contra a mulher. Considerando a situação narrada e a legislação aplicável, assinale a alternativa correta.",
+    "alternativas": [
+      { "ordem": 1, "texto": "A violência psicológica contra a mulher configura infração de menor potencial ofensivo e, portanto, sua punibilidade exige a tentativa de conciliação entre as partes antes do oferecimento da denúncia.", "correta": false },
+      { "ordem": 2, "texto": "Para a caracterização da violência psicológica, é necessário que a agressão seja praticada presencialmente.", "correta": false },
+      { "ordem": 3, "texto": "A prática de violência psicológica contra a mulher exige vínculo de coabitação entre agressor e vítima no momento dos fatos.", "correta": false },
+      { "ordem": 4, "texto": "A conduta descrita configura apenas contravenção penal de perturbação do sossego, sendo inaplicável a Lei nº 11.340/2006 fora do contexto de convivência atual.", "correta": false },
+      { "ordem": 5, "texto": "A prática de violência psicológica contra a mulher é prevista expressamente na Lei Maria da Penha, podendo ser oferecida denúncia pelo crime previsto no art. 147-B do Código Penal.", "correta": true }
+    ],
+    "gabarito": "E",
+    "explicacao_atual": "GABARITO: alternativa E\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ CORRETA:\r\nO envio reiterado de mensagens com xingamentos, humilhações e ameaças veladas, somado à vigilância nas redes sociais e ao comparecimento repetido no trabalho da vítima, configura violência psicológica (art. 7º, II, da Lei 11.340/2006 — conduta que causa dano emocional, mediante ameaça, humilhação, manipulação e vigilância constante). Essa perseguição reiterada também se amolda ao crime de perseguição (stalking) do art. 147-B do Código Penal, cuja pena é aumentada de metade quando cometido contra mulher por razões da condição de sexo feminino (art. 147-B, §1º, II, CP).\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nO art. 41 da Lei 11.340/2006 afasta expressamente a aplicação da Lei 9.099/95 (Juizados Especiais Criminais) aos crimes praticados com violência doméstica contra a mulher, qualquer que seja a pena cominada. Não existe, portanto, exigência de tentativa de conciliação prévia — essa é justamente a lógica que a Lei Maria da Penha veio romper.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\nA violência psicológica não exige contato presencial. O próprio rol do art. 7º, II, é amplo (\"ou qualquer outro meio\"), e a jurisprudência reconhece a caracterização por meios virtuais, como mensagens e redes sociais.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nO art. 5º, III, dispensa expressamente a coabitação para a caracterização de violência doméstica em relação íntima de afeto — o vínculo de ex-companheiros já basta.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nA conduta não se limita a uma contravenção penal de perturbação do sossego, nem exige convivência atual: trata-se de violência doméstica psicológica plenamente tipificada pela Lei 11.340/2006, ainda que o relacionamento tenha terminado.\r\n\r\nBIZU DE PROVA:\r\nViolência psicológica pode ocorrer por qualquer meio, inclusive virtual, sem exigir coabitação nem convivência atual — perseguição reiterada por redes sociais e no local de trabalho pode configurar o crime do art. 147-B do CP, com pena aumentada quando praticado por razões de gênero.",
+    "fonte": "TEC Concursos — questão 3520358 — FACAPE — Ed Soc (Pref Afrânio)/Pref Afrânio/2025",
+    "banca": "FACAPE",
+    "concurso": "Ed Soc (Pref Afrânio)/Pref Afrânio/2025",
+    "ano": "2025",
+    "observacao_origem": "Lote-base 'Lote 1' (criado_em 2026-08-17T02:21Z). Nunca auditada juridicamente. Explicação cita art. 147-B do Código Penal (stalking) e sua causa de aumento — checar na auditoria se a numeração/percentual do aumento de pena permanece vigente."
+  },
+  {
+    "id": 1293,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Na forma da Lei Maria da Penha, nome pelo qual ficou popularmente conhecido o instrumento que criou mecanismos para coibir a violência doméstica e familiar contra a mulher, nos termos do art. 226, § 8º da Constituição Federal, da Convenção sobre a Eliminação de Todas as Formas de Discriminação contra as Mulheres e da Convenção Interamericana para Prevenir, Punir e Erradicar a Violência contra a Mulher; dispõe sobre a criação dos Juizados de Violência Doméstica e Familiar contra a Mulher; altera o Código de Processo Penal, o Código Penal e a Lei de Execução Penal; e dá outras providências, podemos afirmar que a violência psicológica se configura corretamente quando a conduta do(a) agressor(a)",
+    "alternativas": [
+      { "ordem": 1, "texto": "configurar ofensa à integridade ou saúde corporal da vítima.", "correta": false },
+      { "ordem": 2, "texto": "configurar retenção, subtração, destruição parcial ou total de seus objetos, instrumentos de trabalho, documentos pessoais, bens, valores e direitos ou recursos econômicos, incluindo os destinados a satisfazer as necessidades da vítima.", "correta": false },
+      { "ordem": 3, "texto": "configurar calúnia, difamação ou injúria.", "correta": false },
+      { "ordem": 4, "texto": "conduta que a constranja a presenciar, a manter ou a participar de relação sexual não desejada, mediante intimidação, ameaça, coação ou uso da força; que a induza a comercializar ou a utilizar, de qualquer modo, a sua sexualidade, que a impeça de usar qualquer método contraceptivo ou que a force ao matrimônio, à gravidez, ao aborto ou à prostituição, mediante coação, chantagem, suborno ou manipulação; ou que limite ou anule o exercício de seus direitos sexuais e reprodutivos da vítima.", "correta": false },
+      { "ordem": 5, "texto": "configurar dano emocional e diminuição da autoestima ou que lhe prejudique e perturbe o pleno desenvolvimento ou que vise degradar ou controlar suas ações, comportamentos, crenças e decisões, mediante ameaça, constrangimento, humilhação, manipulação, isolamento, vigilância constante, perseguição contumaz, insulto, chantagem, violação de sua intimidade, ridicularização, exploração e limitação do direito de ir e vir ou qualquer outro meio que lhe cause prejuízo à saúde mental e à autodeterminação da vítima.", "correta": true }
+    ],
+    "gabarito": "E",
+    "explicacao_atual": "GABARITO: alternativa E\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ CORRETA:\r\nO texto reproduz, com fidelidade, a redação do art. 7º, II, da Lei 11.340/2006, que define violência psicológica como qualquer conduta que cause dano emocional e diminuição da autoestima, ou que prejudique o pleno desenvolvimento, ou que vise degradar ou controlar as ações da mulher, mediante ameaça, constrangimento, humilhação, manipulação, isolamento, vigilância constante, perseguição contumaz, insulto, chantagem, violação de intimidade, ridicularização, exploração e limitação do direito de ir e vir.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nEssa é a definição de violência FÍSICA (art. 7º, I) — conduta que ofende a integridade ou saúde corporal.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\nEssa é a definição de violência PATRIMONIAL (art. 7º, IV) — retenção, subtração ou destruição de bens, documentos e instrumentos de trabalho.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nEssa é a definição de violência MORAL (art. 7º, V) — calúnia, difamação ou injúria.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nEssa é a definição de violência SEXUAL (art. 7º, III) — constranger a presenciar, manter ou participar de relação sexual não desejada, entre outras condutas ligadas à liberdade sexual e reprodutiva.\r\n\r\nBIZU DE PROVA:\r\nO art. 7º lista 5 formas de violência — decore o núcleo de cada uma: física = integridade/saúde corporal; psicológica = dano emocional/controle; sexual = constrangimento sexual/reprodutivo; patrimonial = bens/dinheiro; moral = calúnia/difamação/injúria. Bancas adoram trocar os rótulos entre si.",
+    "fonte": "TEC Concursos — questão 3824093 — Instituto ACCESS — ASoc (Pref Rodeiro)/Pref Rodeiro/2025",
+    "banca": "Instituto ACCESS",
+    "concurso": "ASoc (Pref Rodeiro)/Pref Rodeiro/2025",
+    "ano": "2025",
+    "observacao_origem": "Lote-base 'Lote 1' (criado_em 2026-08-17T02:21Z). Nunca auditada juridicamente. Explicação diz 'o art. 7º lista 5 formas de violência' — checar na auditoria se isso está desatualizado frente à violência vicária (art. 7º, VI, Lei 15.384/2026), já tratada corretamente em outras questões do banco (ex. 21, 347 do sub-lote 1)."
+  },
+  {
+    "id": 1294,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Sobre a Lei “Maria da Penha”, assinale a alternativa correta.",
+    "alternativas": [
+      { "ordem": 1, "texto": "A mencionada Lei cria mecanismos para coibir e prevenir a violência doméstica e familiar contra a mulher e o homem.", "correta": false },
+      { "ordem": 2, "texto": "Os Juizados de Violência Doméstica e Familiar foram criados pela mencionada Lei.", "correta": true },
+      { "ordem": 3, "texto": "Apenas a pessoa do sexo masculino pode ser autora de violência doméstica e familiar.", "correta": false },
+      { "ordem": 4, "texto": "Qualquer conduta que configure calúnia, difamação ou injúria contra a mulher será considerada violência psicológica.", "correta": false }
+    ],
+    "gabarito": "B",
+    "explicacao_atual": "GABARITO: alternativa B\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ CORRETA:\r\nOs arts. 1º e 14 da Lei 11.340/2006 preveem expressamente a criação dos Juizados de Violência Doméstica e Familiar contra a Mulher, órgãos da Justiça Ordinária com competência cível e criminal.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nA Lei Maria da Penha protege especificamente a mulher (art. 5º) em situação de violência doméstica e familiar. Não é uma lei de proteção genérica que abranja igualmente o homem.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nO agressor pode ser qualquer pessoa que tenha vínculo doméstico, familiar ou de relação íntima de afeto com a vítima — não apenas homens. A Lei já foi aplicada, por exemplo, a agressões entre mulheres em relação homoafetiva ou entre mãe e filho.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nCalúnia, difamação e injúria configuram violência MORAL (art. 7º, V), não psicológica (art. 7º, II) — são categorias distintas dentro do rol legal.\r\n\r\nBIZU DE PROVA:\r\nO sujeito ativo da violência doméstica pode ser qualquer pessoa (homem ou mulher) com vínculo doméstico, familiar ou afetivo com a vítima — o que a Lei exige é que a vítima seja mulher.",
+    "fonte": "TEC Concursos — questão 3138220 — IGEDUC — Vig (CM Tuparetama)/CM Tuparetama/2024",
+    "banca": "IGEDUC",
+    "concurso": "Vig (CM Tuparetama)/CM Tuparetama/2024",
+    "ano": "2024",
+    "observacao_origem": "Lote-base 'Lote 1' (criado_em 2026-08-17T02:21Z). Nunca auditada juridicamente. Só 4 alternativas."
+  },
+  {
+    "id": 1295,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Considerando que a Lei Maria da Penha (Lei nº 11.340/2006) é um marco na proteção e no combate à violência doméstica e familiar contra a mulher no Brasil, analise as afirmativas a seguir. I. A Lei Maria da Penha prevê a criação de juizados especiais de violência doméstica e familiar contra a mulher, que são responsáveis por processar e julgar os casos de violência doméstica, bem como promover o atendimento multidisciplinar às vítimas. II. A Lei Maria da Penha estabelece medidas protetivas de urgência, que podem ser solicitadas pela vítima para garantir sua segurança e integridade física, como o afastamento do agressor do lar ou local de convivência com a vítima, a suspensão da posse ou restrição do porte de armas e a determinação de prestação de alimentos provisórios ou provisionais. III. A Lei Maria da Penha aplica-se a todas as formas de violência doméstica e familiar contra a mulher, incluindo violência física, psicológica, sexual, patrimonial e moral, abrangendo relações de convivência esporádica, sendo necessária a coabitação entre vítima e agressor para a caracterização da violência doméstica. Está correto o que se afirma em 17/42",
+    "alternativas": [
+      { "ordem": 1, "texto": "I, II e III.", "correta": false },
+      { "ordem": 2, "texto": "I e II, apenas. https://www.tecconcursos.com.br/questoes/cadernos/100938882/imprimir", "correta": true },
+      { "ordem": 3, "texto": "I e III, apenas.", "correta": false },
+      { "ordem": 4, "texto": "II e III, apenas.", "correta": false }
+    ],
+    "gabarito": "B",
+    "explicacao_atual": "GABARITO: alternativa B\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ CORRETA:\r\nA afirmativa I está correta: os Juizados de Violência Doméstica e Familiar (arts. 14 e 29) têm competência para processar e julgar os casos, contando com equipe de atendimento multidisciplinar. A afirmativa II também está correta: as medidas protetivas de urgência do art. 22 incluem exatamente o afastamento do agressor do lar, a suspensão/restrição de porte de armas e a prestação de alimentos provisórios. A afirmativa III está incorreta, pois exige coabitação, requisito expressamente dispensado pelo art. 5º, III.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nInclui a afirmativa III, que é falsa (exige coabitação indevidamente).\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nInclui a afirmativa III, que é falsa.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nInclui a afirmativa III, que é falsa, e exclui a I, que é verdadeira.\r\n\r\nBIZU DE PROVA:\r\nCuidado com afirmativas que colam um requisito de \"coabitação obrigatória\" — é pegadinha clássica; a Lei Maria da Penha dispensa coabitação (art. 5º, III) para relação íntima de afeto.",
+    "fonte": "TEC Concursos — questão 3124680 — FAUEL — Ed Soc (Pref Maringá)/Pref Maringá/2024",
+    "banca": "FAUEL",
+    "concurso": "Ed Soc (Pref Maringá)/Pref Maringá/2024",
+    "ano": "2024",
+    "observacao_origem": "Lote-base 'Lote 1' (criado_em 2026-08-17T02:21Z). Nunca auditada juridicamente. RESÍDUO DE EXTRAÇÃO CONFIRMADO (não é questão jurídica, é sujeira de dado): o enunciado termina com '17/42' (paginação de caderno) e a alternativa B tem uma URL colada no final do texto ('https://www.tecconcursos.com.br/questoes/cadernos/100938882/imprimir'). Isso é resíduo de scraping/importação, análogo ao já corrigido em utils/higiene-questoes.mjs para outros padrões — candidato a correção textual (não jurídica) na revisão."
+  },
+  {
+    "id": 1296,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Analise as situações hipotéticas a seguir. I. O marido de AGV, 22 anos, é policial militar e a agrediu fisicamente gerando inúmeras lesões de natureza média. Neste caso, poderá o juiz aplicar, de imediato, suspensão da posse ou restrição do porte de armas. II. APL, 35 anos, cessou a relação amorosa com seu namorado no dia 02/03/22; em 10/04/23, movido por ciúmes ao vê-la com um novo companheiro, seu ex- namorado a agrediu verbalmente em via pública. Nesta situação não deve ser aplicada a Lei Maria da Penha pelo eventual delito cometido pelo ex-namorado contra APL. III. ACV, 38 anos, é vítima de constantes agressões pelo marido; desejando dar fim a esta situação ela irá propor ação de divórcio. Neste caso, a ofendida deverá propor ação de divórcio ou de dissolução de união estável no Juizado de Violência Doméstica e Familiar contra a Mulher. IV. CAG, 28 anos, é comprovadamente vítima de esbulho patrimonial por seu esposo. Nesta situação, a prática de violência patrimonial não encontra amparo no âmbito do ordenamento jurídico abarcado pela Lei nº 11.340/2006. No que concerne à Lei nº 11.340/2006 – Lei Maria da Penha, está correto o que se afirma em",
+    "alternativas": [
+      { "ordem": 1, "texto": "I, II, III e IV.", "correta": false },
+      { "ordem": 2, "texto": "I e III, apenas.", "correta": true },
+      { "ordem": 3, "texto": "II e IV, apenas.", "correta": false },
+      { "ordem": 4, "texto": "III e IV, apenas.", "correta": false }
+    ],
+    "gabarito": "B",
+    "explicacao_atual": "GABARITO: alternativa B\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ CORRETA:\r\nA afirmativa I está correta: o juiz pode aplicar de imediato a suspensão da posse ou restrição do porte de armas (art. 22, I) independentemente da profissão do agressor, inclusive se for policial militar. A afirmativa III está correta: o art. 14-A prevê a competência cível do Juizado de Violência Doméstica para ações relacionadas à situação de violência, inclusive divórcio e dissolução de união estável.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nInclui as afirmativas II e IV, ambas falsas: a Lei se aplica sim a relacionamentos de namoro já terminados (art. 5º, III) e a violência patrimonial é expressamente prevista (art. 7º, IV).\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nAs afirmativas II e IV são falsas, não verdadeiras: a Lei se aplica ao caso do ex-namorado, e a violência patrimonial (esbulho) é amparada pela Lei.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nA afirmativa III é verdadeira, mas a IV é falsa — a violência patrimonial está sim prevista no art. 7º, IV.\r\n\r\nBIZU DE PROVA:\r\nRelação de namoro (mesmo terminada) e mera convivência íntima de afeto atraem a Lei Maria da Penha, mesmo sem coabitação; violência patrimonial (esbulho, subtração de bens) também está expressamente prevista — não pense que só existe violência física.",
+    "fonte": "TEC Concursos — questão 2936068 — FGV — Ass Soc (TJ SC)/TJ SC/2024",
+    "banca": "FGV",
+    "concurso": "Ass Soc (TJ SC)/TJ SC/2024",
+    "ano": "2024",
+    "observacao_origem": "Lote-base 'Lote 1' (criado_em 2026-08-17T02:21Z). Nunca auditada juridicamente. Explicação cita art. 22, I (mesmo artigo alterado pela Lei 15.383/2026 — achado da questão 344) — checar prioritariamente na auditoria."
+  },
+  {
+    "id": 1297,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Analise as afirmativas a seguir: I. A violência doméstica e familiar contra a mulher constitui uma das formas de violação dos direitos humanos, cuja política pública que visa coibir a violência doméstica e familiar contra a mulher deve ser feita pela articulação de ações da União, dos Estados, do Distrito Federal e dos Municípios e de ações não- governamentais. II. Define-se violência doméstica e familiar contra a mulher qualquer ação baseada no gênero que lhe cause morte, lesão, sofrimento físico ou sexual. Marque a alternativa CORRETA:",
+    "alternativas": [
+      { "ordem": 1, "texto": "As duas afirmativas são verdadeiras.", "correta": false },
+      { "ordem": 2, "texto": "A afirmativa I é verdadeira, e a II é falsa.", "correta": true },
+      { "ordem": 3, "texto": "A afirmativa II é verdadeira, e a I é falsa.", "correta": false },
+      { "ordem": 4, "texto": "As duas afirmativas são falsas.", "correta": false }
+    ],
+    "gabarito": "B",
+    "explicacao_atual": "GABARITO: alternativa B\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ CORRETA:\r\nA afirmativa I está correta, combinando o art. 6º (a violência doméstica constitui uma das formas de violação dos direitos humanos) com o art. 8º, caput (política pública por ação articulada de União, Estados, DF, Municípios e ações não governamentais). A afirmativa II está incompleta e, por isso, falsa: a definição legal do art. 5º, caput, exige \"morte, lesão, sofrimento físico, sexual OU PSICOLÓGICO E DANO MORAL OU PATRIMONIAL\" — a afirmativa omitiu o sofrimento psicológico e o dano moral/patrimonial.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nAfirma que ambas são verdadeiras, mas a II está incompleta e, portanto, falsa para fins de prova.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nInverte a avaliação: é a I que é verdadeira, e a II que é falsa, não o contrário.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nA afirmativa I é verdadeira, não falsa.\r\n\r\nBIZU DE PROVA:\r\nDecore a definição completa do art. 5º, caput — \"morte, lesão, sofrimento físico, sexual OU PSICOLÓGICO e dano moral OU PATRIMONIAL\" — bancas adoram cortar um desses elementos para testar se você decorou tudo.",
+    "fonte": "TEC Concursos — questão 2919563 — MS (SARMENTO) — ASoc Sau (Pref Adustina)/Pref Adustina/2024",
+    "banca": "MS (SARMENTO)",
+    "concurso": "ASoc Sau (Pref Adustina)/Pref Adustina/2024",
+    "ano": "2024",
+    "observacao_origem": "Lote-base 'Lote 1' (criado_em 2026-08-17T02:21Z). Nunca auditada juridicamente."
+  },
+  {
+    "id": 1298,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Ares passou a ridicularizar e a difamar publicamente Atena, sua namorada havia dois anos, como expressão de seu excessivo ciúme e visando controlar suas ações. Atena vem suportando tal sofrimento porque está sob ameaça de morte de seu filho menor, fruto de relação anterior, caso ela se separe de Ares. Não suportando mais a situação nociva, ela toma coragem e rompe com Ares. Pouco tempo depois da separação, Atena recebe uma ligação de Ares que lhe diz para cuidar mais do filho, pois está em perigo, e finaliza abruptamente a ligação. No dia seguinte, Ares desfere um tapa no rosto de Atena quando ela saía da faculdade. Considerando-se o caso hipotético, assinale a afirmativa correta.",
+    "alternativas": [
+      { "ordem": 1, "texto": "Ao caso é aplicada a Lei Maria da Penha por se tratar de violência de relação íntima de afeto, mas, por envolver ameaça e lesão corporal leve, a ação penal pública é condicionada à representação de Atena.", "correta": false },
+      { "ordem": 2, "texto": "Ao caso é aplicada a Lei Maria da Penha, visto que a normativa abrange qualquer relação íntima de afeto, na qual o agressor conviva ou tenha convivido com a ofendida, independentemente de coabitação.", "correta": true },
+      { "ordem": 3, "texto": "Ao caso não é aplicada a Lei Maria da Penha por inexistir violência física concreta contra a mulher. A hipótese narrada configura crimes de ameaça e de lesão corporal leve, além de ser aplicado o Estatuto da Criança e do Adolescente em relação ao filho menor.", "correta": false },
+      { "ordem": 4, "texto": "Na hipótese, estão configurados os crimes de ameaça e de lesão corporal leve, previstos no Código Penal, já que a Lei Maria da Penha apenas seria aplicada, caso Ares e Atena ainda estivessem namorando quando da ameaça real e da lesão corporal ou, ao menos, convivessem no mesmo ambiente familiar.", "correta": false }
+    ],
+    "gabarito": "B",
+    "explicacao_atual": "GABARITO: alternativa B\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ CORRETA:\r\nO art. 5º, III, da Lei estende a proteção a qualquer relação íntima de afeto na qual o agressor conviva ou tenha convivido com a ofendida, independentemente de coabitação — um namoro de dois anos se enquadra plenamente nesse conceito, ainda que não tenha havido coabitação.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nEmbora a Lei se aplique ao caso, a alternativa erra ao afirmar que \"a ação penal pública é condicionada à representação\" para o conjunto dos dois crimes narrados. Isso é impreciso ao menos quanto à lesão corporal: pela Súmula 542 do STJ, a ação penal pelo crime de lesão corporal decorrente de violência doméstica é pública INCONDICIONADA, não dependendo de representação da vítima (diferente da ameaça do art. 147 do CP, que, isoladamente, segue exigindo representação).\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nA premissa está errada — há sim violência física concreta no caso (o tapa no rosto), o que já afasta a alegação de que \"inexiste violência física concreta\".\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nO art. 5º, III, fala em relação na qual o agressor \"conviva OU TENHA CONVIVIDO\" com a ofendida — abrange relacionamentos já encerrados, não exigindo que o casal ainda esteja junto ou more no mesmo ambiente.\r\n\r\nBIZU DE PROVA:\r\nA expressão \"tenha convivido\" no art. 5º, III, cobre relacionamentos já terminados — não é preciso estar namorando ou coabitando no momento do fato.",
+    "fonte": "TEC Concursos — questão 2718877 — IBAM — CSoc (Pref Guarujá (SP))/Pref Guarujá (SP)/2023",
+    "banca": "IBAM",
+    "concurso": "CSoc (Pref Guarujá (SP))/Pref Guarujá (SP)/2023",
+    "ano": "2023",
+    "observacao_origem": "Lote-base 'Lote 1' (criado_em 2026-08-17T02:21Z). Nunca auditada juridicamente. Explicação cita Súmula 542/STJ — checar vigência/número na auditoria."
+  },
+  {
+    "id": 1299,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "A Lei Maria da Penha (Lei nº 11.340 de 07 de agosto de 2006) “cria mecanismos para coibir e prevenir a violência doméstica e familiar contra a mulher, nos termos do § 8º do art. 226 da Constituição Federal, da Convenção sobre a Eliminação de Todas as Formas de Violência contra a Mulher, da Convenção Interamericana para Prevenir, Punir e Erradicar a Violência contra a Mulher e de outros tratados internacionais ratificados pela República Federativa do Brasil; dispõe sobre a criação dos Juizados de Violência Doméstica e Familiar contra a Mulher; e estabelece medidas de assistência e proteção às mulheres em situação de violência doméstica e familiar”. Segundo esta Lei, é caracterizada como violência doméstica contra mulher",
+    "alternativas": [
+      { "ordem": 1, "texto": "toda ação prática realizada dentro, ou fora do domicílio, que cause sofrimento, aflição psicológica e emocional.", "correta": false },
+      { "ordem": 2, "texto": "toda prática social realizada contra a esposa e os filhos que cause lesão física, ou dano psicológico.", "correta": false },
+      { "ordem": 3, "texto": "qualquer ação ou omissão baseada no gênero que lhe cause morte, lesão, sofrimento físico, sexual ou psicológico e dano moral ou patrimonial.", "correta": true },
+      { "ordem": 4, "texto": "toda ação realizada dentro da unidade familiar que cause sofrimento físico e/ou emocional.", "correta": false },
+      { "ordem": 5, "texto": "qualquer prática social sobre a esposa que gere dor física, emocional e dano moral.", "correta": false }
+    ],
+    "gabarito": "C",
+    "explicacao_atual": "GABARITO: alternativa C\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ CORRETA:\r\nA alternativa reproduz literalmente a definição do art. 5º, caput, da Lei 11.340/2006: \"qualquer ação ou omissão baseada no gênero que lhe cause morte, lesão, sofrimento físico, sexual ou psicológico e dano moral ou patrimonial\".\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nÉ uma paráfrase incompleta que restringe indevidamente o local (\"dentro, ou fora do domicílio\") e o resultado (\"sofrimento, aflição psicológica e emocional\"), deixando de fora lesão física, sexual, morte e dano patrimonial/moral, que também integram a definição legal.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\nRestringe indevidamente a violência à \"esposa e filhos\" e ao resultado \"lesão física ou dano psicológico\", quando a Lei protege qualquer mulher em relação doméstica, familiar ou afetiva, e prevê também dano sexual, moral e patrimonial.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nRestringe a violência à \"unidade familiar\" (quando a Lei também abrange a unidade doméstica e a relação íntima de afeto) e ao resultado \"sofrimento físico e/ou emocional\", omitindo sexual, moral e patrimonial.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\nRestringe indevidamente o sujeito passivo a \"a esposa\" e o resultado a \"dor física, emocional e dano moral\", deixando de fora o dano patrimonial e o sofrimento sexual.\r\n\r\nBIZU DE PROVA:\r\nA definição do art. 5º, caput, é a mais cobrada de toda a Lei — decore-a palavra por palavra: ação OU omissão; baseada no gênero; morte, lesão, sofrimento físico, sexual OU psicológico; dano moral OU patrimonial.",
+    "fonte": "TEC Concursos — questão 3622849 — URI — ASoc (Pref Entre-Ijuís)/Pref Entre-Ijuís/2023",
+    "banca": "URI",
+    "concurso": "ASoc (Pref Entre-Ijuís)/Pref Entre-Ijuís/2023",
+    "ano": "2023",
+    "observacao_origem": "Lote-base 'Lote 1' (criado_em 2026-08-17T02:21Z). Nunca auditada juridicamente."
+  },
+  {
+    "id": 1301,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "A respeito da Lei nº 11.340, de 7 de agosto de 2006, Lei Maria da Penha, assinale a alternativa correta.",
+    "alternativas": [
+      { "ordem": 1, "texto": "São formas de violência doméstica e familiar contra a mulher, entre outras, a violência psicológica, entendida como qualquer conduta que configure calúnia, difamação ou injúria", "correta": false },
+      { "ordem": 2, "texto": "Em termos de assistência à mulher em situação de violência doméstica e famílias, o juiz determinará a inclusão da mulher em situação de violência doméstica e familiar no cadastro de programas assistenciais do governo federal, estadual e municipal, ainda que por prazo incerto", "correta": false },
+      { "ordem": 3, "texto": "O juiz assegurará à mulher em situação de violência doméstica e familiar, para preservar sua integridade física e psicológica, entre outras providências, a manutenção do vínculo trabalhista, quando necessário o afastamento do local de trabalho, por até seis meses", "correta": true },
+      { "ordem": 4, "texto": "A inquirição de mulher em situação de violência doméstica e familiar ou de testemunha de violência doméstica, quando se tratar de crime contra a mulher, obedecerá, entre outras diretrizes garantia de que, em hipótese específicas, a mulher em situação de violência doméstica e familiar, familiares e testemunhas terão contato direto com investigados ou suspeitos e pessoas a eles relacionadas", "correta": false }
+    ],
+    "gabarito": "C",
+    "explicacao_atual": "GABARITO: alternativa C\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ CORRETA:\r\nO art. 9º, §2º, II, assegura à mulher em situação de violência doméstica a manutenção do vínculo trabalhista, quando necessário o afastamento do local de trabalho, por até 6 (seis) meses.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nA conduta descrita (\"qualquer conduta que configure calúnia, difamação ou injúria\") é a definição legal de violência MORAL (art. 7º, V), não de violência psicológica (art. 7º, II) — a alternativa trocou o rótulo da modalidade.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\nO art. 9º, §1º, determina que a inclusão em programa assistencial seja feita \"por tempo certo\", e não por prazo incerto.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nAs diretrizes de inquirição do art. 10-A vão no sentido exatamente oposto: garantir que a mulher, familiares e testemunhas NÃO tenham contato direto com investigados ou suspeitos, nunca autorizar esse contato.\r\n\r\nBIZU DE PROVA:\r\nDecore o prazo de 6 meses para manutenção do vínculo trabalhista (art. 9º, §2º, II) — é um dos números mais cobrados da Lei, junto com os prazos de 48h para o juiz decidir sobre medida protetiva e 24h nas hipóteses de afastamento provisório do agressor.",
+    "fonte": "TEC Concursos — questão 2832645 — FUNDATEC — ASG (CM Sapucaia do Sul)/CM Sapucaia do Sul/2023",
+    "banca": "FUNDATEC",
+    "concurso": "ASG (CM Sapucaia do Sul)/CM Sapucaia do Sul/2023",
+    "ano": "2023",
+    "observacao_origem": "Lote-base 'Lote 1' (criado_em 2026-08-17T02:21Z). Nunca auditada juridicamente. Mesmo conteúdo (art. 9º §2º) já validado como correto na questão 134 do sub-lote 1 — baixo risco esperado, mas será auditada de forma independente."
+  },
+  {
+    "id": 1302,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "Maria é médica e é casada com Diego, que é engenheiro. Ambos são servidores concursados da Prefeitura de Agudo. O casal tem dois filhos: João, de 18 anos, e Alice, de 13 anos. Certo dia, João chegou em casa alcoolizado, pois havia passado a noite ingerindo bebida alcoólica com os amigos em uma festa. No momento, Maria estava sozinha em casa, pois Diego já havia saído para trabalhar e Alice estava na escola. Vendo o estado em que se encontrava João, Maria pediu que ele tomasse um banho frio e um café, para que pudessem conversar sobre o ocorrido. João, que estava visivelmente alterado, começou a gritar com a mãe e agredi-la com socos, tapas e chutes, empreendendo fuga da residência na sequência. Após as agressões, Maria conseguiu ligar para seu marido, tendo sido socorrida e levada ao hospital para atendimento. Com base nos fatos narrados, assinale a alternativa correta, conforme as disposições da Lei Maria da Penha.",
+    "alternativas": [
+      { "ordem": 1, "texto": "A situação narrada não configura violência doméstica, pois a relação de João e Maria é de mãe e filho.", "correta": false },
+      { "ordem": 2, "texto": "Não será aplicada a Lei Maria da Penha, pois João é adolescente, o que atrai a aplicação do Estatuto da Criança e do Adolescente.", "correta": false },
+      { "ordem": 3, "texto": "Como não se verifica situação de vulnerabilidade entre vítima e agressor, já que Maria é médica, tem trabalho estável e residência fixa, afasta-se a aplicação das disposições da Lei Maria da Penha.", "correta": false },
+      { "ordem": 4, "texto": "No caso em tela, serão aplicadas as disposições da Lei Maria da Penha, uma vez que configura violência contra a mulher em contexto doméstico e familiar.", "correta": true },
+      { "ordem": 5, "texto": "Embora seja existente o vínculo familiar entre Maria e João, o que em um primeiro momento atrai a aplicação da Lei Maria da Penha, no caso em tela não se pode falar em aplicação da referida lei, ao passo que Maria é mãe de João e, estando em uma posição hierárquica superior em relação ao filho, afasta o requisito da situação de vulnerabilidade da vítima.", "correta": false }
+    ],
+    "gabarito": "D",
+    "explicacao_atual": "GABARITO: alternativa D\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ CORRETA:\r\nA agressão de João contra a mãe, Maria, configura violência doméstica em contexto familiar (art. 5º, II — comunidade formada por indivíduos aparentados por laços naturais). A Lei Maria da Penha se aplica sempre que a vítima é mulher e há relação doméstica, familiar ou afetiva com o agressor, independentemente de quem seja este.\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ INCORRETA:\r\nA relação de mãe e filho se enquadra expressamente no \"âmbito da família\" do art. 5º, II — há sim violência doméstica.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\nJoão já é maior de idade (18 anos), de forma que o Estatuto da Criança e do Adolescente não se aplica a ele como autor do fato; e ainda que fosse adolescente, isso não afastaria a proteção da mãe pela Lei Maria da Penha.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nA Lei não exige vulnerabilidade econômica ou social da vítima — o art. 2º garante proteção a toda mulher, independentemente de classe, raça, renda, cultura ou nível educacional.\r\n\r\nPOR QUE A ALTERNATIVA E ESTÁ INCORRETA:\r\nNão existe essa exceção por \"hierarquia\" na relação — o vínculo de parentesco (mãe e filho) já basta para a incidência da Lei, independentemente de quem detenha mais autoridade prática na relação.\r\n\r\nBIZU DE PROVA:\r\nA Lei Maria da Penha protege a mulher em qualquer relação familiar de parentesco (mãe, filha, irmã, sogra, nora etc.), não apenas entre cônjuges ou companheiros — a vítima pode ser agredida por filho, pai, irmão etc.",
+    "fonte": "TEC Concursos — questão 2828648 — FCC — AJ (TJ BA)/TJ BA/Apoio Especializado/Pedagogo/2023",
+    "banca": "FCC",
+    "concurso": "AJ (TJ BA)/TJ BA/Apoio Especializado/Pedagogo/2023",
+    "ano": "2023",
+    "observacao_origem": "Lote-base 'Lote 1' (criado_em 2026-08-17T02:21Z). Nunca auditada juridicamente. Nota de coerência (não jurídica): enunciado descreve o marido de Maria como 'Diego, engenheiro', mas o texto da explicação nunca o nomeia incorretamente — sem resíduo detectado aqui, ao contrário do padrão visto na questão 739 do sub-lote 1."
+  },
+  {
+    "id": 1303,
+    "materia": "Legislação Específica",
+    "assunto": "Lei Maria da Penha",
+    "enunciado": "De acordo com o disposto na Lei Maria da Penha (Lei nº 11.340/2006), a proteção e os direitos das mulheres em situação de violência doméstica e familiar incluem:",
+    "alternativas": [
+      { "ordem": 1, "texto": "A criminalização da violência física, psicológica, sexual, patrimonial e moral, bem como o estabelecimento de medidas de prevenção e assistência às vítimas.", "correta": true },
+      { "ordem": 2, "texto": "A obrigatoriedade do comparecimento da vítima à audiência de conciliação com o agressor, visando à reconciliação e à resolução pacífica do conflito.", "correta": false },
+      { "ordem": 3, "texto": "A suspensão temporária e imediata das procurações conferidas pelo agressor à ofendida.", "correta": false },
+      { "ordem": 4, "texto": "A aplicação de penas alternativas aos agressores, visando à sua reintegração social, mesmo em casos de reincidência.", "correta": false }
+    ],
+    "gabarito": "A",
+    "explicacao_atual": "GABARITO: alternativa A\r\n\r\nPOR QUE A ALTERNATIVA A ESTÁ CORRETA:\r\nA alternativa sintetiza corretamente as 5 formas de violência criminalizadas pelo art. 7º (física, psicológica, sexual, patrimonial e moral) somadas às medidas de prevenção (art. 8º) e assistência às vítimas (arts. 9º e seguintes) previstas na Lei.\r\n\r\nPOR QUE A ALTERNATIVA B ESTÁ INCORRETA:\r\nNão existe obrigatoriedade de comparecimento a audiência de conciliação. Pelo contrário: o art. 41 afasta a aplicação da Lei 9.099/95 (onde existiriam institutos conciliatórios) justamente para não banalizar a violência doméstica como conflito de menor potencial ofensivo.\r\n\r\nPOR QUE A ALTERNATIVA C ESTÁ INCORRETA:\r\nNão há previsão de suspensão automática de procurações conferidas PELO agressor À ofendida. O que a Lei prevê (art. 24, III), como medida de proteção patrimonial, é o inverso: a suspensão de procurações conferidas PELA ofendida AO agressor.\r\n\r\nPOR QUE A ALTERNATIVA D ESTÁ INCORRETA:\r\nO art. 17 veda expressamente a aplicação de penas de cesta básica ou de outras de prestação pecuniária, bem como a substituição de pena que implique o pagamento isolado de multa — não há incentivo a penas alternativas para reincidentes.\r\n\r\nBIZU DE PROVA:\r\nCuidado com a troca de sujeito na procuração — \"procuração da ofendida ao agressor\" é suspensa por lei; \"procuração do agressor à ofendida\" não tem previsão nenhuma. Leia com atenção quem é o outorgante.",
+    "fonte": "TEC Concursos — questão 2769196 — INSTITUTO MAIS — GCM (Pref Santos)/Pref Santos/2023",
+    "banca": "INSTITUTO MAIS",
+    "concurso": "GCM (Pref Santos)/Pref Santos/2023",
+    "ano": "2023",
+    "observacao_origem": "Lote-base 'Lote 1' (criado_em 2026-08-17T02:21Z). Nunca auditada juridicamente. Explicação cita 'apenas 5 formas de violência' — mesmo ponto de atenção da questão 1293 quanto à violência vicária (Lei 15.384/2026). Também cita art. 24, III — checar se este artigo foi tocado por leis recentes."
+  }
+]
