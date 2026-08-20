@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 
 const supabase = createClient();
@@ -19,7 +20,7 @@ type Concurso = {
 
 const concursos: Concurso[] = [
   {
-    id: "gm-alvorada",
+    id: "86d06052-d21d-4e2e-b7ef-d6cfab169185",
     carreira: "Guarda Municipal",
     concurso: "Guarda Municipal de Alvorada",
     cargo: "Guarda Municipal",
@@ -30,18 +31,7 @@ const concursos: Concurso[] = [
     previsao: true,
   },
   {
-    id: "pc-parana",
-    carreira: "Polícia Civil",
-    concurso: "Polícia Civil do Paraná",
-    cargo: "Agente de Polícia Judiciária",
-    banca: "FGV",
-    dataProva: "2026-10-11",
-    dataExibicao: "11/10/2026",
-    imagem: "/cursos/pc-parana.png",
-    previsao: false,
-  },
-  {
-    id: "brigada-militar-rs",
+    id: "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
     carreira: "Polícia Militar",
     concurso: "Brigada Militar do Rio Grande do Sul",
     cargo: "Soldado de Primeira Classe",
@@ -54,7 +44,8 @@ const concursos: Concurso[] = [
 ];
 
 export default function Configuracao() {
-  const [selecionados, setSelecionados] = useState<string[]>([]);
+  const router = useRouter();
+  const [cursoSelecionado, setCursoSelecionado] = useState<string | null>(null);
   const [horasDiarias, setHorasDiarias] = useState("");
   const [mensagem, setMensagem] = useState("");
   const [carregando, setCarregando] = useState(false);
@@ -75,22 +66,15 @@ export default function Configuracao() {
 
   function selecionarConcurso(id: string) {
     setMensagem("");
-
-    setSelecionados((atuais) => {
-      if (atuais.includes(id)) {
-        return atuais.filter((item) => item !== id);
-      }
-
-      return [...atuais, id];
-    });
+    setCursoSelecionado(id);
   }
 
   async function salvarObjetivos(evento: FormEvent<HTMLFormElement>) {
     evento.preventDefault();
     setMensagem("");
 
-    if (selecionados.length === 0) {
-      setMensagem("Selecione pelo menos um concurso.");
+    if (!cursoSelecionado) {
+      setMensagem("Selecione um concurso.");
       return;
     }
 
@@ -108,43 +92,21 @@ export default function Configuracao() {
       return;
     }
 
-    const objetivosSelecionados = concursos
-      .filter((concurso) => selecionados.includes(concurso.id))
-      .map((concurso) => ({
-        usuario_id: user.id,
-        carreira: concurso.carreira,
-        concurso: concurso.concurso,
-        cargo: concurso.cargo,
-        banca: concurso.banca,
-        data_prova: concurso.dataProva,
-        horas_diarias: Number(horasDiarias),
-      }));
+    const { error } = await supabase.rpc("configurar_curso_usuario", {
+      p_curso_id: cursoSelecionado,
+      p_horas_diarias: Number(horasDiarias),
+    });
 
-    const { error: erroExclusao } = await supabase
-      .from("objetivos")
-      .delete()
-      .eq("usuario_id", user.id);
-
-    if (erroExclusao) {
-      setMensagem(`Erro ao atualizar objetivos: ${erroExclusao.message}`);
+    if (error) {
+      setMensagem(`Erro ao salvar: ${error.message}`);
       setCarregando(false);
       return;
     }
 
-    const { error: erroSalvamento } = await supabase
-      .from("objetivos")
-      .insert(objetivosSelecionados);
-
-    if (erroSalvamento) {
-      setMensagem(`Erro ao salvar: ${erroSalvamento.message}`);
-      setCarregando(false);
-      return;
-    }
-
-    setMensagem("Concursos salvos com sucesso!");
+    setMensagem("Concurso configurado com sucesso!");
 
     setTimeout(() => {
-      window.location.replace("/painel");
+      router.push("/cronograma");
     }, 800);
   }
 
@@ -156,9 +118,9 @@ export default function Configuracao() {
         </a>
 
         <p>CONFIGURAÇÃO DO PLANO</p>
-        <h1>ESCOLHA SEUS CONCURSOS</h1>
+        <h1>ESCOLHA SEU CONCURSO</h1>
         <span>
-          Você pode selecionar um ou mais concursos para o seu plano.
+          Escolha o concurso do seu plano de estudos.
         </span>
       </header>
 
@@ -167,15 +129,12 @@ export default function Configuracao() {
           <div className="course-section-title">
             <h2>CURSOS DISPONÍVEIS</h2>
 
-            <span>
-              {selecionados.length} selecionado
-              {selecionados.length === 1 ? "" : "s"}
-            </span>
+            <span>{cursoSelecionado ? "1 selecionado" : "Nenhum selecionado"}</span>
           </div>
 
           <div className="course-grid">
             {concursos.map((concurso) => {
-              const selecionado = selecionados.includes(concurso.id);
+              const selecionado = concurso.id === cursoSelecionado;
 
               return (
                 <button

@@ -86,6 +86,7 @@ type MateriaCurso = {
   id: number;
   materia_id: number | null;
   nome: string;
+  peso: number | null;
   prioridade_estrategica: number | null;
   frequencia_historica: number | null;
   evidencias: Evidencia[];
@@ -213,12 +214,44 @@ function calcularBonusEvidencias(evidencias: Evidencia[]) {
   return bonus;
 }
 
+// Limites do fator de peso da matéria (Score Papiro Beta) — aprovados
+// explicitamente. Mesmo a matéria mais leve do curso nunca cai abaixo de
+// 0,7× a base (nunca desaparece do cronograma); mesmo a mais pesada nunca
+// passa de 1,7× (nunca domina de forma desproporcional a curadoria de
+// conteúdo, que continua entrando por cima via prioridade_estrategica).
+const FATOR_PESO_MINIMO = 0.7;
+const FATOR_PESO_MAXIMO = 1.7;
+
 /**
- * Prioridade = prioridade_estrategica (ou valor neutro, se nula) + bônus por
- * presença de evidência. frequencia_historica não entra aqui — só desempata.
+ * Normaliza curso_materias.peso pela média de peso do curso (pesoMedioCurso),
+ * produzindo um multiplicador em torno de 1.0 para uma matéria de peso médio,
+ * >1 para matérias mais pesadas que a média, <1 para mais leves — sempre
+ * dentro de [FATOR_PESO_MINIMO, FATOR_PESO_MAXIMO]. peso nulo (matéria ainda
+ * sem esse dado) ou pesoMedioCurso indisponível (nenhuma matéria do curso tem
+ * peso cadastrado) sempre resulta em fator neutro (1), nunca em erro ou NaN.
  */
-function calcularPrioridadeItem(base: number | null, evidencias: Evidencia[]) {
-  const prioridadeBase = base ?? PRIORIDADE_NEUTRA;
+function calcularFatorPesoMateria(peso: number | null, pesoMedioCurso: number | null) {
+  if (peso == null || pesoMedioCurso == null || pesoMedioCurso <= 0) return 1;
+
+  const fator = peso / pesoMedioCurso;
+
+  return Math.min(FATOR_PESO_MAXIMO, Math.max(FATOR_PESO_MINIMO, fator));
+}
+
+/**
+ * Prioridade = (prioridade_estrategica ou valor neutro, se nula) ×
+ * fatorPesoMateria (Score Papiro Beta — peso da matéria, ver
+ * calcularFatorPesoMateria) + bônus por presença de evidência. O bônus de
+ * evidência é somado DEPOIS da multiplicação, não multiplicado por ela — só a
+ * base estratégica é escalada pelo peso da matéria. frequencia_historica não
+ * entra aqui — só desempata.
+ */
+function calcularPrioridadeItem(
+  base: number | null,
+  evidencias: Evidencia[],
+  fatorPesoMateria: number
+) {
+  const prioridadeBase = (base ?? PRIORIDADE_NEUTRA) * fatorPesoMateria;
   return prioridadeBase + calcularBonusEvidencias(evidencias);
 }
 
@@ -536,6 +569,7 @@ export default function Cronograma() {
           id: materia.id,
           materia_id: materia.materia_id,
           nome: materia.nome,
+          peso: materia.peso,
           prioridade_estrategica: materia.prioridade_estrategica,
           frequencia_historica: materia.frequencia_historica,
           evidencias: evidenciasPorMateria.get(materia.id) ?? [],
@@ -675,21 +709,53 @@ export default function Cronograma() {
   }, [revisoes]);
 
   /**
+   * Peso médio do curso (Score Papiro Beta) — usa só os dados de curso_materias
+   * já carregados em materiasCurso (nenhuma consulta nova ao Supabase).
+   * materiasCurso já vem filtrada por relevante_para_preparacao = true desde a
+   * própria query (linha da busca de curso_materias), então não é preciso
+   * refiltrar aqui. Ignora matérias com peso nulo ou <= 0 no cálculo da média,
+   * para não distorcer o valor de referência. Se nenhuma matéria do curso tiver
+   * peso cadastrado, retorna null — calcularFatorPesoMateria trata esse caso
+   * como fallback seguro (fator neutro 1), nunca como erro.
+   */
+  const pesoMedioCurso = useMemo(() => {
+    const pesosValidos = materiasCurso
+      .map((materia) => materia.peso)
+      .filter((peso): peso is number => peso != null && peso > 0);
+
+    if (pesosValidos.length === 0) return null;
+
+    return pesosValidos.reduce((soma, peso) => soma + peso, 0) / pesosValidos.length;
+  }, [materiasCurso]);
+
+  /**
    * Um item por conteúdo (curso_conteudos), quando a matéria já tiver curadoria.
    * Fallback: um único item genérico por matéria, enquanto ela não tiver
    * curso_conteudos relevantes — nunca remove a matéria do cronograma por
    * falta de curadoria, e nunca substitui uma matéria por outra.
    *
    * Para itens de conteúdo, a prioridade estratégica e o bônus de evidências
-   * (calcularPrioridadeItem, intocada) recebem, por cima, os bônus pessoais de
-   * desempenho/erro/revisão daquele assunto — todos valem 0 sem histórico, então
-   * um aluno sem histórico cai exatamente na fórmula que já existia. O fallback
-   * de matéria genérica não tem um assunto único, então não recebe esses bônus.
+   * (calcularPrioridadeItem, ver Score Papiro Beta abaixo) recebem, por cima,
+   * os bônus pessoais de desempenho/erro/revisão daquele assunto — todos valem
+   * 0 sem histórico, então um aluno sem histórico cai exatamente na fórmula que
+   * já existia. O fallback de matéria genérica não tem um assunto único, então
+   * não recebe esses bônus.
+   *
+   * Score Papiro Beta: cada matéria tem seu fatorPesoMateria (curso_materias.peso
+   * normalizado por pesoMedioCurso, ver calcularFatorPesoMateria) calculado uma
+   * vez por matéria e aplicado a todos os seus itens — tanto aos conteúdos
+   * quanto ao fallback de matéria genérica, já que as duas formas usam
+   * calcularPrioridadeItem. Isso é o que faz o GM Alvorada (hoje 100% no
+   * caminho "materia_generica", sem curso_conteudos) sair do empate atual: sem
+   * curadoria de conteúdo, o peso da matéria passa a ser o único critério de
+   * ordenação disponível.
    */
   const itensPriorizados = useMemo<ItemPriorizado[]>(() => {
     const itens: ItemPriorizado[] = [];
 
     materiasCurso.forEach((materia) => {
+      const fatorPesoMateria = calcularFatorPesoMateria(materia.peso, pesoMedioCurso);
+
       if (materia.conteudos.length > 0) {
         materia.conteudos.forEach((conteudo) => {
           const desempenho = desempenhoPorAssunto.get(conteudo.assunto_id) ?? {
@@ -699,7 +765,7 @@ export default function Cronograma() {
           };
 
           const prioridade =
-            calcularPrioridadeItem(conteudo.prioridade_estrategica, conteudo.evidencias) +
+            calcularPrioridadeItem(conteudo.prioridade_estrategica, conteudo.evidencias, fatorPesoMateria) +
             calcularBonusDesempenho(desempenho.totalRespondidas, desempenho.acertos) +
             calcularBonusErroNaoCorrigido(desempenho.errosNaoCorrigidos) +
             calcularBonusRevisao(statusRevisaoPorAssunto.get(conteudo.assunto_id) ?? null);
@@ -721,7 +787,8 @@ export default function Cronograma() {
       } else {
         const prioridade = calcularPrioridadeItem(
           materia.prioridade_estrategica,
-          materia.evidencias
+          materia.evidencias,
+          fatorPesoMateria
         );
 
         itens.push({
@@ -744,7 +811,7 @@ export default function Cronograma() {
       if (b.prioridade !== a.prioridade) return b.prioridade - a.prioridade;
       return Number(b.frequenciaHistorica ?? 0) - Number(a.frequenciaHistorica ?? 0);
     });
-  }, [materiasCurso, desempenhoPorAssunto, statusRevisaoPorAssunto]);
+  }, [materiasCurso, desempenhoPorAssunto, statusRevisaoPorAssunto, pesoMedioCurso]);
 
   /**
    * Fila global em rodízio ponderado, em dois níveis:

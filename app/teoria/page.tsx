@@ -560,8 +560,9 @@ export default function Teoria() {
 
         {estadoAula === "indisponivel" && (
           <div>
-            <h2>Aula ainda não disponível</h2>
-            <p>O conteúdo teórico desta missão ainda não foi publicado. Você já pode seguir para as questões.</p>
+            <h2>Conteúdo em preparação</h2>
+            <p>Este conteúdo ainda está em preparação e não foi liberado para estudo.</p>
+            <Link className="answer-submit" href="/cronograma">Voltar ao cronograma</Link>
           </div>
         )}
 
@@ -654,7 +655,11 @@ export default function Teoria() {
       </section>
       )}
 
-      {estadoAula !== "disponivel" && (
+      {/* "indisponivel" nunca oferece este atalho — ver bloco acima, que já
+          resolve esse estado com sua própria saída segura ("Voltar ao
+          cronograma"). Pular direto para as questões sem aula publicada
+          quebraria o método pedagógico oficial (teoria antes de questões). */}
+      {(estadoAula === "carregando" || estadoAula === "erro") && (
         <Link
           className="answer-submit"
           href={montarLinkMissao({
