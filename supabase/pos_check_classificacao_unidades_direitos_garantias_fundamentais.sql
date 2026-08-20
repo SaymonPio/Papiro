@@ -71,7 +71,7 @@ where u.curso_conteudo_id = 47
 --    operação (comparação manual com os totais já conhecidos antes da
 --    aplicação: 93 curso_conteudos, 97+1=98 unidades_pedagogicas no total
 --    do sistema após a curadoria de Direitos e Garantias Fundamentais,
---    870 questões, 4330 alternativas).
+--    915 questões, 4330 alternativas).
 select
   (select count(*) from public.curso_conteudos) as total_conteudos,
   (select count(*) from public.unidades_pedagogicas) as total_unidades_sistema,
