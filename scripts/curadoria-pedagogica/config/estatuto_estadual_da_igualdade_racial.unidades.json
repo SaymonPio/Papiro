@@ -1,0 +1,31 @@
+{
+  "_nota": "Estatuto Estadual da Igualdade Racial, Lei Estadual RS no 13.694/2011 (curso_conteudo_id 68). Decisao aprovada: MANTER 1 UNICA UNIDADE — mesmo criterio dos conteudos anteriores (com 10 questoes, das quais 2 pares sao duplicatas, a massa util fica bem abaixo do piso de 7-8 ja usado como referencia para dividir). Q132/Q852 e Q136/Q851 sao duplicatas confirmadas — ambas classificadas por decisao explicita do usuario, documentadas em duplicatas_conhecidas no mapa; nenhuma desativada, nenhum gabarito alterado. Correcao juridica feita durante a auditoria: o art. 14 preve participacao FACULTADA (nao obrigatoria) dos mestres tradicionais de capoeira — a falsidade de Q132/Q852 (item III) decorre exclusivamente da troca 'capoeira' por 'Kuduro', nao da modalidade de participacao; e a Q367 (assinale a INCORRETA) seleciona corretamente a alternativa que afirma 'obrigatoria' (contrariando o texto real 'facultada') como a resposta certa. Nenhum erro de gabarito encontrado. A alternativa 5 da Q367 contem residuo de raspagem de dados (texto sobre o Decreto Estadual no 43.245/2004, Regulamento Disciplinar da Brigada Militar, colado ao final) — documentado aqui, nao editado; saneamento textual fica para fluxo separado.",
+  "curso_conteudo_id": 68,
+  "nome_assunto": "Estatuto Estadual da Igualdade Racial",
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "f0f6bae6-df70-450a-b4ee-3d9747962c2e",
+      "ordem": 1,
+      "titulo": "Estatuto Estadual da Igualdade Racial",
+      "escopo": "Estatuto Estadual da Igualdade Racial (Lei Estadual RS nº 13.694/2011): objeto da lei e definição de discriminação racial; mercado de trabalho (acesso a cargos públicos, iniciativa privada, formação profissional, emprego e geração de renda); saúde da população negra e de remanescentes de quilombos; educação e cultura (quesito raça em registros administrativos, datas comemorativas cívicas, capoeira, acesso ao ensino gratuito e a atividades esportivas, diversidade racial em debates, literatura negra, cultura Hip-Hop, pesquisa em pós-graduação); e campanhas publicitárias do Poder Público.",
+      "artigos_esperados": [
+        "art. 1º, caput", "art. 1º, §1º",
+        "art. 4º, caput",
+        "art. 5º, parágrafo único",
+        "art. 7º, II",
+        "art. 10, caput",
+        "art. 11, caput",
+        "art. 12, caput",
+        "art. 13, caput",
+        "art. 14, caput",
+        "art. 15, caput",
+        "art. 16, caput",
+        "art. 17, caput", "art. 17, parágrafo único",
+        "art. 18, caput",
+        "art. 20, caput"
+      ]
+    }
+  ]
+}
