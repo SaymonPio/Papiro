@@ -1,0 +1,18 @@
+{
+  "_nota": "Responsabilidade civil do Estado (curso_conteudo_id 61). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id d6f03d69-8943-4867-a2af-e37482d4ca99) — 3 questoes, unico dispositivo (CF art. 37, §6o), muito abaixo do piso de 7-8. Todas as 3 questoes mapeadas ao mesmo paragrafo: 'As pessoas juridicas de direito publico e as de direito privado prestadoras de servicos publicos responderao pelos danos que seus agentes, nessa qualidade, causarem a terceiros, assegurado o direito de regresso contra o responsavel nos casos de dolo ou culpa.' Q214 reforcada pelo Tema 940 de repercussao geral do STF (RE 1.027.633/2019): a acao indenizatoria pelos danos causados pelo agente publico, nessa qualidade, deve ser ajuizada contra o Estado ou contra a pessoa juridica de direito privado prestadora de servico publico; o agente causador e parte ilegitima nessa acao; permanece assegurado o direito de regresso contra o responsavel nos casos de dolo ou culpa. Tema 940 documentado apenas em texto (escopo/_nota/mapa) — nenhuma entrada jurisprudencial ficticia criada em artigos_esperados. Q215: redacao ajustada para precisao — 'na responsabilidade objetiva, dispensa-se a demonstracao de dolo ou culpa do agente, devendo existir dano e nexo causal com a atuacao estatal juridicamente imputavel', sem acrescentar requisitos que a questao nao testa. Unidade NAO ampliada para hipoteses especiais de responsabilidade por omissao, custodia estatal ou excludentes, pois nenhuma das 3 questoes cobre esses temas. SOBREPOSICAO: verificado contra Constituicao Federal de 1988 (id 57, cobre art. 37 caput/I/II/III/V/§1o/§8o/§11/§13/§16/XII) e Direito Administrativo (id 58, cobre art. 37 caput/III) — nenhum dos dois ja classifica o §6o. Sem sobreposicao encontrada.",
+  "curso_conteudo_id": 61,
+  "nome_assunto": "Responsabilidade civil do Estado",
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "d6f03d69-8943-4867-a2af-e37482d4ca99",
+      "ordem": 1,
+      "titulo": "Responsabilidade civil do Estado",
+      "escopo": "Responsabilidade civil do Estado (Constituição Federal, art. 37, §6º): natureza objetiva da responsabilidade das pessoas jurídicas de direito público e das pessoas jurídicas de direito privado prestadoras de serviços públicos pelos danos causados por seus agentes, nessa qualidade, a terceiros; desnecessidade de prova de dolo ou culpa do agente na relação entre vítima e pessoa jurídica, exigidos dano e nexo causal com a atuação estatal; e direito de regresso contra o agente responsável nos casos de dolo ou culpa, conforme o Tema 940/STF (RE 1.027.633).",
+      "artigos_esperados": [
+        "art. 37, §6º"
+      ]
+    }
+  ]
+}

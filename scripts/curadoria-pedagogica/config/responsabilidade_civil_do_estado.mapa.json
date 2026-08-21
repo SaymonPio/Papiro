@@ -1,0 +1,11 @@
+{
+  "_nota": "Responsabilidade civil do Estado (curso_conteudo_id 61). 1 unica unidade, reaproveitando a unidade placeholder ja existente (id d6f03d69-8943-4867-a2af-e37482d4ca99) — nenhuma multiunidade possivel. Nenhuma duplicata, nenhuma exclusao.",
+  "assunto_id": 76,
+  "total_candidatas_ativas": 3,
+  "questoes_excluidas": [],
+  "vinculos": [
+    { "questao_id": 213, "unidade_id": "d6f03d69-8943-4867-a2af-e37482d4ca99", "ordem_unidade": 1, "tema": "Natureza objetiva da responsabilidade estatal", "justificativa": "Gabarito: 'Objetiva' — responsabilidade civil das pessoas juridicas de direito publico perante terceiros, CF art. 37, §6o. Distratores sem correspondencia (subjetiva exclusivamente, inexistente, penal, contratual obrigatoriamente).", "confianca": "alta" },
+    { "questao_id": 214, "unidade_id": "d6f03d69-8943-4867-a2af-e37482d4ca99", "ordem_unidade": 1, "tema": "Ação regressiva contra o agente — dolo ou culpa", "justificativa": "Gabarito: 'Dolo ou culpa do agente' — CF art. 37, §6o ('assegurado o direito de regresso contra o responsavel nos casos de dolo ou culpa'), reforcado pelo Tema 940 de repercussao geral do STF (RE 1.027.633/2019): a acao indenizatoria pelos danos causados pelo agente publico, nessa qualidade, deve ser ajuizada contra o Estado ou contra a pessoa juridica de direito privado prestadora de servico publico; o agente causador e parte ilegitima nessa acao; permanece assegurado o direito de regresso contra o responsavel nos casos de dolo ou culpa. Distratores sem correspondencia (responsabilidade objetiva do agente, apenas dano moral, condenacao criminal obrigatoria, autorizacao legislativa especifica).", "confianca": "alta" },
+    { "questao_id": 215, "unidade_id": "d6f03d69-8943-4867-a2af-e37482d4ca99", "ordem_unidade": 1, "tema": "Elementos da responsabilidade objetiva", "justificativa": "Gabarito: 'Dano e nexo causal com a atuacao estatal' — na responsabilidade objetiva (CF art. 37, §6o), dispensa-se a demonstracao de dolo ou culpa do agente, devendo existir dano e nexo causal com a atuacao estatal juridicamente imputavel. Distratores sem correspondencia (dolo do agente obrigatoriamente, culpa grave do Estado sempre, condenacao criminal do servidor, enriquecimento ilicito).", "confianca": "alta" }
+  ]
+}
