@@ -1,0 +1,16 @@
+{
+  "_nota": "Constituicao Federal de 1988 (curso_conteudo_id 57). Decisao aprovada: MANTER 1 UNICA UNIDADE — mesmo motivo da Lei de Drogas (massa insuficiente em qualquer divisao tematica coerente: os 4 blocos encontrados na auditoria tem 3, 4, 2 e 5 questoes, todos abaixo do minimo ja aceito de 7-8). Ver relatorios/relatorio_auditoria_constituicao_federal_de_1988.json para a auditoria completa.",
+  "curso_conteudo_id": 57,
+  "nome_assunto": "Constituição Federal de 1988",
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "682804b0-2762-4aff-87f9-d7a5a81757c2",
+      "ordem": 1,
+      "titulo": "Constituição Federal de 1988",
+      "escopo": "Constituição Federal de 1988: princípios fundamentais da República (Título I — fundamentos do Estado Democrático de Direito, separação e harmonia entre os Poderes); organização do Estado (poder constituinte decorrente, competências privativas da União); nacionalidade (art. 12 — brasileiro nato e naturalizado); e administração pública (arts. 37 e 38 — princípios expressos, regras de investidura e servidores públicos, incluindo o exercício de mandato eletivo).",
+      "artigos_esperados": ["art. 1º", "art. 2º", "art. 12", "art. 22", "art. 37", "art. 38"]
+    }
+  ]
+}
