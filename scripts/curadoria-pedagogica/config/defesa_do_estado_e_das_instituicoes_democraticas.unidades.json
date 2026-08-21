@@ -1,0 +1,25 @@
+{
+  "_nota": "Defesa do Estado e das Instituicoes Democraticas (curso_conteudo_id 48). Decisao aprovada: MANTER 1 UNICA UNIDADE — os 4 grupos tematicos (Conselho da Republica/Conselho de Defesa Nacional, estado de defesa/sitio, Forcas Armadas, seguranca publica) tem 1, 3, 1 e 1 questoes, bem abaixo do piso de 7-8 ja usado como referencia. Todos os 19 dispositivos de artigos_esperados sao da Constituicao Federal (sem prefixo, por compatibilidade com o parser de supabase/functions/gerar-aula/escopo.mjs). CORRECAO CONSTITUCIONAL FEITA NA REVISAO: arts. 89-91 (Conselho da Republica e Conselho de Defesa Nacional) NAO pertencem ao Titulo V — estao no Titulo IV (Organizacao dos Poderes), Capitulo II (Poder Executivo). O Titulo V (Da Defesa do Estado e das Instituicoes Democraticas) comeca no art. 136. Q654 permanece neste conteudo por relacao pedagogica com a defesa institucional, mas sua fonte normativa (arts. 89-91) esta documentada como fora do Titulo V. Nao se afirma cobertura dos arts. 139-141 pois nenhuma das 6 questoes os cobre efetivamente. SOBREPOSICAO: Q297 (art. 144, caput) usa a mesma base normativa ja coberta no curso_conteudo_id 49 (Seguranca publica, questao 19) — nao e questao duplicada, mantida neste conteudo por decisao do usuario, nenhuma movimentacao/exclusao. Verificado tambem que nao ha sobreposicao com o curso_conteudo_id 57 (Constituicao Federal de 1988), que cobre arts. 1o,2o,12,22,25,37,38,39,40 — nenhum dos quais coincide com os arts. 89-144 testados aqui.",
+  "curso_conteudo_id": 48,
+  "nome_assunto": "Defesa do Estado e das Instituições Democráticas",
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "ecdb1d62-ef44-4407-b899-85911402bc90",
+      "ordem": 1,
+      "titulo": "Defesa do Estado e das Instituições Democráticas",
+      "escopo": "Defesa do Estado e das Instituições Democráticas na Constituição Federal: Conselho da República e Conselho de Defesa Nacional, como órgãos constitucionais de consulta do Presidente da República relacionados à defesa institucional (arts. 89-91); estado de defesa e estado de sítio, com seus pressupostos, procedimento, prazos, medidas coercitivas e garantias efetivamente cobradas (arts. 136-138); Forças Armadas, incluindo restrições constitucionais aos militares e serviço militar obrigatório (arts. 142-143); e segurança pública (art. 144, caput), tema também coberto no conteúdo específico Segurança pública.",
+      "artigos_esperados": [
+        "art. 90, I", "art. 90, II", "art. 91, §1º, II",
+        "art. 136, caput", "art. 136, §1º, I, \"a\"", "art. 136, §2º",
+        "art. 136, §3º, I", "art. 136, §3º, IV", "art. 136, §4º",
+        "art. 137, I", "art. 137, parágrafo único",
+        "art. 138, caput", "art. 138, §2º",
+        "art. 142, §2º", "art. 142, §3º, IV", "art. 142, §3º, V",
+        "art. 143, §1º", "art. 143, §2º",
+        "art. 144, caput"
+      ]
+    }
+  ]
+}
