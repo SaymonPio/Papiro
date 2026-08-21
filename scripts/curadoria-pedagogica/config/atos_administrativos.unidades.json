@@ -1,0 +1,16 @@
+{
+  "_nota": "Atos administrativos (curso_conteudo_id 54). Decisao aprovada: MANTER 1 UNICA UNIDADE — os 4 grupos tematicos encontrados na auditoria (requisitos/elementos, atributos, validade/eficacia/efetividade, anulacao/revogacao/convalidacao) tem 1, 3, 1 e 3 questoes respectivamente, bem abaixo do piso de 7-8 ja usado como referencia. Conteudo predominantemente doutrinario (Hely Lopes Meirelles para requisitos; classificacao usual de atributos) — artigos_esperados contem SOMENTE os 3 dispositivos legais efetivamente cobrados (art. 37 caput CF; arts. 53 e 55 da Lei 9.784/1999), sem inventar artigo para conteudo puramente doutrinario. Sumula 473 do STF (autotutela, testada na Q714) e mencionada apenas na justificativa do mapa e no escopo — sumula nao e dispositivo legal, nao entra em artigos_esperados. Q646 (validade/eficacia/publicidade) tem redacao pedagogica cuidadosa no escopo para nao afirmar que toda publicidade/publicacao e requisito universal de validade de todo ato administrativo.",
+  "curso_conteudo_id": 54,
+  "nome_assunto": "Atos administrativos",
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "85323ce5-772b-4bf1-bc32-a79e2316158b",
+      "ordem": 1,
+      "titulo": "Atos administrativos",
+      "escopo": "Atos administrativos: requisitos/elementos segundo a doutrina de Hely Lopes Meirelles (competência, finalidade, forma, motivo e objeto); atributos (presunção de legitimidade, imperatividade, autoexecutoriedade, coercibilidade/exigibilidade); a distinção doutrinária entre validade, eficácia e efetividade e o princípio constitucional da publicidade administrativa (art. 37, caput) — quando a publicidade/divulgação for juridicamente exigida para que determinado ato produza efeitos externos, sua ausência pode afetar sua eficácia, sem confundir publicidade com requisito universal de validade de todo ato administrativo; e extinção dos atos administrativos — anulação e revogação por autotutela administrativa (art. 53, Lei nº 9.784/1999, e Súmula 473 do STF) e convalidação de defeitos sanáveis (art. 55, Lei nº 9.784/1999).",
+      "artigos_esperados": ["art. 37, caput", "art. 53", "art. 55"]
+    }
+  ]
+}
