@@ -1,0 +1,24 @@
+{
+  "_nota": "Segurança pública (curso_conteudo_id 49). Decisao aprovada: MANTER 1 UNICA UNIDADE — as 9 questoes orbitam essencialmente um unico artigo (CF, art. 144) e seus paragrafos/incisos, sem grupos tematicos distintos para dividir. IMPORTANTE SOBRE DIPLOMAS: 15 dos 16 itens de artigos_esperados sao da Constituicao Federal (art. 144 e subdivisoes); o 16o item ('art. 126, caput') e da Constituicao do Estado do Rio Grande do Sul (testado pelo item III da Q675, que e uma questao hibrida — itens I e II sao CF, item III e CE/RS). artigos_esperados permanece SEM prefixo de diploma ('CF, '/'CE/RS, ') por compatibilidade com o parser existente em supabase/functions/gerar-aula/escopo.mjs (REGEX_ARTIGO_BASE exige que a referencia comece por 'art.'/numero — um prefixo de diploma quebraria a extracao do numero base e geraria falsos alertas de escopo no painel admin). A distincao de diploma fica registrada aqui e na justificativa da Q675 no mapa. As 9 questoes ja incorporam corretamente a Policia Penal (EC 104/2019) — nenhuma desatualizacao legislativa encontrada.",
+  "curso_conteudo_id": 49,
+  "nome_assunto": "Segurança pública",
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "7cc8a187-da9b-457d-beeb-f496ddd32580",
+      "ordem": 1,
+      "titulo": "Segurança pública",
+      "escopo": "Segurança pública na Constituição Federal (art. 144): dever do Estado e responsabilidade de todos; órgãos de segurança pública (polícia federal, rodoviária federal, ferroviária federal, polícias civis, polícias militares e corpos de bombeiros militares, polícias penais); atribuições de cada órgão; subordinação aos Governadores; guardas municipais; e jurisprudência do STF/STJ sobre o caráter não taxativo do rol de órgãos e a competência residual da polícia civil. Inclui também, pontualmente, a participação da sociedade nos Conselhos de Defesa e Segurança da Comunidade prevista na Constituição do Estado do Rio Grande do Sul (art. 126, caput) — os demais 15 dispositivos listados em artigos_esperados são da Constituição Federal; apenas o art. 126 é da Constituição Estadual.",
+      "artigos_esperados": [
+        "art. 144, caput",
+        "art. 144, I", "art. 144, II", "art. 144, III", "art. 144, IV",
+        "art. 144, V", "art. 144, VI",
+        "art. 144, §1º, II", "art. 144, §1º, IV",
+        "art. 144, §4º", "art. 144, §5º", "art. 144, §5º-A",
+        "art. 144, §6º", "art. 144, §7º", "art. 144, §8º",
+        "art. 126, caput"
+      ]
+    }
+  ]
+}
