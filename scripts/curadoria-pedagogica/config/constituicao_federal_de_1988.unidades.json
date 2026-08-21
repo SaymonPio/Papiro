@@ -10,7 +10,15 @@
       "ordem": 1,
       "titulo": "Constituição Federal de 1988",
       "escopo": "Constituição Federal de 1988: princípios fundamentais da República (Título I — fundamentos do Estado Democrático de Direito, separação e harmonia entre os Poderes); organização do Estado (poder constituinte decorrente, competências privativas da União); nacionalidade (art. 12 — brasileiro nato e naturalizado); e administração pública (arts. 37 e 38 — princípios expressos, regras de investidura e servidores públicos, incluindo o exercício de mandato eletivo).",
-      "artigos_esperados": ["art. 1º", "art. 2º", "art. 12", "art. 22", "art. 37", "art. 38"]
+      "artigos_esperados": [
+        "art. 1º, caput", "art. 1º, I", "art. 1º, II", "art. 1º, III", "art. 1º, V",
+        "art. 2º, caput", "art. 4º, VI",
+        "art. 12, I, a", "art. 12, I, b", "art. 12, I, c", "art. 12, II, a", "art. 12, II, b",
+        "art. 22, XI", "art. 25, caput",
+        "art. 37, caput", "art. 37, I", "art. 37, II", "art. 37, V", "art. 37, §1º",
+        "art. 37, §8º", "art. 37, §11", "art. 37, §13", "art. 37, §16", "art. 37, XII",
+        "art. 38, IV", "art. 39, §9º", "art. 40, §1º, II"
+      ]
     }
   ]
 }
