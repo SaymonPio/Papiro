@@ -1,0 +1,18 @@
+{
+  "_nota": "Poderes da Administracao Publica (curso_conteudo_id 59). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id 8cb82a8e-e0f4-4d46-a4a5-7443f31912a4) — 4 questoes, muito abaixo do piso de 7-8. Conteudo predominantemente doutrinario. Q207 (poder hierarquico) e Q208 (poder disciplinar) permanecem SEM dispositivo legal atribuido — fundamento puramente doutrinario, nenhum artigo inventado. Q209 (poder regulamentar): art. 84, IV, da Constituicao Federal ('expedir decretos e regulamentos para sua fiel execucao'), confirmado por verificacao literal. Q360 (abuso de poder): Lei no 4.717/1965 (Lei da Acao Popular), art. 2o, paragrafo unico — alinea 'a' define literalmente 'incompetencia' ('quando o ato nao se incluir nas atribuicoes legais do agente'); a associacao dessa hipotese com 'excesso de poder' decorre da doutrina administrativista aplicada a questao, nao do texto legal em si (o texto legal nao usa a expressao 'excesso de poder'). Alinea 'e' define literalmente 'desvio de finalidade' ('quando o agente pratica o ato visando a fim diverso daquele previsto, explicita ou implicitamente, na regra de competencia'), tambem chamado na doutrina de desvio de poder — aqui a correspondencia e direta e literal. artigos_esperados usa apenas 'art. 84' e 'art. 2o' (sem prefixo de diploma, por compatibilidade com o parser de supabase/functions/gerar-aula/escopo.mjs); documentado aqui que art. 84 e da Constituicao Federal e art. 2o e da Lei 4.717/1965. SOBREPOSICAO: verificado contra Direito Administrativo (id 58, que cobre apenas autotutela no grupo 'poderes administrativos') e Atos Administrativos (id 54) — nenhuma sobreposicao com poder hierarquico, disciplinar, regulamentar ou abuso de poder/Lei 4.717/1965 em nenhum conteudo ja classificado.",
+  "curso_conteudo_id": 59,
+  "nome_assunto": "Poderes da Administração Pública",
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "8cb82a8e-e0f4-4d46-a4a5-7443f31912a4",
+      "ordem": 1,
+      "titulo": "Poderes da Administração Pública",
+      "escopo": "Poderes da Administração Pública: poder hierárquico e poder disciplinar, tratados em sua dimensão doutrinária geral, sem dispositivo legal específico atribuído; poder regulamentar (Constituição Federal, art. 84, IV — expedição de decretos e regulamentos para fiel execução da lei); e abuso de poder em suas duas modalidades — incompetência, associada pela doutrina ao chamado \"excesso de poder\" (Lei nº 4.717/1965, art. 2º, parágrafo único, \"a\"), e desvio de finalidade ou desvio de poder (Lei nº 4.717/1965, art. 2º, parágrafo único, \"e\") —, como defeitos que tornam nulo o ato administrativo.",
+      "artigos_esperados": [
+        "art. 84, IV", "art. 2º, parágrafo único, \"a\"", "art. 2º, parágrafo único, \"e\""
+      ]
+    }
+  ]
+}
