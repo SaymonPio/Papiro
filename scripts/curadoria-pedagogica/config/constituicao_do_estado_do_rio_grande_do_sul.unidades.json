@@ -1,0 +1,35 @@
+{
+  "_nota": "Constituicao do Estado do Rio Grande do Sul (curso_conteudo_id 50). Decisao aprovada: MANTER 1 UNICA UNIDADE — mesmo criterio da Constituicao Federal de 1988 e da Lei de Drogas (nenhum bloco tematico atinge massa critica: os 5 grupos encontrados na auditoria tem 3, 4, 2, 4 e 1 questoes). Auditoria juridica direcionada confirmou Q357 e Q844 como OK_ATUAL (sao questoes tipo EXCETO — a alternativa-gabarito diverge do texto legal de proposito, isso e o comportamento correto, nao um erro de dados). Q39 confirmado por respaldo no art. 41 e gabarito mantido pela banca FUNDATEC. Q719 confirmado pela EC 82/2022. Q720 mantido com confianca media e nota de cautela jurisprudencial para a futura aula (doutrina do STF sobre invalidacao de foro especial para chefes de policia e real e recorrente em outros estados, mas nao localizada citacao especifica confirmando o RS no mesmo julgamento).",
+  "curso_conteudo_id": 50,
+  "nome_assunto": "Constituição do Estado do Rio Grande do Sul",
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "83636594-c69f-4de0-bf46-0e75c2ec981c",
+      "ordem": 1,
+      "titulo": "Constituição do Estado do Rio Grande do Sul",
+      "escopo": "Constituição do Estado do Rio Grande do Sul: princípios fundamentais e disposições preliminares (soberania popular, símbolos e bens do Estado, hierarquia com a Constituição Federal); administração pública (princípios expressos, Conselhos Populares, publicidade e transparência, administração direta e indireta); direitos dos servidores públicos civis; segurança pública (Brigada Militar, Polícia Civil, Corpo de Bombeiros Militar, Coordenadoria-Geral de Perícias, Polícia Penal); e regime previdenciário do servidor militar (RPPS/RS).",
+      "artigos_esperados": [
+        "art. 1º",
+        "art. 2º",
+        "art. 4º",
+        "art. 6º",
+        "art. 7º",
+        "art. 19",
+        "art. 21",
+        "art. 23",
+        "art. 29",
+        "art. 41",
+        "art. 46",
+        "art. 124",
+        "art. 125",
+        "art. 127",
+        "art. 128",
+        "art. 132",
+        "art. 133",
+        "art. 134"
+      ]
+    }
+  ]
+}
