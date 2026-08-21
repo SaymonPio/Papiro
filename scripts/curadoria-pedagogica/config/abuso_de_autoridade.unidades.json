@@ -1,0 +1,24 @@
+{
+  "_nota": "Abuso de Autoridade (curso_conteudo_id 62). Decisao aprovada: MANTER 1 UNICA UNIDADE — mesmo criterio dos conteudos anteriores (nenhum bloco tematico atinge massa critica: os 4 grupos encontrados na auditoria — elemento geral do crime, efeitos da condenacao/penas, acao penal, crimes em especie — tem 4, 2, 1 e 4 questoes, todos abaixo do piso de 7-8 ja usado como referencia). Lei 13.869/2019 recebeu o art. 15-A (violencia institucional, incluido pela Lei 14.321/2022); nenhuma das 11 questoes ativas cobra esse dispositivo, entao ele nao entra em artigos_esperados. Revisao juridica de granularidade fez 2 correcoes relevantes durante a auditoria: (1) 'perda do cargo' esta no art. 4o, III (efeitos da condenacao), nao no art. 5o (que e so a pena de suspensao do exercicio do cargo); (2) 'produzir prova contra si' e o art. 13, III, nao o art. 15 (uma alternativa da questao 713 cita 'art. 15' com descricao que na verdade corresponde ao art. 13, III — associacao equivocada, corrigida).",
+  "curso_conteudo_id": 62,
+  "nome_assunto": "Abuso de Autoridade",
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "7f7298d6-c0b8-4907-8f72-1072a0796a5f",
+      "ordem": 1,
+      "titulo": "Abuso de Autoridade",
+      "escopo": "Lei de Abuso de Autoridade (Lei nº 13.869/2019): elemento subjetivo geral do crime (finalidade específica de prejudicar, beneficiar ou por mero capricho; irrelevância da mera divergência de interpretação); ação penal pública incondicionada e ação privada subsidiária; efeitos da condenação (inabilitação e perda do cargo, condicionados à reincidência) e penas restritivas de direitos; independência das instâncias civil, administrativa e penal; e crimes em espécie (constranger preso ou detento, inovação artificiosa do local em investigação).",
+      "artigos_esperados": [
+        "art. 1º, §1º", "art. 1º, §2º",
+        "art. 3º, caput", "art. 3º, §1º", "art. 3º, §2º",
+        "art. 4º, III", "art. 4º, parágrafo único",
+        "art. 5º, II",
+        "art. 7º, caput",
+        "art. 13", "art. 13, caput", "art. 13, I", "art. 13, II", "art. 13, III",
+        "art. 23, caput"
+      ]
+    }
+  ]
+}
