@@ -1,0 +1,16 @@
+{
+  "_nota": "Direito Administrativo (curso_conteudo_id 58). Decisao aprovada: MANTER 1 UNICA UNIDADE — os 4 grupos tematicos encontrados na auditoria (principios da administracao publica, organizacao administrativa/administracao indireta, agentes publicos/provimento de cargos, poderes administrativos/autotutela) tem 3, 2, 2 e 1 questoes respectivamente, bem abaixo do piso de 7-8 ja usado como referencia. DIPLOMAS DE CADA DISPOSITIVO (documentado aqui por nao poder usar prefixo no array, por compatibilidade com o parser de supabase/functions/gerar-aula/escopo.mjs): 'art. 37, caput' e 'art. 37, III' sao da Constituicao Federal; 'art. 4º, II' e do Decreto-Lei 200/1967; 'art. 53' e da Lei 9.784/1999. SOBREPOSICOES TEMATICAS SINALIZADAS E MANTIDAS POR DECISAO DO USUARIO (nao sao questoes duplicadas, apenas mesmo instituto/artigo tambem testado em outro curso_conteudo): Q197 (autotutela) cobre o mesmo instituto ja testado no curso_conteudo_id 54 (Atos administrativos, questoes 268 e 714); Q721/Q774/Q796 usam CF art. 37 tambem parcialmente coberto pelo curso_conteudo_id 57 (Constituicao Federal de 1988), mas aqui sao cobrados como temas proprios de Direito Administrativo (principios e concurso publico), nao movidos. Q722 (empregado publico CLT) e fundamento puramente doutrinario, sem dispositivo legal atribuido. Sumula 473 do STF (autotutela, Q197) e mencionada apenas no escopo e na justificativa do mapa — sumula nao e dispositivo legal, nao entra em artigos_esperados.",
+  "curso_conteudo_id": 58,
+  "nome_assunto": "Direito Administrativo",
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "1172a885-1419-4ad8-b728-1a0c7492c133",
+      "ordem": 1,
+      "titulo": "Direito Administrativo",
+      "escopo": "Direito Administrativo: princípios expressos da Administração Pública (legalidade, publicidade, eficiência — Constituição Federal, art. 37, caput) e prazo de validade do concurso público (Constituição Federal, art. 37, III); organização administrativa — entidades da administração indireta (autarquias, empresas públicas, sociedades de economia mista e fundações públicas — Decreto-Lei nº 200/1967, art. 4º, II); regime jurídico dos agentes públicos (distinção doutrinária entre servidor estatutário e empregado público celetista, sem dispositivo legal específico atribuído); e autotutela administrativa (anulação e revogação de atos — art. 53, Lei nº 9.784/1999, e Súmula 473 do STF). A autotutela é instituto também testado no conteúdo \"Atos administrativos\" (curso_conteudo_id 54); os princípios do art. 37 também aparecem, com outros incisos e enfoque, no conteúdo \"Constituição Federal de 1988\" (curso_conteudo_id 57) — sobreposições temáticas conhecidas, não questões duplicadas.",
+      "artigos_esperados": ["art. 37, caput", "art. 37, III", "art. 4º, II", "art. 53"]
+    }
+  ]
+}
