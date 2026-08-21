@@ -1,0 +1,39 @@
+{
+  "_nota": "Estatuto da Igualdade Racial — materia Direitos Humanos e Cidadania (curso_conteudo_id 97). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id 9cc42871-c31c-440a-88cb-32f0d4f232ff) — 9 questoes, dispersas por praticamente toda a Lei 12.288/2010, sem agrupamento denso o bastante para dividir. DUPLICATAS EXATAS IDENTIFICADAS (mantidas ambas classificadas, nenhuma desativacao nesta curadoria — saneamento especifico fica para etapa propria): Q131/Q816 (duplicata exata interna a este conteudo, mesmo enunciado/alternativas/gabarito, art. 3o, caput); Q815/Q135 (duplicata exata cruzada entre este conteudo [97, Direitos Humanos] e o curso_conteudo_id 67 [Estatuto Nacional da Igualdade Racial, Legislacao Especifica, ja concluido] — mesmo enunciado/alternativas/gabarito sobre liberdade religiosa de matriz africana, arts. 23/24/25/26; Q815 classificada aqui, conteudo 67 NAO foi reaberto ou alterado). IMPORTANTE PEDAGOGICO: essas duplicatas reduzem a diversidade efetiva do banco de questoes e devem ser tratadas em saneamento especifico antes da liberacao final da pratica ao aluno. SOBREPOSICAO EXTENSA com o curso_conteudo_id 67 (mesma Lei 12.288/2010, materias/recortes curriculares diferentes — Legislacao Especifica x Direitos Humanos e Cidadania), sem mover questoes nem reabrir o conteudo 67: Q256 (art. 1o, caput) e tematicamente proxima de Q302 (conteudo 67, mesmo dispositivo); Q255 (art. 1o, paragrafo unico, I) sobrepoe-se ao mesmo inciso testado em bloco por Q350 (conteudo 67); Q790 (arts. 52 caput e 53 caput/paragrafo unico) reaproveita os mesmos dispositivos ja testados por Q54 (conteudo 67), com alternativas reformuladas; Q815 e duplicata exata de Q135 (ja detalhado acima). ESCOPO — CORRECAO DE AMPLITUDE: nao generalizar 'arts. 6o-8o' (nenhuma questao mapeada ao art. 8o) nem 'arts. 9o-13' (art. 12 nao e efetivamente coberto) — o escopo final cita apenas os dispositivos realmente testados: art. 6o e art. 7o, II (saude); art. 9o, art. 10 II, art. 11 e art. 13 II (educacao/cultura/esporte/lazer). MICROCHECAGEM DE CAPUT: confirmado por leitura literal que os arts. 3o, 9o, 11, 23, 25, 32 e 37 sao artigos de paragrafo unico (texto integral e o caput), padronizados para 'caput'; mantidos com granularidade especifica ja existente os demais itens (art. 1o caput/paragrafo unico I; art. 4o paragrafo unico; art. 6o caput/§2o; art. 7o II; art. 10 II; art. 13 II; art. 24 II/III/VII; art. 26 II; art. 52 caput; art. 53 caput/paragrafo unico). Nenhum artigo novo adicionado.",
+  "curso_conteudo_id": 97,
+  "nome_assunto": "Estatuto da Igualdade Racial",
+  "materia_id": 11,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "9cc42871-c31c-440a-88cb-32f0d4f232ff",
+      "ordem": 1,
+      "titulo": "Estatuto da Igualdade Racial",
+      "escopo": "Estatuto da Igualdade Racial (Lei nº 12.288/2010) — abordagem sob a ótica de Direitos Humanos e Cidadania: objeto da lei e definição de discriminação racial (art. 1º); diretriz político-jurídica de inclusão das vítimas de desigualdade étnico-racial, valorização da igualdade étnica e fortalecimento da identidade nacional brasileira (art. 3º); ação afirmativa nas esferas pública e privada (art. 4º); direito à saúde da população negra e vedação à discriminação em seguros privados de saúde (art. 6º), com a produção de conhecimento científico e tecnológico em saúde da população negra como diretriz da Política Nacional de Saúde Integral da População Negra (art. 7º, II); direito de participar de atividades educacionais, culturais, esportivas e de lazer (art. 9º), apoio a entidades de promoção social e cultural da população negra (art. 10, II), estudo obrigatório da história geral da África e da população negra no Brasil (art. 11) e incentivo às instituições de ensino superior a incorporar temas de pluralidade étnica e cultural nas matrizes curriculares de formação de professores (art. 13, II); liberdade de consciência e de crença e cultos de matriz africana (arts. 23-26); remanescentes de quilombos (art. 32) e acesso a financiamentos habitacionais (art. 37); e medidas de segurança pública e acesso à Justiça para vítimas de discriminação étnica (arts. 52-53).",
+      "artigos_esperados": [
+        "art. 1º, caput",
+        "art. 1º, parágrafo único, I",
+        "art. 3º, caput",
+        "art. 4º, parágrafo único",
+        "art. 6º, caput",
+        "art. 6º, §2º",
+        "art. 7º, II",
+        "art. 9º, caput",
+        "art. 10, II",
+        "art. 11, caput",
+        "art. 13, II",
+        "art. 23, caput",
+        "art. 24, II",
+        "art. 24, III",
+        "art. 24, VII",
+        "art. 25, caput",
+        "art. 26, II",
+        "art. 32, caput",
+        "art. 37, caput",
+        "art. 52, caput",
+        "art. 53, caput",
+        "art. 53, parágrafo único"
+      ]
+    }
+  ]
+}
