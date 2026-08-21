@@ -1,0 +1,21 @@
+{
+  "_nota": "Estatuto dos Militares Estaduais (curso_conteudo_id 51). Decisao aprovada: MANTER 1 UNICA UNIDADE — 5 questoes, diploma unico (Lei Complementar Estadual n. 10.990/1997), tema geral coeso, bem abaixo do piso de 7-8 ja usado como referencia. Lei Complementar Estadual n. 10.990/1997, vigente. Os dispositivos efetivamente cobrados pelas questoes desta unidade foram verificados individualmente e nao foi identificada incompatibilidade com a redacao vigente consultada. REDUNDANCIA TEMATICA (nao duplicata de banco): Q20 e Q300 sao quase-duplicatas tematicas — ambas testam exclusivamente o mesmo dispositivo unico (art. 12, caput), com enunciados e distratores redigidos de forma diferente. Mantidas ambas por decisao do usuario, sem desativacao. SOBREPOSICAO: Q20/Q300 (art. 12, caput, desta lei) e a Q212 do curso_conteudo_id 64 (Regulamento Disciplinar da Brigada Militar, Decreto 43.245/2004, art. 3o) testam a mesma ideia juridica (hierarquia e disciplina como base institucional da Brigada Militar) em diplomas distintos — nao e duplicata de banco, apenas redundancia conceitual entre normas irmas. Nenhuma movimentacao/exclusao. MICROCHECAGEM DE artigos_esperados: art. 46, caput foi removido da lista pois nenhuma das 5 alternativas da Q362 testa a clausula do caput ('nos limites estabelecidos na legislacao especifica') — todas testam incisos especificos (VII, VIII, XIII, XIV, XV). art. 4o e art. 36 foram padronizados para 'caput' apos confirmacao literal (art. 4o nao tem paragrafos, e o texto integral e o caput; art. 36 tem paragrafo unico subsequente nao testado, e a assertiva IV da Q363 corresponde exatamente ao caput).",
+  "curso_conteudo_id": 51,
+  "nome_assunto": "Estatuto dos Militares Estaduais",
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "bf13f365-3dd9-4d22-9ad7-f369a298eb19",
+      "ordem": 1,
+      "titulo": "Estatuto dos Militares Estaduais",
+      "escopo": "Estatuto dos Militares Estaduais (Lei Complementar nº 10.990/1997): hierarquia e disciplina como base institucional da Brigada Militar (art. 12); serviço e carreira policial-militar, incluindo o regime próprio aplicável a Oficiais nomeados Juízes do Tribunal Militar do Estado e a precedência hierárquica entre servidores militares (arts. 4º, 5º, 8º, 15); direitos dos servidores militares, incluindo assistência judiciária, assistência social e médico-hospitalar, saúde/higiene/segurança do trabalho, transferência para reserva remunerada ou reforma, férias e licenças (art. 46); e violação das obrigações e dos deveres policiais-militares, incluindo a independência da responsabilidade disciplinar em relação às responsabilidades civil e penal (arts. 35-36).",
+      "artigos_esperados": [
+        "art. 4º, caput", "art. 5º, parágrafo único", "art. 8º, parágrafo único",
+        "art. 12, caput", "art. 15, caput", "art. 15, §3º",
+        "art. 35, caput", "art. 35, §2º", "art. 35, §3º", "art. 36, caput",
+        "art. 46, VII", "art. 46, VIII", "art. 46, XIII", "art. 46, XIV", "art. 46, XV"
+      ]
+    }
+  ]
+}
