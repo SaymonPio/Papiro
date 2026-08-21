@@ -1,0 +1,18 @@
+{
+  "_nota": "Poder de Policia (curso_conteudo_id 60). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id 2f0d3b9c-fe22-4173-a712-cfb9e1060b8c) — 4 questoes, muito abaixo do piso de 7-8. Q204: CTN (Lei no 5.172/1966), art. 78, caput — definicao legal de poder de policia, confirmada em fonte oficial. Q205: atributos tradicionalmente associados na doutrina (discricionariedade, autoexecutoriedade, coercibilidade), SEM dispositivo legal atribuido — redacao cuidadosa para nao afirmar que os tres atributos estao necessariamente presentes em todo e qualquer ato de policia, ja que a incidencia concreta depende da natureza e do regime juridico do ato praticado. Q206: Lei no 9.784/1999, art. 2o, caput — legalidade, proporcionalidade e interesse publico sao principios/limites gerais da atuacao administrativa aplicaveis ao exercicio do poder de policia, NAO classificados como 'atributos do poder de policia' (distincao terminologica importante: atributos vs principios/limites). Q871: doutrina pura, sem dispositivo legal atribuido — distincao entre poder de policia (atuacao administrativa externa sobre particulares) e poder hierarquico (relacoes internas de organizacao/subordinacao); as alternativas de fiscalizacao sanitaria, urbanistica e de seguranca permanecem como exemplos doutrinarios de policia administrativa. artigos_esperados usa apenas 'art. 78' e 'art. 2o' (sem prefixo de diploma, por compatibilidade com o parser de supabase/functions/gerar-aula/escopo.mjs); documentado aqui que art. 78 e do CTN (Lei 5.172/1966) e art. 2o e da Lei 9.784/1999. SOBREPOSICAO: verificado contra Poderes da Administracao Publica (id 59, concluido na etapa anterior — nenhuma de suas 4 questoes testa poder de policia), Direito Administrativo (id 58) e Atos Administrativos (id 54, ambos usam apenas arts. 53 e 55 da Lei 9.784/1999, nao o art. 2o) — nenhuma sobreposicao encontrada.",
+  "curso_conteudo_id": 60,
+  "nome_assunto": "Poder de Polícia",
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "2f0d3b9c-fe22-4173-a712-cfb9e1060b8c",
+      "ordem": 1,
+      "titulo": "Poder de Polícia",
+      "escopo": "Poder de Polícia: conceito legal (Código Tributário Nacional, art. 78, caput — atividade da administração pública que limita ou disciplina direito, interesse ou liberdade, em razão do interesse público); atributos tradicionalmente associados ao poder de polícia na doutrina (discricionariedade, autoexecutoriedade e coercibilidade), cuja incidência concreta depende da natureza e do regime jurídico do ato praticado; princípios e limites gerais da atuação administrativa aplicáveis ao seu exercício, dentre os previstos no art. 2º, caput, da Lei nº 9.784/1999 (legalidade, proporcionalidade e interesse público); e exemplos de seu exercício (fiscalização sanitária, urbanística e de segurança sobre particulares), distinguindo-o do poder hierárquico, que se exerce internamente sobre subordinados da própria Administração.",
+      "artigos_esperados": [
+        "art. 78, caput", "art. 2º, caput"
+      ]
+    }
+  ]
+}
