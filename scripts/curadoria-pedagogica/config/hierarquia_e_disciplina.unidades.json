@@ -1,0 +1,18 @@
+{
+  "_nota": "Hierarquia e disciplina (curso_conteudo_id 52). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id cbde0aeb-3df8-4c41-a82f-91b83b529668) — 3 questoes, muito abaixo do piso de 7-8. Todos os dispositivos sao da LC Estadual no 10.990/1997 (Estatuto dos Militares Estaduais), capitulo 'Da Hierarquia e da Disciplina', arts. 12, 13 e 15 — verificados em fonte oficial, vigentes, sem alteracao posterior localizada. SOBREPOSICAO COM curso_conteudo_id 51 (Estatuto dos Militares Estaduais): existe redundancia normativa parcial, pois ambos os conteudos utilizam dispositivos da LC 10.990/1997. Q12 (art. 12, caput) e estruturalmente proxima de Q20/Q300, ja classificadas no conteudo 51 (mesmo dispositivo, mesma ideia de 'hierarquia e disciplina sao base institucional'). Q45 (alt5, art. 15, caput — precedencia funcional do Comandante-Geral/Subcomandante-Geral/Chefe do Estado-Maior) testa o mesmo ponto juridico especifico ja testado por Q53 (alt4) no conteudo 51. O conteudo 52, contudo, possui escopo pedagogico especifico de hierarquia e disciplina e foi preservado como conteudo autonomo da estrutura curricular, por decisao do usuario — nenhuma questao movida, excluida ou reclassificada; o conteudo 51 nao foi reaberto. SOBREPOSICAO CONCEITUAL ADICIONAL com curso_conteudo_id 64 (Regulamento Disciplinar da Brigada Militar, Decreto 43.245/2004): a Q212 daquele conteudo testa a mesma ideia ('hierarquia e disciplina sao base institucional'), porem no art. 3o do RDBM — diploma distinto, mesma logica de registro documental sem movimentacao, ja aplicada em outros conteudos desta curadoria.",
+  "curso_conteudo_id": 52,
+  "nome_assunto": "Hierarquia e disciplina",
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "cbde0aeb-3df8-4c41-a82f-91b83b529668",
+      "ordem": 1,
+      "titulo": "Hierarquia e disciplina",
+      "escopo": "Hierarquia e disciplina no Estatuto dos Militares Estaduais (Lei Complementar nº 10.990/1997): a hierarquia e a disciplina militares como base institucional da Brigada Militar (art. 12, caput); a definição legal de hierarquia militar, como ordenação da autoridade em níveis diferentes por postos/graduações e, dentro de um mesmo posto/graduação, pela antiguidade (art. 12, §1º); a definição legal de disciplina militar, como observância rigorosa das normas que coordenam o funcionamento regular e harmônico da corporação (art. 12, §2º); a extensão da disciplina e do respeito à hierarquia aos servidores militares da reserva remunerada e reformados, além dos da ativa (art. 12, §3º); os círculos hierárquicos como âmbito de convivência entre servidores da mesma categoria (art. 13, caput); e a precedência entre servidores militares da ativa do mesmo grau hierárquico, assegurada pela antiguidade, salvo nos casos de precedência funcional do Comandante-Geral, do Subcomandante-Geral e do Chefe do Estado-Maior (art. 15, caput) — este último ponto também testado no conteúdo \"Estatuto dos Militares Estaduais\".",
+      "artigos_esperados": [
+        "art. 12, caput", "art. 12, §1º", "art. 12, §2º", "art. 12, §3º", "art. 13, caput", "art. 15, caput"
+      ]
+    }
+  ]
+}
