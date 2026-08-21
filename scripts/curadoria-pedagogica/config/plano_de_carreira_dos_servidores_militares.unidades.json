@@ -1,0 +1,18 @@
+{
+  "_nota": "Plano de Carreira dos Servidores Militares (curso_conteudo_id 65). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id 9f8a76ec-2c8c-4bd8-9d72-9ecb7218a200) — 4 questoes, muito abaixo do piso de 7-8. Q201/Q202/Q203 permanecem SEM artigo especifico — afirmacoes genericas sobre sujeicao a legislacao especifica, fundamento geral na LC Estadual no 10.992/1997, sem dispositivo numerado testado. Q364 (INCORRETA): mapeada aos arts. 2o §2o, 3o §1o, 3o §2o, 5o §1o e 5o §2o da LC 10.992/1997. MICROCHECAGEM FINAL DE VIGENCIA: localizada versao oficial consolidada da LC 10.992/1997 (Assembleia Legislativa do RS, 'atualizada ate a Lei Complementar no 15.454, de 17 de fevereiro de 2020'), confirmando que os 5 dispositivos testados permanecem com texto identico ao original de 1997, sem qualquer '(Redacao dada por...)'. Confirmado tambem que a LC 15.454/2020 (alteracao mais recente localizada para este diploma) so modificou os arts. 13, 14 e incluiu o art. 25-A da LC 10.992/1997 — todos sobre Pracas/graduacoes, nao sobre a estrutura QOEM/QOES testada pela Q364. Nenhuma divergencia de vigencia encontrada. Gabarito da Q364 (alt2, INCORRETA selecionada) inverte o texto real do art. 2o §2o ('podera ser recusada' vs a alternativa 'nao podera ser recusada'), confirmado correto. SOBREPOSICAO: verificado contra Estatuto dos Militares Estaduais (id 51, LC 10.990/1997 — diploma distinto, arts. 4o/5o/8o/12/15/35/36/46, sem sobreposicao com os arts. 2o/3o/5o da LC 10.992/1997 aqui usados) e Regulamento Disciplinar da Brigada Militar (id 64, tema de disciplina, nao de carreira). Nenhuma sobreposicao encontrada.",
+  "curso_conteudo_id": 65,
+  "nome_assunto": "Plano de Carreira dos Servidores Militares",
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "9f8a76ec-2c8c-4bd8-9d72-9ecb7218a200",
+      "ordem": 1,
+      "titulo": "Plano de Carreira dos Servidores Militares",
+      "escopo": "Plano de Carreira dos Servidores Militares (Lei Complementar Estadual nº 10.992/1997): estrutura da carreira dos Servidores Militares Estaduais de Nível Superior, por meio do Quadro de Oficiais de Estado Maior (QOEM) e do Quadro de Oficiais Especialistas em Saúde (QOES) — ingresso no QOEM mediante concurso público de provas e títulos com exigência de diplomação no Curso de Ciências Jurídicas e Sociais e aprovação no Curso Superior de Polícia Militar (art. 3º); possibilidade de recusa, pelo servidor, da inclusão no quadro de acesso à promoção ao posto de Coronel (art. 2º, §2º); e requisitos para promoção aos postos de Major (Curso Avançado de Administração Policial Militar) e de Coronel (Curso de Especialização em Políticas e Gestão de Segurança Pública) (art. 5º). Progressão funcional e promoção, em geral, sujeitam-se aos requisitos e critérios estabelecidos nesta legislação específica.",
+      "artigos_esperados": [
+        "art. 2º, §2º", "art. 3º, §1º", "art. 3º, §2º", "art. 5º, §1º", "art. 5º, §2º"
+      ]
+    }
+  ]
+}
