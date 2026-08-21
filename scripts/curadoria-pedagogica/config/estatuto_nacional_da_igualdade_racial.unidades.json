@@ -1,0 +1,23 @@
+{
+  "_nota": "Estatuto Nacional da Igualdade Racial (curso_conteudo_id 67). Decisao aprovada: MANTER 1 UNICA UNIDADE — 5 questoes, diploma unico (Lei no 12.288/2010), temas dispersos por todo o estatuto, bem abaixo do piso de 7-8 ja usado como referencia. Lei no 12.288/2010 vigente. O art. 39 recebeu acrescimos posteriores pela Lei 14.553/2023 (§§8o e 9o), sem impacto sobre o §1o efetivamente cobrado nesta unidade. Os demais dispositivos utilizados pelas cinco questoes foram verificados no texto oficial vigente (Planalto). SOBREPOSICAO: existe conteudo separado para o Estatuto Estadual da Igualdade Racial (curso_conteudo_id 68, Lei Estadual RS no 13.694/2011) — diploma diferente, nenhuma questao duplicada, nenhuma movimentacao/exclusao. MICROCHECAGEM DE GRANULARIDADE: arts. 23, 25, 42, 54, 55 e 58 sao artigos de paragrafo unico (todo o texto do artigo e o caput), padronizados para 'caput' apos confirmacao literal de que cada alternativa testada corresponde ao texto integral do artigo. art. 52 tem paragrafo unico subsequente (nao testado pela Q54), tambem padronizado para 'caput'. Nenhum dispositivo novo foi adicionado ou removido nesta rodada — apenas padronizacao de nomenclatura.",
+  "curso_conteudo_id": 67,
+  "nome_assunto": "Estatuto Nacional da Igualdade Racial",
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "5bf890e1-8e09-4f7a-9410-7f5e5168d9c4",
+      "ordem": 1,
+      "titulo": "Estatuto Nacional da Igualdade Racial",
+      "escopo": "Estatuto Nacional da Igualdade Racial (Lei nº 12.288/2010): objeto da lei e definições de discriminação racial, desigualdade racial, políticas públicas e ações afirmativas (art. 1º); liberdade de consciência e de crença e livre exercício dos cultos religiosos de matriz africana, incluindo assistência religiosa em hospitais e instituições de internação coletiva e combate à intolerância religiosa (arts. 23-26); igualdade de oportunidades no mercado de trabalho e critérios para cargos em comissão visando ampliar a participação de negros (arts. 39, 42); organização institucional da Política Nacional de Promoção da Igualdade Racial — PNPIR (art. 49); acesso à justiça, Ouvidorias Permanentes, combate à violência policial, ressocialização da juventude negra e combate à discriminação por servidores públicos (arts. 52-55); e não exclusão de outras medidas de promoção da igualdade racial adotadas pela União, Estados, Distrito Federal ou Municípios (art. 58).",
+      "artigos_esperados": [
+        "art. 1º, caput", "art. 1º, parágrafo único, I", "art. 1º, parágrafo único, II",
+        "art. 1º, parágrafo único, V", "art. 1º, parágrafo único, VI",
+        "art. 23, caput", "art. 24, II", "art. 24, VII", "art. 25, caput", "art. 26, II",
+        "art. 39, §1º", "art. 42, caput", "art. 49, §3º",
+        "art. 52, caput", "art. 53, caput", "art. 53, parágrafo único",
+        "art. 54, caput", "art. 55, caput", "art. 58, caput"
+      ]
+    }
+  ]
+}
