@@ -1,0 +1,932 @@
+[
+  {
+    "ordem": 1,
+    "curso_conteudo_id": 53,
+    "nome": "Lei Maria da Penha",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 295,
+    "prioridade": "alta",
+    "status": "concluido",
+    "motivo_prioridade": "conteudo piloto do modelo de unidades pedagogicas, com o maior volume de questoes do banco"
+  },
+  {
+    "ordem": 2,
+    "curso_conteudo_id": 47,
+    "nome": "Direitos e Garantias Fundamentais",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 21,
+    "prioridade": "alta",
+    "status": "concluido",
+    "motivo_prioridade": "norma constitucional central (art. 5o da CF/88), alta relevancia para concursos policiais"
+  },
+  {
+    "ordem": 3,
+    "curso_conteudo_id": 55,
+    "nome": "Improbidade Administrativa",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 15,
+    "prioridade": "alta",
+    "status": "concluido",
+    "motivo_prioridade": "lei de alta incidencia em concursos, com reforma legislativa recente (Lei 14.230/2021) exigindo curadoria juridica cuidadosa"
+  },
+  {
+    "ordem": 4,
+    "curso_conteudo_id": 66,
+    "nome": "Lei de Drogas",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 16,
+    "prioridade": "alta",
+    "status": "concluido",
+    "motivo_prioridade": "lei de alta incidencia pratica para atuacao policial, com necessidade de curadoria juridica"
+  },
+  {
+    "ordem": 5,
+    "curso_conteudo_id": 50,
+    "nome": "Constituição do Estado do Rio Grande do Sul",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 14,
+    "prioridade": "alta",
+    "status": "pendente",
+    "motivo_prioridade": "norma constitucional de alta relevancia para concursos policiais"
+  },
+  {
+    "ordem": 6,
+    "curso_conteudo_id": 57,
+    "nome": "Constituição Federal de 1988",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 14,
+    "prioridade": "alta",
+    "status": "pendente",
+    "motivo_prioridade": "norma constitucional de alta relevancia para concursos policiais"
+  },
+  {
+    "ordem": 7,
+    "curso_conteudo_id": 56,
+    "nome": "Estatuto do Desarmamento",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 12,
+    "prioridade": "alta",
+    "status": "pendente",
+    "motivo_prioridade": "lei especial de grande volume de questoes e alta incidencia em concursos policiais"
+  },
+  {
+    "ordem": 8,
+    "curso_conteudo_id": 62,
+    "nome": "Abuso de Autoridade",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 11,
+    "prioridade": "alta",
+    "status": "pendente",
+    "motivo_prioridade": "materia central de Legislacao Especifica, com volume relevante de questoes e necessidade de curadoria juridica"
+  },
+  {
+    "ordem": 9,
+    "curso_conteudo_id": 68,
+    "nome": "Estatuto Estadual da Igualdade Racial",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 10,
+    "prioridade": "alta",
+    "status": "pendente",
+    "motivo_prioridade": "materia central de Legislacao Especifica, com volume relevante de questoes e necessidade de curadoria juridica"
+  },
+  {
+    "ordem": 10,
+    "curso_conteudo_id": 49,
+    "nome": "Segurança pública",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 9,
+    "prioridade": "alta",
+    "status": "pendente",
+    "motivo_prioridade": "materia central de Legislacao Especifica, com volume relevante de questoes e necessidade de curadoria juridica"
+  },
+  {
+    "ordem": 11,
+    "curso_conteudo_id": 54,
+    "nome": "Atos administrativos",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 8,
+    "prioridade": "alta",
+    "status": "pendente",
+    "motivo_prioridade": "materia central de Legislacao Especifica, com volume relevante de questoes e necessidade de curadoria juridica"
+  },
+  {
+    "ordem": 12,
+    "curso_conteudo_id": 58,
+    "nome": "Direito Administrativo",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 8,
+    "prioridade": "alta",
+    "status": "pendente",
+    "motivo_prioridade": "materia central de Legislacao Especifica, com volume relevante de questoes e necessidade de curadoria juridica"
+  },
+  {
+    "ordem": 13,
+    "curso_conteudo_id": 48,
+    "nome": "Defesa do Estado e das Instituições Democráticas",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 6,
+    "prioridade": "media",
+    "status": "pendente",
+    "motivo_prioridade": "lei especifica de incidencia moderada, volume de questoes intermediario"
+  },
+  {
+    "ordem": 14,
+    "curso_conteudo_id": 64,
+    "nome": "Regulamento Disciplinar da Brigada Militar",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 6,
+    "prioridade": "media",
+    "status": "pendente",
+    "motivo_prioridade": "lei especifica de incidencia moderada, volume de questoes intermediario"
+  },
+  {
+    "ordem": 15,
+    "curso_conteudo_id": 51,
+    "nome": "Estatuto dos Militares Estaduais",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 5,
+    "prioridade": "media",
+    "status": "pendente",
+    "motivo_prioridade": "lei especifica de incidencia moderada, volume de questoes intermediario"
+  },
+  {
+    "ordem": 16,
+    "curso_conteudo_id": 67,
+    "nome": "Estatuto Nacional da Igualdade Racial",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 5,
+    "prioridade": "media",
+    "status": "pendente",
+    "motivo_prioridade": "lei especifica de incidencia moderada, volume de questoes intermediario"
+  },
+  {
+    "ordem": 17,
+    "curso_conteudo_id": 69,
+    "nome": "Jurisprudência do STF e STJ",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 5,
+    "prioridade": "media",
+    "status": "pendente",
+    "motivo_prioridade": "lei especifica de incidencia moderada, volume de questoes intermediario"
+  },
+  {
+    "ordem": 18,
+    "curso_conteudo_id": 59,
+    "nome": "Poderes da Administração Pública",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 4,
+    "prioridade": "media",
+    "status": "pendente",
+    "motivo_prioridade": "lei especifica de incidencia moderada, volume de questoes intermediario"
+  },
+  {
+    "ordem": 19,
+    "curso_conteudo_id": 60,
+    "nome": "Poder de Polícia",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 4,
+    "prioridade": "media",
+    "status": "pendente",
+    "motivo_prioridade": "lei especifica de incidencia moderada, volume de questoes intermediario"
+  },
+  {
+    "ordem": 20,
+    "curso_conteudo_id": 65,
+    "nome": "Plano de Carreira dos Servidores Militares",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 4,
+    "prioridade": "media",
+    "status": "pendente",
+    "motivo_prioridade": "lei especifica de incidencia moderada, volume de questoes intermediario"
+  },
+  {
+    "ordem": 21,
+    "curso_conteudo_id": 52,
+    "nome": "Hierarquia e disciplina",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "conteudo pontual de Legislacao Especifica, baixo volume de questoes"
+  },
+  {
+    "ordem": 22,
+    "curso_conteudo_id": 61,
+    "nome": "Responsabilidade civil do Estado",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "conteudo pontual de Legislacao Especifica, baixo volume de questoes"
+  },
+  {
+    "ordem": 23,
+    "curso_conteudo_id": 63,
+    "nome": "Lei de Organização Básica da Brigada Militar",
+    "materia": "Legislação Específica",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "conteudo pontual de Legislacao Especifica, baixo volume de questoes"
+  },
+  {
+    "ordem": 24,
+    "curso_conteudo_id": 72,
+    "nome": "Pacto de San José da Costa Rica",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 11,
+    "prioridade": "alta",
+    "status": "pendente",
+    "motivo_prioridade": "tema de alta incidencia em Direitos Humanos, com volume de questoes relevante"
+  },
+  {
+    "ordem": 25,
+    "curso_conteudo_id": 97,
+    "nome": "Estatuto da Igualdade Racial",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 9,
+    "prioridade": "alta",
+    "status": "pendente",
+    "motivo_prioridade": "tema de alta incidencia em Direitos Humanos, com volume de questoes relevante"
+  },
+  {
+    "ordem": 26,
+    "curso_conteudo_id": 71,
+    "nome": "Pessoa com deficiência",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 8,
+    "prioridade": "alta",
+    "status": "pendente",
+    "motivo_prioridade": "tema de alta incidencia em Direitos Humanos, com volume de questoes relevante"
+  },
+  {
+    "ordem": 27,
+    "curso_conteudo_id": 81,
+    "nome": "Noções de Direitos Humanos",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 7,
+    "prioridade": "media",
+    "status": "pendente",
+    "motivo_prioridade": "tema de Direitos Humanos com volume moderado de questoes"
+  },
+  {
+    "ordem": 28,
+    "curso_conteudo_id": 83,
+    "nome": "Declaração Universal dos Direitos Humanos",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 6,
+    "prioridade": "media",
+    "status": "pendente",
+    "motivo_prioridade": "tema de Direitos Humanos com volume moderado de questoes"
+  },
+  {
+    "ordem": 29,
+    "curso_conteudo_id": 73,
+    "nome": "Lei de Tortura",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 5,
+    "prioridade": "media",
+    "status": "pendente",
+    "motivo_prioridade": "tema de Direitos Humanos com volume moderado de questoes"
+  },
+  {
+    "ordem": 30,
+    "curso_conteudo_id": 76,
+    "nome": "Direitos fundamentais",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 5,
+    "prioridade": "media",
+    "status": "pendente",
+    "motivo_prioridade": "tema de Direitos Humanos com volume moderado de questoes"
+  },
+  {
+    "ordem": 31,
+    "curso_conteudo_id": 95,
+    "nome": "Direito à cidadania na Constituição Federal",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 5,
+    "prioridade": "media",
+    "status": "pendente",
+    "motivo_prioridade": "norma constitucional de alta relevancia para concursos policiais"
+  },
+  {
+    "ordem": 32,
+    "curso_conteudo_id": 70,
+    "nome": "Abuso de Autoridade",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 4,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 33,
+    "curso_conteudo_id": 78,
+    "nome": "Tratados de Direitos Humanos com força de Emenda Constitucional",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 4,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 34,
+    "curso_conteudo_id": 88,
+    "nome": "Corte Interamericana de Direitos Humanos",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 4,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 35,
+    "curso_conteudo_id": 96,
+    "nome": "Programa Nacional de Direitos Humanos - PNDH-3",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 4,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 36,
+    "curso_conteudo_id": 74,
+    "nome": "Pacto Internacional sobre Direitos Civis e Políticos",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 37,
+    "curso_conteudo_id": 75,
+    "nome": "Estatuto da Pessoa com Deficiência",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 38,
+    "curso_conteudo_id": 77,
+    "nome": "Pacto Internacional sobre Direitos Econômicos, Sociais e Culturais",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 39,
+    "curso_conteudo_id": 79,
+    "nome": "Convenção Interamericana para Prevenir e Punir a Tortura",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 40,
+    "curso_conteudo_id": 80,
+    "nome": "Entendimentos do STF e STJ",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 41,
+    "curso_conteudo_id": 82,
+    "nome": "Sistema Internacional de Proteção dos Direitos Humanos",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 42,
+    "curso_conteudo_id": 84,
+    "nome": "Pactos Internacionais de Direitos Humanos",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 43,
+    "curso_conteudo_id": 85,
+    "nome": "Sistema Interamericano de Direitos Humanos",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 44,
+    "curso_conteudo_id": 86,
+    "nome": "Organização dos Estados Americanos",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 45,
+    "curso_conteudo_id": 87,
+    "nome": "Comissão Interamericana de Direitos Humanos",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 46,
+    "curso_conteudo_id": 89,
+    "nome": "Convenção de Belém do Pará",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 47,
+    "curso_conteudo_id": 90,
+    "nome": "Casos do Brasil na Corte Interamericana de Direitos Humanos",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 48,
+    "curso_conteudo_id": 91,
+    "nome": "Direitos Humanos no Mercosul",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 49,
+    "curso_conteudo_id": 92,
+    "nome": "Protocolo de Assunção sobre Direitos Humanos no Mercosul",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 50,
+    "curso_conteudo_id": 93,
+    "nome": "Incorporação de tratados de Direitos Humanos",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 51,
+    "curso_conteudo_id": 94,
+    "nome": "Tratado de Marraqueche",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 52,
+    "curso_conteudo_id": 98,
+    "nome": "Dignidade humana",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 53,
+    "curso_conteudo_id": 99,
+    "nome": "Prevenção da tortura",
+    "materia": "Direitos Humanos e Cidadania",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "tratado ou instituto especifico de Direitos Humanos, baixo volume de questoes no banco"
+  },
+  {
+    "ordem": 54,
+    "curso_conteudo_id": 20,
+    "nome": "Ortografia",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 24,
+    "prioridade": "alta",
+    "status": "pendente",
+    "motivo_prioridade": "grande volume de questoes e alta incidencia"
+  },
+  {
+    "ordem": 55,
+    "curso_conteudo_id": 22,
+    "nome": "Classes de palavras",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 21,
+    "prioridade": "alta",
+    "status": "pendente",
+    "motivo_prioridade": "grande volume de questoes e alta incidencia"
+  },
+  {
+    "ordem": 56,
+    "curso_conteudo_id": 26,
+    "nome": "Acentuação gráfica",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 15,
+    "prioridade": "alta",
+    "status": "pendente",
+    "motivo_prioridade": "grande volume de questoes e alta incidencia"
+  },
+  {
+    "ordem": 57,
+    "curso_conteudo_id": 34,
+    "nome": "Fonemas e dígrafos",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 14,
+    "prioridade": "media",
+    "status": "pendente",
+    "motivo_prioridade": "volume de questoes moderado dentro de Lingua Portuguesa"
+  },
+  {
+    "ordem": 58,
+    "curso_conteudo_id": 31,
+    "nome": "Tempos e modos verbais",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 13,
+    "prioridade": "media",
+    "status": "pendente",
+    "motivo_prioridade": "volume de questoes moderado dentro de Lingua Portuguesa"
+  },
+  {
+    "ordem": 59,
+    "curso_conteudo_id": 33,
+    "nome": "Estrutura e formação de palavras",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 13,
+    "prioridade": "media",
+    "status": "pendente",
+    "motivo_prioridade": "volume de questoes moderado dentro de Lingua Portuguesa"
+  },
+  {
+    "ordem": 60,
+    "curso_conteudo_id": 13,
+    "nome": "Coesão textual",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 6,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "regra gramatical pontual, baixo volume de questoes"
+  },
+  {
+    "ordem": 61,
+    "curso_conteudo_id": 14,
+    "nome": "Conectores",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 5,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "regra gramatical pontual, baixo volume de questoes"
+  },
+  {
+    "ordem": 62,
+    "curso_conteudo_id": 27,
+    "nome": "Transitividade Verbal e Termos Integrantes (Objeto Direto e Indireto, Complemento Nominal e Agente da Passiva)",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 5,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "regra gramatical pontual, baixo volume de questoes"
+  },
+  {
+    "ordem": 63,
+    "curso_conteudo_id": 15,
+    "nome": "Crase",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 4,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "regra gramatical pontual, baixo volume de questoes"
+  },
+  {
+    "ordem": 64,
+    "curso_conteudo_id": 18,
+    "nome": "Concordância verbal",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 4,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "regra gramatical pontual, baixo volume de questoes"
+  },
+  {
+    "ordem": 65,
+    "curso_conteudo_id": 23,
+    "nome": "Significação das palavras",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 4,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "regra gramatical pontual, baixo volume de questoes"
+  },
+  {
+    "ordem": 66,
+    "curso_conteudo_id": 30,
+    "nome": "Redação oficial",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 4,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "regra gramatical pontual, baixo volume de questoes"
+  },
+  {
+    "ordem": 67,
+    "curso_conteudo_id": 12,
+    "nome": "Interpretação de textos",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "regra gramatical pontual, baixo volume de questoes"
+  },
+  {
+    "ordem": 68,
+    "curso_conteudo_id": 16,
+    "nome": "Pontuação",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "regra gramatical pontual, baixo volume de questoes"
+  },
+  {
+    "ordem": 69,
+    "curso_conteudo_id": 17,
+    "nome": "Regência verbal e nominal",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "regra gramatical pontual, baixo volume de questoes"
+  },
+  {
+    "ordem": 70,
+    "curso_conteudo_id": 19,
+    "nome": "Concordância nominal",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "regra gramatical pontual, baixo volume de questoes"
+  },
+  {
+    "ordem": 71,
+    "curso_conteudo_id": 21,
+    "nome": "Reescrita de frases e textos",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "regra gramatical pontual, baixo volume de questoes"
+  },
+  {
+    "ordem": 72,
+    "curso_conteudo_id": 24,
+    "nome": "Denotação e conotação",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "regra gramatical pontual, baixo volume de questoes"
+  },
+  {
+    "ordem": 73,
+    "curso_conteudo_id": 25,
+    "nome": "Implícitos e subentendidos",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "regra gramatical pontual, baixo volume de questoes"
+  },
+  {
+    "ordem": 74,
+    "curso_conteudo_id": 28,
+    "nome": "Coordenação e subordinação",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "regra gramatical pontual, baixo volume de questoes"
+  },
+  {
+    "ordem": 75,
+    "curso_conteudo_id": 29,
+    "nome": "Colocação pronominal",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "regra gramatical pontual, baixo volume de questoes"
+  },
+  {
+    "ordem": 76,
+    "curso_conteudo_id": 32,
+    "nome": "Vozes verbais",
+    "materia": "Língua Portuguesa",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "regra gramatical pontual, baixo volume de questoes"
+  },
+  {
+    "ordem": 77,
+    "curso_conteudo_id": 38,
+    "nome": "Internet e navegadores",
+    "materia": "Informática",
+    "questoes_ativas": 22,
+    "prioridade": "alta",
+    "status": "pendente",
+    "motivo_prioridade": "grande volume de questoes dentro de Informatica, apesar do peso menor da materia no curso"
+  },
+  {
+    "ordem": 78,
+    "curso_conteudo_id": 35,
+    "nome": "Windows",
+    "materia": "Informática",
+    "questoes_ativas": 15,
+    "prioridade": "alta",
+    "status": "pendente",
+    "motivo_prioridade": "grande volume de questoes dentro de Informatica, apesar do peso menor da materia no curso"
+  },
+  {
+    "ordem": 79,
+    "curso_conteudo_id": 36,
+    "nome": "Editor de textos",
+    "materia": "Informática",
+    "questoes_ativas": 15,
+    "prioridade": "alta",
+    "status": "pendente",
+    "motivo_prioridade": "grande volume de questoes dentro de Informatica, apesar do peso menor da materia no curso"
+  },
+  {
+    "ordem": 80,
+    "curso_conteudo_id": 37,
+    "nome": "Planilhas eletrônicas",
+    "materia": "Informática",
+    "questoes_ativas": 15,
+    "prioridade": "alta",
+    "status": "pendente",
+    "motivo_prioridade": "grande volume de questoes dentro de Informatica, apesar do peso menor da materia no curso"
+  },
+  {
+    "ordem": 81,
+    "curso_conteudo_id": 40,
+    "nome": "Segurança da informação",
+    "materia": "Informática",
+    "questoes_ativas": 13,
+    "prioridade": "media",
+    "status": "pendente",
+    "motivo_prioridade": "conteudo tecnico de Informatica com volume moderado de questoes"
+  },
+  {
+    "ordem": 82,
+    "curso_conteudo_id": 39,
+    "nome": "Correio eletrônico",
+    "materia": "Informática",
+    "questoes_ativas": 9,
+    "prioridade": "media",
+    "status": "pendente",
+    "motivo_prioridade": "conteudo tecnico de Informatica com volume moderado de questoes"
+  },
+  {
+    "ordem": 83,
+    "curso_conteudo_id": 3,
+    "nome": "Negação de proposições",
+    "materia": "Raciocínio Lógico",
+    "questoes_ativas": 4,
+    "prioridade": "media",
+    "status": "pendente",
+    "motivo_prioridade": "conteudo tecnico de menor peso, sem peso cadastrado na materia e baixo volume de questoes"
+  },
+  {
+    "ordem": 84,
+    "curso_conteudo_id": 1,
+    "nome": "Proposições e conectivos",
+    "materia": "Raciocínio Lógico",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "conteudo tecnico de menor peso, sem peso cadastrado na materia e baixo volume de questoes"
+  },
+  {
+    "ordem": 85,
+    "curso_conteudo_id": 2,
+    "nome": "Tabela-verdade",
+    "materia": "Raciocínio Lógico",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "conteudo tecnico de menor peso, sem peso cadastrado na materia e baixo volume de questoes"
+  },
+  {
+    "ordem": 86,
+    "curso_conteudo_id": 4,
+    "nome": "Leis de De Morgan",
+    "materia": "Raciocínio Lógico",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "conteudo tecnico de menor peso, sem peso cadastrado na materia e baixo volume de questoes"
+  },
+  {
+    "ordem": 87,
+    "curso_conteudo_id": 5,
+    "nome": "Equivalências lógicas",
+    "materia": "Raciocínio Lógico",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "conteudo tecnico de menor peso, sem peso cadastrado na materia e baixo volume de questoes"
+  },
+  {
+    "ordem": 88,
+    "curso_conteudo_id": 6,
+    "nome": "Condicional e contrapositiva",
+    "materia": "Raciocínio Lógico",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "conteudo tecnico de menor peso, sem peso cadastrado na materia e baixo volume de questoes"
+  },
+  {
+    "ordem": 89,
+    "curso_conteudo_id": 7,
+    "nome": "Quantificadores",
+    "materia": "Raciocínio Lógico",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "conteudo tecnico de menor peso, sem peso cadastrado na materia e baixo volume de questoes"
+  },
+  {
+    "ordem": 90,
+    "curso_conteudo_id": 8,
+    "nome": "Tautologia, contradição e contingência",
+    "materia": "Raciocínio Lógico",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "conteudo tecnico de menor peso, sem peso cadastrado na materia e baixo volume de questoes"
+  },
+  {
+    "ordem": 91,
+    "curso_conteudo_id": 9,
+    "nome": "Sentenças abertas e conjunto-verdade",
+    "materia": "Raciocínio Lógico",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "conteudo tecnico de menor peso, sem peso cadastrado na materia e baixo volume de questoes"
+  },
+  {
+    "ordem": 92,
+    "curso_conteudo_id": 10,
+    "nome": "Argumentação lógica",
+    "materia": "Raciocínio Lógico",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "conteudo tecnico de menor peso, sem peso cadastrado na materia e baixo volume de questoes"
+  },
+  {
+    "ordem": 93,
+    "curso_conteudo_id": 11,
+    "nome": "Diagramas lógicos",
+    "materia": "Raciocínio Lógico",
+    "questoes_ativas": 3,
+    "prioridade": "baixa",
+    "status": "pendente",
+    "motivo_prioridade": "conteudo tecnico de menor peso, sem peso cadastrado na materia e baixo volume de questoes"
+  }
+]

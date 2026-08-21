@@ -44,3 +44,8 @@ next-env.d.ts
 
 # supabase
 /supabase/.temp/
+
+# curadoria pedagogica: relatorios de auditoria sao artefatos regeneraveis
+# (node scripts/curadoria-pedagogica/auditar-conteudo.mjs <id>), nao devem
+# ser versionados a cada conteudo
+scripts/curadoria-pedagogica/relatorios/

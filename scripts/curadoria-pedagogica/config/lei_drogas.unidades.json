@@ -1,0 +1,16 @@
+{
+  "_nota": "Fixture real — dados exatamente iguais aos usados na curadoria de Lei de Drogas ja aplicada e commitada (commit c9e3d45). Serve para testar o pipeline (gerar-curadoria/gerar-mapa/gerar-rollback/gerar-pos-check/validar-pipeline) sem tocar o Supabase, comparando a saida gerada com os arquivos reais ja em supabase/.",
+  "curso_conteudo_id": 66,
+  "nome_assunto": "Lei de Drogas",
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "ba2341c7-0598-48f1-99dd-484692c1dfdb",
+      "ordem": 1,
+      "titulo": "Lei de Drogas",
+      "escopo": "Lei 11.343/2006: porte de drogas para consumo pessoal e critérios de diferenciação em relação ao tráfico (art. 28, caput e §§1º-2º); tráfico de drogas e figuras equiparadas, incluindo o tráfico privilegiado (art. 33, caput, §3º e §4º); associação para o tráfico (art. 35); e a estrutura do Sistema Nacional de Políticas Públicas sobre Drogas (Sisnad) — prevenção do uso indevido, atenção e reinserção social de usuários e dependentes, e disposições sobre internação (voluntária, involuntária e compulsória).",
+      "artigos_esperados": ["art. 28", "art. 28, §1º", "art. 28, §2º", "art. 33", "art. 33, §3º", "art. 33, §4º", "art. 35"]
+    }
+  ]
+}
