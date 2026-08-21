@@ -1,0 +1,23 @@
+{
+  "_nota": "Estatuto do Desarmamento (curso_conteudo_id 56). 1 unica unidade — nenhuma multiunidade possivel. Q142 e Q853 sao duplicatas confirmadas (mesmo fato — registro de arma de uso restrito no Comando do Exercito, art. 3o paragrafo unico — com as mesmas 5 alternativas na mesma ordem); ambas classificadas nesta curadoria por decisao explicita do usuario, documentado aqui como par duplicado. Nenhuma exclusao nesta curadoria.",
+  "assunto_id": 68,
+  "total_candidatas_ativas": 12,
+  "questoes_excluidas": [],
+  "duplicatas_conhecidas": [
+    { "par": [142, 853], "motivo": "mesmo fato testado (art. 3º, parágrafo único — registro de arma de uso restrito no Comando do Exército), mesmas 5 alternativas na mesma ordem; ambas mantidas classificadas por decisão do usuário, saneamento fica para fluxo separado" }
+  ],
+  "vinculos": [
+    { "questao_id": 50, "unidade_id": "d88a80ae-187b-4a24-a5cb-3b20ff32e26f", "ordem_unidade": 1, "tema": "Aquisição, porte e posse", "justificativa": "Assertiva I: art. 4º, caput e I (efetiva necessidade e idoneidade/certidões para aquisição). Assertiva II: art. 10, caput (autorização de porte, competência da PF, após autorização do Sinarm). Assertiva III: art. 12, caput (posse irregular de arma de uso permitido).", "confianca": "alta" },
+    { "questao_id": 142, "unidade_id": "d88a80ae-187b-4a24-a5cb-3b20ff32e26f", "ordem_unidade": 1, "tema": "Registro de arma de uso restrito", "justificativa": "Armas de uso restrito são registradas no Comando do Exército — art. 3º, parágrafo único. DUPLICATA de 853 (mesmo fato, mesmas alternativas).", "confianca": "alta" },
+    { "questao_id": 299, "unidade_id": "d88a80ae-187b-4a24-a5cb-3b20ff32e26f", "ordem_unidade": 1, "tema": "Crimes em espécie", "justificativa": "Porte de arma de uso permitido sem autorização — art. 14, caput.", "confianca": "alta" },
+    { "questao_id": 664, "unidade_id": "d88a80ae-187b-4a24-a5cb-3b20ff32e26f", "ordem_unidade": 1, "tema": "Crimes em espécie", "justificativa": "Arma com numeração suprimida, independentemente de ser de uso permitido e de estar desmuniciada — art. 16, §1º, IV (equiparação, autônomo em relação a arts. 12/14).", "confianca": "alta" },
+    { "questao_id": 728, "unidade_id": "d88a80ae-187b-4a24-a5cb-3b20ff32e26f", "ordem_unidade": 1, "tema": "Crimes em espécie", "justificativa": "Deixar de observar cautelas necessárias, permitindo que menor se apodere de arma de fogo — art. 13, caput (omissão de cautela).", "confianca": "alta" },
+    { "questao_id": 729, "unidade_id": "d88a80ae-187b-4a24-a5cb-3b20ff32e26f", "ordem_unidade": 1, "tema": "Crimes em espécie", "justificativa": "Gabarito: porte ilegal de arma de fogo de uso permitido após cessar a excludente de ilicitude — art. 14, caput. Distrator: art. 12, caput (posse irregular).", "confianca": "alta" },
+    { "questao_id": 730, "unidade_id": "d88a80ae-187b-4a24-a5cb-3b20ff32e26f", "ordem_unidade": 1, "tema": "Destino de arma apreendida", "justificativa": "Arma apreendida, periciada e sem mais interesse à persecução penal: destruição ou doação a órgãos de segurança pública mediante autorização judicial — art. 25, caput.", "confianca": "alta" },
+    { "questao_id": 776, "unidade_id": "d88a80ae-187b-4a24-a5cb-3b20ff32e26f", "ordem_unidade": 1, "tema": "Sinarm", "justificativa": "Compete ao Sinarm cadastrar transferências de propriedade, extravio, furto, roubo e outras ocorrências — art. 2º, IV.", "confianca": "alta" },
+    { "questao_id": 777, "unidade_id": "d88a80ae-187b-4a24-a5cb-3b20ff32e26f", "ordem_unidade": 1, "tema": "Sinarm", "justificativa": "Compete ao Sinarm cadastrar as autorizações de porte de arma de fogo e as renovações expedidas pela Polícia Federal — art. 2º, III.", "confianca": "alta" },
+    { "questao_id": 853, "unidade_id": "d88a80ae-187b-4a24-a5cb-3b20ff32e26f", "ordem_unidade": 1, "tema": "Registro de arma de uso restrito", "justificativa": "Armas de uso restrito são registradas no Comando do Exército — art. 3º, parágrafo único. DUPLICATA de 142 (mesmo fato, mesmas alternativas).", "confianca": "alta" },
+    { "questao_id": 854, "unidade_id": "d88a80ae-187b-4a24-a5cb-3b20ff32e26f", "ordem_unidade": 1, "tema": "Aquisição, porte e posse", "justificativa": "Vedado ao menor de 25 anos adquirir arma de fogo — art. 28, caput.", "confianca": "alta" },
+    { "questao_id": 855, "unidade_id": "d88a80ae-187b-4a24-a5cb-3b20ff32e26f", "ordem_unidade": 1, "tema": "Crimes em espécie", "justificativa": "Numeração de série adulterada equipara o porte ao tratamento de uso restrito — art. 16, §1º, IV; pena aumentada pela metade por ser agente das categorias do art. 6º/7º/8º — art. 20, I. Nenhuma alternativa exige, de forma segura, o texto específico do art. 6º.", "confianca": "alta" }
+  ]
+}

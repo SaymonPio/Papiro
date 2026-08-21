@@ -1,0 +1,26 @@
+{
+  "_nota": "Estatuto do Desarmamento (curso_conteudo_id 56). Decisao aprovada: MANTER 1 UNICA UNIDADE — mesmo criterio da Constituicao Federal de 1988 e da Constituicao do Estado do RS (nenhum bloco tematico atinge massa critica: os 2 grupos encontrados na auditoria — disposicoes administrativas/Sinarm e crimes em especie — teriam ~6 questoes cada, abaixo do piso de 7-8 ja usado como referencia). Q142 e Q853 sao duplicatas confirmadas (mesmo fato, mesmas 5 alternativas na mesma ordem) — ambas classificadas nesta curadoria, documentadas como par duplicado; saneamento de duplicatas continua sendo fluxo separado, nenhuma questao desativada ou alterada aqui. A Lei 10.826/2003 recebeu o art. 21-A (Lei 15.358/2026, aumento de pena em concurso com trafico de drogas); nenhuma das 12 questoes ativas cobra esse dispositivo, entao ele nao entra em artigos_esperados.",
+  "curso_conteudo_id": 56,
+  "nome_assunto": "Estatuto do Desarmamento",
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "d88a80ae-187b-4a24-a5cb-3b20ff32e26f",
+      "ordem": 1,
+      "titulo": "Estatuto do Desarmamento",
+      "escopo": "Estatuto do Desarmamento (Lei nº 10.826/2003): disposições administrativas sobre registro, aquisição e porte de arma de fogo (Sinarm, registro de arma de uso restrito no Comando do Exército, idade mínima para aquisição); e crimes em espécie (posse irregular, porte ilegal, omissão de cautela, numeração suprimida/adulterada, causas de aumento de pena) e destino de armas apreendidas.",
+      "artigos_esperados": [
+        "art. 2º, III", "art. 2º, IV",
+        "art. 3º, parágrafo único",
+        "art. 4º, caput", "art. 4º, I",
+        "art. 10, caput",
+        "art. 12, caput", "art. 13, caput", "art. 14, caput",
+        "art. 16, §1º, IV",
+        "art. 20, I",
+        "art. 25, caput",
+        "art. 28, caput"
+      ]
+    }
+  ]
+}
