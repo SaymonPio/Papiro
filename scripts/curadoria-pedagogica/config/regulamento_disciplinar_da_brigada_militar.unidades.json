@@ -1,0 +1,25 @@
+{
+  "_nota": "Regulamento Disciplinar da Brigada Militar do RS (curso_conteudo_id 64). Diploma: Decreto Estadual no 43.245/2004, aprovado com base no art. 35 da Lei Complementar Estadual no 10.990/1997 (Estatuto dos Servidores Militares da Brigada Militar). Confirmado vigente (usado em concursos ate 2025, sem revogacao ou substituto identificado). Decisao aprovada: MANTER 1 UNICA UNIDADE — com apenas 6 questoes, bem abaixo do piso de 7-8 ja usado como referencia. Micro-revisao final confirmou e refinou os dispositivos com base no texto oficial do RDBM: art. 1o tem caput (finalidade) e paragrafos 1o-3o (camaradagem, harmonia entre superior/subordinado, civilidade/cortesia/urbanidade/justica) efetivamente testados; art. 2o, §1o (aplicacao restrita a militares inativos); art. 3o (hierarquia e disciplina como base institucional); art. 9o (enumeracao das sancoes, incisos V e VI efetivamente testados); arts. 10, 11 e 12 caput (definicoes de advertencia, repreensao e detencao); art. 13 (prisao administrativa); art. 26 (comunicacao de fato contrario a disciplina); art. 28 caput e paragrafo unico (devido processo/ampla defesa e principios do processo); art. 29 caput (autoridades competentes). Nao foram adicionados art. 4o (Q212) nem art. 1o §4o (Q368) por nenhuma alternativa das questoes testar esse conteudo especificamente.",
+  "curso_conteudo_id": 64,
+  "nome_assunto": "Regulamento Disciplinar da Brigada Militar",
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "454f8501-7818-4dc4-b22a-337247678c58",
+      "ordem": 1,
+      "titulo": "Regulamento Disciplinar da Brigada Militar",
+      "escopo": "Regulamento Disciplinar da Brigada Militar do Estado do Rio Grande do Sul (Decreto Estadual nº 43.245/2004, aprovado com base no art. 35 da Lei Complementar Estadual nº 10.990/1997): finalidade do regulamento (art. 1º, caput); camaradagem, harmonia entre superior e subordinado, civilidade, cortesia e urbanidade (art. 1º, §1º a §3º); âmbito de aplicação, inclusive as hipóteses restritas de incidência sobre militares inativos (art. 2º, §1º); hierarquia e disciplina como base institucional (art. 3º); classificação e enumeração das sanções disciplinares — advertência, repreensão, detenção, prisão, licenciamento e exclusão a bem da disciplina (art. 9º) — e as definições específicas de advertência (art. 10), repreensão (art. 11), detenção (art. 12, caput) e o instituto da prisão administrativa (art. 13); e processo administrativo disciplinar militar — dever de comunicar fato contrário à disciplina (art. 26), devido processo/ampla defesa e princípios do processo (art. 28, caput e parágrafo único) e autoridades competentes para instauração, procedimento e julgamento (art. 29, caput).",
+      "artigos_esperados": [
+        "art. 1º, caput", "art. 1º, §1º", "art. 1º, §2º", "art. 1º, §3º",
+        "art. 2º, §1º",
+        "art. 3º",
+        "art. 9º, V", "art. 9º, VI",
+        "art. 10", "art. 11", "art. 12, caput", "art. 13",
+        "art. 26",
+        "art. 28, caput", "art. 28, parágrafo único",
+        "art. 29, caput"
+      ]
+    }
+  ]
+}
