@@ -1,0 +1,18 @@
+{
+  "_nota": "Lei de Organizacao Basica da Brigada Militar (curso_conteudo_id 63). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id 3c033d9a-5543-422a-a935-c55095bdfc86) — 3 questoes, muito abaixo do piso de 7-8. SUCESSAO NORMATIVA CONFIRMADA EM FONTE OFICIAL (PDF da Assembleia Legislativa do RS, baixado e verificado): a Lei no 10.991/1997 (historicamente conhecida como Lei de Organizacao Basica da Brigada Militar, citada no enunciado original da Q43) foi expressamente REVOGADA pela Lei Complementar no 16.450, de 24/12/2025 (publicada no DOE no 252 de 26/12/2025), cujo art. 47 revoga as Leis no 10.991/1997 e no 10.993/1997, e cujo art. 46 estabelece vigencia na data da publicacao. A LC 16.450/2025 e a norma atualmente vigente sobre organizacao, estrutura basica e efetivo da Brigada Militar. Q43: a competencia testada (Chefe do Estado-Maior assessorar o Comandante-Geral) foi preservada com redacao praticamente identica no art. 10 da lei sucessora ('Compete ao Chefe do Estado-Maior assessorar o Comandante-Geral nos assuntos de ordem estrategica da Instituicao e coordenar, em carater geral, as atividades dos Orgaos do Nivel de Direcao Setorial'). O gabarito permanece materialmente valido sob a norma vigente. O enunciado da Q43 no banco cita nominalmente a Lei 10.991/1997 (hoje revogada) — sinalizado como possivel saneamento textual futuro, FORA desta curadoria; a questao NAO foi alterada nem o gabarito foi modificado. Q271 e Q272 permanecem SEM artigo especifico — sao afirmacoes genericas sobre organizacao/estrutura/competencias da Brigada Militar, sem dispositivo numerado efetivamente testado; nao se insere art. 1o/2o da LC 16.450/2025 apenas por contexto. VERIFICACAO RETROATIVA: confirmado que a Lei no 10.993/1997 (tambem revogada pela LC 16.450/2025) nao aparece em nenhuma config de conteudo ja concluido — nenhuma correcao retroativa necessaria. Achado adicional: o proprio art. 20 da LC 16.450/2025 cita 'a precedencia funcional disposta no art. 15 da Lei Complementar no 10.990, de 18 de agosto de 1997' como norma ainda vigente, confirmando que os curso_conteudo_id 51 (Estatuto dos Militares Estaduais) e 52 (Hierarquia e disciplina), que ja classificam esse mesmo dispositivo, permanecem corretos — nao foram reabertos nem alterados.",
+  "curso_conteudo_id": 63,
+  "nome_assunto": "Lei de Organização Básica da Brigada Militar",
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "3c033d9a-5543-422a-a935-c55095bdfc86",
+      "ordem": 1,
+      "titulo": "Lei de Organização Básica da Brigada Militar",
+      "escopo": "Lei de Organização Básica da Brigada Militar: a Lei nº 10.991/1997, historicamente conhecida como Lei de Organização Básica da Brigada Militar, foi expressamente revogada pela Lei Complementar nº 16.450, de 24/12/2025 (art. 47), vigente desde 26/12/2025, que hoje disciplina a organização, a estrutura básica e o efetivo da Brigada Militar do Estado do Rio Grande do Sul. A competência do Chefe do Estado-Maior de assessorar o Comandante-Geral, testada em questão cujo enunciado cita nominalmente a lei revogada, corresponde materialmente ao art. 10 da lei sucessora ('Compete ao Chefe do Estado-Maior assessorar o Comandante-Geral nos assuntos de ordem estratégica da Instituição e coordenar, em caráter geral, as atividades dos Órgãos do Nível de Direção Setorial'). A lei também disciplina, em geral, a estrutura, a organização e o efetivo institucional da corporação.",
+      "artigos_esperados": [
+        "art. 10"
+      ]
+    }
+  ]
+}
