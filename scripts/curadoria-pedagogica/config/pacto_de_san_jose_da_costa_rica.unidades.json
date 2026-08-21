@@ -1,0 +1,28 @@
+{
+  "_nota": "Pacto de San Jose da Costa Rica / Convencao Americana sobre Direitos Humanos (curso_conteudo_id 72). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id b918b069-8364-4412-80a6-07d78b369317) — 11 questoes fortemente interligadas (varias testam multiplos artigos da Convencao numa unica questao), sem divisao tematica limpa possivel sem fragmentar questoes individuais. PRIMEIRO CONTEUDO DO BLOCO DIREITOS HUMANOS (materia_id 11) — nenhuma sobreposicao com conteudos ja concluidos (todos em Legislacao Especifica). DIPLOMA: Convencao Americana sobre Direitos Humanos (Pacto de San Jose da Costa Rica, 1969), promulgada no Brasil pelo Decreto no 678, de 6/11/1992 (em vigor para o Brasil desde 25/09/1992). Texto verificado diretamente no Planalto (fonte oficial). IMPORTANTE: os arts. 4o, 5o, 6o, 7o, 8o, 10, 12, 17, 19, 22 e 27 citados em artigos_esperados sao artigos DA CONVENCAO ANEXA ao decreto (texto do tratado internacional), NAO dos (poucos) artigos do proprio Decreto no 678/1992 (que tem apenas 3 artigos de promulgacao). PADRONIZACAO: a CADH numera seus dispositivos como 'itens' (1, 2, 3...), nao como paragrafos (§) no padrao brasileiro — por fidelidade ao texto literal do tratado, artigos_esperados usa a forma 'art. X, item N' em vez de 'art. X, §No'; confirmado que o parser (REGEX_ARTIGO_BASE, supabase/functions/gerar-aula/escopo.mjs) so compara o numero inicial apos 'art.', ignorando o sufixo — nenhuma alteracao de infraestrutura foi necessaria. DUPLICATA QUASE EXATA: Q130 e Q822 tem enunciado, alternativas e gabarito praticamente identicos (lacunas sobre idade minima/maxima para pena de morte, art. 4o, item 5). Mantidas AMBAS classificadas por decisao do usuario, nenhuma desativacao nesta curadoria — saneamento de duplicidade fica para etapa propria. MICROCHECAGEM Q56: a assertiva III do enunciado afirma que o principio de vedacao a prisao por divida 'LIMITA' os mandados por obrigacao alimentar — o texto oficial (art. 7o, item 7) diz o oposto: 'este principio NAO limita os mandados...'. A assertiva, tal como redigida (sem a negativa 'nao'), e portanto FALSA. Confirmado: I=verdadeira, II=verdadeira, III=falsa — gabarito 'Apenas I e II' esta CORRETO, sem erro de gabarito. MICROCHECAGEM Q819: a questao pergunta apenas qual das 4 opcoes (vida/educacao/integridade pessoal/liberdade pessoal) NAO e considerada 'direito civil' pela Convencao, sem citar ou remeter materialmente ao conteudo do art. 26 (Capitulo III — Direitos Economicos, Sociais e Culturais). Como nao ha remissao material ao art. 26, ele NAO foi incluido em artigos_esperados — documentado apenas como contexto estrutural (vida/integridade/liberdade pessoal estao no Capitulo II, arts. 4o/5o/7o; educacao nao e enumerada nesse capitulo, estando associada ao desenvolvimento progressivo do art. 26 ou ao Protocolo de San Salvador). MICROCHECAGEM Q144: o gabarito (alternativa marcada como a INCORRETA, ja que a questao pede exatidao aos termos da Convencao) usa a formula 'contraditorio e ampla defesa, com os meios e recursos a ela inerentes', que e redacao literal da CONSTITUICAO FEDERAL, art. 5o, LV — NAO e texto da CADH. Documentado aqui e no mapa; CF art. 5o, LV NAO foi adicionado a artigos_esperados desta unidade (pertence a outro diploma, e o motivo pelo qual a alternativa e a INCORRETA e justamente nao ser texto do tratado).",
+  "curso_conteudo_id": 72,
+  "nome_assunto": "Pacto de San José da Costa Rica",
+  "materia_id": 11,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "b918b069-8364-4412-80a6-07d78b369317",
+      "ordem": 1,
+      "titulo": "Pacto de San José da Costa Rica",
+      "escopo": "Convenção Americana sobre Direitos Humanos — Pacto de San José da Costa Rica (Decreto nº 678/1992): direito à vida e vedações à pena de morte (art. 4º); direito à integridade pessoal, vedação à tortura e penas cruéis, finalidade das penas privativas de liberdade e separação de menores processados dos adultos (art. 5º); proibição da escravidão, servidão e trabalho forçado, com as exceções legais (art. 6º); direito à liberdade pessoal, vedação à detenção arbitrária, direito de ser informado das razões da detenção e vedação à prisão por dívida, ressalvada a obrigação alimentar (art. 7º); garantias judiciais, incluindo presunção de inocência, assistência gratuita de tradutor/intérprete, direito de defesa e vedação ao duplo julgamento pelos mesmos fatos (art. 8º); direito à indenização por erro judiciário (art. 10); liberdade de consciência e de religião, incluindo o direito dos pais de educar os filhos conforme suas convicções (art. 12); proteção da família (art. 17); direitos da criança (art. 19); direito de circulação e de residência (art. 22); e suspensão de garantias em situações de emergência, com o rol de direitos não suspensáveis (art. 27). A unidade também trabalha a distinção entre os direitos civis e políticos enumerados no Capítulo II (arts. 3º-25) e os direitos econômicos, sociais e culturais tratados de forma programática no art. 26 (Capítulo III), sem remissão material a este último quando não efetivamente cobrado.",
+      "artigos_esperados": [
+        "art. 4º, item 4", "art. 4º, item 5",
+        "art. 5º, item 1", "art. 5º, item 2", "art. 5º, item 5", "art. 5º, item 6",
+        "art. 6º, item 1", "art. 6º, item 3, \"a\"",
+        "art. 7º, item 1", "art. 7º, item 3", "art. 7º, item 4", "art. 7º, item 7",
+        "art. 8º, item 2", "art. 8º, item 2, \"a\"", "art. 8º, item 2, \"d\"", "art. 8º, item 4",
+        "art. 10",
+        "art. 12, item 4",
+        "art. 17, item 1",
+        "art. 19",
+        "art. 22, item 5",
+        "art. 27, item 2"
+      ]
+    }
+  ]
+}
