@@ -1,0 +1,22 @@
+{
+  "_nota": "Convencao Interamericana para Prevenir e Punir a Tortura (curso_conteudo_id 79). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id af995205-bb67-49e4-8ad1-151e339e892a) — 3 questoes, unico diploma (Convencao Interamericana para Prevenir e Punir a Tortura, Cartagena 1985, ratificada pelo Brasil via Decreto no 98.386/1989), sem necessidade de divisao. VIGENCIA E FORMATO: numeracao oficial dos artigos da Convencao e 'Artigo N' SEM sufixo 'o' (confirmado via fonte oficial OAS/OEA — convencao especifica deste instrumento, nao generalizada para outros diplomas); alineas do art. 3 grafadas 'a.' e 'b.' (com ponto). Todos os dispositivos testados (arts. 2, 3 'a', 4, 5, 6) confirmados literalmente, sem alteracao superveniente. CORRECAO CRITICA — Q249/ART. 1 x ART. 6: a auditoria preliminar atribuiu Q249 ao art. 1, mas a microchecagem confirmou que o art. 1 apenas diz 'Os Estados Partes obrigam-se a prevenir e a punir a tortura, nos termos desta Convencao' (sem qualificador de jurisdicao), enquanto o art. 6 diz expressamente que os Estados Partes tomarao 'medidas efetivas a fim de prevenir e punir a tortura no ambito de sua jurisdicao' — a formulacao literal do gabarito da Q249 ('devem prevenir e punir a tortura dentro de sua jurisdicao') corresponde exatamente ao art. 6, nao ao art. 1. O art. 1 foi REMOVIDO de artigos_esperados por nao haver cobranca autonoma da obrigacao geral ali prevista — nenhuma alternativa da Q249 testa o art. 1 isoladamente, apenas a formulacao com qualificador territorial do art. 6. SOBREPOSICAO TEMATICA (nao duplicata, apenas registro): curso_conteudo_id 73 (Lei de Tortura, Lei no 9.455/1997, ja concluido) trata do mesmo tema geral (tortura) mas e diploma nacional distinto — nenhuma questao duplicada, nenhuma acao sobre o conteudo 73.",
+  "curso_conteudo_id": 79,
+  "nome_assunto": "Convenção Interamericana para Prevenir e Punir a Tortura",
+  "materia_id": 11,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "af995205-bb67-49e4-8ad1-151e339e892a",
+      "ordem": 1,
+      "titulo": "Convenção Interamericana para Prevenir e Punir a Tortura",
+      "escopo": "Convenção Interamericana para Prevenir e Punir a Tortura (Decreto nº 98.386/1989): definição de tortura, com exclusão condicionada de penas ou sofrimentos que sejam unicamente consequência de medidas legais, desde que não incluam os atos ou métodos vedados pelo próprio artigo (art. 2); responsabilidade do funcionário público que, podendo impedir a tortura, não o faz (art. 3, alínea a); irrelevância de ordens superiores para eximir da responsabilidade penal (art. 4); vedação a invocar circunstâncias excepcionais — estado de guerra, ameaça de guerra, estado de sítio ou emergência, comoção ou conflito interno, suspensão de garantias constitucionais, instabilidade política, periculosidade do detido ou insegurança do estabelecimento carcerário — como justificativa para a tortura (art. 5); dever dos Estados Partes de tomar medidas efetivas para prevenir e punir a tortura no âmbito de sua jurisdição (art. 6).",
+      "artigos_esperados": [
+        "art. 2",
+        "art. 3, \"a\"",
+        "art. 4",
+        "art. 5",
+        "art. 6"
+      ]
+    }
+  ]
+}
