@@ -1,0 +1,26 @@
+{
+  "_nota": "Lei de Tortura (curso_conteudo_id 73). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id 392fd9fe-a3d2-4062-b912-0a299b414429) — 5 questoes, unico diploma (Lei no 9.455/1997), sem necessidade de divisao. ESCOPO DO ART. 1o, I: o corpus de questoes ativas cobre apenas as alineas 'a' (obtencao de informacao/declaracao/confissao) e 'b' (provocar acao ou omissao de natureza criminosa) do inciso I; a alinea 'c' (discriminacao racial ou religiosa) NAO e testada por nenhuma questao ativa e por isso foi removida do escopo e de artigos_esperados — nao inserir apenas por pertencer ao mesmo inciso. VIGENCIA 2026: a Lei no 15.410/2026 ('Lei Barbara Penna') acrescentou ao art. 1o o inciso III, tipificando como tortura a submissao reiterada da mulher a intenso sofrimento fisico ou mental no contexto de violencia domestica e familiar. Nenhuma das 5 questoes ativas cobra esse inciso III — por isso ele NAO entra em artigos_esperados nem a aula deve ensina-lo como se fosse coberto pelo banco atual; fica registrado aqui apenas como contexto de atualizacao legislativa recente, para eventual saneamento/expansao futura caso surjam novas questoes sobre o tema. MICROCHECAGEM Q817/ART. 1o, SS7o: o texto literal da lei permanece 'o condenado por crime previsto nesta Lei, salvo a hipotese do parágrafo 2o, iniciara o cumprimento da pena em regime fechado'; a Q817 pergunta expressamente 'com base na Lei no 9.455/1997' (literalidade normativa, nao formulacao de regra juridica atual absoluta e desvinculada do texto legal), e a alternativa-gabarito (INCORRETA) e incorreta justamente por omitir a ressalva do SS2o — o gabarito permanece valido sob a leitura literal da lei, independentemente da jurisprudencia superveniente. Registra-se, porem, que o STJ, aplicando o entendimento do STF no HC 111.840, ja afastou a obrigatoriedade do regime inicial fechado para o condenado por crime de tortura, devendo a fixacao do regime observar os criterios gerais aplicaveis ao caso — a aula NAO pode ensinar que o crime de tortura obrigatoriamente comeca no regime fechado como regra juridica atual, apenas que esse e o texto ainda vigente do SS7o, temperado pela jurisprudencia. MICROCHECAGEM Q138/ART. 1o, SS6o: o comando e 'Nos termos da Lei no 9.455/1997, o crime de tortura e considerado:' — tambem literalidade normativa; gabarito 'inafiancavel e insuscetivel de graca ou anistia' corresponde exatamente ao texto do SS6o, sem extrapolacao para 'indulto' ou 'imprescritibilidade' (que nao constam do dispositivo). Nenhuma divergencia encontrada nas duas microchecagens — gabaritos mantidos sem alteracao.",
+  "curso_conteudo_id": 73,
+  "nome_assunto": "Lei de Tortura",
+  "materia_id": 11,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "392fd9fe-a3d2-4062-b912-0a299b414429",
+      "ordem": 1,
+      "titulo": "Lei de Tortura",
+      "escopo": "Lei nº 9.455/1997 (define os crimes de tortura): constranger alguém, com violência ou grave ameaça, causando sofrimento físico ou mental, para obter informação, declaração ou confissão da vítima ou de terceiro (art. 1º, I, \"a\"), ou para provocar ação ou omissão de natureza criminosa (art. 1º, I, \"b\"); submeter pessoa sob guarda, poder ou autoridade, com violência ou grave ameaça, a intenso sofrimento físico ou mental, como castigo pessoal ou medida de caráter preventivo (art. 1º, II); omissão de quem tinha o dever de evitar ou apurar essas condutas (art. 1º, §2º); causas de aumento de pena, inclusive quando o crime é cometido por agente público (art. 1º, §4º, I); perda do cargo, função ou emprego público, com interdição para seu exercício pelo dobro do prazo da pena aplicada (art. 1º, §5º); inafiançabilidade e vedação a graça ou anistia (art. 1º, §6º); regime inicial fechado, ressalvada a hipótese do §2º — texto literal ainda vigente, temperado pelo entendimento do STJ/STF (HC 111.840) que afasta sua obrigatoriedade absoluta, devendo a fixação do regime observar os critérios gerais aplicáveis ao caso (art. 1º, §7º); e extraterritorialidade da lei quando a vítima é brasileira ou o agente se encontra em local sob jurisdição brasileira (art. 2º, caput). A Lei nº 15.410/2026 acrescentou ao art. 1º o inciso III (tortura por submissão reiterada da mulher a intenso sofrimento físico ou mental no contexto de violência doméstica e familiar), não coberto pelas questões atuais.",
+      "artigos_esperados": [
+        "art. 1º, I, \"a\"",
+        "art. 1º, I, \"b\"",
+        "art. 1º, II",
+        "art. 1º, §2º",
+        "art. 1º, §4º, I",
+        "art. 1º, §5º",
+        "art. 1º, §6º",
+        "art. 1º, §7º",
+        "art. 2º, caput"
+      ]
+    }
+  ]
+}
