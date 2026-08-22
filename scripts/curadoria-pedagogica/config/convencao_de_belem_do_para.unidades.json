@@ -1,0 +1,19 @@
+{
+  "_nota": "Convencao de Belem do Para (curso_conteudo_id 89). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id a2d8b683-1a53-451e-9072-525a147fed01) — 3 questoes, unico diploma (Convencao Interamericana para Prevenir, Punir e Erradicar a Violencia contra a Mulher, Decreto 1.973/1996, numeracao oficial 'Artigo N' sem 'o', alineas 'a.'/'b.' com ponto), sem necessidade de divisao. Texto oficial dos 25 artigos conferido diretamente (PDF anexo ao Decreto Legislativo no 107/1995), sem indicio de denuncia/revogacao. Q153: art. 7, caput ('Os Estados Partes condenam todas as formas de violencia contra a mulher e convem em adotar... politicas destinadas a prevenir, punir e erradicar tal violencia') — corresponde a propria finalidade nominal da Convencao; nao ampliado para as alineas 'a' a 'h' do art. 7, pois a questao nao cobra as medidas especificas. Q154: art. 1 ('...tanto na esfera publica como na esfera privada') — mantido no art. 1, e NAO substituido pelo art. 2 (que apenas detalha contextos familiar/comunitario/estatal em que a violencia definida no art. 1 pode ocorrer, sem repetir a expressao 'publico e privado'). Q155 — AJUSTE APROVADO: a questao pergunta apenas a que sistema a Convencao pertence ('Interamericano de protecao dos direitos humanos'), sem cobrar competencia consultiva da Corte (art. 11) nem procedimento de peticoes perante a Comissao (art. 12); por isso NENHUM artigo foi incluido em artigos_esperados para fundamentar isoladamente a Q155 — a classificacao e registrada como institucional/contextual (denominacao 'Convencao Interamericana', adocao no ambito da OEA, Capitulo IV 'Mecanismos Interamericanos de Protecao', arts. 11 e 12 como confirmacao contextual, sem entrarem como dispositivos efetivamente cobrados). NENHUMA JURISPRUDENCIA especifica necessaria para estas 3 questoes (nao adicionar caso Maria da Penha vs. Brasil artificialmente). SOBREPOSICOES (nao duplicata, apenas registro pedagogico): nenhuma questao repetida ou vinculada em outro curso_conteudo encontrada via busca textual (materia_id 11, termos 'Belem do Para'/'violencia contra a mulher'/'Maria da Penha'); relacao com Comissao Interamericana (conteudo 87) e Corte Interamericana (conteudo 88) e apenas institucional/pedagogica, nenhum desses conteudos ja concluidos foi reaberto ou alterado.",
+  "curso_conteudo_id": 89,
+  "nome_assunto": "Convenção de Belém do Pará",
+  "materia_id": 11,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "a2d8b683-1a53-451e-9072-525a147fed01",
+      "ordem": 1,
+      "titulo": "Convenção de Belém do Pará",
+      "escopo": "Convenção Interamericana para Prevenir, Punir e Erradicar a Violência contra a Mulher (\"Convenção de Belém do Pará\", Decreto nº 1.973/1996): define violência contra a mulher como qualquer ato ou conduta baseada no gênero que cause morte, dano ou sofrimento físico, sexual ou psicológico à mulher, tanto na esfera pública como na esfera privada (art. 1); os Estados Partes condenam todas as formas de violência contra a mulher e convêm em adotar, por todos os meios apropriados e sem demora, políticas destinadas a prevenir, punir e erradicar tal violência (art. 7, caput). A Convenção integra o Sistema Interamericano de Proteção dos Direitos Humanos, adotada no âmbito da Organização dos Estados Americanos, prevendo mecanismos interamericanos de proteção (Capítulo IV) — parecer consultivo da Corte Interamericana de Direitos Humanos (art. 11) e petições à Comissão Interamericana de Direitos Humanos por violação do art. 7 (art. 12), citados aqui apenas como contexto institucional, sem que seu conteúdo específico (procedimento de petições, competência consultiva) seja cobrado pelas questões desta unidade.",
+      "artigos_esperados": [
+        "art. 1",
+        "art. 7, caput"
+      ]
+    }
+  ]
+}
