@@ -1,0 +1,18 @@
+{
+  "_nota": "Protocolo de Assuncao sobre Direitos Humanos no Mercosul (curso_conteudo_id 92). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id 655700d6-b585-468f-8d98-8143090cbafb) — 3 questoes, mesmo diploma, sem necessidade de divisao. Mesmo instrumento ja verificado no conteudo 91 (Direitos Humanos no Mercosul, ja concluido, commit 552b970): Protocolo de Assuncao sobre Compromisso com a Promocao e Protecao dos Direitos Humanos do MERCOSUL (2005, CMC/DEC no 17/05, Decreto no 7.225/2010). Q180 ('Protocolo de Assuncao esta relacionado ao compromisso com' -> 'A promocao e protecao dos direitos humanos no Mercosul') e questao de IDENTIFICACAO do proprio instrumento — gabarito reproduz literalmente o titulo oficial do protocolo, sem cobrar artigo especifico. Q181 ('Protocolo de Assuncao integra o conjunto normativo de' -> 'Direitos humanos no Mercosul') e questao de CLASSIFICACAO da area/ramo normativo a que pertence o instrumento (frente a distratores de areas do direito completamente alheias), tambem sem cobrar artigo especifico. Q182 ('a logica do Protocolo de Assuncao e compativel com a ideia de que' -> 'O respeito aos direitos humanos e condicao relevante para o processo de integracao regional') tem fundamento normativo direto no art. 1 do Protocolo de Assuncao — mesmo dispositivo ja usado no conteudo 91 para Q162/Q163 (mesmo diploma, dispositivo genuina e independentemente testado em ambos os conteudos por questoes diferentes; sem colisao de parser, pois e o mesmo diploma em ambos, nao dois diplomas distintos disputando a mesma numeracao). SOBREPOSICAO TEMATICA (nao duplicata) com o conteudo 91: Q182 testa substancialmente a mesma tese juridica do art. 1 ja usada para Q162/Q163 do conteudo 91, mas com enunciados diferentes e nenhuma duplicata exata de ID — currículo legitimamente desenhado como dois recortes pedagogicos distintos sobre o mesmo tema central (conteudo 91 mais amplo: institucionalidade/RAADH/IPPDH/complementaridade; conteudo 92 estudo dedicado especificamente ao Protocolo de Assuncao enquanto instrumento). Nenhum dos dois conteudos foi reaberto ou alterado alem do necessario. Nenhuma exclusao. Nenhuma jurisprudencia necessaria para estas 3 questoes.",
+  "curso_conteudo_id": 92,
+  "nome_assunto": "Protocolo de Assunção sobre Direitos Humanos no Mercosul",
+  "materia_id": 11,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "655700d6-b585-468f-8d98-8143090cbafb",
+      "ordem": 1,
+      "titulo": "Protocolo de Assunção sobre Direitos Humanos no Mercosul",
+      "escopo": "Protocolo de Assunção sobre Compromisso com a Promoção e Proteção dos Direitos Humanos do MERCOSUL (2005, CMC/DEC nº 17/05, Decreto nº 7.225/2010): instrumento normativo do Mercosul cujo objeto é a promoção e proteção dos direitos humanos no bloco, integrando o conjunto normativo específico de direitos humanos no Mercosul (e não outras áreas do direito, como direito marítimo, penal internacional, eleitoral ou monetário). Seu art. 1 estabelece que a plena vigência das instituições democráticas e o respeito aos direitos humanos e às liberdades fundamentais são condições essenciais — não meramente incidentais — para a vigência e evolução do processo de integração regional entre as Partes.",
+      "artigos_esperados": [
+        "art. 1"
+      ]
+    }
+  ]
+}
