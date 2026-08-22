@@ -1,0 +1,28 @@
+{
+  "_nota": "Abuso de Autoridade (curso_conteudo_id 70, materia_id 11/Direitos Humanos e Cidadania). NAO confundir com curso_conteudo_id 62 (mesmo nome, materia_id 10/Legislacao Especifica, ja concluido, arquivo abuso_de_autoridade.unidades.json) — slug deliberadamente diferenciado (abuso_de_autoridade_direitos_humanos_70) para nao colidir/sobrescrever os arquivos do conteudo 62. Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id d4d8a1fc-4c52-4c85-879c-031d0085be88) — 4 questoes, unico diploma (Lei no 13.869/2019), sem necessidade de divisao. CORRECAO JURIDICA CRITICA (Q354, situacao II): a conduta 'inovar artificiosamente, no curso de diligencia, de investigacao ou de processo, o estado de lugar, de coisa ou de pessoa, com o fim de eximir-se de responsabilidade ou de responsabilizar criminalmente alguem ou agravar-lhe a responsabilidade' esta no art. 23, caput da Lei 13.869/2019. O dispositivo do projeto de lei original que numericamente antecederia este foi integralmente vetado no processo legislativo e nao possui texto vigente, por isso nao serve de fundamento nesta ou em qualquer curadoria. Verificado tambem que o conteudo 62 ja usa corretamente art. 23, caput para a Q712 (mesma conduta), e que esse dispositivo vetado nao aparece em nenhum lugar do conteudo 62 — nao ha erro retroativo a corrigir la. Art. 15-A (violencia institucional, incluido pela Lei 14.321/2022, vigente e estavel desde entao) cobre vitima de infracao penal OU testemunha de crimes violentos — redacao padronizada para nao dar a entender que 'crimes violentos' qualifica tambem a vitima. Q57/art. 4o, I: o efeito nao e 'indenizacao automatica' — a lei estabelece tornar certa a obrigacao de indenizar o dano causado pelo crime, com valor minimo fixado na sentenca mediante requerimento do ofendido; os efeitos dos incisos II e III (inabilitacao e perda do cargo) sao condicionados a reincidencia especifica em crime de abuso de autoridade, nao sao automaticos, e exigem declaracao motivada na sentenca. SOBREPOSICOES (documentacao apenas, nenhuma acao): Q291 e quase-duplicata de Q193 (ja classificada no conteudo 62, ja concluido) — mesmo tema/gabarito ('divergencia na interpretacao da lei ou avaliacao de fatos/provas nao configura abuso de autoridade por si so'), 3 das 5 alternativas identicas, 2 distratores diferentes; Q193 NAO foi movida nem alterada. Tambem ha sobreposicao tematica (nao duplicata) entre Q354/situacao II (art. 23, caput) e Q712 do conteudo 62 (mesmo dispositivo, fatos distintos), e entre Q57/art. 4o (efeitos da condenacao) e Q838 do conteudo 62 (mesmo tema geral, assertiva diferente sobre pena restritiva de direitos do art. 5o).",
+  "curso_conteudo_id": 70,
+  "nome_assunto": "Abuso de Autoridade",
+  "materia_id": 11,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "d4d8a1fc-4c52-4c85-879c-031d0085be88",
+      "ordem": 1,
+      "titulo": "Abuso de Autoridade",
+      "escopo": "Lei nº 13.869/2019 (Lei de Abuso de Autoridade): a divergência na interpretação da lei ou na avaliação de fatos e provas não configura abuso de autoridade por si só (art. 1º, §2º); efeitos da condenação — tornar certa a obrigação de indenizar o dano causado pelo crime, com valor mínimo fixado na sentença mediante requerimento do ofendido (art. 4º, I), inabilitação para cargo, mandato ou função pública por 1 a 5 anos (art. 4º, II) e perda do cargo, mandato ou função pública (art. 4º, III), sendo estes dois últimos condicionados à reincidência específica em crime de abuso de autoridade, não automáticos e exigindo declaração motivada na sentença (art. 4º, parágrafo único); crime de violência institucional, consistente em submeter vítima de infração penal ou testemunha de crimes violentos a procedimento repetitivo, desnecessário ou invasivo que a leve a reviver, sem estrita necessidade, a situação de violência (art. 15-A, caput); deixar de identificar-se ou identificar-se falsamente ao preso por ocasião de sua captura ou detenção, inclusive por parte do responsável por interrogatório (art. 16, caput e parágrafo único); inovar artificiosamente, no curso de diligência, o estado de lugar, coisa ou pessoa, com o fim de eximir-se ou de agravar responsabilidade de terceiro (art. 23, caput); e a exceção de não configuração do crime de invasão de imóvel quando o ingresso se dá para prestar socorro ou em razão de flagrante delito ou desastre (art. 22, §2º).",
+      "artigos_esperados": [
+        "art. 1º, §2º",
+        "art. 4º, caput",
+        "art. 4º, I",
+        "art. 4º, II",
+        "art. 4º, III",
+        "art. 4º, parágrafo único",
+        "art. 15-A, caput",
+        "art. 16, caput",
+        "art. 16, parágrafo único",
+        "art. 22, §2º",
+        "art. 23, caput"
+      ]
+    }
+  ]
+}
