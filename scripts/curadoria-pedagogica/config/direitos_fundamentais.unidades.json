@@ -1,0 +1,31 @@
+{
+  "_nota": "Direitos fundamentais (curso_conteudo_id 76). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id 325c5ca6-8165-472f-b02b-eb7b18c6f71d) — 5 questoes, unico diploma (Constituicao Federal de 1988), sem necessidade de divisao. VIGENCIA: todos os dispositivos testados (art. 3o, I a IV; art. 4o, III; art. 5o, VIII, X, XI, XIV, XVII, XX, XLII, XLIV, SS1o) sao texto original de 1988, nunca alterados por emenda constitucional — confirmado (o art. 5o hoje conta com 78 incisos por sucessivas EC, mas nenhuma alterou os incisos aqui testados). MICROCHECAGEM Q342 (EXCETO): a questao pede o item que NAO pertence aos objetivos fundamentais da Republica (art. 3o). As quatro alternativas corretas (nao selecionadas) correspondem a art. 3o, I/II/III/IV. O gabarito 'assegurar a autodeterminacao dos povos' NAO e frase aleatoria/incorreta — corresponde efetivamente ao art. 4o, III (principios que regem as relacoes internacionais do Brasil). A questao testa exatamente a distincao normativa entre objetivos fundamentais da Republica (art. 3o) e principios das relacoes internacionais (art. 4o) — por isso art. 4o, III entra em artigos_esperados, sem que isso amplie a unidade para o estudo geral do art. 4o (limitado a esse contraste pontual). MICROCHECAGEM Q343: a assertiva sobre acesso a informacao e sigilo da fonte corresponde a art. 5o, XIV (nao art. 5o, X, que trata de intimidade/vida privada/honra/imagem); a assertiva sobre vedacao a associacao compulsoria corresponde a art. 5o, XX. SOBREPOSICAO TEMATICA (nao duplicata): curso_conteudo_id 47 (Direitos e Garantias Fundamentais, materia_id 10/Legislacao Especifica, ja concluido) tambem versa sobre art. 5o/SS1o (questao 846, distinta, ja classificada, sem vinculo com as presentes 5 questoes) — apenas registro, nenhuma acao (nao mover questoes, nao reabrir conteudo 47).",
+  "curso_conteudo_id": 76,
+  "nome_assunto": "Direitos fundamentais",
+  "materia_id": 11,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "325c5ca6-8165-472f-b02b-eb7b18c6f71d",
+      "ordem": 1,
+      "titulo": "Direitos fundamentais",
+      "escopo": "Constituição Federal de 1988: objetivos fundamentais da República (art. 3º, I a IV); distinção pontual entre os objetivos fundamentais da República (art. 3º) e o princípio da autodeterminação dos povos previsto entre os princípios das relações internacionais (art. 4º, III), utilizado como contraste em questão; direitos e garantias individuais — liberdade de crença/convicção filosófica ou política, com exceção quando invocada para eximir-se de obrigação legal e recusar-se a cumprir prestação alternativa (art. 5º, VIII), inviolabilidade da intimidade, vida privada, honra e imagem (art. 5º, X), inviolabilidade domiciliar (art. 5º, XI), acesso à informação com resguardo do sigilo da fonte (art. 5º, XIV), liberdade de associação para fins lícitos, vedada a de caráter paramilitar (art. 5º, XVII), vedação à associação ou permanência associativa compulsória (art. 5º, XX), racismo como crime inafiançável e imprescritível (art. 5º, XLII), ação de grupos armados, civis ou militares, contra a ordem constitucional e o Estado Democrático como crime inafiançável e imprescritível (art. 5º, XLIV), e aplicação imediata das normas definidoras dos direitos e garantias fundamentais (art. 5º, §1º).",
+      "artigos_esperados": [
+        "art. 3º, I",
+        "art. 3º, II",
+        "art. 3º, III",
+        "art. 3º, IV",
+        "art. 4º, III",
+        "art. 5º, VIII",
+        "art. 5º, X",
+        "art. 5º, XI",
+        "art. 5º, XIV",
+        "art. 5º, XVII",
+        "art. 5º, XX",
+        "art. 5º, XLII",
+        "art. 5º, XLIV",
+        "art. 5º, §1º"
+      ]
+    }
+  ]
+}
