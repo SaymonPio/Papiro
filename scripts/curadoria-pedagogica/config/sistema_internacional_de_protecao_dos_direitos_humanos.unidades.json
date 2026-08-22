@@ -1,0 +1,16 @@
+{
+  "_nota": "Sistema Internacional de Protecao dos Direitos Humanos (curso_conteudo_id 82). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id 522f7c40-b95e-4c91-b0d6-cf4a6f012c16) — 3 questoes, conteudo integralmente doutrinario/conceitual (nenhum dispositivo normativo, tratado, decreto, sumula ou precedente jurisprudencial e objeto de nenhuma das 3 questoes), sem necessidade de divisao. artigos_esperados = [] APROVADO EXPLICITAMENTE: as 3 questoes sao integralmente doutrinarias, sobre a classificacao do Direito Internacional dos Direitos Humanos (sistema universal x sistemas regionais) e o principio da complementaridade entre eles — nao ha artigo de Carta da ONU, DUDH, PIDCP/PIDESC, sumula ou jurisprudencia a mapear; nao forcar referencia normativa apenas para evitar lista vazia. AJUSTE DE REDACAO (Q187): evitar afirmar de forma absoluta que 'a DUDH e o marco fundacional do sistema universal', pois a ONU e sua Carta constitutiva sao anteriores (1945) a DUDH (1948) — usar formulacao mais precisa: 'a DUDH de 1948 constitui um dos marcos centrais/fundamentais da consolidacao do sistema universal de protecao dos direitos humanos'. NENHUMA JURISPRUDENCIA NECESSARIA: este conteudo nao envolve sumula nem precedente do STF/STJ/Corte IDH — nao inventar jurisprudencia apenas por proximidade tematica. SOBREPOSICOES (nao duplicata, apenas registro pedagogico): DUDH, PIDCP, PIDESC, Pacto de San Jose, Corte Interamericana e demais instrumentos internacionais ja curados nesta sequencia sao exemplos concretos dos sistemas classificados aqui — podem ser citados como exemplos na aula, sem transformar esta unidade em revisao detalhada desses tratados nem em estudo completo da ONU/OEA/Cortes regionais; nenhum desses conteudos ja concluidos foi reaberto ou alterado.",
+  "curso_conteudo_id": 82,
+  "nome_assunto": "Sistema Internacional de Proteção dos Direitos Humanos",
+  "materia_id": 11,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "522f7c40-b95e-4c91-b0d6-cf4a6f012c16",
+      "ordem": 1,
+      "titulo": "Sistema Internacional de Proteção dos Direitos Humanos",
+      "escopo": "Sistema Internacional de Proteção dos Direitos Humanos: (A) sistema universal, desenvolvido institucionalmente no âmbito da Organização das Nações Unidas, tendo a Declaração Universal dos Direitos Humanos de 1948 como um dos marcos centrais de sua consolidação — o Pacto Internacional sobre Direitos Civis e Políticos e o Pacto Internacional sobre Direitos Econômicos, Sociais e Culturais podem ser citados como exemplos de instrumentos desse sistema, sem revisão detalhada de seu conteúdo; (B) sistemas regionais de proteção — interamericano, europeu e africano — apresentados apenas na medida necessária para diferenciá-los do sistema universal; (C) princípio da complementaridade: os sistemas universal e regionais podem coexistir e atuar de forma complementar entre si e com a proteção nacional dos direitos humanos, sem se excluírem mutuamente.",
+      "artigos_esperados": []
+    }
+  ]
+}
