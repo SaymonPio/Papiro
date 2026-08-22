@@ -1,0 +1,22 @@
+{
+  "_nota": "Pacto Internacional sobre Direitos Civis e Politicos - PIDCP (curso_conteudo_id 74). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id 8d4e4b20-37ac-4df0-a7ac-57cb016c44d6) — 3 questoes, unico diploma (PIDCP, promulgado pelo Decreto no 592/1992), sem necessidade de divisao. VIGENCIA: arts. 6o, 7o, 9o, 10 e 11 sao texto original do tratado de 1966, ratificado pelo Brasil em 1992, sem alteracao superveniente (art. 7o conferido literalmente contra fonte oficial). PRECISAO ART. 11: o dispositivo NAO veda genericamente 'prisao por descumprimento de obrigacao contratual' — o texto normativo e mais estrito: 'ninguem podera ser preso APENAS POR NAO PODER CUMPRIR com uma obrigacao contratual'. Usar formulacao aderente: 'vedacao a prisao fundada exclusivamente na incapacidade de cumprir obrigacao contratual'. ART. 7o — NAO AMPLIAR PARA NAO DERROGABILIDADE: a natureza nao derrogavel do art. 7o tambem se relaciona ao art. 4o, item 2, do PIDCP, mas esse dispositivo NAO e testado pelo corpus atual — nao entra em artigos_esperados, nao amplia o escopo; mencionado aqui apenas como nota de contexto, nao como conteudo cobrado. MICROCHECAGEM Q58/ALT2 (gabarito INCORRETA): o texto real do art. 7o afirma 'sera proibido, sobretudo, submeter uma pessoa, sem seu livre consentimento, a experiencias medicas ou cientificas' — a alternativa inverte para 'e autorizado submeter uma pessoa, sem seu livre consentimento, a experiencias medicas ou cientificas', confirmando a INCORRETA. SOBREPOSICAO TEMATICA (nao duplicata, apenas registro): DUDH (conteudo 83, ja concluido) e CADH/Pacto de San Jose (conteudo 72, ja concluido) protegem direitos substantivos semelhantes (vida, proibicao de tortura), mas nenhuma questao e duplicata textual — nenhum conteudo ja concluido foi alterado.",
+  "curso_conteudo_id": 74,
+  "nome_assunto": "Pacto Internacional sobre Direitos Civis e Políticos",
+  "materia_id": 11,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "8d4e4b20-37ac-4df0-a7ac-57cb016c44d6",
+      "ordem": 1,
+      "titulo": "Pacto Internacional sobre Direitos Civis e Políticos",
+      "escopo": "Pacto Internacional sobre Direitos Civis e Políticos — PIDCP (Decreto nº 592/1992): direito inerente à vida, protegido por lei, com vedação à privação arbitrária (art. 6º, item 1); proibição da tortura e de penas ou tratamentos cruéis, desumanos ou degradantes, incluindo a vedação a submeter pessoa, sem seu livre consentimento, a experiências médicas ou científicas (art. 7º); direito à reparação de quem for vítima de prisão ou encarceramento ilegais (art. 9º, item 5); direito de toda pessoa privada de liberdade a tratamento humano e com respeito à dignidade inerente à pessoa humana (art. 10, item 1); vedação à prisão fundada exclusivamente na incapacidade de cumprir obrigação contratual (art. 11).",
+      "artigos_esperados": [
+        "art. 6º, item 1",
+        "art. 7º",
+        "art. 9º, item 5",
+        "art. 10, item 1",
+        "art. 11"
+      ]
+    }
+  ]
+}
