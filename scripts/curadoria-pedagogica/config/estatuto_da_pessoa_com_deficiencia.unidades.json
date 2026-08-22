@@ -1,0 +1,23 @@
+{
+  "_nota": "Estatuto da Pessoa com Deficiencia (curso_conteudo_id 75). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id 128d9183-6188-4ca1-abdb-fc5c57e78d28) — 3 questoes, unico diploma (Lei no 13.146/2015 — Lei Brasileira de Inclusao da Pessoa com Deficiencia), sem necessidade de divisao. DIFERENCA DE ESCOPO EM RELACAO AO CONTEUDO 71: o curso_conteudo_id 71 ('Pessoa com deficiencia', ja concluido) cita a Lei 13.146/2015 apenas como lei alteradora dos arts. 2o e 8o da Lei 7.853/1989 (seu artigos_esperados contem 'art. 2o, paragrafo unico, II, b/d/f' e 'art. 8o, I/II/III/IV/VI/SS3o', todos da Lei 7.853, nao da Lei 13.146 em si); as 3 questoes deste conteudo (75) testam dispositivos SUBSTANTIVOS proprios da Lei 13.146/2015 (arts. 3o, 6o, 84, 85) — nenhuma sobreposicao de artigo entre os dois conteudos, e o fato de ambos tratarem de pessoa com deficiencia nao gera duplicacao das questoes atuais. Nao reabrir, nao alterar, nao mover questoes do conteudo 71. VIGENCIA: os dispositivos especificos efetivamente cobrados pelas questoes (art. 3o, XIII; art. 6o, caput e I; art. 84, SS3o; art. 85, caput e SS1o) permanecem vigentes e compativeis com os gabaritos atuais. A Lei 13.146 recebeu alteracoes posteriores em outros pontos do art. 3o, inclusive inclusao de novo inciso em 2025, mas isso NAO alterou o inciso XIII testado pela Q126 — por isso essa atualizacao nao amplia artigos_esperados.",
+  "curso_conteudo_id": 75,
+  "nome_assunto": "Estatuto da Pessoa com Deficiência",
+  "materia_id": 11,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "128d9183-6188-4ca1-abdb-fc5c57e78d28",
+      "ordem": 1,
+      "titulo": "Estatuto da Pessoa com Deficiência",
+      "escopo": "Lei nº 13.146/2015 (Lei Brasileira de Inclusão da Pessoa com Deficiência / Estatuto da Pessoa com Deficiência): definição de profissional de apoio escolar — pessoa que exerce atividades de alimentação, higiene e locomoção do estudante com deficiência e atua em todas as atividades escolares nas quais se fizer necessária (art. 3º, XIII); a deficiência não afeta a plena capacidade civil da pessoa (art. 6º, caput), inclusive para casar-se e constituir união estável (art. 6º, I); a curatela como medida protetiva extraordinária, proporcional às necessidades e circunstâncias de cada caso, com duração pelo menor tempo possível (art. 84, §3º); a curatela afeta somente os atos de natureza patrimonial e negocial (art. 85, caput), não alcançando o direito ao próprio corpo, à sexualidade, ao matrimônio, à privacidade, à educação, à saúde, ao trabalho e ao voto (art. 85, §1º).",
+      "artigos_esperados": [
+        "art. 3º, XIII",
+        "art. 6º, caput",
+        "art. 6º, I",
+        "art. 84, §3º",
+        "art. 85, caput",
+        "art. 85, §1º"
+      ]
+    }
+  ]
+}
