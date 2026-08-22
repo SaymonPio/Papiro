@@ -1,0 +1,24 @@
+{
+  "_nota": "Direito a cidadania na Constituicao Federal (curso_conteudo_id 95). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id c80fe9be-da9c-4e28-b2a1-27a04be17bf7) — 5 questoes, unico diploma (Constituicao Federal de 1988, arts. 1o e 14), sem necessidade de divisao. VIGENCIA: todos os dispositivos testados (art. 1o, II; art. 14, caput/I/II/III; art. 14, SS1o, I; art. 14, SS3o, VI, 'c') sao texto original de 1988, nunca alterados por emenda. Q161 e questao de natureza conceitual (direito de votar como manifestacao central dos direitos politicos, sem reproducao literal exclusiva de um dispositivo), mas possui fundamento normativo direto e seguro no art. 14, caput ('a soberania popular sera exercida pelo sufragio universal e pelo voto direto e secreto'). ATUALIZACAO ELEITORAL 2025 (Q694): a idade minima constitucional para Prefeito permanece 21 anos (art. 14, SS3o, VI, 'c'), inalterada. A Lei no 15.230/2025 alterou o art. 11, SS2o da Lei no 9.504/1997 (Lei das Eleicoes) apenas quanto ao MOMENTO DE AFERICAO da idade minima — para candidatos a cargos do Poder Executivo, a idade minima e aferida na data da posse. Isso nao altera a Q694, que pergunta apenas qual e a idade minima constitucional para Prefeito, sem tocar no momento de afericao; por isso nenhum dispositivo da Lei 9.504/1997 entra em artigos_esperados.",
+  "curso_conteudo_id": 95,
+  "nome_assunto": "Direito à cidadania na Constituição Federal",
+  "materia_id": 11,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "c80fe9be-da9c-4e28-b2a1-27a04be17bf7",
+      "ordem": 1,
+      "titulo": "Direito à cidadania na Constituição Federal",
+      "escopo": "Constituição Federal de 1988: a cidadania como fundamento da República Federativa do Brasil (art. 1º, II); soberania popular exercida pelo sufrágio universal e pelo voto direto e secreto, com valor igual para todos, mediante plebiscito, referendo e iniciativa popular (art. 14, caput, I, II e III); direito de votar como manifestação central dos direitos políticos; alistamento eleitoral e voto obrigatórios para os maiores de dezoito anos (art. 14, §1º, I); idade mínima de 21 anos como condição de elegibilidade para Prefeito (art. 14, §3º, VI, \"c\"). A Lei nº 15.230/2025 alterou o momento de aferição da idade mínima na legislação eleitoral (Lei nº 9.504/1997), sem modificar as idades previstas no art. 14, §3º, VI da Constituição.",
+      "artigos_esperados": [
+        "art. 1º, II",
+        "art. 14, caput",
+        "art. 14, I",
+        "art. 14, II",
+        "art. 14, III",
+        "art. 14, §1º, I",
+        "art. 14, §3º, VI, \"c\""
+      ]
+    }
+  ]
+}
