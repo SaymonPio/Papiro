@@ -1,0 +1,23 @@
+{
+  "_nota": "Organizacao dos Estados Americanos (curso_conteudo_id 86). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id 7a9e1731-626a-44cc-90f0-004faed11e0f) — 3 questoes, unico diploma (Carta da Organizacao dos Estados Americanos, Carta de Bogota 1948, com emendas pelos Protocolos de Buenos Aires/1967, Cartagena das Indias/1985, Washington/1992 e Managua/1993 — numeracao atual consolidada), sem necessidade de divisao. APLICANDO O PRECEDENTE DO CONTEUDO 85: verificado fundamento normativo direto para as 3 questoes antes de presumir doutrina pura — nenhuma e puramente doutrinaria. Q171: art. 1 ('Dentro das Nacoes Unidas, a Organizacao dos Estados Americanos constitui um organismo regional'). Q172: art. 53, alinea 'e', que lista os orgaos por meio dos quais a OEA realiza seus fins, incluindo a Comissao Interamericana de Direitos Humanos — confirma o vinculo institucional da Comissao com a OEA; NAO antecipa competencias/funcoes especificas da Comissao, que pertencem ao futuro curso_conteudo_id 87 (ainda pendente, nao antecipado). Q173: gabarito sintetiza tres propositos essenciais do art. 2 — paz e seguranca continentais (alinea 'a'), democracia representativa (alinea 'b') e acao cooperativa voltada ao desenvolvimento economico, social e cultural (alinea 'f'); mantido tambem art. 2, caput, por ser a norma introdutoria dessa enumeracao. NAO incluidas as demais alineas do art. 2 (c, d, e, g, h) — a questao nao exige estudo integral dos oito propositos, apenas os tres efetivamente sintetizados no gabarito. NENHUMA JURISPRUDENCIA especifica exigida — nao adicionar STF/STJ/Corte IDH artificialmente. SOBREPOSICOES (nao duplicata, apenas registro): conteudo 85 (Sistema Interamericano de Direitos Humanos, ja concluido, art. 33 CADH sobre orgaos de PROTECAO de DH) trata de fundamento distinto de Q172 (art. 53 Carta OEA, sobre orgaos DA PROPRIA OEA); nenhum conteudo ja concluido foi alterado; conteudo 87 (Comissao Interamericana, ainda pendente) tambem nao foi tocado nem antecipado.",
+  "curso_conteudo_id": 86,
+  "nome_assunto": "Organização dos Estados Americanos",
+  "materia_id": 11,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "7a9e1731-626a-44cc-90f0-004faed11e0f",
+      "ordem": 1,
+      "titulo": "Organização dos Estados Americanos",
+      "escopo": "Organização dos Estados Americanos (Carta de Bogotá, 1948): a OEA constitui, dentro das Nações Unidas, um organismo regional (art. 1); seus propósitos essenciais incluem garantir a paz e a segurança continentais (art. 2, \"a\"), promover e consolidar a democracia representativa (art. 2, \"b\") e promover, por meio da ação cooperativa, o desenvolvimento econômico, social e cultural dos Estados membros (art. 2, \"f\"); a Comissão Interamericana de Direitos Humanos é um dos órgãos por meio dos quais a OEA realiza seus fins (art. 53, \"e\").",
+      "artigos_esperados": [
+        "art. 1",
+        "art. 2, caput",
+        "art. 2, \"a\"",
+        "art. 2, \"b\"",
+        "art. 2, \"f\"",
+        "art. 53, \"e\""
+      ]
+    }
+  ]
+}

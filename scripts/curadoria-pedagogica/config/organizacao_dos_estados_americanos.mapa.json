@@ -1,0 +1,11 @@
+{
+  "_nota": "Organizacao dos Estados Americanos (curso_conteudo_id 86). 1 unica unidade, reaproveitando a unidade placeholder ja existente (id 7a9e1731-626a-44cc-90f0-004faed11e0f) — nenhuma multiunidade possivel. Nenhuma duplicata, nenhuma exclusao.",
+  "assunto_id": 87,
+  "total_candidatas_ativas": 3,
+  "questoes_excluidas": [],
+  "vinculos": [
+    { "questao_id": 171, "unidade_id": "7a9e1731-626a-44cc-90f0-004faed11e0f", "ordem_unidade": 1, "tema": "Natureza da OEA como organismo regional", "justificativa": "Gabarito 'Regional americano' — cópia literal do art. 1 da Carta da OEA ('Dentro das Nações Unidas, a Organização dos Estados Americanos constitui um organismo regional'). Distratores citam outros âmbitos (europeu, africano, asiático, global exclusivamente).", "confianca": "alta" },
+    { "questao_id": 172, "unidade_id": "7a9e1731-626a-44cc-90f0-004faed11e0f", "ordem_unidade": 1, "tema": "Comissão Interamericana como órgão da OEA", "justificativa": "Fundamento normativo: art. 53, alínea 'e', da Carta da OEA, que lista os órgãos por meio dos quais a Organização realiza seus fins, incluindo a Comissão Interamericana de Direitos Humanos. Gabarito 'Organização dos Estados Americanos' — confirma o vínculo institucional. Não antecipa competências/funções específicas da Comissão (destino: futuro curso_conteudo_id 87, ainda pendente). Distratores citam organismos sem relação (União Europeia, OTAN, OMC, OCDE).", "confianca": "alta" },
+    { "questao_id": 173, "unidade_id": "7a9e1731-626a-44cc-90f0-004faed11e0f", "ordem_unidade": 1, "tema": "Propósitos essenciais da OEA", "justificativa": "Gabarito 'Paz, segurança, democracia e cooperação entre os Estados americanos' — síntese de três propósitos essenciais do art. 2, caput (norma introdutória da enumeração): paz e segurança continentais (art. 2, \"a\"); promover e consolidar a democracia representativa (art. 2, \"b\"); promover, por meio da ação cooperativa, o desenvolvimento econômico, social e cultural (art. 2, \"f\"). Não inclui as demais alíneas do art. 2 (c, d, e, g, h), não exigidas pelo corpus. Distratores fabricam propósitos absurdos (moeda única mundial, unificação de exércitos, extinção de fronteiras, controle direto de governos).", "confianca": "alta" }
+  ]
+}
