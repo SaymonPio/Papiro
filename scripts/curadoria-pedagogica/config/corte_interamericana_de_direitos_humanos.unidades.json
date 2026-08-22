@@ -1,0 +1,19 @@
+{
+  "_nota": "Corte Interamericana de Direitos Humanos (curso_conteudo_id 88). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id 9ab2c28c-2c1d-4d15-b134-a191ff946529) — 4 questoes, dois diplomas do sistema interamericano (Estatuto da Corte IDH e CADH), sem necessidade de divisao. AMBIGUIDADE DE PARSER (Estatuto da Corte IDH vs. CADH): ambos os diplomas reiniciam sua propria numeracao de artigos a partir de 1; como o parser nao distingue diplomas e trabalha apenas com a numeracao-base do artigo, o art. 1 (natureza juridica) e o art. 3 (sede) do Estatuto da Corte IDH NAO entram em artigos_esperados, pois colidiriam com o art. 1 (Obrigacao de Respeitar os Direitos) e o art. 3 (Direito ao Reconhecimento da Personalidade Juridica) da propria CADH — conteudo totalmente diferente. O fundamento exato de Q156 e Q158 fica documentado apenas em escopo/mapa/_nota, seguindo o mesmo precedente ja adotado no conteudo 71 (Pessoa com Deficiencia) para o Protocolo Facultativo. FONTES: (A) Estatuto da Corte Interamericana de Direitos Humanos (aprovado pela Resolucao AG/RES. 448, OEA, 1979) — art. 1 (natureza e regime juridico: instituicao judiciaria autonoma cujo objetivo e a aplicacao e interpretacao da CADH) fundamenta Q156; art. 3 (sede: San Jose, Costa Rica) fundamenta Q158. (B) Convencao Americana sobre Direitos Humanos — CADH/Pacto de San Jose da Costa Rica (Decreto 678/1992) — art. 52, item 1 (composicao por sete juizes) fundamenta Q826; art. 68, item 1 (cumprimento das decisoes pelos Estados Partes) fundamenta Q157. CONTEXTO ADICIONAL (nao testado por nenhuma questao ativa, apenas registro): o Brasil reconheceu a competencia obrigatoria (jurisdicao contenciosa) da Corte IDH por declaracao depositada em 10/12/1998, posteriormente promulgada pelo Decreto no 4.463/2002 — essa declaracao alcanca fatos posteriores a 10/12/1998; nenhuma das 4 questoes cobra diretamente o art. 62 da CADH ou o Decreto 4.463/2002, por isso esse contexto nao entra em artigos_esperados. SEPARACAO TEMATICA (nao duplicata, apenas registro): Q147 (assunto_id 97) e outros casos concretos pertencem ao curso_conteudo_id 90 ('Casos do Brasil na Corte Interamericana de Direitos Humanos'), ainda nao processado nesta curadoria — nao mexer nele agora. Escopo desta unidade restrito ao corpus real (natureza, composicao, sede, dever de cumprimento das decisoes), sem se transformar em estudo geral da competencia consultiva, do procedimento perante a Corte, de reparacoes ou dos casos brasileiros.",
+  "curso_conteudo_id": 88,
+  "nome_assunto": "Corte Interamericana de Direitos Humanos",
+  "materia_id": 11,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "9ab2c28c-2c1d-4d15-b134-a191ff946529",
+      "ordem": 1,
+      "titulo": "Corte Interamericana de Direitos Humanos",
+      "escopo": "Corte Interamericana de Direitos Humanos: instituição judiciária autônoma do sistema interamericano cujo objetivo é a aplicação e a interpretação da Convenção Americana sobre Direitos Humanos — CADH/Pacto de San José da Costa Rica (Estatuto da Corte IDH, art. 1); composta por sete juízes, nacionais dos Estados membros da OEA, eleitos a título pessoal dentre juristas da mais alta autoridade moral e de reconhecida competência em matéria de direitos humanos (CADH, art. 52, item 1); sede em San José, Costa Rica (Estatuto da Corte IDH, art. 3); os Estados Partes comprometem-se a cumprir a decisão da Corte em todo caso em que forem partes (CADH, art. 68, item 1). O Brasil reconheceu a competência obrigatória (jurisdição contenciosa) da Corte por declaração depositada em 10/12/1998, promulgada pelo Decreto nº 4.463/2002, com efeitos para fatos posteriores a essa data.",
+      "artigos_esperados": [
+        "art. 52, item 1",
+        "art. 68, item 1"
+      ]
+    }
+  ]
+}
