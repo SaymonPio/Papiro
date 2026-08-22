@@ -1,0 +1,24 @@
+{
+  "_nota": "Pacto Internacional sobre Direitos Economicos, Sociais e Culturais - PIDESC (curso_conteudo_id 77). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id f33221cc-f53c-4f91-88e4-a6d8440beca0) — 3 questoes, unico diploma (PIDESC, promulgado pelo Decreto no 591/1992), sem necessidade de divisao. VIGENCIA: arts. 4o, 5o, 6o, 9o, 13 e 15 sao texto original do tratado de 1966, ratificado pelo Brasil em 1992, sem alteracao superveniente (art. 15, item 1, 'c', conferido literalmente contra fonte doutrinaria/comentario geral). REFINAMENTO PEDAGOGICO — ART. 15: nao rotular esse dispositivo genericamente como 'direito de propriedade intelectual' ou expressao equivalente que sugira identidade completa com os regimes juridicos ordinarios de propriedade intelectual; usar a formulacao do proprio PIDESC ('direito de beneficiar-se da protecao dos interesses morais e materiais decorrentes de producao cientifica, literaria ou artistica de que seja autor'). O Comite de Direitos Economicos, Sociais e Culturais, no Comentario Geral no 17, distingue esse direito humano dos direitos patrimoniais tipicos dos sistemas de propriedade intelectual — nota registrada apenas como contexto doutrinario, sem gerar novo artigo_esperado. SOBREPOSICAO TEMATICA (nao duplicata, apenas registro): PIDCP (conteudo 74, ja concluido) e DUDH (conteudo 83, ja concluido) sao instrumentos internacionais relacionados, com padrao pedagogico semelhante de distratores por inversao/fabricacao, mas nenhuma questao duplicada — nenhum conteudo ja concluido foi alterado.",
+  "curso_conteudo_id": 77,
+  "nome_assunto": "Pacto Internacional sobre Direitos Econômicos, Sociais e Culturais",
+  "materia_id": 11,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "f33221cc-f53c-4f91-88e4-a6d8440beca0",
+      "ordem": 1,
+      "titulo": "Pacto Internacional sobre Direitos Econômicos, Sociais e Culturais",
+      "escopo": "Pacto Internacional sobre Direitos Econômicos, Sociais e Culturais — PIDESC (Decreto nº 591/1992): limites admissíveis ao exercício dos direitos assegurados, restritos aos estabelecidos em lei, na medida compatível com a natureza desses direitos e exclusivamente para favorecer o bem-estar geral em sociedade democrática (art. 4º); vedação a restringir ou suspender direitos humanos fundamentais já reconhecidos ou vigentes sob pretexto de o Pacto não os reconhecer ou reconhecê-los em menor grau (art. 5º, item 2); direito ao trabalho, compreendendo a possibilidade de ganhar a vida mediante trabalho livremente escolhido ou aceito, com previsão expressa de medidas incluindo orientação e formação técnica e profissional (art. 6º, itens 1 e 2); direito de toda pessoa à previdência social, inclusive ao seguro social (art. 9º); direito de toda pessoa à educação (art. 13, item 1); direito de beneficiar-se da proteção dos interesses morais e materiais decorrentes de produção científica, literária ou artística de que a pessoa seja autora (art. 15, item 1, alínea c).",
+      "artigos_esperados": [
+        "art. 4º",
+        "art. 5º, item 2",
+        "art. 6º, item 1",
+        "art. 6º, item 2",
+        "art. 9º",
+        "art. 13, item 1",
+        "art. 15, item 1, \"c\""
+      ]
+    }
+  ]
+}
