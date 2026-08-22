@@ -1,0 +1,30 @@
+{
+  "_nota": "Declaracao Universal dos Direitos Humanos (curso_conteudo_id 83). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id e7bef052-b882-4a2f-b1e6-88ce12740c26) — 6 questoes, unico instrumento (DUDH), sem necessidade de divisao. STATUS JURIDICO DA DUDH: proclamada pela Assembleia Geral das Nacoes Unidas em 10 de dezembro de 1948, por meio da Resolucao 217 A (III). Nao e tratado internacional sujeito a ratificacao/promulgacao como as convencoes. Constitui marco fundamental do sistema internacional de direitos humanos, e determinados direitos nela reconhecidos tambem encontram correspondencia em normas convencionais, costumeiras ou imperativas do Direito Internacional (nao se aprofunda o tema de jus cogens nesta unidade, pois nenhuma das 6 questoes o cobra). NORMALIZACAO DE NUMERACAO: a DUDH numera seus artigos tradicionalmente em algarismos romanos ('Artigo I' a 'Artigo XXX') em diversas edicoes graficas oficiais; outras publicacoes oficiais da ONU em portugues tambem apresentam numeracao ordinal/arabica ('Artigo 1o', 'Artigo 11o' etc.). artigos_esperados usa representacao arabica normalizada (com sufixo 'o', ja usado uniformemente em todos os conteudos anteriores desta curadoria) por compatibilidade estrutural com o parser (REGEX_ARTIGO_BASE, que exige digitos arabicos no inicio da string) — nao houve alteracao da referencia substantiva, apenas da forma de representacao do numero. MICROCHECAGEM Q349/ART. 26: a DUDH nao afirma que a gratuidade da instrucao e restrita 'apenas' aos graus elementares e fundamentais, proibindo extensao a outros niveis — ela apenas ASSEGURA a gratuidade 'pelo menos' nesses graus, sendo o acesso ao ensino superior baseado no merito e aberto a todos em igualdade, sem garantia expressa de gratuidade. A alternativa-gabarito da Q349 (INCORRETA) afirma que a DUDH GARANTE gratuidade tambem no ensino superior — isso permanece incorreto, pois a Declaracao nao estabelece essa garantia para o ensino superior; a gratuidade e expressamente assegurada, pelo menos, nos graus elementares e fundamentais.",
+  "curso_conteudo_id": 83,
+  "nome_assunto": "Declaração Universal dos Direitos Humanos",
+  "materia_id": 11,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "e7bef052-b882-4a2f-b1e6-88ce12740c26",
+      "ordem": 1,
+      "titulo": "Declaração Universal dos Direitos Humanos",
+      "escopo": "Declaração Universal dos Direitos Humanos (proclamada pela Assembleia Geral da ONU em 10/12/1948, Resolução 217 A (III); não é tratado sujeito a ratificação/promulgação, mas marco fundamental do sistema internacional de direitos humanos): direito à igualdade em dignidade e direitos desde o nascimento (art. 1º); direito à vida, à liberdade e à segurança pessoal (art. 3º); vedação à escravidão e servidão (art. 4º); vedação à tortura e a penas ou tratamentos cruéis, desumanos ou degradantes, sem qualquer exceção (art. 5º); igualdade perante a lei (art. 7º); direito a julgamento equitativo e público por tribunal independente e imparcial (art. 10); presunção de inocência e princípio da legalidade/irretroatividade penal, sem exceções (art. 11); liberdade de pensamento, consciência e religião (art. 18); direito de participar do governo do país (art. 21); direito à instrução, com gratuidade assegurada pelo menos nos graus elementares e fundamentais, sendo o ensino superior baseado no mérito e aberto a todos em igualdade, sem garantia de gratuidade (art. 26); direito de participar da vida cultural da comunidade (art. 27); e deveres para com a comunidade (art. 29). Determinadas edições gráficas da Declaração numeram seus artigos em algarismos romanos; artigos_esperados usa representação arábica normalizada por compatibilidade com o parser, sem alteração da referência substantiva.",
+      "artigos_esperados": [
+        "art. 1º",
+        "art. 3º",
+        "art. 4º",
+        "art. 5º",
+        "art. 7º",
+        "art. 10",
+        "art. 11, item 1",
+        "art. 11, item 2",
+        "art. 18",
+        "art. 21, item 1",
+        "art. 26",
+        "art. 27, item 1",
+        "art. 29, item 1"
+      ]
+    }
+  ]
+}
