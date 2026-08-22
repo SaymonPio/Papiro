@@ -1,0 +1,21 @@
+{
+  "_nota": "Comissao Interamericana de Direitos Humanos (curso_conteudo_id 87). Decisao aprovada: MANTER 1 UNICA UNIDADE, reaproveitando a unidade placeholder ja existente (id 1b84fd2f-93e4-46c1-868f-c8402e73bdf9) — 3 questoes, unico diploma estruturado (CADH), sem necessidade de divisao. APLICANDO OS PRECEDENTES DOS CONTEUDOS 85/86: verificado fundamento normativo direto para as 3 questoes antes de presumir doutrina pura. Q150: CADH art. 33, que identifica expressamente a Comissao e a Corte Interamericanas como orgaos competentes relacionados ao cumprimento dos compromissos assumidos na Convencao (mesmo artigo ja usado no conteudo 85, para questao distinta — Q183, sobre os dois orgaos; aqui a questao foca isoladamente na Comissao). Q151 — AJUSTE DE GRANULARIDADE: nao bastava o art. 44 (que trata de QUEM pode apresentar peticao); a funcao da propria Comissao em relacao as peticoes esta expressamente prevista no art. 41, alinea 'f' ('atuar com respeito as peticoes e outras comunicacoes, no exercicio de sua autoridade, de conformidade com o disposto nos artigos 44 a 51 desta Convencao') — por isso art. 41, 'f' foi acrescentado. O art. 48 (processamento posterior da peticao) NAO foi incluido, pois a questao nao cobra procedimento/admissibilidade/investigacao, apenas a funcao generica de receber e analisar peticoes. Q152 — DECISAO DE FONTE: mantido como fundamento PRINCIPAL o art. 41, caput, da CADH ('A Comissao tem a funcao principal de promover a observancia e a defesa dos direitos humanos...'), por ser diretamente aderente ao gabarito. O Estatuto da CIDH, art. 1 (Resolucao AG/RES. 447, IX-O/79, OEA), contem formulacao muito semelhante (orgao da OEA, promocao da observancia e defesa dos DH, funcao consultiva), mas NAO entra em artigos_esperados — registrado apenas como fonte complementar em nota/mapa, para evitar introduzir outro diploma desnecessariamente na estrutura do parser quando a CADH ja fornece fundamento normativo direto e suficiente. NENHUMA JURISPRUDENCIA especifica necessaria para estas 3 questoes — nao adicionar casos da Corte IDH artificialmente. COMISSAO x CORTE: nenhuma das 3 questoes confunde as competencias — a Comissao recebe/processa peticoes, produz relatorios/recomendacoes e pode submeter casos a Corte quando cabivel; a Corte exerce funcao jurisdicional e profere decisoes nos casos submetidos a sua competencia; nao transformar a aula em estudo completo do procedimento dos arts. 46 a 51, pois o corpus atual nao exige isso. SOBREPOSICOES (nao duplicata, apenas registro): conteudo 85 (Sistema Interamericano, mesma CADH art. 33, questao diferente), conteudo 86 (OEA, Carta da OEA art. 53 'e', vinculo institucional distinto), conteudo 88 (Corte Interamericana) e conteudo 72 (CADH substantiva) — nenhum desses conteudos ja concluidos foi reaberto ou alterado.",
+  "curso_conteudo_id": 87,
+  "nome_assunto": "Comissão Interamericana de Direitos Humanos",
+  "materia_id": 11,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unidades": [
+    {
+      "id": "1b84fd2f-93e4-46c1-868f-c8402e73bdf9",
+      "ordem": 1,
+      "titulo": "Comissão Interamericana de Direitos Humanos",
+      "escopo": "Comissão Interamericana de Direitos Humanos (CADH): órgão competente, ao lado da Corte Interamericana, para conhecer dos assuntos relacionados ao cumprimento dos compromissos assumidos pelos Estados Partes na Convenção (art. 33); tem a função principal de promover a observância e a defesa dos direitos humanos (art. 41, caput); atua com respeito às petições e outras comunicações, no exercício de sua autoridade, de conformidade com os arts. 44 a 51 da Convenção (art. 41, \"f\"); qualquer pessoa, grupo de pessoas ou entidade não governamental legalmente reconhecida pode apresentar-lhe petições contendo denúncias ou queixas de violação da Convenção por um Estado Parte (art. 44) — sem que a Comissão possua competência para condenar criminalmente indivíduos, substituir tribunais nacionais ou exercer função jurisdicional própria da Corte.",
+      "artigos_esperados": [
+        "art. 33",
+        "art. 41, caput",
+        "art. 41, \"f\"",
+        "art. 44"
+      ]
+    }
+  ]
+}
