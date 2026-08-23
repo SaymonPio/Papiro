@@ -15,10 +15,17 @@
 --
 -- NOTA: artigos_esperados = NULL para toda a unidade (metodologia nao
 -- juridica). Q71 (FORA_DE_ESCOPO_SINTAXE_SUJEITO), Q325
--- (PROBLEMA_DE_DADO_TEXTO_BASE_AUSENTE), Q683
--- (FORA_DE_ESCOPO_REFERENCIA_TEXTUAL) e Q878
--- (FORA_DE_ESCOPO_SEMANTICA_PRESSUPOSICAO) excluidas intencionalmente
+-- (PROBLEMA_DE_DADO_TEXTO_BASE_AUSENTE) e Q683
+-- (FORA_DE_ESCOPO_REFERENCIA_TEXTUAL) excluidas intencionalmente
 -- — permanecem ativas, intactas e sem vinculo pedagogico.
+--
+-- ADENDO (2026-08-23): Q878 (antes excluida aqui como
+-- FORA_DE_ESCOPO_SEMANTICA_PRESSUPOSICAO) foi REALOCADA via saneamento
+-- taxonomico dedicado para assunto_id=46 (Implicitos e subentendidos,
+-- curso_conteudo_id=25) — ver supabase/saneamento_taxonomico_q878.sql e
+-- supabase/pos_check_saneamento_taxonomico_q878.sql. Nao pertence mais a
+-- este conteudo; removida das consultas 5 e 9 abaixo e substituida pela
+-- consulta 9b, que confirma explicitamente sua saida.
 
 -- 1) A(s) 1 unidade(s) pedagogica(s) do conteudo 22, com
 --    titulo/escopo/artigos aplicados pela curadoria. Esperado: 1 linha(s),
@@ -54,14 +61,14 @@ group by qup.questao_id
 having count(*) > 1;
 
 -- 5) Questoes ativas do conteudo que ficaram SEM nenhuma classificacao
---    E NAO estao na lista de exclusoes intencionais (71, 325, 683, 878).
+--    E NAO estao na lista de exclusoes intencionais (71, 325, 683).
 --    Esperado: 0 linhas.
 select q.id, q.enunciado
 from public.questoes q
 where q.ativa = true
   and q.materia_id = 6
   and q.assunto_id = 47
-  and q.id not in (71, 325, 683, 878)
+  and q.id not in (71, 325, 683)
   and not exists (
     select 1
     from public.questao_unidades_pedagogicas qup
@@ -107,15 +114,29 @@ select
   (select count(*) from public.unidades_pedagogicas where curso_conteudo_id = 20) as unidades_20,
   (select count(*) from public.questao_unidades_pedagogicas qup join public.unidades_pedagogicas u on u.id = qup.unidade_pedagogica_id where u.curso_conteudo_id = 20) as vinculos_20;
 
--- 9) Q71, Q325, Q683, Q878 permanecem ATIVAS, INTACTAS e SEM vinculo
+-- 9) Q71, Q325, Q683 permanecem ATIVAS, INTACTAS e SEM vinculo
 --    pedagogico. Esperado: todas ativa=true, vinculos=0.
 select
   q.id,
   q.ativa,
   (select count(*) from public.questao_unidades_pedagogicas where questao_id = q.id) as vinculos
 from public.questoes q
-where q.id in (71, 325, 683, 878)
+where q.id in (71, 325, 683)
 order by q.id;
+
+-- 9b) Q878 NAO pertence mais a este conteudo (ver ADENDO no cabecalho).
+--     Esperado: assunto_id=46, ativa=true, vinculos_totais=1,
+--     vinculos_neste_conteudo=0.
+select
+  q.id,
+  q.assunto_id,
+  q.ativa,
+  (select count(*) from public.questao_unidades_pedagogicas where questao_id = q.id) as vinculos_totais,
+  (select count(*) from public.questao_unidades_pedagogicas qup
+     join public.unidades_pedagogicas u on u.id = qup.unidade_pedagogica_id
+     where qup.questao_id = q.id and u.curso_conteudo_id = 22) as vinculos_neste_conteudo
+from public.questoes q
+where q.id = 878;
 
 -- 10) Confirma que artigos_esperados permanece NULL.
 --    Esperado: artigos_esperados_null = true.
