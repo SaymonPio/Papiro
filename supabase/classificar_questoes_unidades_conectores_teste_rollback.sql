@@ -42,6 +42,7 @@ create temporary table _mapa (
 insert into _mapa (questao_id, unidade_pedagogica_id, ordem_unidade, confianca) values
   (67, 'd1e31767-d27d-431b-ba59-7a2008c7473d', 1, 'alta'),
   (121, 'd1e31767-d27d-431b-ba59-7a2008c7473d', 1, 'alta'),
+  (279, 'd1e31767-d27d-431b-ba59-7a2008c7473d', 1, 'alta'),
   (305, 'd1e31767-d27d-431b-ba59-7a2008c7473d', 1, 'alta'),
   (316, 'd1e31767-d27d-431b-ba59-7a2008c7473d', 1, 'alta'),
   (334, 'd1e31767-d27d-431b-ba59-7a2008c7473d', 1, 'alta');
@@ -115,9 +116,9 @@ begin
     and (cc.assunto_id is null or q.assunto_id = cc.assunto_id);
 
   insert into _relatorio values (
-    'total_candidatas_5',
-    v_total_candidatas = 5,
-    format('total_candidatas=%s (esperado 5)', v_total_candidatas)
+    'total_candidatas_6',
+    v_total_candidatas = 6,
+    format('total_candidatas=%s (esperado 6)', v_total_candidatas)
   );
 
   select count(*) into v_classificacoes_previas
@@ -155,9 +156,9 @@ begin
 
   select count(*) into v_distintas from (select distinct questao_id from _mapa) x;
   insert into _relatorio values (
-    'mapa_cobre_5_distintas',
-    v_distintas = 5,
-    format('mapa cobre %s questoes distintas (esperado 5)', v_distintas)
+    'mapa_cobre_6_distintas',
+    v_distintas = 6,
+    format('mapa cobre %s questoes distintas (esperado 6)', v_distintas)
   );
 
 
@@ -176,7 +177,7 @@ begin
   insert into _relatorio values (
     'mapa_sem_linhas_fora_do_candidato',
     v_fora_do_candidato = 0,
-    format('%s linha(s) fora do conjunto candidato de 5 ativas', v_fora_do_candidato)
+    format('%s linha(s) fora do conjunto candidato de 6 ativas', v_fora_do_candidato)
   );
 
   select count(*) into v_unidade_fora
@@ -223,13 +224,13 @@ begin
   from public.questao_unidades_pedagogicas qup
   join public.unidades_pedagogicas u on u.id = qup.unidade_pedagogica_id
   where u.curso_conteudo_id = 14;
-  insert into _relatorio values ('total_vinculos_5', v_total_vinculos = 5, format('total_vinculos=%s (esperado 5)', v_total_vinculos));
+  insert into _relatorio values ('total_vinculos_6', v_total_vinculos = 6, format('total_vinculos=%s (esperado 6)', v_total_vinculos));
 
   select count(distinct qup.questao_id) into v_questoes_classificadas
   from public.questao_unidades_pedagogicas qup
   join public.unidades_pedagogicas u on u.id = qup.unidade_pedagogica_id
   where u.curso_conteudo_id = 14;
-  insert into _relatorio values ('questoes_classificadas_5', v_questoes_classificadas = 5, format('questoes_classificadas=%s (esperado 5)', v_questoes_classificadas));
+  insert into _relatorio values ('questoes_classificadas_6', v_questoes_classificadas = 6, format('questoes_classificadas=%s (esperado 6)', v_questoes_classificadas));
 
   select count(*) into v_fora_do_mapa
   from public.questao_unidades_pedagogicas qup
@@ -258,7 +259,7 @@ begin
   select count(distinct qup.questao_id) into v_qtd_tmp
   from public.questao_unidades_pedagogicas qup
   where qup.unidade_pedagogica_id = 'd1e31767-d27d-431b-ba59-7a2008c7473d';
-  insert into _relatorio values ('u1_5_questoes', v_qtd_tmp = 5, format('u1_questoes=%s (esperado 5)', v_qtd_tmp));
+  insert into _relatorio values ('u1_6_questoes', v_qtd_tmp = 6, format('u1_questoes=%s (esperado 6)', v_qtd_tmp));
 
 
   insert into _relatorio values ('unidades_pedagogicas_inalteradas_em_qtd',
@@ -276,9 +277,9 @@ begin
     (select count(*) from public.respostas_usuarios) = (select total_respostas from _snapshot_antes), 'historico de respostas_usuarios nao deve mudar');
   insert into _relatorio values ('sessoes_inalteradas',
     (select count(*) from public.sessoes_estudo) = (select total_sessoes from _snapshot_antes), 'sessoes_estudo nao deve mudar');
-  insert into _relatorio values ('vinculos_cresceram_exatamente_5',
-    (select count(*) from public.questao_unidades_pedagogicas) = (select total_vinculos from _snapshot_antes) + 5,
-    'total de vinculos deve crescer exatamente 5 em relacao ao snapshot antes');
+  insert into _relatorio values ('vinculos_cresceram_exatamente_6',
+    (select count(*) from public.questao_unidades_pedagogicas) = (select total_vinculos from _snapshot_antes) + 6,
+    'total de vinculos deve crescer exatamente 6 em relacao ao snapshot antes');
 end $$;
 
 -- Relatorio final — nunca aborta a transacao; so relata.
