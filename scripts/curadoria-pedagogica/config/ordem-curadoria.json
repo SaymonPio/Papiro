@@ -814,10 +814,10 @@
     "curso_conteudo_id": 39,
     "nome": "Correio eletrônico",
     "materia": "Informática",
-    "questoes_ativas": 9,
+    "questoes_ativas": 10,
     "prioridade": "media",
-    "status": "pendente",
-    "motivo_prioridade": "conteudo tecnico de Informatica com volume moderado de questoes"
+    "status": "concluido",
+    "motivo_prioridade": "conteudo tecnico de Informatica com volume moderado de questoes (contagem original de 9 questoes atualizada para 10 apos saneamento taxonomico que trouxe Q635 de Internet e navegadores para este assunto, antes da curadoria final)"
   },
   {
     "ordem": 83,
