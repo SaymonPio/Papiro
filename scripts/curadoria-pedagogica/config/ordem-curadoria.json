@@ -776,7 +776,7 @@
     "materia": "Informática",
     "questoes_ativas": 15,
     "prioridade": "alta",
-    "status": "pendente",
+    "status": "concluido",
     "motivo_prioridade": "grande volume de questoes dentro de Informatica, apesar do peso menor da materia no curso"
   },
   {
