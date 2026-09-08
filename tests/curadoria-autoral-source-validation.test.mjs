@@ -252,3 +252,89 @@ test("15. manifesto local de fontes: fonte PEDAGOGICA (Concordancia verbal, Fase
   });
   assert.equal(validacao.status, STATUS_VALIDACAO_FONTE.SOURCE_VALIDATED, "Portugues nao tem artigos_esperados — fonte validated=true sem covers_articles deve bastar");
 });
+
+// Fase 2A.2.1 — TRIPWIRE contra a regressao "EXISTIR e impessoal". Achado
+// real desta sessao: a v1 do manifesto do piloto Concordancia verbal
+// resumia o escopo como "verbos impessoais haver/existir/fazer", agrupando
+// os tres sob um rotulo unico — impreciso, pois EXISTIR e verbo PESSOAL.
+// A fonte original (unidades_pedagogicas.escopo, no banco, fora do
+// controle deste manifesto) sempre distinguiu os tres corretamente; o erro
+// era exclusivamente do resumo/paráfrase autoral deste pipeline.
+//
+// Guard estrutural (nao depende so da frase literal exata): falha quando
+// haver + existir + fazer aparecem proximos de "impessoal" no mesmo texto
+// SEM que "existir" tenha, na vizinhanca imediata, um qualificador
+// explicito de "pessoal" (nao "impessoal") — exatamente a assinatura do
+// agrupamento indevido, sem gerar falso-positivo no texto legitimo do
+// escopo real (que sempre diz "existir, verbo pessoal...").
+function contemAgrupamentoIndevidoExistirImpessoal(texto) {
+  const minusculo = (texto || "").toLowerCase();
+
+  // Padroes diretos (formulacoes explicitas, mesmo sendo so parte da defesa).
+  const padroesDiretos = [
+    /existir\s+(é|eh|e)\s+(um\s+verbo\s+)?impessoal/i,
+    /haver,?\s*\/?\s*existir\s*\/?\s*,?\s*(e\s+)?fazer\s+(s[aã]o|e)\s*(verbos\s+)?impessoa(l|is)/i,
+  ];
+  if (padroesDiretos.some((regex) => regex.test(minusculo))) return true;
+
+  // Guard estrutural: uma enumeracao CONTIGUA dos 3 verbos (separados so
+  // por espaco/virgula/barra — nunca por uma oracao inteira, o que
+  // distingue uma "lista solta" de uma descricao individual de cada
+  // verbo, como a do escopo real) cuja clausula (ate o "."/";" mais
+  // proximo) tambem menciona a familia "impessoa*" sem qualificar
+  // "existir" com "pessoal" (nao "impessoal") explicito na mesma clausula.
+  const enumeracaoTresVerbos = /\b(haver|existir|fazer)\b[\s,/]+\b(haver|existir|fazer)\b[\s,/]+(?:e\s+)?\b(haver|existir|fazer)\b/gi;
+  let match;
+  while ((match = enumeracaoTresVerbos.exec(minusculo)) !== null) {
+    const verbosEncontrados = new Set([match[1], match[2], match[3]]);
+    if (verbosEncontrados.size !== 3) continue; // precisa ser haver+existir+fazer, sem repeticao
+
+    const inicioPonto = minusculo.lastIndexOf(".", match.index);
+    const inicioPontoVirgula = minusculo.lastIndexOf(";", match.index);
+    const inicioClausula = Math.max(inicioPonto, inicioPontoVirgula) + 1;
+    const fimPonto = minusculo.indexOf(".", match.index);
+    const fimPontoVirgula = minusculo.indexOf(";", match.index);
+    const candidatosFim = [fimPonto, fimPontoVirgula].filter((i) => i !== -1);
+    const fimClausula = candidatosFim.length > 0 ? Math.min(...candidatosFim) : minusculo.length;
+    const clausula = minusculo.slice(inicioClausula, fimClausula);
+
+    if (!/\bimpessoa/.test(clausula)) continue;
+    const temPessoalExplicito = /(?<!im)pessoal\b/.test(clausula);
+    if (!temPessoalExplicito) return true;
+  }
+
+  return false;
+}
+
+test("16. TRIPWIRE: guard estrutural detecta 'existir agrupado como impessoal' sem falso-positivo no escopo real", () => {
+  // Casos que DEVEM disparar o guard (a formulacao que existiu na v1 do manifesto):
+  assert.equal(contemAgrupamentoIndevidoExistirImpessoal("impessoalidade de haver/existir/fazer exatamente nos termos descritos no escopo"), true);
+  assert.equal(contemAgrupamentoIndevidoExistirImpessoal("verbos impessoais haver/existir/fazer, com as tres regras descritas no escopo"), true);
+  assert.equal(contemAgrupamentoIndevidoExistirImpessoal("Existir é impessoal em qualquer contexto."), true);
+  assert.equal(contemAgrupamentoIndevidoExistirImpessoal("Haver, existir e fazer são verbos impessoais."), true);
+
+  // Caso que NAO deve disparar: o texto real de unidades_pedagogicas.escopo
+  // (verbatim, confirmado ao vivo nesta sessao) — distingue corretamente
+  // os tres verbos, com "existir" explicitamente qualificado como pessoal.
+  const escopoRealVerbatim = 'como cobertura secundária/suplementar (sustentada apenas por questões autorais, sem incidência real neste corpus), os verbos impessoais — haver, quando empregado com sentido de existir/ocorrer/acontecer, permanece sempre na 3ª pessoa do singular, inclusive como verbo principal de locução verbal ("deve haver", em que "deve" é o auxiliar e "haver" o infinitivo impessoal, mantendo o auxiliar no singular); existir, verbo pessoal que concorda normalmente com seu sujeito mesmo em locução ("pode existir"/"podem existir"); e fazer, impessoal apenas quando indica tempo decorrido ou fenômeno atmosférico, sem generalizar para todos os seus usos.';
+  assert.equal(contemAgrupamentoIndevidoExistirImpessoal(escopoRealVerbatim), false, "o escopo real ja distingue existir como pessoal — nao pode ser falso-positivo");
+
+  // Caso neutro: nenhuma mencao a impessoalidade.
+  assert.equal(contemAgrupamentoIndevidoExistirImpessoal("Concordância verbal: sujeito, número, verbo."), false);
+});
+
+test("17. TRIPWIRE: manifesto do piloto Concordancia verbal (versao corrigida) nao contem a formulacao indevida", () => {
+  const fontes = carregarFontes();
+  const pedagogica = fontes.find((f) => f.source_key === "BMRS_PT_CONCORDANCIA_VERBAL_ESCOPO_UNIDADE");
+  assert.ok(pedagogica, "esperado o manifesto do piloto Concordancia verbal");
+
+  const textoCompleto = [pedagogica.content_summary, ...(pedagogica.scope_limits || []), ...(pedagogica.notes || [])].join(" \n ");
+  assert.equal(
+    contemAgrupamentoIndevidoExistirImpessoal(textoCompleto),
+    false,
+    "manifesto nao pode voltar a agrupar haver/existir/fazer como impessoais sem qualificar existir como pessoal"
+  );
+
+  // Positivo: o manifesto corrigido AFIRMA explicitamente que existir e pessoal.
+  assert.match(textoCompleto, /existir[^.]*\bpessoal\b/i);
+});
