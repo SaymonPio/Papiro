@@ -125,3 +125,35 @@ export function classificarDuplicidade(textoNovo, candidatos) {
 
   return { codigo: null, similaridade: null, candidato_id: null };
 }
+
+/**
+ * Variante de classificarDuplicidade para quando so existe o HASH do texto
+ * normalizado do candidato — nunca o texto bruto (Fase 2B, Secoes 11/13:
+ * dedup_baseline.json guarda so `texto_normalizado_hash` das questoes REAL
+ * existentes, de proposito, para nunca persistir o enunciado integral
+ * delas em nenhum artefato deste pipeline).
+ *
+ * So consegue emitir Camada 1 (EXACT_TEXT_DUPLICATE, por igualdade de
+ * hash — que ja cobre a Camada 2, pois o hash e do texto normalizado).
+ * Nunca calcula Jaccard (Camada 3): sem o texto bruto do candidato isso e
+ * matematicamente impossivel, nao so indisponivel por escolha —
+ * `camada_3_indisponivel: true` deixa isso explicito para quem ler o
+ * resultado, em vez de sugerir silenciosamente "nenhuma similaridade".
+ *
+ * @param {string} textoNovo
+ * @param {Array<{ id: number|string, texto_normalizado_hash: string }>} candidatosComHash
+ */
+export function compararContraHashesExistentes(textoNovo, candidatosComHash) {
+  if (!Array.isArray(candidatosComHash) || candidatosComHash.length === 0) {
+    return { codigo: null, similaridade: null, candidato_id: null, camada_3_indisponivel: true };
+  }
+
+  const hashNovo = hashTextoNormalizado(textoNovo);
+  for (const candidato of candidatosComHash) {
+    if (candidato.texto_normalizado_hash === hashNovo) {
+      return { codigo: CODIGOS_MOTIVO.EXACT_TEXT_DUPLICATE, similaridade: 1, candidato_id: candidato.id, camada_3_indisponivel: true };
+    }
+  }
+
+  return { codigo: null, similaridade: null, candidato_id: null, camada_3_indisponivel: true };
+}

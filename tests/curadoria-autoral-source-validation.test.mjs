@@ -13,6 +13,7 @@ import { avaliarContextoPedagogico, avaliarElegibilidade, materiaPareceNormativa
 import { avaliarValidacaoFonte, buscarFontesParaUnidade, carregarFontes } from "../scripts/curadoria-autoral/lib/source-manifest.mjs";
 import { CODIGO_ABORTO_SESSAO_NAO_READONLY, travarSessaoSomenteLeituraOuAbortar } from "../scripts/curadoria-autoral/lib/context-resolver.mjs";
 import { STATUS_BANCA, STATUS_CONTEXTO_PEDAGOGICO, STATUS_ELEGIBILIDADE, STATUS_VALIDACAO_FONTE } from "../scripts/curadoria-autoral/lib/schemas.mjs";
+import { contemAgrupamentoIndevidoExistirImpessoal, verificarTripwiresGramaticais, violaGeneralizacaoFazerImpessoal, violaGeneralizacaoHaverImpessoal } from "../scripts/curadoria-autoral/lib/grammar-tripwires.mjs";
 
 // Dados reais (confirmados via consulta direta ao Supabase nesta sessao,
 // nao inventados) das duas unidades usadas como regressao — exatamente as
@@ -261,50 +262,9 @@ test("15. manifesto local de fontes: fonte PEDAGOGICA (Concordancia verbal, Fase
 // controle deste manifesto) sempre distinguiu os tres corretamente; o erro
 // era exclusivamente do resumo/paráfrase autoral deste pipeline.
 //
-// Guard estrutural (nao depende so da frase literal exata): falha quando
-// haver + existir + fazer aparecem proximos de "impessoal" no mesmo texto
-// SEM que "existir" tenha, na vizinhanca imediata, um qualificador
-// explicito de "pessoal" (nao "impessoal") — exatamente a assinatura do
-// agrupamento indevido, sem gerar falso-positivo no texto legitimo do
-// escopo real (que sempre diz "existir, verbo pessoal...").
-function contemAgrupamentoIndevidoExistirImpessoal(texto) {
-  const minusculo = (texto || "").toLowerCase();
-
-  // Padroes diretos (formulacoes explicitas, mesmo sendo so parte da defesa).
-  const padroesDiretos = [
-    /existir\s+(é|eh|e)\s+(um\s+verbo\s+)?impessoal/i,
-    /haver,?\s*\/?\s*existir\s*\/?\s*,?\s*(e\s+)?fazer\s+(s[aã]o|e)\s*(verbos\s+)?impessoa(l|is)/i,
-  ];
-  if (padroesDiretos.some((regex) => regex.test(minusculo))) return true;
-
-  // Guard estrutural: uma enumeracao CONTIGUA dos 3 verbos (separados so
-  // por espaco/virgula/barra — nunca por uma oracao inteira, o que
-  // distingue uma "lista solta" de uma descricao individual de cada
-  // verbo, como a do escopo real) cuja clausula (ate o "."/";" mais
-  // proximo) tambem menciona a familia "impessoa*" sem qualificar
-  // "existir" com "pessoal" (nao "impessoal") explicito na mesma clausula.
-  const enumeracaoTresVerbos = /\b(haver|existir|fazer)\b[\s,/]+\b(haver|existir|fazer)\b[\s,/]+(?:e\s+)?\b(haver|existir|fazer)\b/gi;
-  let match;
-  while ((match = enumeracaoTresVerbos.exec(minusculo)) !== null) {
-    const verbosEncontrados = new Set([match[1], match[2], match[3]]);
-    if (verbosEncontrados.size !== 3) continue; // precisa ser haver+existir+fazer, sem repeticao
-
-    const inicioPonto = minusculo.lastIndexOf(".", match.index);
-    const inicioPontoVirgula = minusculo.lastIndexOf(";", match.index);
-    const inicioClausula = Math.max(inicioPonto, inicioPontoVirgula) + 1;
-    const fimPonto = minusculo.indexOf(".", match.index);
-    const fimPontoVirgula = minusculo.indexOf(";", match.index);
-    const candidatosFim = [fimPonto, fimPontoVirgula].filter((i) => i !== -1);
-    const fimClausula = candidatosFim.length > 0 ? Math.min(...candidatosFim) : minusculo.length;
-    const clausula = minusculo.slice(inicioClausula, fimClausula);
-
-    if (!/\bimpessoa/.test(clausula)) continue;
-    const temPessoalExplicito = /(?<!im)pessoal\b/.test(clausula);
-    if (!temPessoalExplicito) return true;
-  }
-
-  return false;
-}
+// A partir da Fase 2B, os guards moraram para lib/grammar-tripwires.mjs
+// (importado acima) — o pipeline real de geracao precisa rodar o mesmo
+// codigo que os testes, nunca uma segunda copia que possa divergir.
 
 test("16. TRIPWIRE: guard estrutural detecta 'existir agrupado como impessoal' sem falso-positivo no escopo real", () => {
   // Casos que DEVEM disparar o guard (a formulacao que existiu na v1 do manifesto):
@@ -337,4 +297,86 @@ test("17. TRIPWIRE: manifesto do piloto Concordancia verbal (versao corrigida) n
 
   // Positivo: o manifesto corrigido AFIRMA explicitamente que existir e pessoal.
   assert.match(textoCompleto, /existir[^.]*\bpessoal\b/i);
+});
+
+// Fase 2B (Secao 21 do mandato de geracao) — os mesmos 3 verbos tem um
+// segundo tipo de erro possivel, alem do agrupamento com existir: HAVER ou
+// FAZER apresentados como impessoais SEM a condicao que legitima isso
+// (existir/ocorrer/acontecer para haver; tempo decorrido/fenomeno
+// atmosferico para fazer) — a assinatura de "todo uso do verbo e impessoal".
+
+test("18. TRIPWIRE: violaGeneralizacaoHaverImpessoal pega generalizacao indevida sem falso-positivo na regra correta", () => {
+  assert.equal(violaGeneralizacaoHaverImpessoal("O verbo haver é sempre impessoal."), true);
+  assert.equal(violaGeneralizacaoHaverImpessoal("Todo uso de haver é impessoal, sem exceção."), true);
+
+  // Correto: haver impessoal QUALIFICADO pelo sentido de existir/ocorrer/acontecer.
+  assert.equal(
+    violaGeneralizacaoHaverImpessoal("HAVER, quando empregado com sentido de existir/ocorrer/acontecer, é impessoal e permanece na 3ª pessoa do singular."),
+    false
+  );
+  assert.equal(violaGeneralizacaoHaverImpessoal("Concordância verbal: sujeito, número, verbo."), false);
+});
+
+test("19. TRIPWIRE: violaGeneralizacaoFazerImpessoal pega generalizacao indevida sem falso-positivo na regra correta", () => {
+  assert.equal(violaGeneralizacaoFazerImpessoal("O verbo fazer é sempre impessoal."), true);
+  assert.equal(violaGeneralizacaoFazerImpessoal("Todo uso de fazer é impessoal."), true);
+
+  // Correto: fazer impessoal QUALIFICADO por tempo decorrido/fenomeno atmosferico.
+  assert.equal(
+    violaGeneralizacaoFazerImpessoal("FAZER, quando indica tempo decorrido ou fenômeno atmosférico, é impessoal, sem generalizar para os demais usos."),
+    false
+  );
+  assert.equal(violaGeneralizacaoFazerImpessoal("Concordância verbal: sujeito, número, verbo."), false);
+});
+
+// Fase 2B.1 (Secao 2/3) — achado real na primeira geracao: a explicacao de
+// Q1 estabelece a condicao de HAVER numa clausula e retoma por anafora na
+// seguinte ("essa impessoalidade alcança o auxiliar da locução"), sem
+// repetir "existir/ocorrer/acontecer" ali — isso e uma continuacao legitima
+// da MESMA frase, nao uma nova generalizacao, e nao pode mais disparar FAIL.
+
+test("20. TRIPWIRE: retomada anaforica LEGITIMA de HAVER (texto real gerado, Fase 2B) nao dispara mais falso-positivo", () => {
+  const textoReal =
+    'Em "pode haver falhas", o verbo haver tem sentido de existir e, por isso, é impessoal. ' +
+    'Ele permanece na terceira pessoa do singular, e essa impessoalidade alcança o auxiliar da locução: "pode haver", e não "podem haver". ' +
+    "Já existir é verbo pessoal e concorda normalmente com seu sujeito mesmo em locução.";
+  assert.equal(violaGeneralizacaoHaverImpessoal(textoReal), false, "retomada anafórica legítima não pode mais falhar (achado real da Fase 2B)");
+});
+
+test("21. TRIPWIRE: retomada anaforica so e aceita quando a clausula anterior REALMENTE qualificou o MESMO verbo", () => {
+  // Retomada anaforica sem NENHUMA condicao estabelecida antes -> continua FAIL.
+  assert.equal(violaGeneralizacaoHaverImpessoal("O verbo haver é impessoal. Essa impessoalidade nunca muda."), true);
+
+  // Retomada anaforica que tenta herdar a condicao de OUTRO verbo (fazer) -> continua FAIL.
+  assert.equal(
+    violaGeneralizacaoHaverImpessoal("Fazer, quando indica tempo decorrido, é impessoal. Haver também segue essa impessoalidade."),
+    true
+  );
+
+  // Mesmo teste, para FAZER: retomada anaforica legitima da propria condicao de FAZER.
+  const textoRealFazer =
+    "Na primeira oração, fazer indica tempo decorrido e é impessoal. " +
+    'Assim, permanece na terceira pessoa do singular; na locução "deve fazer", o auxiliar também fica no singular, e essa impessoalidade não se estende ao uso pessoal do verbo.';
+  assert.equal(violaGeneralizacaoFazerImpessoal(textoRealFazer), false);
+
+  // Retomada anaforica de FAZER tentando herdar condicao de outro verbo (haver) -> continua FAIL.
+  assert.equal(
+    violaGeneralizacaoFazerImpessoal("Haver, quando emprega sentido de existir, é impessoal. Fazer também segue essa impessoalidade."),
+    true
+  );
+});
+
+test("22. TRIPWIRE: verificarTripwiresGramaticais combina os 3 guards e reporta motivos", () => {
+  const textoRuim = "Existir é impessoal. O verbo haver é sempre impessoal. O verbo fazer é sempre impessoal.";
+  const resultadoRuim = verificarTripwiresGramaticais(textoRuim);
+  assert.equal(resultadoRuim.ok, false);
+  assert.equal(resultadoRuim.existir, "FAIL");
+  assert.equal(resultadoRuim.haver, "FAIL");
+  assert.equal(resultadoRuim.fazer, "FAIL");
+  assert.deepEqual(resultadoRuim.motivos, ["EXISTIR_TRATADO_COMO_IMPESSOAL", "HAVER_GENERALIZADO_COMO_SEMPRE_IMPESSOAL", "FAZER_GENERALIZADO_COMO_SEMPRE_IMPESSOAL"]);
+
+  const textoBom = "Em \"Há problemas.\" o verbo haver (sentido de existir/ocorrer) é impessoal; já em \"Existem problemas.\" o verbo existir é pessoal e concorda com o sujeito.";
+  const resultadoBom = verificarTripwiresGramaticais(textoBom);
+  assert.equal(resultadoBom.ok, true);
+  assert.deepEqual(resultadoBom.motivos, []);
 });
