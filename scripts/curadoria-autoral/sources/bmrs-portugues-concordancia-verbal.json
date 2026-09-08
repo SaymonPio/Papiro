@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_PT_CONCORDANCIA_VERBAL_ESCOPO_UNIDADE",
+  "type": "pedagogical_reference",
+  "course_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unit_id": "834a820d-48a7-440f-a013-be375be8a62d",
+  "content_id": 14,
+  "applies_to_unit_ids": ["834a820d-48a7-440f-a013-be375be8a62d"],
+  "title": "Concordância verbal (BMRS/Fundatec) — escopo pedagógico da unidade + corpus real vinculado",
+  "reference": "unidades_pedagogicas.escopo (curso_conteudo_id=14, assunto_id=57) + questões vinculadas Q16, Q116, Q304, Q318 + curso_evidencias #14 (edital_anterior) e #36 (prova_anterior)",
+  "content_summary": "Núcleo pré-edital: mecanismo geral de concordância verbal (identificar sujeito, seu núcleo e número, localizar verbos dependentes, propagar singular/plural, reconhecer acento diferencial tem/têm, vem/vêm, mantém/mantêm) e concordância verbal em cadeia — ambos observados nas 2 questões REAL vinculadas (Q116, Q318 — Fundatec, dificuldade média, itens autocontidos de frase única, sem texto-base longo). Distinção explícita entre concordância verbal e concordância nominal. Cobertura secundária/suplementar (sustentada apenas pelas 2 questões autorais vinculadas Q16/Q304, sem incidência real neste corpus): verbos impessoais haver/existir/fazer, com as três regras descritas no escopo (haver impessoal sempre 3ª pess. singular mesmo em locução; existir sempre pessoal; fazer impessoal só em tempo decorrido/fenômeno atmosférico).",
+  "scope_limits": [
+    "PODE cobrar: identificação de sujeito/núcleo/número e propagação para verbo(s) dependente(s), incluindo concordância em cadeia com múltiplos verbos coordenados",
+    "PODE cobrar: pares com acento diferencial de número (tem/têm, vem/vêm, mantém/mantêm e verbos análogos da mesma família morfológica)",
+    "PODE cobrar, como cobertura suplementar explícita (nunca como se fosse padrão recorrente da banca): impessoalidade de haver/existir/fazer exatamente nos termos descritos no escopo",
+    "NAO PODE cobrar: concordância nominal isolada (artigo/demonstrativo + substantivo) como se fosse o mesmo fenômeno de concordância verbal — a distinção entre os dois deve ficar sempre explícita quando ambos aparecerem na mesma questão",
+    "NAO PODE cobrar: outros verbos impessoais ou construções não descritas no escopo (ex.: bastar, chover em sentido figurado, ser em indicação de horas/distância) sem antes atualizar o manifesto/escopo",
+    "NAO PODE depender de texto-base longo com marcação de linha [NN] — todas as questões vinculadas desta unidade (REAL e autoral) são itens autocontidos de frase única; o piloto deve manter esse formato",
+    "NAO PODE usar as questões REAL (Q116, Q318) como fonte de enunciado/alternativas — apenas como referência de estilo/dificuldade/incidência, nunca copiadas"
+  ],
+  "validated": true,
+  "validated_by": "human_curated_project_context",
+  "validated_at": "2026-09-08T00:39:08Z",
+  "notes": [
+    "Validado por inspeção direta e ao vivo do projeto (Supabase, read-only) nesta sessão de curadoria supervisionada, não por pesquisa externa: confirmados ao vivo (1) o texto de unidades_pedagogicas.escopo para esta unidade, (2) que as 4 questões vinculadas (Q16, Q116, Q304, Q318) existem, estão ativas e têm o teor resumido acima, (3) que Q116 e Q318 são REAL/Fundatec e Q16/Q304 são autorais (banca contém 'Papiro'), (4) que existem 2 curso_evidencias (edital_anterior, prova_anterior) para este curso_conteudo, e (5) que NAO existe nenhuma aula/aula_versao para esta unidade.",
+    "Diferente do manifesto de fontes jurídicas da Fase 2A.1 (LC 16.450/2025, LC 10.990/1997): aqui não se trata de validar um texto normativo externo, e sim de confirmar que o conteúdo-base pedagógico já presente no projeto (escopo + corpus vinculado) é suficientemente claro, determinístico e ancorado em incidência real para permitir geração e auditoria seguras — exatamente a política definida para Língua Portuguesa na Fase 2A.2 (Seção 6 do mandato), distinta da política de legislação.",
+    "artigos_esperados desta unidade é null por convenção do projeto para conteúdo não jurídico (parser de artigos só reconhece formato 'art.') — isso não reduz a validação de fonte; covers_articles não se aplica aqui e foi omitido de propósito."
+  ]
+}

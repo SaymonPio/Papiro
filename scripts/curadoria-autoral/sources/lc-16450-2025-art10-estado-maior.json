@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "source_key": "LC_16450_2025_ART10_ESTADO_MAIOR",
+  "type": "official_law",
+  "title": "LC 16.450/2025 (RS) — art. 10, competência do Chefe do Estado-Maior",
+  "reference": "Lei Complementar nº 16.450, de 24/12/2025 (RS), art. 10",
+  "content": "Convergência de pesquisa (WebSearch, sessão de curadoria) indica que o art. 10 da LC 16.450/2025 atribui ao Chefe do Estado-Maior a competência de assessorar o Comandante-Geral nos assuntos de ordem estratégica da Instituição e coordenar, em caráter geral, as atividades dos Órgãos do Nível de Direção Setorial. Esta lei revogou expressamente (art. 47) a Lei nº 10.991/1997 (antiga Lei de Organização Básica da Brigada Militar).",
+  "content_hash": null,
+  "applies_to_unit_ids": ["3c033d9a-5543-422a-a935-c55095bdfc86"],
+  "covers_articles": ["art. 10"],
+  "validated": false,
+  "validated_by": null,
+  "validated_at": null,
+  "notes": "RASCUNHO — NAO VALIDADO. Origem: pesquisa via WebSearch (evidencia convergente de multiplas fontes secundarias), NUNCA leitura byte-a-byte do PDF/texto oficial primario da LC 16.450/2025 (leitura de PDF nao disponivel neste ambiente). Isto NAO constitui validacao documental humana — so um humano lendo o texto oficial publicado (ex.: Diario Oficial do RS) e marcando validated=true, validated_by e validated_at pode promover este registro. Cobre apenas o art. 10; o restante da lei (demais artigos citados no escopo da unidade) permanece nao verificado. Enquanto validated=false, este registro produz SOURCE_REQUIRES_HUMAN_VALIDATION (nunca SOURCE_VALIDATED) para a unidade 'Lei de Organizacao Basica da Brigada Militar' — exatamente o comportamento esperado pela Fase 2A.1."
+}

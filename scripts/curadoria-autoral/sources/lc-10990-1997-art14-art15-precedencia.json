@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "source_key": "LC_10990_1997_ART14_ART15_PRECEDENCIA",
+  "type": "official_law",
+  "title": "LC 10.990/1997 — arts. 14 e 15, quadro hierárquico vs. precedência funcional",
+  "reference": "Lei Complementar nº 10.990, de 18/08/1997 (RS), arts. 14 e 15",
+  "content": "Convergência de pesquisa (WebSearch, sessão de curadoria) indica que o art. 14 da LC 10.990/1997 trata do quadro/escala hierárquica geral dos militares estaduais, enquanto o art. 15 trata especificamente da precedência funcional (critério de precedência entre servidores militares em situações de serviço). Esta distinção corrigiu explicações do banco (Q45/Q53) que citavam erroneamente o art. 14 para precedência funcional.",
+  "content_hash": null,
+  "applies_to_unit_ids": ["bf13f365-3dd9-4d22-9ad7-f369a298eb19"],
+  "covers_articles": ["art. 15, caput"],
+  "validated": false,
+  "validated_by": null,
+  "validated_at": null,
+  "notes": "RASCUNHO — NAO VALIDADO. Origem: pesquisa via WebSearch (evidencia convergente), NUNCA leitura byte-a-byte do texto oficial primario da LC 10.990/1997 (leitura de PDF nao disponivel neste ambiente). Isto NAO constitui validacao documental humana. Cobre apenas a distincao art.14/art.15 (usada para corrigir Q45/Q53) — NAO cobre os demais 14 artigos_esperados desta unidade (arts. 4, 5, 8, 12, 35, 36, 46), que permanecem sem qualquer fonte registrada. Enquanto validated=false, este registro produz SOURCE_REQUIRES_HUMAN_VALIDATION (nunca SOURCE_VALIDATED/SOURCE_PARTIAL) para a unidade 'Estatuto dos Militares Estaduais' — o piloto da Fase 2A baseado em SOURCE_VALIDATED por 15 artigos_esperados nao pode ser mantido sem isto ser promovido por um humano."
+}
