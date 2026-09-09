@@ -28,7 +28,7 @@ import {
   sanitizarQuestaoParaBlindSolver,
 } from "../lib/openai-audit-provider.mjs";
 import { STATUS_ETAPA, executarEtapaAuditoria } from "../lib/audit-runner.mjs";
-import { ACOES_RETOMADA, calcularFingerprintAuditoria, lerEstadoAuditoria, planejarRetomada } from "../lib/audit-state.mjs";
+import { ACOES_RETOMADA, calcularFingerprintAuditoria, calcularHashPerfilBanca, lerEstadoAuditoria, planejarRetomada } from "../lib/audit-state.mjs";
 import { agregarResultadoAuditoria, compararRespostaBlind, validarRespostaBlindLocalmente, validarRespostaCriticLocalmente } from "../lib/audit-orchestrator.mjs";
 import { extrairSlotDoQuestionKey } from "../lib/generation-enrichment.mjs";
 import { escreverArtefatoJson } from "../lib/artifact-writer.mjs";
@@ -58,6 +58,7 @@ async function main() {
       "reasoning-effort": { type: "string", default: "high" },
       "blind-prompt-version": { type: "string", default: "papiro-question-blind-solver-v1" },
       "critic-prompt-version": { type: "string", default: "papiro-question-full-critic-v1" },
+      "bank-style-profile": { type: "string" },
       "dry-run": { type: "boolean", default: false },
     },
   });
@@ -107,6 +108,21 @@ async function main() {
   const blindPromptVersion = values["blind-prompt-version"];
   const criticPromptVersion = values["critic-prompt-version"];
 
+  // Fase 2C.3, Secao 21/23-24: bank_style_profile e OPCIONAL — quando
+  // ausente, o Full Critic cai no fallback generico (nunca inventa
+  // estilo) e o fingerprint usa bank_style_profile_hash=null, igual a
+  // antes desta fase. O Blind Solver NUNCA recebe o perfil (Secao 22).
+  let bankStyleProfile = null;
+  if (values["bank-style-profile"]) {
+    const caminhoPerfil = path.resolve(values["bank-style-profile"]);
+    if (!fs.existsSync(caminhoPerfil)) {
+      console.error(`bank-style-profile nao encontrado: ${caminhoPerfil}`);
+      process.exit(1);
+    }
+    bankStyleProfile = JSON.parse(fs.readFileSync(caminhoPerfil, "utf8"));
+  }
+  const bankStyleProfileHash = calcularHashPerfilBanca(bankStyleProfile);
+
   const questoesComSlot = questoesGeradas.questoes.map((q) => ({ ...q, slot: extrairSlotDoQuestionKey(q.question_key) }));
 
   const fingerprint = calcularFingerprintAuditoria({
@@ -118,6 +134,7 @@ async function main() {
     criticPromptVersion,
     escopo: payload.pedagogical_context.scope,
     fontesValidadas: payload.source.validated_source_keys,
+    bankStyleProfileHash,
   });
 
   const estado = lerEstadoAuditoria(dirRun);
@@ -131,6 +148,7 @@ async function main() {
   console.log(`critic_present: ${Boolean(estado.critic)} (valido: ${estado.critic?.valido ?? "-"})`);
   console.log(`result_present: ${Boolean(estado.result)} (valido: ${estado.result?.valido ?? "-"})`);
   console.log(`model: ${model} · blind_prompt_version: ${blindPromptVersion} · critic_prompt_version: ${criticPromptVersion}`);
+  console.log(`bank_style_profile: ${bankStyleProfile ? `presente (hash ${bankStyleProfileHash.slice(0, 12)}...)` : "ausente"}`);
 
   if (values["dry-run"]) {
     console.log("--dry-run: nenhuma acao adicional executada.");
@@ -208,7 +226,7 @@ async function main() {
   // ==================== CALL B (quando o plano manda RUN_BLIND_THEN_CRITIC ou RUN_CRITIC_ONLY) ====================
   let criticDados = estado.critic?.dados?.audits ? estado.critic.dados : null;
   if (plano.action === ACOES_RETOMADA.RUN_BLIND_THEN_CRITIC || plano.action === ACOES_RETOMADA.RUN_CRITIC_ONLY) {
-    const promptCritic = montarPromptAuditorCritic(payload, questoesComSlot);
+    const promptCritic = montarPromptAuditorCritic(payload, questoesComSlot, bankStyleProfile);
     const requestCritic = construirRequestOpenAI({ model, reasoningEffort, promptText: promptCritic, schemaName: FULL_CRITIC_SCHEMA_NAME, schema: FULL_CRITIC_JSON_SCHEMA });
 
     const resultadoCritic = await executarEtapaAuditoria({
@@ -226,6 +244,8 @@ async function main() {
         response_id: extraida.response_id,
         usage: extraida.usage,
         audit_input_fingerprint: fp,
+        bank_style_profile_used: Boolean(bankStyleProfile),
+        bank_style_profile_hash: bankStyleProfileHash,
         audits: dadosValidados.audits,
       }),
     });

@@ -23,9 +23,20 @@ import { validarRespostaBlindLocalmente, validarRespostaCriticLocalmente } from 
  *   criticPromptVersion: string,
  *   escopo: string,
  *   fontesValidadas: string[],
+ *   bankStyleProfileHash?: string|null,
  * }} entrada
  */
-export function calcularFingerprintAuditoria({ questoesGeradasRaw, runId, questionKeys, model, blindPromptVersion, criticPromptVersion, escopo, fontesValidadas }) {
+export function calcularFingerprintAuditoria({
+  questoesGeradasRaw,
+  runId,
+  questionKeys,
+  model,
+  blindPromptVersion,
+  criticPromptVersion,
+  escopo,
+  fontesValidadas,
+  bankStyleProfileHash = null,
+}) {
   const base = {
     questoes_hash: crypto.createHash("sha256").update(questoesGeradasRaw, "utf8").digest("hex"),
     run_id: runId,
@@ -35,8 +46,25 @@ export function calcularFingerprintAuditoria({ questoesGeradasRaw, runId, questi
     critic_prompt_version: criticPromptVersion,
     escopo_hash: crypto.createHash("sha256").update(escopo || "", "utf8").digest("hex"),
     fontes_validadas: [...(fontesValidadas || [])].sort(),
+    // Fase 2C.3, Secao 23: o Full Critic passa a poder receber
+    // bank_style_profile — uma mudanca no perfil (ou sua ausencia/presenca)
+    // precisa invalidar qualquer auditoria parcial incompativel, mesmo que
+    // nada mais tenha mudado. null (perfil nao usado) e um valor estavel
+    // e distinto de qualquer hash real.
+    bank_style_profile_hash: bankStyleProfileHash,
   };
   return crypto.createHash("sha256").update(JSON.stringify(base), "utf8").digest("hex");
+}
+
+/**
+ * Hash estavel de um bank_style_profile ja construido (bank-style-profiler.mjs)
+ * — usado como `bankStyleProfileHash` acima. Hash do JSON canonico do
+ * proprio perfil (que ja e sanitizado — nunca contem texto integral de
+ * questao REAL, ver bank-style-profiler.mjs).
+ */
+export function calcularHashPerfilBanca(perfil) {
+  if (!perfil) return null;
+  return crypto.createHash("sha256").update(JSON.stringify(perfil), "utf8").digest("hex");
 }
 
 function lerJsonSeExiste(caminho) {

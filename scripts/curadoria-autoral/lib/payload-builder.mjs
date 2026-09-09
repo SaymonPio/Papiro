@@ -53,6 +53,12 @@ export function construirPayload({
   requerFonteValidada,
   constraints,
   auditPolicy,
+  // Fase 2C.3, Secao 24: referencia OPCIONAL a um bank_style_profile ja
+  // construido (bank-style-profiler.mjs) — {path, hash, confidence} ou
+  // null. Nunca inventado aqui; so populado quando o chamador ja
+  // construiu um perfil evidence-based real. Ausente = null, igual ao
+  // comportamento anterior a esta fase (nunca fabrica regra de banca).
+  bankStyleProfileRef = null,
 }) {
   return {
     schema_version: PAYLOAD_SCHEMA_VERSION,
@@ -68,7 +74,7 @@ export function construirPayload({
       name: banca.banca_resolvida,
       resolution_status: banca.status,
       resolution_source: banca.origem_da_resolucao,
-      style_profile: null,
+      style_profile: bankStyleProfileRef,
       criteria: [],
     },
 

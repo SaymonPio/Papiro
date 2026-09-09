@@ -160,11 +160,42 @@ Responda SOMENTE no formato JSON estruturado definido pelo schema desta requisi�
 }
 
 /**
+ * Monta o bloco de evidencia de estilo de banca (Fase 2C.3, Secao 21) a
+ * partir de um bank_style_profile ja construido (bank-style-profiler.mjs)
+ * — nunca do conhecimento generico do modelo. Ausente/confianca LOW cai no
+ * fallback generico ja existente (nunca inventa "esta banca sempre...").
+ */
+function montarBlocoEstiloBanca(bankStyleProfile) {
+  if (
+    !bankStyleProfile ||
+    bankStyleProfile.confidence === "LOW" ||
+    bankStyleProfile.confidence === "INSUFFICIENT" ||
+    (bankStyleProfile.sample.real_official_confirmed ?? 0) === 0
+  ) {
+    return 'Não há perfil de estilo de banca evidence-based suficiente para esta avaliação — avalie ESTILO_BANCA_COMPATIVEL apenas por clareza, objetividade, estrutura, nível e formato; NUNCA afirme "esta banca sempre cobra..." sem evidência.';
+  }
+  const p = bankStyleProfile;
+  const formatos = p.command_patterns.map((c) => `${c.format}: ${c.count}/${p.sample.real_official_confirmed} (${c.percent}%)`).join("; ");
+  return `PERFIL DE ESTILO DA BANCA ${p.bank}/${p.subject} — construído a partir de ${p.sample.real_official_confirmed} questões REAL_OFFICIAL_CONFIRMED (proveniência estrita — prova oficial nomeada + número de questão) no banco do Papiro (confidence: ${p.confidence}, anos ${p.sample.year_min}-${p.sample.year_max}). Use isto, e SOMENTE isto, como evidência de estilo — nunca conhecimento genérico sobre a banca:
+- Distribuição de comandos observada: ${formatos}
+- Alternativas: distribuição observada ${JSON.stringify(p.alternative_count_distribution)}
+- Tamanho de enunciado (chars): p25=${p.length_profile.enunciado_chars.p25}, mediana=${p.length_profile.enunciado_chars.mediana}, p75=${p.length_profile.enunciado_chars.p75}
+- Uso de texto-base: ${p.base_text_usage.usa_texto_base}/${p.sample.real_official_confirmed} questões dependem de texto-base longo
+Avalie ESTILO_BANCA_COMPATIVEL comparando a questão contra esses números reais — um formato pouco frequente no corpus (ex.: abaixo de 5%) ou ausente dele deve pesar contra a nota, mesmo que a questão pareça bem escrita; um formato bem representado deve pesar a favor. Nunca trate a mera plausibilidade como evidência.`;
+}
+
+/**
  * Monta o prompt do Auditor B (Full Critic) — recebe a questao COMPLETA
  * (com gabarito/explicacao/fundamento), mas NUNCA o resultado do Auditor A
  * (Secao 8) — os dois julgamentos precisam permanecer independentes.
+ *
+ * @param {object} payload
+ * @param {object[]} questoesCompletas
+ * @param {object|null} bankStyleProfile — opcional (Fase 2C.3, Secao 21);
+ *   quando ausente, o prompt cai no fallback generico ja existente na
+ *   Fase 2B/2C (nunca inventa estilo).
  */
-export function montarPromptAuditorCritic(payload, questoesCompletas) {
+export function montarPromptAuditorCritic(payload, questoesCompletas, bankStyleProfile = null) {
   if (questoesCompletas.length !== 2) throw new Error(`esperado exatamente 2 questoes; recebido ${questoesCompletas.length}.`);
 
   const blocoQuestoes = questoesCompletas
@@ -196,7 +227,7 @@ REGRAS GRAMATICAIS CONGELADAS PARA ESTE PILOTO (violação de qualquer uma é fa
 - FAZER, quando indica tempo decorrido (ou fenômeno atmosférico), é impessoal.
 - É proibido tratar EXISTIR como impessoal, generalizar HAVER para todo uso, generalizar FAZER para todo uso, ou usar concordância nominal como núcleo da questão fora do escopo.
 
-Não invente um perfil de estilo desta banca além do que está aqui — avalie ESTILO_BANCA_COMPATIVEL apenas por clareza, objetividade, estrutura, nível e formato; nunca afirme "esta banca sempre cobra..." sem evidência.
+${montarBlocoEstiloBanca(bankStyleProfile)}
 
 ${blocoQuestoes}
 
