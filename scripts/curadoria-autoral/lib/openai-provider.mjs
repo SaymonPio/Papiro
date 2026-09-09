@@ -79,11 +79,14 @@ export const QUESTION_GENERATION_JSON_SCHEMA = Object.freeze({
 /**
  * Monta o corpo exato da requisicao (Secoes 7-8) — puro, sem rede. store
  * sempre false, reasoning.effort sempre o passado, tools sempre [], text.
- * format sempre json_schema/strict.
+ * format sempre json_schema/strict. `schemaName`/`schema` sao opcionais e
+ * default para o contrato de geracao de questoes (uso original, Fase 2B);
+ * a Fase 2C (auditoria) passa seu proprio par schemaName/schema — mesmo
+ * request builder, nunca duplicado (Secao 4 do mandato de auditoria).
  *
- * @param {{ model: string, reasoningEffort: string, promptText: string }} entrada
+ * @param {{ model: string, reasoningEffort: string, promptText: string, schemaName?: string, schema?: object }} entrada
  */
-export function construirRequestOpenAI({ model, reasoningEffort, promptText }) {
+export function construirRequestOpenAI({ model, reasoningEffort, promptText, schemaName = QUESTION_GENERATION_SCHEMA_NAME, schema = QUESTION_GENERATION_JSON_SCHEMA }) {
   if (typeof model !== "string" || !model.trim()) throw new Error("model e obrigatorio (nunca hardcoded na arquitetura — sempre passado pelo chamador).");
   if (typeof reasoningEffort !== "string" || !reasoningEffort.trim()) throw new Error("reasoningEffort e obrigatorio.");
   if (typeof promptText !== "string" || !promptText.trim()) throw new Error("promptText e obrigatorio.");
@@ -96,9 +99,9 @@ export function construirRequestOpenAI({ model, reasoningEffort, promptText }) {
     text: {
       format: {
         type: "json_schema",
-        name: QUESTION_GENERATION_SCHEMA_NAME,
+        name: schemaName,
         strict: true,
-        schema: QUESTION_GENERATION_JSON_SCHEMA,
+        schema,
       },
     },
     input: [{ role: "user", content: [{ type: "input_text", text: promptText }] }],
