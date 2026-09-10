@@ -28,7 +28,14 @@ export const COMANDOS_CONHECIDOS = Object.freeze([
 export function classificarComando(enunciado) {
   const texto = (enunciado || "").toLowerCase();
 
-  if (/preench[ae].{0,30}lacuna|lacunas? (pontilhadas|dos? trechos?)|preencha.{0,20}corretamente as lacunas/.test(texto)) {
+  // Fase 2C.3.3: bug real encontrado via dados oficiais verificados (id115
+  // — "assinale a alternativa que preenche, correta e respectivamente, as
+  // lacunas nos trechos a seguir") — o gap "{0,30}" era curto demais para
+  // a insercao canonica ", correta e respectivamente, " (33 chars) entre
+  // "preenche" e "lacuna", e "nos trechos" nao batia em "dos? trechos?".
+  // Alargado para {0,50} (ainda uma janela curta, so cobre uma clausula) e
+  // adicionado "nos trechos?" como variante aceita.
+  if (/preench[ae].{0,50}lacuna|lacunas? (pontilhadas|dos? trechos?|nos trechos?)|preencha.{0,20}corretamente as lacunas/.test(texto)) {
     return "PREENCHIMENTO_LACUNAS";
   }
   if (/reescrit[ae]|reescreva|reescrever/.test(texto)) {

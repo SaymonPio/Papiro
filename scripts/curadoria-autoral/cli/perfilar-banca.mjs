@@ -16,7 +16,7 @@ import path from "node:path";
 import fs from "node:fs";
 import { carregarCorpusMateriaViaPg } from "../lib/bank-corpus-loader.mjs";
 import { normalizarBanca, perfilarCorpus } from "../lib/bank-style-profiler.mjs";
-import { carregarProvenienciaCurada, obterIdsComProvenienciaConfirmada } from "../lib/question-provenance-manifest.mjs";
+import { carregarProvenienciaCurada, obterProvenienciaConfirmada } from "../lib/question-provenance-manifest.mjs";
 import { RAIZ_SAIDA, escreverArtefatoJson, garantirDiretorio } from "../lib/artifact-writer.mjs";
 
 const PADRAO_ESTRITO = "strict_official_confirmed_curated_evidence";
@@ -59,7 +59,8 @@ async function main() {
   // local curado por humano, nunca inferencia por regex sobre `fonte`.
   // Leitura de arquivo local, zero rede, zero DB write.
   const registrosProvenienciaCurada = carregarProvenienciaCurada();
-  const idsComProvenienciaConfirmada = obterIdsComProvenienciaConfirmada(registrosProvenienciaCurada, bancaAlvoNormalizada);
+  const provenienciaConfirmadaPorId = obterProvenienciaConfirmada(registrosProvenienciaCurada, bancaAlvoNormalizada);
+  const idsComProvenienciaConfirmada = new Set(provenienciaConfirmadaPorId.keys());
   console.log(`registros de proveniencia curada (sources/question-provenance/*.json): ${registrosProvenienciaCurada.length}`);
   console.log(`ids confirmados por curadoria humana para "${values.bank}": ${idsComProvenienciaConfirmada.size}`);
 
@@ -71,6 +72,7 @@ async function main() {
     recentYearWindow,
     anoAtual,
     idsComProvenienciaConfirmada,
+    provenienciaConfirmadaPorId,
   });
 
   const resumoProveniencia = questoesClassificadas.reduce((acc, q) => {
@@ -80,8 +82,10 @@ async function main() {
 
   console.log("--- PROVENIENCIA ---");
   console.log(JSON.stringify(resumoProveniencia));
+  console.log("--- DIVERSIDADE ---");
+  console.log(JSON.stringify(perfil.diversity));
   console.log("--- PERFIL (resumo) ---");
-  console.log(JSON.stringify({ sample: perfil.sample, confidence: perfil.confidence, format_distribution: perfil.format_distribution, alternative_count_distribution: perfil.alternative_count_distribution }, null, 2));
+  console.log(JSON.stringify({ sample: perfil.sample, confidence: perfil.confidence, format_distribution: perfil.format_distribution, alternative_count_distribution: perfil.alternative_count_distribution, command_patterns: perfil.command_patterns }, null, 2));
 
   const dirPerfis = path.join(RAIZ_SAIDA, "bank-profiles");
   garantirDiretorio(dirPerfis);
@@ -114,9 +118,17 @@ async function main() {
 
   if (caminhoAnterior && fs.existsSync(caminhoAnterior)) {
     const perfilAnterior = JSON.parse(fs.readFileSync(caminhoAnterior, "utf8"));
-    if (perfilAnterior.provenance_standard !== PADRAO_ESTRITO && perfilAnterior.status !== "PROFILE_PROVENANCE_SUPERSEDED" && perfilAnterior.status !== "PROFILE_PROVENANCE_NOT_STRICT") {
+    const jaMarcado = perfilAnterior.status === "PROFILE_PROVENANCE_SUPERSEDED" || perfilAnterior.status === "PROFILE_PROVENANCE_NOT_STRICT";
+    // Fase 2C.3.3: marcar superseded nao so quando o NOME do padrao de
+    // proveniencia muda, mas tambem quando a COMPOSICAO do corpus muda sob
+    // o mesmo padrao (ex.: curadoria documental promove questoes de
+    // PARTIAL para CONFIRMED sem alterar o nome do standard) — caso
+    // contrario dois perfis com a mesma "provenance_standard" ficariam
+    // coexistindo como se ambos fossem igualmente atuais.
+    const composicaoMudou = JSON.stringify(perfilAnterior.sample) !== JSON.stringify(perfil.sample);
+    if (!jaMarcado && (perfilAnterior.provenance_standard !== PADRAO_ESTRITO || composicaoMudou)) {
       escreverArtefatoJson(caminhoAnterior, { ...perfilAnterior, status: "PROFILE_PROVENANCE_SUPERSEDED", superseded_by: `${nomeBase}-v${novaVersao}.json`, superseded_at: new Date().toISOString() });
-      console.log(`Perfil anterior (padrao de proveniencia desatualizado) marcado PROFILE_PROVENANCE_SUPERSEDED e preservado em: ${caminhoAnterior}`);
+      console.log(`Perfil anterior (composicao ou padrao de proveniencia desatualizado) marcado PROFILE_PROVENANCE_SUPERSEDED e preservado em: ${caminhoAnterior}`);
     }
   }
 

@@ -47,6 +47,13 @@ export function avaliarFidelidadeEstilo(questaoGerada, perfil) {
     reasonCodes.push("COMMAND_FORMAT_UNSUPPORTED_BY_CORPUS");
   } else if (observedPercent < 5) {
     reasonCodes.push("COMMAND_FORMAT_RARE_IN_CORPUS");
+  } else if (commandInfo && commandInfo.robust_multi_exam_support === false) {
+    // Fase 2C.3.4, Secao 13/15: contagem/percentual sozinhos nao bastam —
+    // um formato so aparecendo em UMA prova nao sustenta "e assim que esta
+    // banca escreve", so "e assim que ESTA prova especifica escreveu".
+    // Evita confirmation bias (Secao 15: nunca forcar MATCH so porque a
+    // questao gerada usa o mesmo formato que se queria confirmar).
+    reasonCodes.push("COMMAND_FORMAT_SINGLE_EXAM_ONLY");
   }
 
   // Contagem de alternativas

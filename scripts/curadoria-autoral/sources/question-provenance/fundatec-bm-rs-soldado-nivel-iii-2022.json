@@ -1,0 +1,50 @@
+{
+  "schema_version": 2,
+  "bank": "Fundatec",
+  "contest": "Concurso Público para o Cargo de Militar Estadual na Graduação de Soldado Nível III (Polícia Ostensiva – Carreira de Nível Médio) — Brigada Militar RS, Edital DA/DRESA nº SD-P 01/2021/2022",
+  "role": "Soldado Nível III (Polícia Ostensiva)",
+  "year": 2022,
+
+  "official_exam_evidence": {
+    "source_type": "official_appeal_decision",
+    "publisher": "Brigada Militar do Estado do Rio Grande do Sul (Secretaria da Segurança Pública / Departamento Administrativo), em conjunto com FUNDATEC",
+    "reference": "EDITAL DA/DRESA nº SD-P 14/2021/2022 — Gabarito Definitivo e Resultado do Julgamento dos Recursos da 1ª Fase (Exame Intelectual), PROA nº 21/1203-0014005-9, publicado no DOE nº 34 de 18/02/2022, assinado por Ailton Pereira Azevedo (Ten Cel QOEM, Presidente da Comissão de Concursos Públicos) em 17/02/2022. Documento de julgamento de recursos: para cada questão de Língua Portuguesa (01 a 10), reproduz/cita textualmente trechos suficientes do enunciado, das assertivas I/II/III ou da sequência de lacunas e do texto-base para permitir verificação do conteúdo original da prova, além da tabela completa de gabarito definitivo (questões 1-50).",
+    "url": "https://www.brigadamilitar.rs.gov.br/upload/arquivos/202202/18084723-edital-dadresa-sd-p-14-2021-2022-gabaritos-definitivos.pdf",
+    "document_hash": "c674849e01159a0f9d61e152f6b674ab1817ae05b5368fe3ee1aac4f1bc43a27",
+    "verified": true,
+    "verified_at": "2026-09-09T23:00:00Z"
+  },
+
+  "official_key_evidence": {
+    "source_type": "official_final_answer_key",
+    "publisher": "Brigada Militar do Estado do Rio Grande do Sul (Secretaria da Segurança Pública / Departamento Administrativo), em conjunto com FUNDATEC",
+    "reference": "Mesmo documento acima — Seção '1 DO GABARITO DEFINITIVO', tabela com o gabarito definitivo das 50 questões do Exame Intelectual, já incorporando o julgamento de todos os recursos (não é gabarito preliminar).",
+    "url": "https://www.brigadamilitar.rs.gov.br/upload/arquivos/202202/18084723-edital-dadresa-sd-p-14-2021-2022-gabaritos-definitivos.pdf",
+    "document_hash": "c674849e01159a0f9d61e152f6b674ab1817ae05b5368fe3ee1aac4f1bc43a27",
+    "verified": true,
+    "verified_at": "2026-09-09T23:00:00Z"
+  },
+
+  "validated": true,
+  "validated_by": "human_documentary_curation",
+  "validated_at": "2026-09-09T23:00:00Z",
+
+  "questions": [
+    { "question_id": 114, "official_question_number": 5, "match_status": "OFFICIAL_MATCH_STRONG", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "C", "official_key": "C" },
+    { "question_id": 115, "official_question_number": 7, "match_status": "OFFICIAL_MATCH_STRONG", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "A", "official_key": "A" },
+    { "question_id": 116, "official_question_number": 8, "match_status": "OFFICIAL_MATCH_STRONG", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "E", "official_key": "E" },
+    { "question_id": 117, "official_question_number": 9, "match_status": "OFFICIAL_MATCH_STRONG", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "D", "official_key": "D" },
+    { "question_id": 118, "official_question_number": 10, "match_status": "OFFICIAL_MATCH_STRONG", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "A", "official_key": "A" },
+    { "question_id": 119, "official_question_number": 1, "match_status": "OFFICIAL_MATCH_AMBIGUOUS", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "A", "official_key": "A" },
+    { "question_id": 120, "official_question_number": 2, "match_status": "OFFICIAL_MATCH_STRONG", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "A", "official_key": "A" },
+    { "question_id": 121, "official_question_number": 3, "match_status": "OFFICIAL_MATCH_STRONG", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "B", "official_key": "B" },
+    { "question_id": 122, "official_question_number": 4, "match_status": "OFFICIAL_MATCH_EXACT", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "D", "official_key": "D" },
+    { "question_id": 123, "official_question_number": 6, "match_status": "OFFICIAL_MATCH_STRONG", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "A", "official_key": "A" }
+  ],
+
+  "documentary_findings": [
+    "question_id 119 (Questão 01 oficial): classificado OFFICIAL_MATCH_AMBIGUOUS, NÃO confirmado. O enunciado armazenado no Papiro pede para assinalar a alternativa cujos vocábulos estão 'todos grafados de forma correta' (framing de ortografia pura, sem menção a lacunas ou a linhas do texto-base). O julgamento oficial de recursos descreve a Questão 01 real como um preenchimento de lacunas tracejadas em linhas específicas do texto-base ('linhas 02, 10, 30 e 36'), com o mesmo conjunto de alternativas (mesma sequência de vocábulos) citado como gabarito. Ou seja: as ALTERNATIVAS batem, mas o ENUNCIADO/comando armazenado no Papiro foi reformulado para remover a dependência do texto-base e da tarefa de preenchimento — uma mudança de conteúdo, não apenas de formatação/OCR. Por não ser possível provar que o comando/tarefa arquivado é o mesmo da prova oficial (apenas que as opções de resposta coincidem), fica AMBIGUOUS. Letra do gabarito Papiro (A) bate com o gabarito oficial da Questão 01 (A) — key_status OFFICIAL_KEY_MATCH mesmo assim, mas isso sozinho NÃO basta para confirmação (Secao 14 exige match EXACT/STRONG também). Recomendação para curadoria futura: decidir se o enunciado deve ser corrigido para refletir o texto-base original (promovendo a EXACT/STRONG) ou se deve permanecer como variante autoral adaptada (mantendo-se fora do corpus REAL_OFFICIAL_CONFIRMED permanentemente).",
+    "Nenhum mismatch de gabarito (OFFICIAL_KEY_MISMATCH) foi encontrado nas 10 questões avaliadas — todas as 10 letras armazenadas no Papiro batem com o gabarito definitivo oficial.",
+    "Limitação documental: a evidência de 'prova oficial' e de 'gabarito oficial' usadas aqui vêm do MESMO documento (o julgamento de recursos com gabarito definitivo), que cita/reproduz trechos suficientes do conteúdo de cada questão para permitir comparação, mas não é o caderno de prova completo original digitalizado. Isso foi suficiente para verificar 9/10 questões com confiança EXACT/STRONG nesta rodada; buscar o caderno de prova original completo (se localizável oficialmente) poderia elevar classificações STRONG para EXACT em rodadas futuras, mas não foi necessário para esta primeira curadoria."
+  ]
+}

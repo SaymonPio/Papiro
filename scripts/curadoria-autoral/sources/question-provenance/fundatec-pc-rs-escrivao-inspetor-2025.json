@@ -1,0 +1,49 @@
+{
+  "schema_version": 2,
+  "bank": "Fundatec",
+  "contest": "Concurso Público de Ingresso nas Carreiras de Escrivão de Polícia e de Inspetor de Polícia — Polícia Civil do Estado do Rio Grande do Sul, Concurso Público nº 02/2025, Edital de Abertura nº 06/2025",
+  "role": "Escrivão de Polícia / Inspetor de Polícia",
+  "year": 2026,
+
+  "official_exam_evidence": {
+    "source_type": "official_appeal_decision",
+    "publisher": "Academia de Polícia Civil do Estado do Rio Grande do Sul (Divisão de Recrutamento e Seleção), executora FUNDATEC",
+    "reference": "Edital nº 14/2026 — Divulgação dos Gabaritos Definitivos da Prova Preambular (Fase Preliminar), assinado por Cristiane Pasche (Delegada de Polícia, respondendo pela Direção-Geral da Academia de Polícia Civil), Porto Alegre, 20/02/2026. ANEXO I reproduz, para cada questão de Língua Portuguesa (01 a 30, Bloco 1, Prova Tipo 1-4), a justificativa de manutenção do gabarito com citação textual do enunciado/assertivas/trechos do texto-base suficiente para verificação do conteúdo original; ANEXO II traz a tabela completa de gabaritos definitivos por Tipo de Prova (1 a 4).",
+    "url": "https://concursos-publicacoes.s3.amazonaws.com/993/publico/993-EditalnA14-2026-GabaritosDefinitvosdasProvasTO_699876c35461c.pdf?idpub=506149",
+    "document_hash": "fc33ab54bc0f9d8765e88a004fb08e94d86c795400268f8376d18a3f54bb0c98",
+    "verified": true,
+    "verified_at": "2026-09-09T23:40:00Z"
+  },
+
+  "official_key_evidence": {
+    "source_type": "official_final_answer_key",
+    "publisher": "Academia de Polícia Civil do Estado do Rio Grande do Sul (Divisão de Recrutamento e Seleção), executora FUNDATEC",
+    "reference": "Mesmo documento acima — ANEXO II, tabela 'GABARITOS DEFINITIVOS' com todas as 4 versões de prova (Tipo 1 a Tipo 4), já incorporando o julgamento de todos os recursos (não é gabarito preliminar).",
+    "url": "https://concursos-publicacoes.s3.amazonaws.com/993/publico/993-EditalnA14-2026-GabaritosDefinitvosdasProvasTO_699876c35461c.pdf?idpub=506149",
+    "document_hash": "fc33ab54bc0f9d8765e88a004fb08e94d86c795400268f8376d18a3f54bb0c98",
+    "verified": true,
+    "verified_at": "2026-09-09T23:40:00Z"
+  },
+
+  "validated": true,
+  "validated_by": "human_documentary_curation",
+  "validated_at": "2026-09-09T23:40:00Z",
+
+  "questions": [
+    { "question_id": 688, "official_question_number": 1, "match_status": "OFFICIAL_MATCH_STRONG", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "A", "official_key": "A" },
+    { "question_id": 679, "official_question_number": 17, "match_status": "OFFICIAL_MATCH_STRONG", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "A", "official_key": "A" },
+    { "question_id": 682, "official_question_number": 13, "match_status": "OFFICIAL_MATCH_EXACT", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "E", "official_key": "E" },
+    { "question_id": 683, "official_question_number": 29, "match_status": "OFFICIAL_MATCH_STRONG", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "D", "official_key": "D" },
+    { "question_id": 685, "official_question_number": 10, "match_status": "OFFICIAL_MATCH_EXACT", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "D", "official_key": "D" },
+    { "question_id": 686, "official_question_number": 11, "match_status": "OFFICIAL_MATCH_EXACT", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "C", "official_key": "C" },
+    { "question_id": 687, "official_question_number": 23, "match_status": "OFFICIAL_MATCH_STRONG", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "C", "official_key": "C" },
+    { "question_id": 692, "official_question_number": 24, "match_status": "OFFICIAL_MATCH_STRONG", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "E", "official_key": "E" }
+  ],
+
+  "documentary_findings": [
+    "Descoberta incidental: a pesquisa original buscava o gabarito definitivo do concurso 'Del Pol (PC RS)/PC RS/2025' (Delegado de Polícia, 9 questões no Papiro). A busca web levou a um concurso ADJACENTE (concurso=993 no portal Fundatec, Escrivão de Polícia/Inspetor de Polícia, não Delegado). Optou-se por usar este documento (8 questões no Papiro, todas mapeáveis) em vez de insistir na busca pelo concurso de Delegado, por já ter evidência oficial completa e verificável em mãos — não por preferência de formato/conteúdo (Secao 15 do mandato: evitar confirmation bias). O concurso de Delegado (Del Pol) fica como candidato para uma futura rodada.",
+    "Todas as 8 questões avaliadas tiveram key_status OFFICIAL_KEY_MATCH — nenhum mismatch encontrado.",
+    "Nenhuma questão desta prova ficou com match_status AMBIGUOUS ou NO_OFFICIAL_MATCH — as 8 candidatas do Papiro para este concurso foram todas confirmadas.",
+    "Em 3 questões (683/Q29, 687/Q23, 692/Q24) o enunciado armazenado no Papiro foi reestruturado (substituição de referência por número de linha por referência a parágrafo; reformulação de tarefa T/F para preenchimento de lacuna) mantendo o conteúdo/resposta idênticos ao original — classificadas STRONG, não EXACT, por prudência, mesmo com evidência forte de correspondência."
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "bank": "Fundatec",
+  "contest": "Concurso Público para o Cargo de Militar Estadual na Graduação de Soldado de Primeira Classe (Polícia Ostensiva – Carreira de Nível Médio) — Brigada Militar RS, Edital DA/DRESA nº SD-P 01/2025, PROA nº 24/1203-0025942-7",
+  "role": "Soldado de Primeira Classe (Polícia Ostensiva)",
+  "year": 2025,
+
+  "official_exam_evidence": {
+    "source_type": "official_appeal_decision",
+    "publisher": "Brigada Militar do Estado do Rio Grande do Sul (Comissão de Concursos Públicos), executora FUNDATEC",
+    "reference": "EDITAL DA/DRESA nº SD-P 17/2025 — ANEXO ÚNICO: Das Justificativas para Manutenção ou Alteração do Gabarito Preliminar, assinado por Daniel Luizelli Altafini (Ten Cel PM, Presidente da Comissão de Concursos Públicos), 24/06/2025. Para cada questão de Língua Portuguesa (01 a 10, exceto a Q09 anulada), reproduz/cita textualmente assertivas, trechos do texto-base (com referência às linhas [01]-[32]) e alternativas suficientes para verificação do conteúdo original.",
+    "url": "https://www.brigadamilitar.rs.gov.br/upload/arquivos/202506/25075518-edital-17-anexo-unico.pdf",
+    "document_hash": "1e2a01fb03b72fe3f3b2f534e51a8a82e60b045339b9aa8ef1892c872b893a6b",
+    "verified": true,
+    "verified_at": "2026-09-10T00:10:00Z"
+  },
+
+  "official_key_evidence": {
+    "source_type": "official_final_answer_key",
+    "publisher": "Brigada Militar do Estado do Rio Grande do Sul (Comissão de Concursos Públicos), executora FUNDATEC",
+    "reference": "EDITAL DA/DRESA nº SD-P 17/2025 — Gabarito Definitivo do Exame Intelectual (Seção 1, tabela de 50 questões), DOE nº 121 de 25/06/2025, mesmo edital/assinatura acima. Documento distinto do Anexo Único (mesmo edital, dois arquivos: um com a tabela de gabarito, outro com as justificativas).",
+    "url": "https://www.brigadamilitar.rs.gov.br/upload/arquivos/202506/25075531-edital-17-gabarito-definitivo-do-exame-intelectual.pdf",
+    "document_hash": "99aca048d31128dffe808207af97a210b3f5fc2773919280d14a3629f207a7c2",
+    "verified": true,
+    "verified_at": "2026-09-10T00:10:00Z"
+  },
+
+  "validated": true,
+  "validated_by": "human_documentary_curation",
+  "validated_at": "2026-09-10T00:10:00Z",
+
+  "questions": [
+    { "question_id": 65, "official_question_number": 1, "match_status": "OFFICIAL_MATCH_EXACT", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "C", "official_key": "C" },
+    { "question_id": 67, "official_question_number": 3, "match_status": "OFFICIAL_MATCH_EXACT", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "B", "official_key": "B" },
+    { "question_id": 68, "official_question_number": 4, "match_status": "OFFICIAL_MATCH_EXACT", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "C", "official_key": "C" },
+    { "question_id": 69, "official_question_number": 5, "match_status": "OFFICIAL_MATCH_EXACT", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "C", "official_key": "C" },
+    { "question_id": 71, "official_question_number": 7, "match_status": "OFFICIAL_MATCH_EXACT", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "E", "official_key": "E" },
+    { "question_id": 72, "official_question_number": 8, "match_status": "OFFICIAL_MATCH_EXACT", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "A", "official_key": "A" },
+    { "question_id": 73, "official_question_number": 10, "match_status": "OFFICIAL_MATCH_EXACT", "key_status": "OFFICIAL_KEY_MATCH", "stored_key": "A", "official_key": "A" },
+    { "question_id": 66, "official_question_number": 2, "match_status": "NO_OFFICIAL_MATCH", "key_status": "OFFICIAL_KEY_UNAVAILABLE", "stored_key": "E", "official_key": null },
+    { "question_id": 70, "official_question_number": 6, "match_status": "NO_OFFICIAL_MATCH", "key_status": "OFFICIAL_KEY_UNAVAILABLE", "stored_key": "D", "official_key": null }
+  ],
+
+  "documentary_findings": [
+    "Confirmação de consistência: a Questão 09 (Língua Portuguesa) foi ANULADA pela banca (sem alternativa correta, conforme Anexo Único) — e, correspondentemente, NÃO existe nenhuma questão com fonte 'Fundatec — BM RS Soldado de Primeira Classe 2025 — Questão 09' no Papiro. Isso é evidência indireta de que a curadoria original do Papiro já era criteriosa ao importar apenas questões com gabarito válido.",
+    "ACHADO IMPORTANTE (id 66, 'Questão 02'): o enunciado armazenado no Papiro testa a ortografia de palavras DIFERENTES ('coragem', 'amenizar', 'fascínio') das discutidas na justificativa oficial da Questão 02 real ('florescer', 'inatingível', 'ferozes'). A letra do gabarito Papiro (E = 'g – z – sc') coincide, por acaso, com o padrão de letras do gabarito oficial, mas o CONTEÚDO diverge materialmente — não é possível afirmar que é a mesma questão. Classificado NO_OFFICIAL_MATCH, key_status OFFICIAL_KEY_UNAVAILABLE (a coincidência de letra não pode ser usada como evidência de gabarito, já que o conteúdo não é o mesmo). NÃO confirmado. Recomenda-se investigação futura sobre a origem real deste registro no Papiro.",
+    "ACHADO IMPORTANTE (id 70, 'Questão 06'): mesmo padrão do achado acima — o enunciado armazenado no Papiro usa frases de crase genéricas ('margens da lagoa', 'trouxe à tona a discussão', 'começou a percorrer o caminho') sem qualquer relação com o texto-base real da prova (que a justificativa oficial cita explicitmente, linhas 14/16/29: 'dedicar às ações', 'lançam à missão', 'renunciar a tudo'). A letra do gabarito Papiro (D = 'às – à – a') novamente coincide por acaso com o padrão letra-a-letra do gabarito oficial, mas o conteúdo diverge materialmente. Classificado NO_OFFICIAL_MATCH, key_status OFFICIAL_KEY_UNAVAILABLE. NÃO confirmado.",
+    "Os dois achados acima (ids 66 e 70) ilustram exatamente por que este mandato exige NUNCA promover so pela coincidência de gabarito/regex — sem comparação de conteúdo real contra a fonte oficial, essas 2 questões teriam sido confirmadas erroneamente apesar de não corresponderem ao conteúdo real da prova.",
+    "7 das 9 candidatas (Q01, Q03, Q04, Q05, Q07, Q08, Q10) foram confirmadas com match EXACT e key MATCH — nenhum mismatch de gabarito entre as confirmadas."
+  ]
+}

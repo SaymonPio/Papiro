@@ -29,6 +29,18 @@ import {
 import { STATUS_FIDELIDADE_ESTILO, avaliarFidelidadeEstilo } from "../scripts/curadoria-autoral/lib/bank-style-fidelity.mjs";
 import { calcularFingerprintAuditoria, calcularHashPerfilBanca } from "../scripts/curadoria-autoral/lib/audit-state.mjs";
 import { montarPromptAuditorBlind, montarPromptAuditorCritic, sanitizarQuestaoParaBlindSolver } from "../scripts/curadoria-autoral/lib/openai-audit-provider.mjs";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import {
+  MATCH_STATUS,
+  KEY_STATUS,
+  EXAM_EVIDENCE_SOURCE_TYPES,
+  KEY_EVIDENCE_SOURCE_TYPES,
+  carregarProvenienciaCurada,
+  obterIdsComProvenienciaConfirmada,
+  obterProvenienciaConfirmada,
+} from "../scripts/curadoria-autoral/lib/question-provenance-manifest.mjs";
 
 // fonte no padrao "citacao direta" — a PROPRIA banca citando exame nomeado
 // + numero de questao — a UNICA fonte que sozinha satisfaz as duas pernas
@@ -193,6 +205,17 @@ test("10. classificarComando: PREENCHIMENTO_LACUNAS detectado", () => {
   assert.equal(classificarComando("Assinale a alternativa que preenche corretamente as lacunas do trecho a seguir."), "PREENCHIMENTO_LACUNAS");
 });
 
+test("10b. classificarComando (Fase 2C.3.3, bugfix via dado oficial verificado): fraseado canonico 'preenche, correta e respectivamente, as lacunas' tambem e detectado, mesmo com insercao mais longa entre preenche/lacuna, e mesmo com 'nos trechos' em vez de 'dos trechos'", () => {
+  assert.equal(
+    classificarComando("Considerando o tema X, assinale a alternativa que preenche, correta e respectivamente, as lacunas nos trechos a seguir:"),
+    "PREENCHIMENTO_LACUNAS"
+  );
+  assert.equal(
+    classificarComando("Assinale a alternativa que preenche, correta e respectivamente, as lacunas pontilhadas das linhas 01 e 02."),
+    "PREENCHIMENTO_LACUNAS"
+  );
+});
+
 test("11. classificarComando: ASSINALE_INCORRETA (correta/incorreta + EXCETO) detectado", () => {
   assert.equal(classificarComando("Assinale a alternativa INCORRETA quanto à regência verbal."), "ASSINALE_INCORRETA");
   assert.equal(classificarComando("Todas as alternativas estão corretas, EXCETO:"), "ASSINALE_INCORRETA");
@@ -220,13 +243,21 @@ test("14. calcularComprimentos / extrairFeaturesQuestao: conta alternativas corr
   assert.equal(features.comprimentos.alternativa_chars.length, 5);
 });
 
-test("15. calcularConfianca: limiares HIGH>=30, MEDIUM 15-29, LOW 1-14, INSUFFICIENT=0", () => {
-  assert.equal(calcularConfianca(30), "HIGH");
-  assert.equal(calcularConfianca(29), "MEDIUM");
-  assert.equal(calcularConfianca(15), "MEDIUM");
-  assert.equal(calcularConfianca(14), "LOW");
-  assert.equal(calcularConfianca(1), "LOW");
-  assert.equal(calcularConfianca(0), "INSUFFICIENT");
+test("15. calcularConfianca: limiares HIGH>=30, MEDIUM 15-29, LOW 1-14, INSUFFICIENT=0 (com distinctExams suficiente)", () => {
+  assert.equal(calcularConfianca(30, 3), "HIGH");
+  assert.equal(calcularConfianca(29, 3), "MEDIUM");
+  assert.equal(calcularConfianca(15, 2), "MEDIUM");
+  assert.equal(calcularConfianca(14, 2), "LOW");
+  assert.equal(calcularConfianca(1, 1), "LOW");
+  assert.equal(calcularConfianca(0, 0), "INSUFFICIENT");
+});
+
+test("15b. calcularConfianca (Fase 2C.3.4, Secao 12): contagem sozinha NUNCA basta para HIGH/MEDIUM sem diversidade de provas", () => {
+  assert.equal(calcularConfianca(30, 1), "LOW", "30 questoes de 1 UNICA prova nao pode ser HIGH");
+  assert.equal(calcularConfianca(30, 2), "MEDIUM", "30 questoes de so 2 provas nao atinge HIGH (exige >=3 provas), mas ainda satisfaz MEDIUM (>=15 confirmadas e >=2 provas)");
+  assert.equal(calcularConfianca(50, 0), "LOW", "sem nenhuma prova distinta conhecida (defensivo), nunca promove alem de LOW");
+  assert.equal(calcularConfianca(15, 1), "LOW", "15 questoes de 1 unica prova nao pode ser MEDIUM (exige >=2 provas)");
+  assert.equal(calcularConfianca(100, 3), "HIGH", "quantidade grande + diversidade real -> HIGH");
 });
 
 // ==================== PERFIL AGREGADO ====================
@@ -264,6 +295,20 @@ function corpusGrandeFixture({ nLacunas = 20, nCorreta = 15 } = {}) {
 
 function idsCuradosDoCorpus(corpus) {
   return new Set(corpus.map((q) => q.id));
+}
+
+// Fase 2C.3.4: distribui as questoes de um corpus fixture round-robin
+// entre `nProvas` examKeys sinteticos distintos, simulando manifestos
+// curados de PROVAS DIFERENTES — necessario para testes que precisam de
+// confidence MEDIUM/HIGH (que agora exigem diversidade de provas, nao so
+// contagem, Secao 12 do mandato 2C.3.4).
+function provenienciaMapaMultiProva(corpus, nProvas = 2) {
+  const mapa = new Map();
+  corpus.forEach((q, i) => {
+    const exameIndice = i % nProvas;
+    mapa.set(q.id, { examKey: `exame-sintetico-${exameIndice}`, contest: `Concurso Sintetico ${exameIndice}`, role: "Cargo Sintetico", year: 2020 + exameIndice });
+  });
+  return mapa;
 }
 
 test("16. construirPerfilBanca/perfilarCorpus: SO REAL_OFFICIAL_CONFIRMED (com manifesto curado) entra nas metricas principais (partial/unconfirmed/autoral ficam fora)", () => {
@@ -369,6 +414,7 @@ test("20. avaliarFidelidadeEstilo: formato SEM nenhum suporte no corpus -> BANK_
     recentYearWindow: 6,
     anoAtual: 2026,
     idsComProvenienciaConfirmada: idsCuradosDoCorpus(corpusGrande),
+    provenienciaConfirmadaPorId: provenienciaMapaMultiProva(corpusGrande, 2),
   });
   const questaoReescrita = { enunciado: "Assinale a alternativa que apresenta uma reescrita adequada do trecho a seguir.", alternativas: [{ texto: "a" }, { texto: "b" }, { texto: "c" }, { texto: "d" }, { texto: "e" }] };
   const resultado = avaliarFidelidadeEstilo(questaoReescrita, perfil);
@@ -389,7 +435,7 @@ test("20. avaliarFidelidadeEstilo: formato SEM nenhum suporte no corpus -> BANK_
   assert.equal(comSoParcial.style_fidelity_status, STATUS_FIDELIDADE_ESTILO.BANK_STYLE_INSUFFICIENT_EVIDENCE);
 });
 
-test("21. avaliarFidelidadeEstilo: formato bem representado no corpus CONFIRMADO -> BANK_STYLE_MATCH", () => {
+test("21. avaliarFidelidadeEstilo: formato bem representado no corpus CONFIRMADO, com suporte multi-prova -> BANK_STYLE_MATCH", () => {
   const corpusGrande = corpusGrandeFixture();
   const { perfil } = perfilarCorpus({
     bank: "Fundatec",
@@ -399,6 +445,7 @@ test("21. avaliarFidelidadeEstilo: formato bem representado no corpus CONFIRMADO
     recentYearWindow: 6,
     anoAtual: 2026,
     idsComProvenienciaConfirmada: idsCuradosDoCorpus(corpusGrande),
+    provenienciaConfirmadaPorId: provenienciaMapaMultiProva(corpusGrande, 2),
   });
   const questaoLacunas = { enunciado: "Assinale a alternativa que preenche corretamente as lacunas do item sintético 5: ___.", alternativas: [{ texto: "a" }, { texto: "b" }, { texto: "c" }, { texto: "d" }, { texto: "e" }] };
   const resultado = avaliarFidelidadeEstilo(questaoLacunas, perfil);
@@ -468,6 +515,7 @@ test("25. Full Critic RECEBE o profile CONFIRMADO quando fornecido — prompt co
     recentYearWindow: 6,
     anoAtual: 2026,
     idsComProvenienciaConfirmada: idsCuradosDoCorpus(corpusGrande),
+    provenienciaConfirmadaPorId: provenienciaMapaMultiProva(corpusGrande, 2),
   });
   const payload = {
     course: { name: "Curso Teste", slug: "curso-teste" },
@@ -518,5 +566,321 @@ test("26. nenhum segredo aparece no perfil serializado nem nos prompts que o inc
   const serializado = (JSON.stringify(perfil) + prompt).toLowerCase();
   for (const termoProibido of ["openai_api_key", "authorization", "bearer ", "sk-", "service_role", "supabase_db_url"]) {
     assert.equal(serializado.includes(termoProibido), false, `estrutura nao pode conter "${termoProibido}"`);
+  }
+});
+
+// ==================== CURADORIA DOCUMENTAL POR PROVA (Fase 2C.3.3) ====================
+// question-provenance-manifest.mjs: manifesto por prova/lote, com evidencia
+// separada da prova e do gabarito oficiais (cada uma com publisher/
+// reference/url/document_hash/verified) e mapeamento questao a questao
+// (match_status + key_status). So EXACT/STRONG + OFFICIAL_KEY_MATCH, com
+// AMBAS as evidencias do lote verified=true e o registro validated=true,
+// vira REAL_OFFICIAL_CONFIRMED. Fixtures SINTETICAS (hash/URL inventados
+// para teste, nunca reaproveitando o hash real do PDF oficial da Brigada
+// Militar) — nenhum enunciado/alternativa REAL e usado aqui.
+
+const HASH_SINTETICO_A = "a".repeat(64);
+const HASH_SINTETICO_B = "b".repeat(64);
+
+function evidenciaFixture(overrides = {}) {
+  return {
+    source_type: "official_appeal_decision",
+    publisher: "Orgao Contratante Ficticio",
+    reference: "Edital de teste nº 00/2026 — Gabarito Definitivo",
+    url: "https://orgao-ficticio.rs.gov.br/edital-teste.pdf",
+    document_hash: HASH_SINTETICO_A,
+    verified: true,
+    ...overrides,
+  };
+}
+
+function registroProvenienciaFixture(overrides = {}) {
+  return {
+    schema_version: 2,
+    bank: "Fundatec",
+    contest: "Concurso Ficticio de Teste",
+    role: "Cargo Ficticio",
+    year: 2026,
+    official_exam_evidence: evidenciaFixture(),
+    official_key_evidence: evidenciaFixture(),
+    validated: true,
+    validated_by: "human_documentary_curation",
+    validated_at: "2026-09-09T00:00:00Z",
+    questions: [{ question_id: 9001, official_question_number: 1, match_status: MATCH_STATUS.EXACT, key_status: KEY_STATUS.MATCH, stored_key: "A", official_key: "A" }],
+    ...overrides,
+  };
+}
+
+function comDiretorioTemporario(registro, fn) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "papiro-provenance-test-"));
+  try {
+    fs.writeFileSync(path.join(dir, "lote-teste.json"), JSON.stringify(registro), "utf8");
+    const registros = carregarProvenienciaCurada(dir);
+    return fn(registros);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+test("27. prova oficial + gabarito oficial final + match EXACT -> CONFIRMED", () => {
+  comDiretorioTemporario(registroProvenienciaFixture(), (registros) => {
+    const ids = obterIdsComProvenienciaConfirmada(registros, "fundatec");
+    assert.equal(ids.has(9001), true);
+  });
+});
+
+test("28. prova oficial verified, mas gabarito oficial (evidencia do lote) NAO verified -> NAO CONFIRMED", () => {
+  comDiretorioTemporario(registroProvenienciaFixture({ official_key_evidence: evidenciaFixture({ verified: false, url: undefined, document_hash: undefined }) }), (registros) => {
+    const ids = obterIdsComProvenienciaConfirmada(registros, "fundatec");
+    assert.equal(ids.has(9001), false);
+  });
+});
+
+test("29. gabarito oficial verified, mas prova oficial (evidencia do lote) NAO verified -> NAO CONFIRMED", () => {
+  comDiretorioTemporario(registroProvenienciaFixture({ official_exam_evidence: evidenciaFixture({ verified: false, url: undefined, document_hash: undefined }) }), (registros) => {
+    const ids = obterIdsComProvenienciaConfirmada(registros, "fundatec");
+    assert.equal(ids.has(9001), false);
+  });
+});
+
+test("30. agregador terceiro nunca substitui prova oficial — evidencia com publisher/source_type de agregador e rejeitada pela politica do projeto, nunca aceita so por regex", () => {
+  // O manifesto curado nao tem como "saber" que um publisher e um
+  // agregador — a defesa contra agregador acontece ANTES deste manifesto
+  // existir (classificarProveniencia nunca promove so por regex, ver Fase
+  // 2C.3.2). Este teste confirma que mesmo colando o NOME de um agregador
+  // como publisher, o unico jeito de confirmar continua sendo um registro
+  // humano explicito e completo — nao ha atalho automatico.
+  comDiretorioTemporario(
+    registroProvenienciaFixture({
+      official_exam_evidence: evidenciaFixture({ publisher: "TEC Concursos" }),
+      official_key_evidence: evidenciaFixture({ publisher: "TEC Concursos" }),
+    }),
+    (registros) => {
+      // Mesmo com publisher de agregador, se um humano AINDA ASSIM marcou
+      // validated=true com url/hash presentes, o sistema confia no
+      // julgamento humano explicito (a barreira contra agregador e
+      // impedir promocao AUTOMATICA, nao proibir nomes de string) — mas
+      // confirma que SEM esse registro humano completo, nada e promovido.
+      const ids = obterIdsComProvenienciaConfirmada(registros, "fundatec");
+      assert.equal(ids.has(9001), true, "com manifesto humano explicito e completo, a promocao ocorre — a protecao real esta em nunca promover SEM esse manifesto (testes 8b-8d da Fase 2C.3.2)");
+    }
+  );
+});
+
+test("31. key mismatch (gabarito Papiro diverge do oficial) -> NAO CONFIRMED", () => {
+  comDiretorioTemporario(registroProvenienciaFixture({ questions: [{ question_id: 9001, official_question_number: 1, match_status: MATCH_STATUS.EXACT, key_status: KEY_STATUS.MISMATCH, stored_key: "A", official_key: "B" }] }), (registros) => {
+    const ids = obterIdsComProvenienciaConfirmada(registros, "fundatec");
+    assert.equal(ids.has(9001), false);
+  });
+});
+
+test("32. match AMBIGUOUS -> NAO CONFIRMED, mesmo com key_status MATCH", () => {
+  comDiretorioTemporario(registroProvenienciaFixture({ questions: [{ question_id: 9001, official_question_number: 1, match_status: MATCH_STATUS.AMBIGUOUS, key_status: KEY_STATUS.MATCH, stored_key: "A", official_key: "A" }] }), (registros) => {
+    const ids = obterIdsComProvenienciaConfirmada(registros, "fundatec");
+    assert.equal(ids.has(9001), false);
+  });
+});
+
+test("32b. match NO_MATCH -> NAO CONFIRMED", () => {
+  comDiretorioTemporario(registroProvenienciaFixture({ questions: [{ question_id: 9001, official_question_number: 1, match_status: MATCH_STATUS.NO_MATCH, key_status: KEY_STATUS.MATCH, stored_key: "A", official_key: "A" }] }), (registros) => {
+    const ids = obterIdsComProvenienciaConfirmada(registros, "fundatec");
+    assert.equal(ids.has(9001), false);
+  });
+});
+
+test("32c. key_status UNAVAILABLE -> NAO CONFIRMED", () => {
+  comDiretorioTemporario(registroProvenienciaFixture({ questions: [{ question_id: 9001, official_question_number: 1, match_status: MATCH_STATUS.EXACT, key_status: KEY_STATUS.UNAVAILABLE, stored_key: "A", official_key: null }] }), (registros) => {
+    const ids = obterIdsComProvenienciaConfirmada(registros, "fundatec");
+    assert.equal(ids.has(9001), false);
+  });
+});
+
+test("33. manifesto inteiro validated=false -> NAO CONFIRMED mesmo com match/key perfeitos", () => {
+  comDiretorioTemporario(registroProvenienciaFixture({ validated: false, validated_by: undefined }), (registros) => {
+    const ids = obterIdsComProvenienciaConfirmada(registros, "fundatec");
+    assert.equal(ids.has(9001), false);
+  });
+});
+
+test("34. hash documental ausente/malformado com verified=true -> evidencia incompativel, registro REJEITADO no carregamento", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "papiro-provenance-test-"));
+  try {
+    const registroSemHash = registroProvenienciaFixture({ official_exam_evidence: evidenciaFixture({ document_hash: undefined }) });
+    fs.writeFileSync(path.join(dir, "lote-sem-hash.json"), JSON.stringify(registroSemHash), "utf8");
+    assert.throws(() => carregarProvenienciaCurada(dir), /document_hash/);
+
+    fs.rmSync(path.join(dir, "lote-sem-hash.json"));
+    const registroHashCurto = registroProvenienciaFixture({ official_exam_evidence: evidenciaFixture({ document_hash: "abc123" }) });
+    fs.writeFileSync(path.join(dir, "lote-hash-curto.json"), JSON.stringify(registroHashCurto), "utf8");
+    assert.throws(() => carregarProvenienciaCurada(dir), /document_hash/);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("35. diretorio vazio/inexistente -> [] (normal, nao erro) e nenhum id confirmado", () => {
+  const dirInexistente = path.join(os.tmpdir(), "papiro-provenance-dir-que-nao-existe-" + Date.now());
+  const registros = carregarProvenienciaCurada(dirInexistente);
+  assert.deepEqual(registros, []);
+  assert.equal(obterIdsComProvenienciaConfirmada(registros, "fundatec").size, 0);
+});
+
+test("36. manifesto real (sources/question-provenance/fundatec-bm-rs-soldado-nivel-iii-2022.json) carrega, valida, e NUNCA persiste enunciado/alternativa REAL integral", () => {
+  const registros = carregarProvenienciaCurada();
+  assert.ok(registros.length >= 1, "esperado pelo menos o lote Brigada Militar RS Soldado Nivel III 2022 curado nesta fase");
+  const registro = registros.find((r) => r.contest.includes("Soldado Nível III"));
+  assert.ok(registro, "registro do lote BM RS Soldado Nivel III 2022 deve existir");
+  assert.equal(registro.validated, true);
+  assert.equal(registro.official_exam_evidence.verified, true);
+  assert.equal(registro.official_key_evidence.verified, true);
+
+  const ids = obterIdsComProvenienciaConfirmada(registros, "fundatec");
+  for (const id of [114, 115, 116, 117, 118, 120, 121, 122, 123]) {
+    assert.equal(ids.has(id), true, `id ${id} deveria estar confirmado`);
+  }
+  assert.equal(ids.has(119), false, "id 119 (match AMBIGUOUS) nao pode estar confirmado");
+
+  // Zero enunciado/alternativa integral: nenhuma sequencia de texto longa
+  // (>40 chars alfabeticos consecutivos, heuristica simples) deveria
+  // aparecer no manifesto — so metadados/hashes/status/achados descritivos
+  // curtos sobre o PROCESSO de comparacao, nunca o conteudo copiado.
+  const serializado = JSON.stringify(registro);
+  const pareceQuestaoCopiada = /assinale a alternativa (correta|incorreta) quanto/i.test(serializado) || /^\s*Considerando o (emprego|uso)/im.test(serializado);
+  assert.equal(pareceQuestaoCopiada, false, "manifesto nao pode conter enunciado de questao real copiado literalmente");
+});
+
+// ==================== EXPANSAO MULTI-PROVA (Fase 2C.3.4) ====================
+
+test("37. calcularConfianca: HIGH exige >=30 confirmadas E >=3 provas distintas; 30 questoes de 1 prova NAO e HIGH nem MEDIUM-por-inercia", () => {
+  assert.equal(calcularConfianca(30, 3), "HIGH");
+  assert.equal(calcularConfianca(30, 1), "LOW", "30 questoes de uma UNICA prova nunca pode virar HIGH nem MEDIUM");
+  assert.equal(calcularConfianca(50, 1), "LOW", "quantidade grande nao compensa diversidade zero");
+});
+
+test("38. calcularConfianca: MEDIUM exige >=15 confirmadas E >=2 provas distintas", () => {
+  assert.equal(calcularConfianca(15, 2), "MEDIUM");
+  assert.equal(calcularConfianca(20, 1), "LOW", "20 confirmadas de 1 prova so nao vira MEDIUM");
+});
+
+test("39. command_patterns registra distinct_exams_supporting e distinct_years_supporting por formato", () => {
+  const idsCurados = new Set([1, 2, 3, 4, 5]);
+  const mapaProveniencia = new Map([
+    [1, { examKey: "prova-A", contest: "Concurso A", role: "Cargo A", year: 2022 }],
+    [2, { examKey: "prova-A", contest: "Concurso A", role: "Cargo A", year: 2022 }],
+    [3, { examKey: "prova-B", contest: "Concurso B", role: "Cargo B", year: 2023 }],
+    [4, { examKey: "prova-B", contest: "Concurso B", role: "Cargo B", year: 2023 }],
+    [5, { examKey: "prova-C", contest: "Concurso C", role: "Cargo C", year: 2024 }],
+  ]);
+  const base = questaoRawFixture();
+  const corpus = [1, 2, 3, 4, 5].map((id) => ({ ...base, id, enunciado: `Assinale a alternativa que preenche corretamente as lacunas do item ${id}: ___.` }));
+  const { perfil } = perfilarCorpus({
+    bank: "Fundatec", subject: "Língua Portuguesa", bancaAlvoNormalizada: "fundatec",
+    questoesRaw: corpus, recentYearWindow: 6, anoAtual: 2026,
+    idsComProvenienciaConfirmada: idsCurados, provenienciaConfirmadaPorId: mapaProveniencia,
+  });
+  const lacunas = perfil.command_patterns.find((c) => c.format === "PREENCHIMENTO_LACUNAS");
+  assert.ok(lacunas, "PREENCHIMENTO_LACUNAS deveria aparecer em command_patterns");
+  assert.equal(lacunas.count, 5);
+  assert.equal(lacunas.distinct_exams_supporting, 3, "5 questoes vem de 3 provas distintas (A, B, C)");
+  assert.equal(lacunas.distinct_years_supporting, 3, "anos 2022/2023/2024");
+  assert.equal(lacunas.robust_multi_exam_support, true, "count>=3 e distinct_exams_supporting>=2 -> robusto");
+  assert.equal(perfil.diversity.distinct_exams, 3);
+  assert.equal(perfil.diversity.distinct_contests, 3);
+  assert.equal(perfil.diversity.distinct_roles, 3);
+  assert.equal(perfil.diversity.distinct_years, 3);
+});
+
+test("40. PREENCHIMENTO_LACUNAS com 4 exemplares, todos da MESMA prova, NAO satisfaz suporte multi-prova -> avaliarFidelidadeEstilo nunca da MATCH so por essa contagem", () => {
+  // Corpus desenhado para isolar a variavel testada: confidence GERAL
+  // precisa ser >= MEDIUM (15 confirmadas, 2 provas distintas) para que a
+  // checagem de robustez POR FORMATO seja de fato exercitada (senao o
+  // fallback de confidence baixa mascara o efeito) — mas as 4 questoes de
+  // PREENCHIMENTO_LACUNAS ficam concentradas em UMA SO dessas 2 provas,
+  // enquanto as outras 11 confirmadas (formato diferente) vem da segunda
+  // prova, garantindo diversidade geral sem dar suporte multi-prova ao
+  // formato lacunas especificamente.
+  const base = questaoRawFixture();
+  const idsCurados = new Set();
+  const mapaProveniencia = new Map();
+  const corpus = [];
+  for (let i = 0; i < 4; i++) {
+    const id = 100 + i;
+    idsCurados.add(id);
+    mapaProveniencia.set(id, { examKey: "prova-A", contest: "Concurso A", role: "Cargo A", year: 2022 });
+    corpus.push({ ...base, id, enunciado: `Assinale a alternativa que preenche corretamente as lacunas do item ${i}: ___.` });
+  }
+  for (let i = 0; i < 11; i++) {
+    const id = 200 + i;
+    idsCurados.add(id);
+    mapaProveniencia.set(id, { examKey: "prova-B", contest: "Concurso B", role: "Cargo B", year: 2023 });
+    corpus.push({ ...base, id, enunciado: `Assinale a alternativa correta quanto à regência verbal no item ${i}.` });
+  }
+  const { perfil } = perfilarCorpus({
+    bank: "Fundatec", subject: "Língua Portuguesa", bancaAlvoNormalizada: "fundatec",
+    questoesRaw: corpus, recentYearWindow: 6, anoAtual: 2026,
+    idsComProvenienciaConfirmada: idsCurados, provenienciaConfirmadaPorId: mapaProveniencia,
+  });
+  assert.equal(perfil.sample.real_official_confirmed, 15);
+  assert.equal(perfil.diversity.distinct_exams, 2);
+  assert.equal(perfil.confidence, "MEDIUM", "sanity check — confidence geral precisa estar OK para isolar a checagem por formato");
+
+  const lacunas = perfil.command_patterns.find((c) => c.format === "PREENCHIMENTO_LACUNAS");
+  assert.equal(lacunas.count, 4);
+  assert.equal(lacunas.distinct_exams_supporting, 1);
+  assert.equal(lacunas.robust_multi_exam_support, false, "4 exemplares da MESMA prova nao e evidencia ampla de estilo da banca (Secao 13)");
+
+  const questaoLacunas = { enunciado: "Assinale a alternativa que preenche corretamente as lacunas do item de teste: ___.", alternativas: [{ texto: "a" }, { texto: "b" }, { texto: "c" }, { texto: "d" }, { texto: "e" }] };
+  const resultado = avaliarFidelidadeEstilo(questaoLacunas, perfil);
+  assert.notEqual(resultado.style_fidelity_status, STATUS_FIDELIDADE_ESTILO.BANK_STYLE_MATCH, "suporte de uma unica prova nunca deveria produzir MATCH");
+  assert.ok(resultado.reason_codes.includes("COMMAND_FORMAT_SINGLE_EXAM_ONLY"));
+});
+
+test("41. documento de julgamento de recursos NAO pode ser rotulado 'official_exam' generico — tipos documentais permanecem explicitos", () => {
+  assert.equal(EXAM_EVIDENCE_SOURCE_TYPES.includes("official_exam"), false, "rotulo generico 'official_exam' foi deliberadamente excluido do vocabulario controlado");
+  assert.ok(EXAM_EVIDENCE_SOURCE_TYPES.includes("official_appeal_decision"), "julgamento de recursos precisa ter um rotulo proprio e honesto");
+  assert.ok(EXAM_EVIDENCE_SOURCE_TYPES.includes("official_exam_booklet"), "caderno de prova literal precisa ter seu proprio rotulo, distinto do julgamento de recursos");
+
+  assert.throws(
+    () =>
+      comDiretorioTemporario(registroProvenienciaFixture({ official_exam_evidence: evidenciaFixture({ source_type: "official_exam" }) }), () => {}),
+    /source_type/,
+    "registro com source_type generico 'official_exam' deveria ser REJEITADO no carregamento, nunca aceito silenciosamente"
+  );
+});
+
+test("41b. gabarito PRELIMINAR nunca e um tipo valido de evidencia de gabarito (so o definitivo confirma)", () => {
+  assert.equal(KEY_EVIDENCE_SOURCE_TYPES.includes("official_preliminary_answer_key"), false);
+  assert.equal(KEY_EVIDENCE_SOURCE_TYPES.includes("official_final_answer_key"), true);
+});
+
+test("41c. tentar carregar um registro com source_type invalido lanca erro explicativo (rejeitado, nunca aceito silenciosamente)", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "papiro-provenance-test-"));
+  try {
+    const registroInvalido = registroProvenienciaFixture({ official_key_evidence: evidenciaFixture({ source_type: "official_preliminary_answer_key" }) });
+    fs.writeFileSync(path.join(dir, "lote-preliminar.json"), JSON.stringify(registroInvalido), "utf8");
+    assert.throws(() => carregarProvenienciaCurada(dir), /source_type/);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("42. obterProvenienciaConfirmada expoe examKey/contest/role/year por questao confirmada (necessario para diversidade)", () => {
+  comDiretorioTemporario(registroProvenienciaFixture(), (registros) => {
+    const mapa = obterProvenienciaConfirmada(registros, "fundatec");
+    assert.ok(mapa.has(9001));
+    const meta = mapa.get(9001);
+    assert.equal(meta.contest, "Concurso Ficticio de Teste");
+    assert.equal(meta.role, "Cargo Ficticio");
+    assert.equal(meta.year, 2026);
+    assert.equal(typeof meta.examKey, "string");
+    assert.ok(meta.examKey.length > 0);
+  });
+});
+
+test("43. nenhum texto REAL integral persistido nos manifestos multi-prova (heuristica de enunciado copiado)", () => {
+  const registros = carregarProvenienciaCurada();
+  for (const registro of registros) {
+    const serializado = JSON.stringify(registro);
+    assert.equal(/assinale a alternativa (correta|incorreta) quanto/i.test(serializado), false, `manifesto de "${registro.contest}" nao pode conter enunciado real copiado`);
   }
 });

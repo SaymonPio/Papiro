@@ -181,9 +181,14 @@ export function classificarTier(questaoRaw, { anoAtual, recentYearWindow }) {
 // abaixo de 15" e passa a exigir pelo menos 1 questao REAL_OFFICIAL_CONFIRMED;
 // zero confirmadas e INSUFFICIENT, um estado distinto e mais honesto do
 // que classificar como "LOW" (que ainda sugeria alguma base).
-export function calcularConfianca(nOfficialConfirmed) {
-  if (nOfficialConfirmed >= 30) return "HIGH";
-  if (nOfficialConfirmed >= 15) return "MEDIUM";
+//
+// Fase 2C.3.4, Secao 12: quantidade sozinha nao basta mais — 30 questoes
+// confirmadas de UMA UNICA prova nao sustentam "conhecemos o estilo desta
+// banca", so "conhecemos esta prova". HIGH/MEDIUM agora exigem tambem
+// diversidade de provas distintas (distinctExams), nunca so contagem.
+export function calcularConfianca(nOfficialConfirmed, distinctExams = 0) {
+  if (nOfficialConfirmed >= 30 && distinctExams >= 3) return "HIGH";
+  if (nOfficialConfirmed >= 15 && distinctExams >= 2) return "MEDIUM";
   if (nOfficialConfirmed >= 1) return "LOW";
   return "INSUFFICIENT";
 }
@@ -216,9 +221,16 @@ function calcularPercentis(valores) {
  *   bank: string, subject: string,
  *   questoesClassificadas: Array<{ id: number, proveniencia: string, tier: string, ano: number|null, features: object }>,
  *   recentYearWindow: number, anoAtual: number,
+ *   provenienciaConfirmadaPorId?: Map<number, { examKey: string, contest: string, role: string, year: number }>,
  * }} entrada
+ *   provenienciaConfirmadaPorId (Fase 2C.3.4, Secao 12-13): metadados de
+ *   qual PROVA/lote curado confirmou cada questao — usado so para
+ *   calcular diversidade (distinct_exams/contests/roles/years) e suporte
+ *   multi-prova por formato. Default vazio = sem diversidade conhecida
+ *   (nunca assume "1 prova" por engano; so conta o que o mapa realmente
+ *   documenta).
  */
-export function construirPerfilBanca({ bank, subject, questoesClassificadas, recentYearWindow, anoAtual }) {
+export function construirPerfilBanca({ bank, subject, questoesClassificadas, recentYearWindow, anoAtual, provenienciaConfirmadaPorId = new Map() }) {
   const highConfidence = questoesClassificadas.filter((q) => q.proveniencia === "REAL_OFFICIAL_CONFIRMED");
   const provenancePartial = questoesClassificadas.filter((q) => q.proveniencia === "REAL_PROVENANCE_PARTIAL");
   const unconfirmed = questoesClassificadas.filter((q) => q.proveniencia === "REAL_UNCONFIRMED");
@@ -245,14 +257,60 @@ export function construirPerfilBanca({ bank, subject, questoesClassificadas, rec
     porTierComando[q.tier][comando] = (porTierComando[q.tier][comando] ?? 0) + 1;
   }
   const total = highConfidence.length;
+
+  // Fase 2C.3.4, Secao 12: diversidade do corpus CONFIRMADO — nunca
+  // assumida, so contada a partir do que o manifesto curado realmente
+  // documentou por questao (provenienciaConfirmadaPorId). Uma questao sem
+  // metadado no mapa (nao deveria acontecer, mas defensivamente) nao
+  // contribui para nenhuma contagem de diversidade.
+  const examKeysDistintos = new Set();
+  const contestsDistintos = new Set();
+  const rolesDistintos = new Set();
+  const anosDistintosConfirmados = new Set();
+  for (const q of highConfidence) {
+    const meta = provenienciaConfirmadaPorId.get(q.id);
+    if (!meta) continue;
+    if (meta.examKey) examKeysDistintos.add(meta.examKey);
+    if (meta.contest) contestsDistintos.add(meta.contest);
+    if (meta.role) rolesDistintos.add(meta.role);
+    if (meta.year !== null && meta.year !== undefined) anosDistintosConfirmados.add(meta.year);
+  }
+  const distinctExams = examKeysDistintos.size;
+  const distinctContests = contestsDistintos.size;
+  const distinctRoles = rolesDistintos.size;
+  const distinctYears = anosDistintosConfirmados.size;
+
+  // Secao 13: suporte multi-prova POR FORMATO — nunca so contagem bruta.
+  // "Robusto" exige count>=3 E pelo menos 2 provas distintas contribuindo
+  // exemplares desse formato (Secao 13: "se houver 4 exemplos todos da
+  // mesma prova, nao considerar evidencia ampla de estilo da banca").
+  const examKeysPorFormato = {};
+  const anosPorFormato = {};
+  for (const q of highConfidence) {
+    const comando = q.features.comando;
+    const meta = provenienciaConfirmadaPorId.get(q.id);
+    if (!examKeysPorFormato[comando]) examKeysPorFormato[comando] = new Set();
+    if (!anosPorFormato[comando]) anosPorFormato[comando] = new Set();
+    if (meta?.examKey) examKeysPorFormato[comando].add(meta.examKey);
+    if (meta?.year !== null && meta?.year !== undefined) anosPorFormato[comando].add(meta.year);
+  }
+
   const commandPatterns = Object.entries(contagemComando)
     .sort((a, b) => b[1] - a[1])
-    .map(([formato, contagem]) => ({
-      format: formato,
-      count: contagem,
-      percent: total > 0 ? Math.round((contagem / total) * 1000) / 10 : 0,
-      by_tier: { TIER_1: porTierComando.TIER_1[formato] ?? 0, TIER_2: porTierComando.TIER_2[formato] ?? 0, TIER_3: porTierComando.TIER_3[formato] ?? 0 },
-    }));
+    .map(([formato, contagem]) => {
+      const distinctExamsSupporting = examKeysPorFormato[formato]?.size ?? 0;
+      const distinctYearsSupporting = anosPorFormato[formato]?.size ?? 0;
+      return {
+        format: formato,
+        count: contagem,
+        percent: total > 0 ? Math.round((contagem / total) * 1000) / 10 : 0,
+        by_tier: { TIER_1: porTierComando.TIER_1[formato] ?? 0, TIER_2: porTierComando.TIER_2[formato] ?? 0, TIER_3: porTierComando.TIER_3[formato] ?? 0 },
+        distinct_exams_supporting: distinctExamsSupporting,
+        distinct_years_supporting: distinctYearsSupporting,
+        // Secao 13 do mandato 2C.3.4 — limiar explicito e documentado, nunca inferido implicitamente alhures.
+        robust_multi_exam_support: contagem >= 3 && distinctExamsSupporting >= 2,
+      };
+    });
 
   // alternative_count_distribution
   const contagemAlternativas = {};
@@ -273,7 +331,7 @@ export function construirPerfilBanca({ bank, subject, questoesClassificadas, rec
   const enunciadoChars = highConfidence.map((q) => q.features.comprimentos.enunciado_chars);
   const alternativaCharsFlat = highConfidence.flatMap((q) => q.features.comprimentos.alternativa_chars);
 
-  const confidence = calcularConfianca(highConfidence.length);
+  const confidence = calcularConfianca(highConfidence.length, distinctExams);
 
   const observedCharacteristics = [];
   const unsupportedClaims = [];
@@ -324,6 +382,15 @@ export function construirPerfilBanca({ bank, subject, questoesClassificadas, rec
       year_max: anos.length > 0 ? Math.max(...anos) : null,
     },
 
+    // Fase 2C.3.4, Secao 12: diversidade do corpus CONFIRMADO — nunca
+    // inferida, so contada a partir do manifesto curado por prova/lote.
+    diversity: {
+      distinct_exams: distinctExams,
+      distinct_contests: distinctContests,
+      distinct_roles: distinctRoles,
+      distinct_years: distinctYears,
+    },
+
     // Secao 6: relatorio secundario de transparencia — NUNCA alimenta
     // percentis/format_distribution/command_patterns acima.
     secondary_provenance_report: {
@@ -353,7 +420,16 @@ export function construirPerfilBanca({ bank, subject, questoesClassificadas, rec
  * memoria, NUNCA persistidas) + parametros, devolve o perfil sanitizado
  * pronto para escrever em disco (so metadados/estatisticas — Secao 12).
  */
-export function perfilarCorpus({ bank, subject, bancaAlvoNormalizada, questoesRaw, recentYearWindow, anoAtual, idsComProvenienciaConfirmada = new Set() }) {
+export function perfilarCorpus({
+  bank,
+  subject,
+  bancaAlvoNormalizada,
+  questoesRaw,
+  recentYearWindow,
+  anoAtual,
+  idsComProvenienciaConfirmada = new Set(),
+  provenienciaConfirmadaPorId = new Map(),
+}) {
   const questoesClassificadas = questoesRaw.map((q) => ({
     id: q.id,
     proveniencia: classificarProveniencia(q, { bancaAlvoNormalizada, bancaAlvoOriginal: bank, idsComProvenienciaConfirmada }),
@@ -362,6 +438,6 @@ export function perfilarCorpus({ bank, subject, bancaAlvoNormalizada, questoesRa
     features: extrairFeaturesQuestao(q),
   }));
 
-  const perfil = construirPerfilBanca({ bank, subject, questoesClassificadas, recentYearWindow, anoAtual });
+  const perfil = construirPerfilBanca({ bank, subject, questoesClassificadas, recentYearWindow, anoAtual, provenienciaConfirmadaPorId });
   return { perfil, questoesClassificadas };
 }

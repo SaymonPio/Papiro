@@ -40,12 +40,21 @@ export async function carregarCorpusMateriaViaPg({ materiaId }) {
   try {
     const transactionReadOnly = await travarSessaoSomenteLeituraOuAbortar(client);
 
-    const { rows: questoes } = await client.query(
+    // `id`/`questao_id` sao bigint no Postgres — o driver `pg` os devolve
+    // como STRING por padrao (bigint pode exceder Number.MAX_SAFE_INTEGER
+    // em geral), o que quebraria comparacoes estritas contra os inteiros
+    // JSON do manifesto de proveniencia curada (question_id: 114, um
+    // numero) via Set.has(). Os ids reais de questoes.id sao pequenos o
+    // bastante para caber em Number com seguranca; convertidos aqui, uma
+    // unica vez, para que TODO consumidor deste loader (perfilador,
+    // manifesto curado, etc.) trabalhe com numero de forma consistente.
+    const { rows: questoesRaw } = await client.query(
       `select id, banca, concurso, ano, fonte, dificuldade, gerada_por_ia, ativa, materia_id, assunto_id, enunciado
        from public.questoes
        where materia_id = $1 and ativa = true`,
       [materiaId]
     );
+    const questoes = questoesRaw.map((q) => ({ ...q, id: Number(q.id) }));
 
     const idsQuestoes = questoes.map((q) => q.id);
     let alternativasPorQuestao = new Map();
@@ -56,8 +65,9 @@ export async function carregarCorpusMateriaViaPg({ materiaId }) {
       );
       alternativasPorQuestao = new Map();
       for (const alt of alternativas) {
-        if (!alternativasPorQuestao.has(alt.questao_id)) alternativasPorQuestao.set(alt.questao_id, []);
-        alternativasPorQuestao.get(alt.questao_id).push(alt);
+        const questaoId = Number(alt.questao_id);
+        if (!alternativasPorQuestao.has(questaoId)) alternativasPorQuestao.set(questaoId, []);
+        alternativasPorQuestao.get(questaoId).push(alt);
       }
     }
 
