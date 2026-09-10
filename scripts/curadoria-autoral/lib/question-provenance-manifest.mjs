@@ -192,6 +192,33 @@ export function obterProvenienciaConfirmada(registros, bancaAlvoNormalizada) {
 }
 
 /**
+ * Variante MULTIBANCA (Fase 2C.4) de obterProvenienciaConfirmada — nao
+ * filtra por uma banca-alvo unica, pois POLICE_DOMAIN_PROFILE precisa
+ * agregar evidencia confirmada de QUALQUER banca com manifesto curado
+ * (Secao 3 do mandato 2C.4: "nao hardcodar Fundatec... a lista deve nascer
+ * dos dados"). Os mesmos 5 criterios da Secao 14 (2C.3.3) continuam
+ * valendo integralmente — apenas o filtro de banca-unica e removido.
+ *
+ * @param {object[]} registros — saida de carregarProvenienciaCurada
+ * @returns {Map<number, { examKey: string, bank: string, contest: string, role: string, year: number }>}
+ */
+export function obterProvenienciaConfirmadaTodasBancas(registros) {
+  const mapa = new Map();
+  for (const registro of registros) {
+    if (registro.validated !== true) continue;
+    if (registro.official_exam_evidence.verified !== true) continue;
+    if (registro.official_key_evidence.verified !== true) continue;
+    const examKey = registro.official_exam_evidence.document_hash;
+    for (const q of registro.questions) {
+      if (!MATCH_STATUS_ELEGIVEIS_PARA_CONFIRMACAO.has(q.match_status)) continue;
+      if (q.key_status !== KEY_STATUS.MATCH) continue;
+      mapa.set(q.question_id, { examKey, bank: registro.bank, contest: registro.contest, role: registro.role, year: registro.year });
+    }
+  }
+  return mapa;
+}
+
+/**
  * Compatibilidade: Set de question_ids confirmados (sem os metadados de
  * diversidade), derivado de obterProvenienciaConfirmada. Usado por
  * classificarProveniencia, que so precisa de `.has(id)`.
