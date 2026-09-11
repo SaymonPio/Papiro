@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_PT_REESCRITA_FRASES_TEXTOS_ESCOPO_UNIDADE",
+  "type": "pedagogical_reference",
+  "course_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unit_id": "5cc30e49-890f-4b83-b96f-31724024ee24",
+  "content_id": 21,
+  "applies_to_unit_ids": ["5cc30e49-890f-4b83-b96f-31724024ee24"],
+  "title": "Reescrita de frases e textos (BMRS/Fundatec) — escopo pedagógico da unidade",
+  "reference": "unidades_pedagogicas.escopo (curso_conteudo_id=21, materia_id=6, conteudo_id=49), confirmado ao vivo via scan de cobertura (Fase 3A.1, read-only) — 2 úteis vinculadas (1 REAL + 1 AUTORAL) antes desta fase",
+  "content_summary": "Núcleo pré-edital fundamentado na questão real deste corpus: transposição da voz ativa para a passiva analítica, preservando os papéis semânticos (quem pratica x quem sofre a ação), o tempo verbal do auxiliar 'ser' (idêntico ao do verbo original) e o sentido global, inclusive em períodos com múltiplas orações coordenadas. Método de resolução documentado: (1) identificar quem pratica e quem sofre a ação; (2) localizar o objeto direto da oração ativa; (3) transformá-lo em sujeito paciente; (4) flexionar 'ser' no tempo/modo correspondente; (5) formar o particípio; (6) introduzir corretamente o agente da passiva ('por'/'pela'); (7) verificar a manutenção dos papéis semânticos; (8) comparar o sentido final com o original. Limite explícito: nem toda oração admite passivização natural (pressupõe estrutura verbal compatível, como transitivos diretos/diretos e indiretos) — não deve ser ensinada como transformação mecânica aplicável a qualquer verbo. Fronteira taxonômica explícita: 'reescrever/substituir' como mero formato não pertence a esta unidade quando o conteúdo testado é de outra unidade (valor semântico de conectivos → Conectores; conjugação em outro tempo → Tempos e modos verbais; termos sintáticos → Transitividade/Termos Integrantes).",
+  "scope_limits": [
+    "PODE cobrar: transposição de frase(s) na voz ativa para a voz passiva analítica, incluindo períodos com múltiplas orações coordenadas com o mesmo agente",
+    "PODE cobrar: preservação do tempo/modo verbal do auxiliar 'ser' correspondente ao verbo original",
+    "PODE cobrar: introdução correta do agente da passiva com 'por'/'pela' e sua concordância",
+    "PODE cobrar: preservação dos papéis semânticos (quem pratica x quem sofre) entre a versão ativa e a passiva",
+    "PODE cobrar: reconhecimento de que um verbo/estrutura específica NÃO admite passivização natural (limite explícito do núcleo)",
+    "PODE cobrar: formação correta do particípio do verbo principal na passiva analítica",
+    "NAO PODE tratar 'reescrever/substituir' como pretexto para testar conteúdo de outra unidade (valor semântico de conectivo, conjugação em outro tempo verbal isolada sem transposição de voz, classificação de termo sintático) — isso pertence a outras unidades já delimitadas no próprio escopo",
+    "NAO PODE ensinar a transposição ativa→passiva como fórmula mecânica aplicável a qualquer verbo, sem checar se a estrutura admite passivização",
+    "NAO PODE tratar de passiva sintética/pronominal (SE apassivador) nem de voz reflexiva — esses núcleos pertencem à unidade 'Vozes verbais', não a esta",
+    "NAO PODE depender de texto-base longo — as questões desta unidade devem ser itens autocontidos (frase ou período curto), mantendo o padrão observado no corpus",
+    "FRONTEIRA EXPLÍCITA COM 'VOZES VERBAIS' (Fase 3A.3, Seção 6 — revisão editorial humana): a classificação de uma questão entre esta unidade e 'Vozes verbais' nasce da HABILIDADE NUCLEAR exigida, nunca apenas da presença de voz ativa/passiva no enunciado. Esta unidade (Reescrita de frases e textos) tem foco primário em AVALIAR A EQUIVALÊNCIA DA REESCRITA como um todo — pode usar ativa/passiva quando o que se avalia é preservação de sentido, preservação de papéis semânticos, preservação de tempo/modo, perda/acréscimo de informação, ou validade da reescrita globalmente considerada. Já 'Vozes verbais' tem foco primário no MECANISMO E NA CLASSIFICAÇÃO das vozes verbais em si (reconhecer ativa/passiva, transformação direta ativa→passiva, estrutura SER+particípio, passiva sintética, SE apassivador, índice de indeterminação). Uma questão que pede para 'avaliar se a reescrita preserva o sentido' pertence aqui; uma questão que pede para 'reconhecer/classificar a voz verbal' pertence a 'Vozes verbais', mesmo que ambas usem ativa/passiva como matéria-prima. Esta fronteira não move automaticamente nenhuma questão já gerada — aplica-se à classificação de questões futuras."
+  ],
+  "validated": true,
+  "validated_by": "human_curated_project_context",
+  "validated_at": "2026-09-11T00:00:00Z",
+  "notes": [
+    "Validado por inspeção direta e ao vivo do projeto (Supabase, read-only, via scripts/curadoria-autoral/cli/diagnosticar-cobertura.mjs) na Fase 3A.1: confirmado ao vivo o texto de unidades_pedagogicas.escopo desta unidade, sua contagem real de questões úteis (2: 1 REAL + 1 AUTORAL) e seu déficit (8) frente ao target_bank_size=10.",
+    "Mesma política definida para Língua Portuguesa na Fase 2A.2 (Seção 6): validação por confirmação de que o conteúdo-base pedagógico já presente no projeto (escopo curado pela pipeline curadoria-pedagogica, já aplicado em unidades_pedagogicas.escopo) é suficientemente claro, determinístico e delimitado para permitir geração segura — não pesquisa documental externa, que é a política reservada a fontes normativas/legais.",
+    "content_id/curso_conteudo_id/unit_id conferidos diretamente contra a saída real de diagnosticar-cobertura.mjs nesta mesma sessão (run d4deedd0-18a8-4995-a3d1-88780b474864), nunca hardcoded a partir de suposição."
+  ]
+}

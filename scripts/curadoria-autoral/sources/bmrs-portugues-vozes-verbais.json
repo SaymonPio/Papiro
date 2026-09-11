@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_PT_VOZES_VERBAIS_ESCOPO_UNIDADE",
+  "type": "pedagogical_reference",
+  "course_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unit_id": "1cb6bef3-1d8d-4cae-9ed9-eae9fe4d79b9",
+  "content_id": 32,
+  "applies_to_unit_ids": ["1cb6bef3-1d8d-4cae-9ed9-eae9fe4d79b9"],
+  "title": "Vozes verbais (BMRS/Fundatec) — escopo pedagógico da unidade",
+  "reference": "unidades_pedagogicas.escopo (curso_conteudo_id=32, materia_id=6, conteudo_id=51), confirmado ao vivo via scan de cobertura (Fase 3A.1, read-only) — 3 úteis vinculadas (0 REAL + 3 AUTORAL) antes desta fase",
+  "content_summary": "Organização conceitual: voz ativa, voz passiva (analítica e sintética/pronominal) e voz reflexiva (reciprocidade tratada como valor dentro da reflexiva, não como quinta voz). Voz ativa: sujeito gramatical não é sempre agente (limite: 'João sofreu muito' é ativa sem agente voluntário). Passiva analítica: estrutura canônica SER+particípio (núcleo de Q244) — não generalizar 'SER ou ESTAR+particípio'. Transformação ativa→passiva analítica: identificar verbo transitivo passivizável, objeto direto, promovê-lo a sujeito paciente, flexionar SER preservando tempo/modo, formar particípio, concordar, introduzir agente da passiva quando expresso — não é transformação mecânica universal. Passiva sintética/pronominal (núcleo de Q245): VTD+SE apassivador+sujeito paciente ('Vendem-se casas'), concordância com o sujeito paciente — contrastada com SE índice de indeterminação do sujeito (VTI/VI/VL+SE, sempre 3ª pessoa singular, sem sujeito paciente, como 'Precisa-se de funcionários'); classificação exige análise da estrutura completa, não fórmula mecânica baseada só na transitividade. Voz reflexiva: participante do sujeito também afetado pelo processo, mas presença isolada de 'se' não prova reflexividade por si só. Cobertura efetiva do banco (núcleos realmente praticados hoje): reconhecimento de voz ativa, transformação ativa→passiva analítica, reconhecimento de passiva sintética com distinção de análises concorrentes — voz reflexiva isolada, reciprocidade, classificação isolada de passiva analítica, transformação passiva→ativa e transformação para passiva sintética são gaps de banco explicitamente registrados, sem cobertura ainda.",
+  "scope_limits": [
+    "PODE cobrar: reconhecimento de voz ativa, incluindo o limite de que o sujeito gramatical nem sempre é agente de uma ação voluntária",
+    "PODE cobrar: transformação ativa→passiva analítica com SER+particípio, preservando tempo/modo do auxiliar e introduzindo corretamente o agente da passiva",
+    "PODE cobrar: reconhecimento de passiva sintética/pronominal (SE apassivador) com concordância do verbo com o sujeito paciente",
+    "PODE cobrar: distinção entre SE apassivador e SE índice de indeterminação do sujeito, considerando a estrutura completa da frase (transitividade, existência de sujeito paciente, concordância, paráfrase equivalente)",
+    "NAO PODE cobrar voz reflexiva isolada, reciprocidade como voz autônoma, classificação isolada de passiva analítica sem transformação, transformação passiva→ativa, ou transformação para passiva sintética — gaps de banco explicitamente registrados no escopo, sem prática vinculada; não criar questão sobre isso nesta fase",
+    "NAO PODE generalizar 'SER ou ESTAR + particípio' como fórmula automática de passiva — ESTAR+particípio pode expressar estado/resultado sem ser passiva dinâmica equivalente",
+    "NAO PODE apresentar 'VTD+SE+substantivo = sempre apassivador' e 'VTI/VI/VL+SE = sempre índice de indeterminação' como regras absolutas — são pistas iniciais, a classificação exige análise da estrutura completa",
+    "NAO PODE tratar a transposição ativa→passiva como aplicável mecanicamente a qualquer verbo — pressupõe estrutura passivizável",
+    "FRONTEIRA EXPLÍCITA COM 'REESCRITA DE FRASES E TEXTOS' (Fase 3A.3, Seção 6 — revisão editorial humana, substitui a formulação anterior desta linha): a classificação de uma questão entre esta unidade e 'Reescrita de frases e textos' nasce da HABILIDADE NUCLEAR exigida, nunca apenas da presença de voz ativa/passiva no enunciado. Esta unidade (Vozes verbais) tem foco primário no MECANISMO E NA CLASSIFICAÇÃO das vozes verbais em si — reconhecer ativa/passiva, transformação direta ativa→passiva, estrutura SER+particípio, passiva sintética, SE apassivador, índice de indeterminação. Já 'Reescrita de frases e textos' tem foco primário em AVALIAR A EQUIVALÊNCIA DA REESCRITA como um todo (preservação de sentido, papéis semânticos, tempo/modo, perda/acréscimo de informação, validade global da reescrita). Uma questão que pede para 'reconhecer/classificar a voz verbal' pertence aqui; uma questão que pede para 'avaliar se a reescrita preserva o sentido' pertence à outra unidade, mesmo que ambas usem ativa/passiva como matéria-prima. Esta fronteira não move automaticamente nenhuma questão já gerada — aplica-se à classificação de questões futuras."
+  ],
+  "validated": true,
+  "validated_by": "human_curated_project_context",
+  "validated_at": "2026-09-11T00:00:00Z",
+  "notes": [
+    "Validado por inspeção direta e ao vivo do projeto (Supabase, read-only, via scripts/curadoria-autoral/cli/diagnosticar-cobertura.mjs) na Fase 3A.1: confirmado ao vivo o texto de unidades_pedagogicas.escopo desta unidade, sua contagem real de questões úteis (3, todas AUTORAL_PAPIRO, sem incidência REAL) e seu déficit (7) frente ao target_bank_size=10.",
+    "Unidade sem nenhuma questão REAL vinculada — toda a prática é autoral. O próprio escopo já registra explicitamente quais núcleos são 'efetivamente praticados hoje' versus gaps de banco; este manifesto preserva essa distinção integralmente, sem ampliar cobertura por conta própria.",
+    "Mesma política definida para Língua Portuguesa na Fase 2A.2 (Seção 6): validação por confirmação de que o conteúdo-base pedagógico já presente no projeto é suficientemente claro, determinístico e delimitado para permitir geração segura — não pesquisa documental externa."
+  ]
+}

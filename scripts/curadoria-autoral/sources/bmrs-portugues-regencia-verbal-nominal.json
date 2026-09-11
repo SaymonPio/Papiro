@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_PT_REGENCIA_VERBAL_NOMINAL_ESCOPO_UNIDADE",
+  "type": "pedagogical_reference",
+  "course_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unit_id": "735f736a-37c0-477f-a555-dcd73d243d21",
+  "content_id": 17,
+  "applies_to_unit_ids": ["735f736a-37c0-477f-a555-dcd73d243d21"],
+  "title": "Regência verbal e nominal (BMRS/Fundatec) — escopo pedagógico da unidade",
+  "reference": "unidades_pedagogicas.escopo (curso_conteudo_id=17, materia_id=6, conteudo_id=42), confirmado ao vivo via scan de cobertura (Fase 3A.1, read-only) — 3 úteis vinculadas (1 REAL Q120 + 2 AUTORAL) antes desta fase",
+  "content_summary": "Núcleo pré-edital fundamentado exclusivamente na questão real deste corpus (Q120): emprego correto de pronomes relativos conforme a regência do termo da oração subordinada que se relaciona com o relativo, pelo procedimento de reconstruir mentalmente a oração relativa substituindo o pronome pelo antecedente, identificar o termo que rege esse antecedente e usar a preposição exigida + 'que'. CUJO tratado separadamente: relação de posse, concorda em gênero/número com o substantivo posterior (a coisa possuída), nunca admite artigo entre si e esse substantivo. Cobertura suplementar (sustentada apenas por questões autorais, sem incidência real): regência verbal de verbos clássicos de concurso — assistir (ver/presenciar=VTI+a; ajudar=VTD), aspirar (cheirar=VTD; almejar=VTI+a padrão tradicional), obedecer/desobedecer (sempre VTI+a), visar (mirar/apor visto=VTD; almejar=VTI+a padrão tradicional, com nota de divergência de uso contemporâneo), chegar/ir (regem 'a' no padrão formal tradicional), preferir (X a Y, sem comparativo redundante). Distinção explícita entre regência (preposição exigida pelo verbo) e crase (fusão dessa preposição 'a' com artigo feminino).",
+  "scope_limits": [
+    "PODE cobrar: emprego de pronome relativo com a preposição exigida pelo termo da oração subordinada, via reconstrução mental da oração",
+    "PODE cobrar: CUJO — concordância com o substantivo posterior (coisa possuída), proibição de artigo entre CUJO e esse substantivo",
+    "PODE cobrar, como cobertura suplementar explícita: regência dos verbos assistir, aspirar, obedecer/desobedecer, visar, chegar/ir e preferir, exatamente nos sentidos e padrões descritos no escopo",
+    "PODE cobrar: distinção entre regência verbal (preposição exigida) e crase (fusão dessa preposição com artigo feminino)",
+    "NAO PODE cobrar regência NOMINAL (adjetivo/substantivo + preposição, como 'favorável a', 'aversão a', 'necessidade de', 'compatível com') — GAP_SUBASSUNTO explicitamente registrado no escopo da unidade, sem cobertura ainda; não criar questão sobre isso nesta fase",
+    "NAO PODE usar a associação mecânica 'em que = pronome para lugar' para pronome relativo — deve exigir a reconstrução mental da oração",
+    "NAO PODE apresentar 'visar'/'aspirar' no sentido de almejar como se a regência com 'a' fosse a única forma aceitável no uso contemporâneo — o escopo registra explicitamente que o padrão 'VTI+a' é o tradicional de concurso, podendo haver divergência no uso real",
+    "NAO PODE apresentar 'chegar em'/'ir em' como inexistentes na língua — o escopo reconhece que são amplamente usados na fala/registros menos monitorados; a regência com 'a' é o padrão formal tradicional cobrado em concurso, não uma regra absoluta de correção geral"
+  ],
+  "validated": true,
+  "validated_by": "human_curated_project_context",
+  "validated_at": "2026-09-11T00:00:00Z",
+  "notes": [
+    "Validado por inspeção direta e ao vivo do projeto (Supabase, read-only, via scripts/curadoria-autoral/cli/diagnosticar-cobertura.mjs) na Fase 3A.1: confirmado ao vivo o texto de unidades_pedagogicas.escopo desta unidade, sua contagem real de questões úteis (3: 1 REAL + 2 AUTORAL) e seu déficit (7) frente ao target_bank_size=10.",
+    "O próprio escopo já registra um GAP_SUBASSUNTO explícito (regência nominal, sem incidência real ou autoral neste corpus) — este manifesto preserva essa lacuna como NAO PODE, não a preenche por conta própria, respeitando a decisão curatorial já registrada na fonte original.",
+    "Mesma política definida para Língua Portuguesa na Fase 2A.2 (Seção 6): validação por confirmação de que o conteúdo-base pedagógico já presente no projeto é suficientemente claro, determinístico e delimitado para permitir geração segura — não pesquisa documental externa."
+  ]
+}

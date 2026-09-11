@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_PT_INTERPRETACAO_TEXTOS_ESCOPO_UNIDADE",
+  "type": "pedagogical_reference",
+  "course_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unit_id": "138aafa7-066c-40fd-9fa5-7f1b90406db2",
+  "content_id": 12,
+  "applies_to_unit_ids": ["138aafa7-066c-40fd-9fa5-7f1b90406db2"],
+  "title": "Interpretação de textos (BMRS/Fundatec) — escopo pedagógico da unidade",
+  "reference": "unidades_pedagogicas.escopo (curso_conteudo_id=12, materia_id=6, conteudo_id=15), confirmado ao vivo via scan de cobertura (Fase 3A.1, read-only) — 3 úteis vinculadas (1 REAL + 2 AUTORAL) antes desta fase",
+  "content_summary": "Núcleo pré-edital fundamentado exclusivamente na habilidade efetivamente cobrada pela questão real deste corpus: compreensão global do conteúdo textual e verificação de fidelidade ao que o texto efetivamente afirma, distinguindo informação explícita, inferência sustentada pelo texto, extrapolação (acrescentar algo que o texto não autoriza), contradição (afirmar o oposto do que o autor disse) e redução indevida (transformar afirmação nuançada em afirmação excessivamente restrita) — com atenção a palavras generalizantes ('desaparecer', 'todos', 'sempre') que costumam sinalizar extrapolação. Método de resolução documentado: localizar o comando, identificar exatamente o que cada assertiva/alternativa afirma, voltar ao trecho relevante do texto, verificar se a afirmação é sustentada, e só então marcar. Cobertura suplementar (sustentada apenas por questões autorais, sem incidência real neste corpus): identificação da tese em texto dissertativo-argumentativo (distinguindo tese de tema, exemplo, argumento ou conclusão isolada) e o contraste entre inferência válida e os três erros clássicos de leitura (extrapolação, redução, contradição).",
+  "scope_limits": [
+    "PODE cobrar: distinção entre informação explícita, inferência sustentada pelo texto, extrapolação, contradição e redução indevida, a partir de um texto curto e autocontido criado para a questão",
+    "PODE cobrar: uso de palavra generalizante ('todos', 'sempre', 'nunca') como pista de possível extrapolação em uma alternativa",
+    "PODE cobrar, como cobertura suplementar explícita: identificação da tese em um parágrafo dissertativo-argumentativo curto, distinguindo-a de exemplo, argumento de apoio ou conclusão isolada",
+    "PODE cobrar: compreensão global do texto (ideia central), evitando que um detalhe secundário seja tratado como resposta",
+    "NAO PODE citar fatos, dados, nomes de pessoas reais, trechos de provas reais ou qualquer conteúdo faticamente verificável — os textos-base desta unidade devem ser inteiramente originais e genéricos (contexto institucional/policial plausível, sem alegação de fato real)",
+    "NAO PODE depender de texto-base longo com múltiplos parágrafos — cada questão deve trazer seu próprio texto curto e autocontido (3 a 8 frases), já que não há aula publicada nem material de leitura vinculado a esta unidade",
+    "NAO PODE apresentar inferência válida como se precisasse estar escrita literalmente no texto — a regra de bolso ('se a alternativa diz mais do que o texto permite, desconfie') não é absoluta"
+  ],
+  "validated": true,
+  "validated_by": "human_curated_project_context",
+  "validated_at": "2026-09-11T00:00:00Z",
+  "notes": [
+    "Validado por inspeção direta e ao vivo do projeto (Supabase, read-only, via scripts/curadoria-autoral/cli/diagnosticar-cobertura.mjs) na Fase 3A.1: confirmado ao vivo o texto de unidades_pedagogicas.escopo desta unidade, sua contagem real de questões úteis (3: 1 REAL + 2 AUTORAL) e seu déficit (7) frente ao target_bank_size=10.",
+    "Particularidade desta unidade frente às demais já trabalhadas (Concordância verbal, gramática pura): interpretação de texto exige necessariamente um texto-base, ainda que curto — a fonte validada aqui autoriza a CRIAÇÃO de textos-base curtos e genéricos pela própria esteira de geração, desde que originais e sem alegação factual, não a citação de texto real de terceiros.",
+    "Mesma política definida para Língua Portuguesa na Fase 2A.2 (Seção 6): validação por confirmação de que o conteúdo-base pedagógico já presente no projeto é suficientemente claro, determinístico e delimitado para permitir geração segura — não pesquisa documental externa."
+  ]
+}
