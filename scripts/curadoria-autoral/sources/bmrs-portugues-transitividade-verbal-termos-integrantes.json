@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_PT_TRANSITIVIDADE_VERBAL_TERMOS_INTEGRANTES_ESCOPO_UNIDADE",
+  "type": "pedagogical_reference",
+  "course_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unit_id": "981e5d2c-3b59-48a0-a699-a53c03e500ee",
+  "content_id": 27,
+  "applies_to_unit_ids": ["981e5d2c-3b59-48a0-a699-a53c03e500ee"],
+  "title": "Transitividade Verbal e Termos Integrantes (BMRS/Fundatec) — escopo pedagógico da unidade [PENDENTE — aguardando sign-off humano, Fase Lote 05]",
+  "reference": "unidades_pedagogicas.escopo (curso_conteudo_id=27, materia_id=6, conteudo_id=30), confirmado ao vivo via consulta LIVE read-only nesta fase — 5 úteis vinculadas (3 REAL + 2 AUTORAL) antes do Lote 05",
+  "content_summary": "Transitividade verbal (VTD, VTI, VTDI) e termos integrantes: objeto direto, incluindo o objeto direto preposicionado (que continua sendo objeto direto mesmo introduzido por preposição, por desambiguação/estilo/estrutura, nunca classificado automaticamente como objeto indireto só por haver preposição); objeto indireto, com a regra de bolso de que o/a/os/as tipicamente substituem objeto direto e lhe/lhes tipicamente substituem objeto indireto, ressalvado o limite de que lhe/lhes podem assumir valor possessivo em certos usos normativos; agente da passiva, identificado na voz passiva analítica (sujeito paciente + ser + particípio + agente tipicamente introduzido por por/pelo/pela, tratado como pista forte, não definição isolada) e sua conversão correta para a voz ativa (agente da passiva vira sujeito, sujeito paciente vira objeto direto correspondente, sem introdução indevida de pronome reflexivo); cobertura secundária/breve (sem incidência real equivalente): complemento nominal em contraste geral com complemento verbal.",
+  "scope_limits": [
+    "PODE cobrar: objeto direto, incluindo objeto direto preposicionado, sem classificá-lo automaticamente como indireto por haver preposição",
+    "PODE cobrar: objeto indireto, incluindo a regra de bolso o/a/os/as (OD) × lhe/lhes (OI), com a ressalva de que lhe/lhes podem ter valor possessivo em certos usos",
+    "PODE cobrar: agente da passiva na voz passiva analítica (ser + particípio + agente tipicamente com por/pelo/pela) e sua conversão correta para a voz ativa",
+    "PODE cobrar, como cobertura secundária/breve: complemento nominal em contraste geral com complemento verbal",
+    "NAO PODE tratar a preposição antes do objeto direto como prova automática de objeto indireto — objeto direto preposicionado continua sendo objeto direto",
+    "NAO PODE apresentar a regra o/a×lhe/lhes como absoluta sem a ressalva do valor possessivo eventual de lhe/lhes",
+    "NAO PODE tratar 'por/pelo/pela' como definição isolada e suficiente do agente da passiva — é pista forte, a estrutura completa (ser+particípio+sujeito paciente) deve ser verificada",
+    "NAO PODE introduzir pronome reflexivo na conversão ativa→passiva ou passiva→ativa fora do padrão normativo (evitar 'transformou-se' espúrio na reescrita mecânica)"
+  ],
+  "proposed_distribution_next_batch": [
+    { "subtema": "objeto direto (incluindo objeto direto preposicionado)", "quantidade": 2 },
+    { "subtema": "objeto indireto (regra do bolso o/a×lhe/lhes, com ressalva possessiva)", "quantidade": 1 },
+    { "subtema": "agente da passiva + conversão para voz ativa", "quantidade": 2 },
+    { "subtema": "candidata extra de reserva (qualquer subtema acima, variando exemplo)", "quantidade": 1, "authorization_status": "SCOPE_AUDITED_READY" }
+  ],
+  "incidencia_real": "PARCIAL",
+  "incidencia_nota": "3 questões REAL já vinculadas (objeto direto/indireto e agente da passiva), mais 2 AUTORAL suplementares. Déficit de 5 exige geração autoral suplementar; nenhuma alegação de recorrência é extrapolada além dos 3 casos reais.",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote05",
+  "validated_at": "2026-09-12T00:00:00Z",
+  "process_validation": {
+    "status": "SCOPE_AUDITED_BY_ASSISTANT",
+    "audited_at": "2026-09-12T00:00:00Z",
+    "method": "Leitura integral de unidades_pedagogicas.escopo via consulta LIVE read-only (Lote 05, Seção 2), sem pesquisa externa, sem chamada de API. Isto é validação de PROCESSO, NÃO é, por si só, sign-off humano — a decisão humana explícita está registrada separadamente em human_signoff_record."
+  },
+  "human_source_signoff": "APPROVED",
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-12T00:00:00Z",
+    "phase": "Lote 05",
+    "evidence": "Aprovação explícita recebida no mandato 'PAPIRO — LOTE 05 — HUMAN SOURCE SIGN-OFF + CONTINUAÇÃO DA GERAÇÃO': 'APROVADOS os 3 source manifests pendentes: 1. Transitividade Verbal e Termos Integrantes ...' com restrição humana obrigatória registrada literalmente: 'Priorizar: objeto direto; objeto indireto; agente da passiva + conversão para ativa. Complemento nominal × complemento verbal: pode aparecer como subtema secundário/reserva; NÃO afirmar incidência histórica; NÃO deixar esse eixo dominar o lote; exigir estrutura inequívoca e sem ambiguidade de regência. Restrições obrigatórias: não tratar objeto direto preposicionado como objeto indireto; não apresentar regra o/a × lhe/lhes de forma absoluta sem as ressalvas já previstas no escopo; \"por/pelo/pela\" pode ser pista de agente da passiva, nunca definição isolada suficiente; não ampliar para conteúdos de outras unidades.' Registrado literalmente, não inferido."
+  },
+  "notes": [
+    "Unidade selecionada para o Lote 05 (déficit 5, uma das 5 últimas unidades geráveis de Português antes de Redação oficial, que permanece explicitamente fora deste lote).",
+    "Nenhum conteúdo normativo/legal citado no escopo (é gramática pura); mesmo assim, o pipeline (gerar-questoes.mjs) exige SOURCE_VALIDATED incondicionalmente, e esta unidade permaneceu BLOQUEADA até o sign-off humano explícito acima (Lote 05).",
+    "validated=true e human_source_signoff=APPROVED refletem a decisão humana explícita registrada em human_signoff_record — nada foi inferido nem presumido.",
+    "Restrição humana obrigatória: complemento nominal×complemento verbal só pode aparecer como subtema secundário/reserva, nunca dominante, e sem afirmação de incidência histórica (0 questão REAL cobre esse subtema)."
+  ]
+}

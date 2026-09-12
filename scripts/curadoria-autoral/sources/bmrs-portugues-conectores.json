@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_PT_CONECTORES_ESCOPO_UNIDADE",
+  "type": "pedagogical_reference",
+  "course_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unit_id": "d1e31767-d27d-431b-ba59-7a2008c7473d",
+  "content_id": 14,
+  "applies_to_unit_ids": ["d1e31767-d27d-431b-ba59-7a2008c7473d"],
+  "title": "Conectores (BMRS/Fundatec) — escopo pedagógico da unidade [PENDENTE — aguardando sign-off humano, Fase Lote 05]",
+  "reference": "unidades_pedagogicas.escopo (curso_conteudo_id=14, materia_id=6, conteudo_id=57), confirmado ao vivo via consulta LIVE read-only nesta fase — 6 úteis vinculadas (4 REAL + 2 AUTORAL) antes do Lote 05",
+  "content_summary": "Classificação semântica de conjunções coordenativas (adversativas — mas, porém, contudo, todavia, entretanto, no entanto — com valor geral de oposição/contraste, mas NÃO substituíveis entre si em qualquer contexto de forma absoluta, pois a substituição concreta depende de construção sintática, posição, pontuação, registro e nuance discursiva; aditivas; conclusivas) e subordinativas (causais, condicionais, concessivas, temporais), com foco na relação lógico-semântica estabelecida, não em memorização isolada de listas; falsos amigos frequentes em prova (conquanto [concessivo] × quando [tipicamente temporal]; porquanto [tradicionalmente causal/explicativo] × portanto [conclusivo]; caso [condicional] × mas [adversativo]); estruturas correlativas (tão...quanto = comparação; tão...que = consecutiva, consequência da intensidade; mas também = valor predominantemente aditivo, podendo ter nuance adversativa em contraste com conteúdo negativo anterior); método de resolução (localizar o conector, ler as duas ideias, perguntar qual relação semântica existe, testar substituição mentalmente, verificar se a relação se mantém — nunca decidir por semelhança gráfica ou impressão de que 'parece caber').",
+  "scope_limits": [
+    "PODE cobrar: classificação semântica de conjunções coordenativas adversativas, aditivas e conclusivas, com a ressalva de que sinônimos aparentes não são substituíveis em qualquer contexto de forma absoluta",
+    "PODE cobrar: classificação semântica de conjunções subordinativas causais, condicionais, concessivas e temporais",
+    "PODE cobrar: falsos amigos clássicos de concurso (conquanto×quando; porquanto×portanto; caso×mas)",
+    "PODE cobrar: estruturas correlativas (tão...quanto comparativa; tão...que consecutiva; mas também aditivo com nuance adversativa possível)",
+    "NAO PODE tratar conectivos de mesma classificação geral (ex. adversativos) como sempre intercambiáveis entre si, independentemente de construção sintática, posição, pontuação ou registro",
+    "NAO PODE decidir a relação semântica apenas pela semelhança gráfica do conectivo ou pela impressão de que ele 'parece caber' — exige verificação da relação lógico-semântica entre as duas ideias conectadas",
+    "NAO PODE ampliar para coesão referencial (retomada pronominal, anáfora) — isso pertence à unidade Coesão textual, não a esta"
+  ],
+  "proposed_distribution_next_batch": [
+    { "subtema": "conjunções coordenativas adversativas (sem substituição absoluta entre si)", "quantidade": 1 },
+    { "subtema": "falsos amigos (conquanto×quando, porquanto×portanto ou caso×mas)", "quantidade": 1 },
+    { "subtema": "conjunções subordinativas (causal/condicional/concessiva/temporal)", "quantidade": 1 },
+    { "subtema": "estruturas correlativas (tão...quanto / tão...que / mas também)", "quantidade": 1 },
+    { "subtema": "candidata extra de reserva 1 (variação de qualquer subtema acima)", "quantidade": 1, "authorization_status": "SCOPE_AUDITED_READY" },
+    { "subtema": "candidata extra de reserva 2 (variação de qualquer subtema acima)", "quantidade": 1, "authorization_status": "SCOPE_AUDITED_READY" }
+  ],
+  "incidencia_real": "PARCIAL",
+  "incidencia_nota": "4 questões REAL já vinculadas (locuções conjuntivas, equivalência de conectivos, classificação de 'contudo', substituição de 'mas'), mais 2 AUTORAL suplementares. Déficit de 4 exige geração autoral suplementar; nenhuma alegação de recorrência é extrapolada além dos 4 casos reais.",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote05",
+  "validated_at": "2026-09-12T00:00:00Z",
+  "process_validation": {
+    "status": "SCOPE_AUDITED_BY_ASSISTANT",
+    "audited_at": "2026-09-12T00:00:00Z",
+    "method": "Leitura integral de unidades_pedagogicas.escopo via consulta LIVE read-only (Lote 05, Seção 2), sem pesquisa externa, sem chamada de API. Isto é validação de PROCESSO, NÃO é, por si só, sign-off humano — a decisão humana explícita está registrada separadamente em human_signoff_record."
+  },
+  "human_source_signoff": "APPROVED",
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-12T00:00:00Z",
+    "phase": "Lote 05",
+    "evidence": "Aprovação explícita recebida no mandato 'PAPIRO — LOTE 05 — HUMAN SOURCE SIGN-OFF + CONTINUAÇÃO DA GERAÇÃO': 'APROVADOS os 3 source manifests pendentes: ... 2. Conectores ...' com restrição humana obrigatória registrada literalmente: 'Manter: coordenativas; subordinativas; falsos amigos; correlativas. Restrições: conectivos da mesma classe NÃO são automaticamente intercambiáveis; nunca decidir relação apenas pela aparência lexical; não ampliar para coesão referencial; toda classificação/substituição deve depender do contexto concreto.' Registrado literalmente, não inferido."
+  },
+  "notes": [
+    "Unidade selecionada para o Lote 05 (déficit 4, uma das 5 últimas unidades geráveis de Português antes de Redação oficial, que permanece explicitamente fora deste lote).",
+    "Nenhum conteúdo normativo/legal citado no escopo (é gramática pura); mesmo assim, o pipeline (gerar-questoes.mjs) exige SOURCE_VALIDATED incondicionalmente, e esta unidade permaneceu BLOQUEADA até o sign-off humano explícito acima (Lote 05).",
+    "validated=true e human_source_signoff=APPROVED refletem a decisão humana explícita registrada em human_signoff_record — nada foi inferido nem presumido."
+  ]
+}

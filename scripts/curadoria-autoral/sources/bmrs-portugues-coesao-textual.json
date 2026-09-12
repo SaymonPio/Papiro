@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_PT_COESAO_TEXTUAL_ESCOPO_UNIDADE",
+  "type": "pedagogical_reference",
+  "course_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unit_id": "29a4bec1-2c3a-40f3-a86f-fa6bda25d04f",
+  "content_id": 13,
+  "applies_to_unit_ids": ["29a4bec1-2c3a-40f3-a86f-fa6bda25d04f"],
+  "title": "Coesão textual (BMRS/Fundatec) — escopo pedagógico da unidade [PENDENTE — aguardando sign-off humano, Fase Lote 05]",
+  "reference": "unidades_pedagogicas.escopo (curso_conteudo_id=13, materia_id=6, conteudo_id=55), confirmado ao vivo via consulta LIVE read-only nesta fase — 7 úteis vinculadas (5 REAL + 2 AUTORAL) antes do Lote 05",
+  "content_summary": "Eixo principal: coesão referencial. Conceito de referente/antecedente; retomada anafórica (elemento coesivo remetendo a algo já mencionado) e catáfora apenas como contraste necessário; retomada por pronome pessoal, possessivo, demonstrativo e relativo; o relativo 'cujo/cuja/cujos/cujas', que introduz relação possessiva retomando semanticamente o possuidor antecedente e concordando com o elemento possuído subsequente (nunca o inverso); equivalência entre 'em que' e 'no qual/na qual' conforme o gênero do antecedente; retomada lexical por repetição/reiteração (mecanismo legítimo de manutenção do tópico, não necessariamente defeito textual) e por expressão sintetizadora (retomando uma palavra, um sintagma, ou sintetizando mais de uma informação anterior); procedimento para descobrir o referente de um elemento coesivo (localizar o elemento, perguntar a que se refere, buscar candidatos compatíveis, verificar gênero/número/pessoa/sentido/estrutura sintática, testar a leitura no contexto — nunca resolver apenas por proximidade gráfica, pois o antecedente nem sempre é o substantivo imediatamente anterior). Subtópico secundário, breve: coesão sequencial, limitada ao valor conclusivo do conectivo 'portanto', sem aprofundar as demais relações (causal, condicional, concessiva, adversativa etc.), reservadas ao conteúdo dedicado de Conectores.",
+  "scope_limits": [
+    "PODE cobrar: retomada anafórica por pronome pessoal, possessivo, demonstrativo ou relativo, incluindo 'cujo/cuja/cujos/cujas' com sua concordância correta (com o possuído, nunca com o possuidor)",
+    "PODE cobrar: equivalência entre 'em que' e 'no qual/na qual' conforme o gênero do antecedente",
+    "PODE cobrar: retomada lexical por repetição/reiteração (tratada como mecanismo legítimo, não como defeito automático) e por expressão sintetizadora",
+    "PODE cobrar: procedimento de descoberta do referente de um elemento coesivo (não resolver apenas por proximidade gráfica)",
+    "PODE cobrar, como subtópico secundário e breve: o valor conclusivo do conectivo 'portanto' dentro de coesão sequencial",
+    "NAO PODE aprofundar coesão sequencial além do conectivo 'portanto' — as demais relações (causal, condicional, concessiva, adversativa etc.) pertencem à unidade dedicada de Conectores, não a esta",
+    "NAO PODE resolver o referente de um elemento coesivo apenas pela proximidade gráfica com o substantivo imediatamente anterior — exige verificação de gênero/número/pessoa/sentido/estrutura sintática",
+    "NAO PODE tratar catáfora como núcleo próprio de questão — aparece apenas como contraste necessário à anáfora, não como habilidade nuclear autônoma nesta fase"
+  ],
+  "proposed_distribution_next_batch": [
+    { "subtema": "retomada anafórica por pronome (pessoal/possessivo/demonstrativo/relativo, incluindo CUJO)", "quantidade": 1 },
+    { "subtema": "retomada lexical (repetição/reiteração ou expressão sintetizadora)", "quantidade": 1 },
+    { "subtema": "procedimento de descoberta do referente (não resolver por proximidade gráfica)", "quantidade": 1 },
+    { "subtema": "candidata extra de reserva (variação de qualquer subtema acima)", "quantidade": 1, "authorization_status": "SCOPE_AUDITED_READY" }
+  ],
+  "incidencia_real": "PARCIAL",
+  "incidencia_nota": "5 questões REAL já vinculadas (coesão referencial em textos-base extensos), mais 2 AUTORAL suplementares. Déficit de 3 exige geração autoral suplementar; nenhuma alegação de recorrência é extrapolada além dos 5 casos reais.",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote05",
+  "validated_at": "2026-09-12T00:00:00Z",
+  "process_validation": {
+    "status": "SCOPE_AUDITED_BY_ASSISTANT",
+    "audited_at": "2026-09-12T00:00:00Z",
+    "method": "Leitura integral de unidades_pedagogicas.escopo via consulta LIVE read-only (Lote 05, Seção 2), sem pesquisa externa, sem chamada de API. Isto é validação de PROCESSO, NÃO é, por si só, sign-off humano — a decisão humana explícita está registrada separadamente em human_signoff_record."
+  },
+  "human_source_signoff": "APPROVED",
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-12T00:00:00Z",
+    "phase": "Lote 05",
+    "evidence": "Aprovação explícita recebida no mandato 'PAPIRO — LOTE 05 — HUMAN SOURCE SIGN-OFF + CONTINUAÇÃO DA GERAÇÃO': 'APROVADOS os 3 source manifests pendentes: ... 3. Coesão textual' com restrição humana obrigatória registrada literalmente: 'Manter: retomada anafórica pronominal; uso de cujo; em que × no qual/na qual quando pertinente; retomada lexical; identificação do referente. Restrições: catáfora apenas como contraste, não como núcleo prioritário; não resolver referente apenas pelo termo graficamente mais próximo; não aprofundar coesão sequencial além do limite já previsto; conectores sequenciais mais amplos pertencem à unidade Conectores.' Registrado literalmente, não inferido."
+  },
+  "notes": [
+    "Unidade selecionada para o Lote 05 (déficit 3, uma das 5 últimas unidades geráveis de Português antes de Redação oficial, que permanece explicitamente fora deste lote).",
+    "Nenhum conteúdo normativo/legal citado no escopo (é gramática pura); mesmo assim, o pipeline (gerar-questoes.mjs) exige SOURCE_VALIDATED incondicionalmente, e esta unidade permaneceu BLOQUEADA até o sign-off humano explícito acima (Lote 05).",
+    "validated=true e human_source_signoff=APPROVED refletem a decisão humana explícita registrada em human_signoff_record — nada foi inferido nem presumido."
+  ]
+}
