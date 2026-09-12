@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_PT_COLOCACAO_PRONOMINAL_ESCOPO_UNIDADE",
+  "type": "pedagogical_reference",
+  "course_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unit_id": "c03b4993-601a-4c1e-b24d-c9e09d01db84",
+  "content_id": 29,
+  "applies_to_unit_ids": ["c03b4993-601a-4c1e-b24d-c9e09d01db84"],
+  "title": "Colocação pronominal (BMRS/Fundatec) — escopo pedagógico da unidade [APROVADO — HUMAN SIGN-OFF Fase 3B.4 — mesóclise/ênclise AUTORIZADAS como núcleo próprio]",
+  "reference": "unidades_pedagogicas.escopo (curso_conteudo_id=29, materia_id=6, conteudo_id=43), confirmado ao vivo via scan de cobertura (Fase 3B.1/3B.2, read-only) — 3 úteis vinculadas (0 REAL + 3 AUTORAL) antes do Lote 03",
+  "content_summary": "Norma-padrão tradicional de concurso. Mapa conceitual completo: próclise, mesóclise e ênclise. Método de 5 passos: (1) identificar verbo e pronome átono; (2) verificar fator de próclise (elemento negativo, conjunção subordinativa, pronome relativo/indefinido/demonstrativo, advérbio sem pausa, sempre interpretados no contexto concreto); (3) na ausência de fator de próclise, verificar futuro sintético tradicional (havendo fator de próclise, ela prevalece mesmo com futuro: 'Nunca me dirá', não 'Nunca dir-me-á'); (4) futuro sintético sem fator de próclise → mesóclise tradicional de concurso ('dar-me-á'); (5) ênclise nos demais contextos previstos pela norma tradicional, não como posição 'residual' default. Cautela normativa explícita: a restrição a iniciar oração com pronome oblíquo átono é convenção da norma-padrão tradicional de concurso, não descrição absoluta da língua — 'Me disseram...' é uso corrente do português brasileiro real; a norma prescritiva de concurso nunca deve ser apresentada como se o uso real não existisse. Cobertura LIVE atual (3 questões, todas AUTORAL_PAPIRO): próclise geral, próclise por elemento negativo ('jamais'), colocação adequada geral — todas sobre próclise por elemento negativo/subordinativo. Mesóclise e ênclise integram o mapa conceitual e aparecem como contraste/distrator nas 3 questões existentes, mas NENHUMA questão tem, até o momento, gabarito dependente especificamente delas.",
+  "scope_limits": [
+    "PODE cobrar: próclise por outros elementos atrativos já mapeados no método (pronome relativo, pronome indefinido, advérbio sem pausa), com frases novas",
+    "PODE cobrar: próclise em conjunto com futuro sintético, testando se o candidato reconhece que a próclise prevalece mesmo havendo futuro (passo 3 do método)",
+    "NAO PODE testar classificação morfológica isolada do pronome oblíquo — o núcleo deve ser sempre a posição do pronome segundo a norma-padrão de concurso, nunca a categoria gramatical do pronome em si",
+    "NAO PODE apresentar a norma prescritiva de concurso como se usos reais divergentes (como 'Me disseram...') simplesmente não existissem na língua — deve distinguir norma de concurso × uso efetivo quando pertinente",
+    "PROPOSED_FOR_HUMAN_AUTHORIZATION_AS_QUESTION_CORE: mesóclise como núcleo próprio de questão (gabarito dependente especificamente dela) — hoje aparece apenas como distrator nas 3 questões existentes; o escopo original NÃO afirma expressamente que isso está autorizado como próximo passo, ao contrário do que ocorre em Coordenação e subordinação com seus GAPS_DE_SUBASSUNTO explicitamente não excluídos",
+    "PROPOSED_FOR_HUMAN_AUTHORIZATION_AS_QUESTION_CORE: ênclise como núcleo próprio de questão — mesma ressalva de mesóclise"
+  ],
+  "proposed_distribution_next_batch": [
+    { "subtema": "próclise por outros elementos atrativos (relativo, indefinido, advérbio sem pausa)", "quantidade": 3, "authorization_status": "SCOPE_AUDITED_READY" },
+    { "subtema": "próclise + futuro sintético (próclise prevalece)", "quantidade": 2, "authorization_status": "SCOPE_AUDITED_READY" },
+    { "subtema": "mesóclise como núcleo próprio", "quantidade": 1, "authorization_status": "APPROVED_AS_QUESTION_CORE" },
+    { "subtema": "ênclise como núcleo próprio", "quantidade": 1, "authorization_status": "APPROVED_AS_QUESTION_CORE" }
+  ],
+  "incidencia_real": "INSUFICIENTE",
+  "incidencia_nota": "0 questão REAL vinculada a esta unidade. Toda a prática (LIVE e proposta) é AUTORAL_PAPIRO suplementar. Nenhuma alegação de recorrência, frequência ou padrão típico da Fundatec é feita ou pode ser inferida deste manifesto.",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_fase3b4",
+  "validated_at": "2026-09-11T00:00:00Z",
+  "process_validation": {
+    "status": "SCOPE_AUDITED_BY_ASSISTANT",
+    "audited_at": "2026-09-11T00:00:00Z",
+    "method": "Leitura integral de unidades_pedagogicas.escopo via scan read-only (Fase 3B.2), sem pesquisa externa, sem chamada de API. Isto é validação de PROCESSO, NÃO é, por si só, sign-off humano. A autorização específica para mesóclise/ênclise como núcleo próprio é uma decisão editorial distinta, tratada separadamente abaixo."
+  },
+  "human_source_signoff": "APPROVED",
+  "mesoclise_authorization": "APPROVED",
+  "enclise_authorization": "APPROVED",
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-11T00:00:00Z",
+    "phase": "Fase 3B.4",
+    "evidence": "Aprovação explícita recebida no mandato de abertura da Fase 3B.4, Seção 0: 'APROVADOS os 4 source manifests: ... 4. Colocação pronominal' + 'AUTORIZADA mesóclise como núcleo próprio em Colocação pronominal' + 'AUTORIZADA ênclise como núcleo próprio em Colocação pronominal'. Registrado literalmente, três decisões distintas (source geral + mesóclise + ênclise), não inferidas de contexto do projeto."
+  },
+  "notes": [
+    "Esta unidade recebeu nota operacional C na auditoria de escopo (Fase 3B.2): apenas 5 dos 7 slots propostos (próclise) estavam prontos sem ressalva adicional antes do sign-off; os outros 2 (mesóclise, ênclise) dependiam de autorização humana específica, agora concedida (ver human_signoff_record e os campos mesoclise_authorization/enclise_authorization acima).",
+    "validated=true, human_source_signoff=APPROVED, mesoclise_authorization=APPROVED e enclise_authorization=APPROVED refletem, todos, a decisão humana explícita registrada acima (Fase 3B.4) — quatro autorizações distintas, cada uma com evidência própria, nenhuma inferida."
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_PT_PONTUACAO_ESCOPO_UNIDADE",
+  "type": "pedagogical_reference",
+  "course_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unit_id": "dca4fe2e-50e9-41db-abeb-0ef6b388c5af",
+  "content_id": 16,
+  "applies_to_unit_ids": ["dca4fe2e-50e9-41db-abeb-0ef6b388c5af"],
+  "title": "Pontuação (BMRS/Fundatec) — escopo pedagógico da unidade [APROVADO — HUMAN SIGN-OFF Fase 3B.4]",
+  "reference": "unidades_pedagogicas.escopo (curso_conteudo_id=16, materia_id=6, conteudo_id=48), confirmado ao vivo via scan de cobertura (Fase 3B.1/3B.2, read-only) — 3 úteis vinculadas (0 REAL + 3 AUTORAL) antes do Lote 03",
+  "content_summary": "Núcleo fixado: o uso da vírgula. Sem núcleo pré-edital baseado em incidência real (corpus integralmente autoral, COBERTURA_SUPLEMENTAR_PONTUACAO). Três eixos autorizados pelo escopo original: (1) oração/estrutura adverbial deslocada para o início ou intercalada no período, isolada por vírgula, analisando posição/extensão/organização sintático-discursiva concreta, sem regra absoluta de obrigatoriedade desvinculada da estrutura; (2) oração adjetiva explicativa × restritiva, com o princípio do isolamento da explicativa (vírgula de abertura e fechamento no meio do período; pontuação terminal ao final), quando a habilidade avaliada é especificamente a vírgula, não a classificação da oração; (3) estruturas que a vírgula não deve romper — relação direta sujeito-verbo e verbo-complemento —, com a ressalva explícita de que termo/oração legitimamente intercalado (ex.: \"O aluno, cansado, saiu.\") não configura ruptura, apenas isola um termo adicional.",
+  "scope_limits": [
+    "PODE cobrar: vírgula em oração/estrutura adverbial deslocada ou intercalada, variando posição, extensão e complexidade sintática",
+    "PODE cobrar: vírgula na distinção explicativa × restritiva, quando a habilidade avaliada é a pontuação em si",
+    "PODE cobrar: reconhecimento de ruptura indevida da vírgula entre sujeito-verbo ou verbo-complemento, contrastada com termo intercalado legítimo",
+    "NAO PODE ter como resposta principal a CLASSIFICAÇÃO do tipo de oração coordenada/subordinada — se o núcleo real da questão for esse, ela pertence a Coordenação e subordinação, não a esta unidade; a vírgula deve ser sempre o objeto central da avaliação",
+    "NAO PODE apresentar qualquer regra de vírgula como absoluta/obrigatória independente da estrutura concreta da frase — o escopo original rejeita explicitamente esse tipo de formulação mecânica",
+    "NAO PODE repetir 7 vezes o mesmo padrão superficial de frase — a distribuição futura exige variação deliberada de posição, extensão, complexidade e formato de comando dentro de cada eixo"
+  ],
+  "proposed_distribution_next_batch": [
+    { "subtema": "eixo 1 — oração/estrutura adverbial deslocada ou intercalada", "quantidade": 3 },
+    { "subtema": "eixo 2 — explicativa × restritiva", "quantidade": 2 },
+    { "subtema": "eixo 3 — ruptura indevida × termo intercalado legítimo", "quantidade": 2 }
+  ],
+  "incidencia_real": "INSUFICIENTE",
+  "incidencia_nota": "0 questão REAL vinculada a esta unidade. Toda a prática (LIVE e proposta) é AUTORAL_PAPIRO suplementar. Nenhuma alegação de recorrência, frequência ou padrão típico da Fundatec é feita ou pode ser inferida deste manifesto.",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_fase3b4",
+  "validated_at": "2026-09-11T00:00:00Z",
+  "process_validation": {
+    "status": "SCOPE_AUDITED_BY_ASSISTANT",
+    "audited_at": "2026-09-11T00:00:00Z",
+    "method": "Leitura integral de unidades_pedagogicas.escopo via scan read-only (Fase 3B.2), sem pesquisa externa, sem chamada de API. Isto é validação de PROCESSO, NÃO é, por si só, sign-off humano."
+  },
+  "human_source_signoff": "APPROVED",
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-11T00:00:00Z",
+    "phase": "Fase 3B.4",
+    "evidence": "Aprovação explícita recebida no mandato de abertura da Fase 3B.4, Seção 0: 'APROVADOS os 4 source manifests: ... 2. Pontuação ...'. Registrado literalmente, não inferido de contexto do projeto."
+  },
+  "notes": [
+    "Esta unidade recebeu nota operacional B na auditoria de escopo (Fase 3B.2): escopo claro e delimitado, mas com apenas 3 eixos correntes (sem lista de GAPS_DE_SUBASSUNTO explicitamente autorizados como em Coordenação e subordinação) — risco real de repetição estrutural percebida entre as 7 futuras questões, mitigado pela variação deliberada exigida acima.",
+    "A fronteira com Coordenação e subordinação (Seção 3 do mandato Fase 3B.3) não estava redigida explicitamente no escopo original; foi formalizada neste manifesto como inferência razoável, análoga à fronteira espelhada já registrada no manifesto de Coordenação e subordinação.",
+    "validated=true e human_source_signoff=APPROVED refletem a decisão humana explícita registrada acima (Fase 3B.4)."
+  ]
+}

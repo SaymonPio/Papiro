@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_PT_COORDENACAO_SUBORDINACAO_ESCOPO_UNIDADE",
+  "type": "pedagogical_reference",
+  "course_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unit_id": "bfeaf283-09fc-4f14-9d0c-41ff0db4eab7",
+  "content_id": 28,
+  "applies_to_unit_ids": ["bfeaf283-09fc-4f14-9d0c-41ff0db4eab7"],
+  "title": "Coordenação e subordinação (BMRS/Fundatec) — escopo pedagógico da unidade [APROVADO — HUMAN SIGN-OFF Fase 3B.4]",
+  "reference": "unidades_pedagogicas.escopo (curso_conteudo_id=28, materia_id=6, conteudo_id=50), confirmado ao vivo via scan de cobertura (Fase 3B.1/3B.2, read-only) — 3 úteis vinculadas (0 REAL + 3 AUTORAL) antes do Lote 03",
+  "content_summary": "Núcleo: identificar a relação sintática entre orações do período composto (coordenação = orações sintaticamente independentes entre si; subordinação = uma oração integra sintaticamente a estrutura da outra) e classificar contextualmente o tipo, nunca por decoreba isolada de conectivo. Cautela conceitual: independência sintática das coordenadas não implica independência de sentido — pode haver forte relação semântica/discursiva/argumentativa entre elas. Cobertura LIVE atual (3 questões, todas AUTORAL_PAPIRO): coordenação sindética adversativa, subordinada adverbial temporal, subordinada adverbial concessiva. GAPS_DE_SUBASSUNTO explicitamente registrados no escopo original e explicitamente NÃO excluídos conceitualmente: coordenação aditiva, alternativa, conclusiva, explicativa, assindética; subordinada adverbial causal, comparativa, condicional, conformativa, consecutiva, final, proporcional; subordinada substantiva (subjetiva, objetiva direta, objetiva indireta, completiva nominal, predicativa, apositiva) e subordinada adjetiva (restritiva/explicativa) — ausência reflete apenas falta de candidata no corpus, não delimitação de escopo.",
+  "scope_limits": [
+    "PODE cobrar: coordenação aditiva, alternativa, conclusiva, explicativa e assindética (não praticadas ainda, mas explicitamente autorizadas pelo escopo original)",
+    "PODE cobrar: subordinada adverbial causal, comparativa, condicional, conformativa, consecutiva, final e proporcional (idem)",
+    "PODE cobrar: subordinada substantiva (qualquer das 6 classificações) e subordinada adjetiva (restritiva/explicativa), DESDE QUE o núcleo da questão seja classificar o TIPO da oração",
+    "NAO PODE repetir como núcleo principal os 3 eixos já praticados (adversativa, temporal, concessiva) sem variação genuína de conteúdo",
+    "NAO PODE transformar a questão em teste de valor/equivalência/substituição de conectivo — isso pertence à unidade Conectores (já concluída)",
+    "NAO PODE, para subordinada substantiva, ter como núcleo a função de complemento/objeto/termo integrante/regência — isso pertence a Transitividade Verbal e Termos Integrantes (já concluída)",
+    "NAO PODE, para subordinada adjetiva, ter como núcleo o uso da vírgula na distinção restritiva/explicativa — isso pertence a Pontuação"
+  ],
+  "proposed_distribution_next_batch": [
+    { "subtema": "coordenação aditiva", "quantidade": 1 },
+    { "subtema": "coordenação conclusiva", "quantidade": 1 },
+    { "subtema": "coordenação explicativa", "quantidade": 1 },
+    { "subtema": "subordinada adverbial causal", "quantidade": 1 },
+    { "subtema": "subordinada adverbial condicional", "quantidade": 1 },
+    { "subtema": "subordinada substantiva — classificação do tipo", "quantidade": 1 },
+    { "subtema": "subordinada adjetiva restritiva × explicativa — classificação", "quantidade": 1 }
+  ],
+  "incidencia_real": "INSUFICIENTE",
+  "incidencia_nota": "0 questão REAL vinculada a esta unidade. Toda a prática (LIVE e proposta) é AUTORAL_PAPIRO suplementar. Nenhuma alegação de recorrência, frequência ou padrão típico da Fundatec é feita ou pode ser inferida deste manifesto.",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_fase3b4",
+  "validated_at": "2026-09-11T00:00:00Z",
+  "process_validation": {
+    "status": "SCOPE_AUDITED_BY_ASSISTANT",
+    "audited_at": "2026-09-11T00:00:00Z",
+    "method": "Leitura integral de unidades_pedagogicas.escopo via scan read-only (Fase 3B.2), sem pesquisa externa, sem chamada de API. Isto é validação de PROCESSO (o escopo é claro, determinístico e delimitado o bastante para permitir geração futura), NÃO é, por si só, sign-off humano."
+  },
+  "human_source_signoff": "APPROVED",
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-11T00:00:00Z",
+    "phase": "Fase 3B.4",
+    "evidence": "Aprovação explícita recebida no mandato de abertura da Fase 3B.4, Seção 0: 'APROVADOS os 4 source manifests: 1. Coordenação e subordinação...'. Registrado literalmente, não inferido de contexto do projeto — distinto do padrão 'human_curated_project_context' usado em manifestos anteriores desta esteira, que representa validação de processo/escopo, não decisão humana explícita sobre USAR esta fonte para gerar."
+  },
+  "notes": [
+    "Esta unidade recebeu nota operacional A na auditoria de escopo (Fase 3B.2): escopo mais claro e mais rico em GAPS_DE_SUBASSUNTO explicitamente autorizados entre as 5 unidades candidatas ao Lote 03.",
+    "validated=true e human_source_signoff=APPROVED refletem a decisão humana explícita registrada acima (Fase 3B.4) — não um atalho de curadoria de processo."
+  ]
+}
