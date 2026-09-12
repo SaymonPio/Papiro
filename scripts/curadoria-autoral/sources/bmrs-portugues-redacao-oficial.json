@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_PT_REDACAO_OFICIAL_ESCOPO_UNIDADE",
+  "type": "pedagogical_reference",
+  "course_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unit_id": "29bfb433-4013-4164-85de-fd847963199d",
+  "content_id": 30,
+  "applies_to_unit_ids": ["29bfb433-4013-4164-85de-fd847963199d"],
+  "title": "Redação oficial (BMRS/Fundatec) — escopo pedagógico da unidade [APROVADO — HUMAN SIGN-OFF Lote 06 — Decreto nº 9.758/2019 tratado como VALIDATED_PRIMARY_NORM por decisão humana explícita]",
+  "reference": "unidades_pedagogicas.escopo (curso_conteudo_id=30, materia_id=6, conteudo_id=16), confirmado ao vivo via consulta LIVE read-only na fase de preparação (Lote 06) — 4 úteis vinculadas (3 REAL + 1 AUTORAL). Pesquisa documental externa realizada na fase de preparação via WebSearch/WebFetch (Decreto Federal nº 9.758/2019); ajuste documental e sign-off humano explícito recebidos na fase de continuação (Lote 06 — 'CONTINUAR DO SOURCE SIGN-OFF E GERAR AS CANDIDATAS') — ver process_validation, human_signoff_record e fontes abaixo.",
+  "content_summary": "Redação oficial segundo o Manual de Redação da Presidência da República (MRPR, 3ª edição, 2018), o Decreto Federal nº 9.758/2019 e o Manual de Redação Oficial do Poder Executivo do Estado do Rio Grande do Sul. Núcleo: (1) estrutura/formatação do documento padrão ofício (campo assunto, introdução conforme a finalidade do documento, fechos 'Respeitosamente'/'Atenciosamente', identificação do signatário), com atenção à polaridade de questões que pedem a alternativa INCORRETA; (2) definição da comunicação administrativa e seus polos (quem comunica é sempre o serviço público; o que se comunica decorre das atribuições do órgão; a quem se comunica pode ser o público, uma instituição privada ou outro órgão público) e o princípio da impessoalidade, exclusivo da esfera pública; (3) vocativo padrão 'Senhor + Cargo' para autoridades em geral (subtema estável, sem controvérsia normativa conhecida) e, quando o MRPR tratar de vocativo/pronome de tratamento, aplicá-lo apenas quando não houver conflito com norma posterior aplicável (ver ponto 6); (4) atributos gerais da redação oficial (clareza, precisão, objetividade, concisão, coesão, coerência, impessoalidade, formalidade, padronização, norma-padrão), com a ressalva expressa de que o mnemônico 'C-P-O-C-I' cobre apenas parte desses atributos, não sendo lista exaustiva; (5) Decreto Federal nº 9.758/2019 (VALIDATED_PRIMARY_NORM por decisão humana explícita, Lote 06): disciplina a forma de tratamento e de endereçamento nas comunicações com agentes públicos da administração pública federal direta e indireta; inclui expressamente Presidente e Vice-Presidente da República no âmbito previsto; estabelece 'senhor' como forma de tratamento; veda formas como 'Vossa Excelência' e 'Excelentíssimo' nas hipóteses abrangidas pelo decreto. PONTO HISTÓRICO SUPERSEDED_OR_REQUIRES_CONTEXT (preservado, não apagado): o escopo originalmente presumia que as formas do MRPR ('Excelentíssimo Senhor', 'Vossa Excelência') permaneceriam aplicáveis sem ressalva para comunicações da BM RS ao Presidente da República — essa presunção está SUPERADA/EXIGE CONTEXTO: o MRPR (2018) antecede o Decreto nº 9.758/2019, e nenhuma questão autoral nova pode afirmar que o decreto não alcança o Presidente. Toda questão sobre o Decreto deve deixar inequívoco que está cobrando a disciplina do Decreto nº 9.758/2019 especificamente (não uma regra geral do MRPR).",
+  "fontes_oficiais": [
+    {
+      "id": "MRPR_2018",
+      "categoria": "VALIDATED_OFFICIAL_MANUAL",
+      "titulo": "Manual de Redação da Presidência da República, 3ª edição, 2018",
+      "sustenta": [
+        "estrutura/formatação do padrão ofício (assunto, introdução, fechos, identificação do signatário)",
+        "definição da comunicação administrativa e seus polos + princípio da impessoalidade",
+        "vocativo padrão 'Senhor + Cargo' para autoridades em geral (fora de Chefes de Poder), e vocativo/tratamento em geral apenas quando não houver conflito com norma posterior aplicável (ver DECRETO_9758_2019)",
+        "atributos gerais da redação oficial (clareza, precisão, objetividade, concisão, coesão, coerência, impessoalidade, formalidade, padronização, norma-padrão) e a ressalva de que C-P-O-C-I é mnemônico parcial"
+      ],
+      "observacao": "Fonte já usada e citada nas explicações das 4 questões úteis atuais (Q18, Q73, Q117, Q118); tratada como oficialmente estabelecida e estável, MAS datada de 2018 — antecede o Decreto nº 9.758/2019, logo qualquer regra de vocativo/tratamento do MRPR aplicada a agente público federal deve ser lida em conjunto com o decreto (ver ponto SUPERSEDED_OR_REQUIRES_CONTEXT abaixo), nunca isoladamente."
+    },
+    {
+      "id": "MANUAL_RS",
+      "categoria": "OFFICIAL_STATE_MANUAL",
+      "titulo": "Manual de Redação Oficial do Poder Executivo do Estado do Rio Grande do Sul",
+      "sustenta": [
+        "aplicabilidade das regras de redação oficial ao ente estadual (Brigada Militar RS) especificamente"
+      ],
+      "observacao": "Aplicável por ser o manual do próprio ente federativo do curso. O texto integral deste manual NÃO foi obtido/lido nesta fase (apenas o resumo já presente no escopo do projeto, herdado de fase anterior do projeto) — por decisão humana explícita (Lote 06), usar SOMENTE o que está efetivamente documentado nesse material já disponível; NÃO inferir ou inventar regras novas do Manual RS a partir de resumo indireto."
+    },
+    {
+      "id": "DECRETO_9758_2019",
+      "categoria": "VALIDATED_PRIMARY_NORM",
+      "titulo": "Decreto nº 9.758, de 11 de abril de 2019",
+      "status": "VALIDATED_PRIMARY_NORM_POR_DECISAO_HUMANA_EXPLICITA_LOTE06",
+      "tentativas_de_acesso_ao_texto_primario_na_fase_de_preparacao": [
+        "planalto.gov.br/ccivil_03/_ato2019-2022/2019/decreto/d9758.htm (2 tentativas — ECONNRESET)",
+        "www2.camara.leg.br (2 URLs distintas — HTTP 429)",
+        "lexml.gov.br (retornou apenas metadados/ementa)",
+        "in.gov.br (Diário Oficial da União — socket hang up)",
+        "legislacao.presidencia.gov.br — ECONNRESET",
+        "repositorio.cgu.gov.br / basedeconhecimento.cgu.gov.br (redirecionamento seguido — retornou apenas metadados)"
+      ],
+      "regra_normativa_aplicavel_por_decisao_humana": "Disciplina tratamento e endereçamento nas comunicações com agentes públicos da administração pública federal direta e indireta; inclui expressamente Presidente e Vice-Presidente da República no âmbito previsto pelo decreto; estabelece 'senhor' como forma de tratamento; veda formas como 'Vossa Excelência' e 'Excelentíssimo' nas hipóteses abrangidas pelo decreto.",
+      "ponto_historico_superseded_or_requires_context": "O escopo original do projeto afirmava que, para comunicações originadas de órgãos do Estado do RS (como a Brigada Militar) dirigidas ao Presidente da República, as formas do MRPR ('Excelentíssimo Senhor', 'Vossa Excelência') permaneceriam normativamente aplicáveis, sem contradição com o decreto federal. Por decisão humana explícita (Lote 06), essa afirmação é marcada como SUPERSEDED_OR_REQUIRES_CONTEXT (preservada aqui como histórico, não apagada): o MRPR é de 2018 e antecede o Decreto de 2019; nenhuma questão autoral nova pode afirmar que o Decreto nº 9.758/2019 não alcança o Presidente da República.",
+      "revogacao": "Não foi localizada revogação do Decreto nº 9.758/2019 nas buscas realizadas na fase de preparação (distinto do Decreto nº 9.759/2019, que é outro ato, revogado em 2023 — não confundir).",
+      "historical_real_question_normative_caution": "Q118 (REAL, Fundatec — BM RS Soldado Nível III 2022) testa vocativo/pronome 'Excelentíssimo Senhor Presidente da República'/'Vossa Excelência' sem mencionar o Decreto nº 9.758/2019. Por ser questão REAL histórica, NÃO deve ser editada, inativada, ter gabarito alterado ou ser reescrita. Também NÃO deve ser usada como modelo normativo para geração autoral nova — qualquer questão nova sobre vocativo/tratamento a agente público federal deve refletir o Decreto nº 9.758/2019, deixando inequívoco que está cobrando a disciplina desse decreto especificamente."
+    }
+  ],
+  "scope_limits": [
+    "PODE cobrar (subtema 1): estrutura/formatação do padrão ofício — campo assunto, introdução conforme a finalidade do documento, fechos 'Respeitosamente' (hierarquia superior, inclusive Presidente) / 'Atenciosamente' (mesma hierarquia, inferior ou público em geral), identificação do signatário (maiúsculas, sem negrito, sem linha/traço de assinatura)",
+    "PODE cobrar (subtema 2): definição da comunicação administrativa e seus polos (quem comunica/o que se comunica/a quem se comunica) e o princípio da impessoalidade exclusivo da esfera pública",
+    "PODE cobrar (subtema 3): vocativo padrão 'Senhor + Cargo' para autoridades em geral, EXCETO Chefes de Poder (Presidente da República, Presidente do Congresso/Câmara/Senado, Presidente do STF)",
+    "PODE cobrar (subtema 4): atributos gerais da redação oficial (clareza, precisão, objetividade, concisão, coesão, coerência, impessoalidade, formalidade, padronização, norma-padrão), incluindo a ressalva de que 'C-P-O-C-I' é mnemônico parcial, não lista exaustiva",
+    "PODE cobrar (subtema 5, MRPR): vocativo/tratamento segundo o MRPR APENAS quando não houver conflito com norma posterior aplicável (ou seja, nunca para agente público federal alcançado pelo Decreto nº 9.758/2019 sem contextualizar o decreto)",
+    "PODE cobrar (subtema 6, VALIDATED_PRIMARY_NORM — autorizado por decisão humana explícita, Lote 06): Decreto nº 9.758/2019 — âmbito de aplicação (agentes públicos da administração pública federal direta e indireta); uso de 'senhor' como forma de tratamento; formas vedadas ('Vossa Excelência', 'Excelentíssimo', entre outras apuradas); inclusão expressa do Presidente e do Vice-Presidente da República no âmbito do decreto; endereçamento previsto pelo decreto. Toda questão sobre este subtema deve deixar INEQUÍVOCO que está cobrando a disciplina do Decreto nº 9.758/2019 especificamente, nunca uma regra geral do MRPR",
+    "NAO PODE afirmar que o Decreto nº 9.758/2019 não alcança o Presidente da República — essa afirmação é expressamente vedada por decisão humana (Lote 06)",
+    "NAO PODE usar Q118 como modelo normativo para geração autoral nova (historical_real_question_normative_caution)",
+    "NAO PODE misturar MRPR 2018 e Decreto 2019 sem deixar claro o contexto temporal/normativo entre os dois (qual regra é anterior, qual é posterior e prevalece para agente público federal)",
+    "NAO PODE criar questão cujo gabarito dependa de conflito documental implícito entre MRPR e Decreto sem explicitar qual dos dois está sendo cobrado",
+    "NAO PODE inventar regra do Manual RS além do que já está documentado no resumo de escopo existente",
+    "NAO PODE extrapolar o Decreto nº 9.758/2019 para situações fora do seu âmbito (agentes públicos da administração pública federal direta e indireta)",
+    "NAO PODE ampliar para regência verbal/nominal, crase, ou outros conteúdos de outras unidades de Língua Portuguesa"
+  ],
+  "cobertura_live_atual": [
+    { "questao_id": 18, "origem": "AUTORAL_PAPIRO", "subtema": "atributos gerais da redação oficial (mnemônico C-P-O-C-I)", "habilidade": "reconhecer os atributos fundamentais da redação oficial (clareza, precisão, objetividade, concisão, impessoalidade) e rejeitar regionalismo/subjetividade/preciosismo/informalidade", "fonte_fundamento": "MRPR (citado na explicação, sem campo 'fonte' formal preenchido)", "risco_normativo": "baixo — mas não explora ainda a ressalva de que C-P-O-C-I é mnemônico parcial, não lista exaustiva" },
+    { "questao_id": 73, "origem": "REAL (Fundatec — BM RS Soldado 1ª Classe 2025, Q10)", "subtema": "estrutura/formatação do padrão ofício", "habilidade": "identificar a alternativa INCORRETA entre regras de campo assunto, introdução, fechos e identificação do signatário", "fonte_fundamento": "MRPR 3ª ed. 2018 (citado explicitamente na explicação)", "risco_normativo": "baixo" },
+    { "questao_id": 117, "origem": "REAL (Fundatec — BM RS Soldado Nível III 2022, Q09)", "subtema": "definição/polos da comunicação administrativa + impessoalidade", "habilidade": "avaliar afirmativas sobre emissor/objeto/destinatário da comunicação administrativa e o padrão de linguagem exigido", "fonte_fundamento": "MRPR (citado na explicação)", "risco_normativo": "baixo" },
+    { "questao_id": 118, "origem": "REAL (Fundatec — BM RS Soldado Nível III 2022, Q10)", "subtema": "vocativo/pronome de tratamento para o Presidente da República", "habilidade": "avaliar vocativo ('Excelentíssimo Senhor Presidente da República') e pronome ('Vossa Excelência') corretos em comunicação dirigida ao Presidente", "fonte_fundamento": "MRPR (citado na explicação) — NÃO menciona o Decreto Federal nº 9.758/2019", "risco_normativo": "MEDIO/ALTO — item histórico de prova (2022); mantido sem edição/inativação/alteração de gabarito (questão REAL histórica); registrado como historical_real_question_normative_caution — NÃO usar como modelo para gerar questão autoral nova" }
+  ],
+  "historical_real_question_normative_caution": ["Q118"],
+  "gaps_identificados": [
+    "Subtema 3 (vocativo padrão 'Senhor + Cargo' para autoridades em geral) nunca foi testado — só existe o caso controverso de Chefes de Poder (Q118)",
+    "Subtema 4 (atributos gerais) só foi testado na versão básica (Q18) — a ressalva de que C-P-O-C-I é mnemônico parcial nunca foi testada isoladamente",
+    "Subtemas 1 e 2 têm apenas 1 questão REAL cada — margem para variação de formato sem repetir Q73/Q117",
+    "Subtema 6 (Decreto nº 9.758/2019 propriamente dito — âmbito, uso de 'senhor', formas vedadas, inclusão do Presidente/Vice-Presidente, endereçamento) nunca foi testado — gap completo, agora autorizado por decisão humana (Lote 06)"
+  ],
+  "proposed_distribution_next_batch": [
+    { "subtema": "estrutura/formatação do padrão ofício (variação de formato distinta de Q73)", "quantidade": 2 },
+    { "subtema": "definição/polos da comunicação administrativa + impessoalidade (variação de Q117)", "quantidade": 1 },
+    { "subtema": "atributos gerais da redação oficial, com ênfase na ressalva 'C-P-O-C-I é mnemônico parcial'", "quantidade": 1 },
+    { "subtema": "Decreto nº 9.758/2019 (âmbito, uso de 'senhor', formas vedadas, Presidente/Vice-Presidente, endereçamento)", "quantidade": 2 },
+    { "subtema": "candidata extra de reserva 1 (variação de qualquer subtema autorizado acima)", "quantidade": 1, "authorization_status": "SCOPE_AUDITED_READY" },
+    { "subtema": "candidata extra de reserva 2 (variação de qualquer subtema autorizado acima)", "quantidade": 1, "authorization_status": "SCOPE_AUDITED_READY" }
+  ],
+  "incidencia_real": "PARCIAL",
+  "incidencia_nota": "3 questões REAL já vinculadas (estrutura/formatação, definição/polos+impessoalidade, vocativo controverso), mais 1 AUTORAL (atributos gerais). Déficit de 6 exige geração autoral suplementar, restrita aos subtemas autorizados acima.",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote06",
+  "validated_at": "2026-09-12T00:00:00Z",
+  "document_validation": {
+    "MRPR_2018": "VALIDATED_OFFICIAL_MANUAL",
+    "DECRETO_9758_2019": "VALIDATED_PRIMARY_NORM",
+    "MANUAL_RS": "OFFICIAL_STATE_MANUAL"
+  },
+  "process_validation": {
+    "status": "SCOPE_AUDITED_BY_ASSISTANT_COM_PESQUISA_DOCUMENTAL_EXTERNA",
+    "audited_at": "2026-09-12T00:00:00Z",
+    "method": "Leitura integral de unidades_pedagogicas.escopo e das 4 questões úteis via consulta LIVE read-only (Lote 06, fase de preparação, Seções 1/2/5), sem chamada de API de geração. Pesquisa documental externa via WebSearch e WebFetch (Lote 06, fase de preparação, Seção 3/4) para o Decreto Federal nº 9.758/2019: 6 tentativas de acesso ao texto primário em domínios oficiais falharam por erro de conexão/HTTP 429/apenas metadados; fontes secundárias especializadas foram usadas SOMENTE como auxílio à descoberta. Isto é validação de PROCESSO, NÃO é, por si só, sign-off humano — a decisão humana explícita está registrada separadamente em human_signoff_record."
+  },
+  "human_source_signoff": "APPROVED",
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-12T00:00:00Z",
+    "phase": "Lote 06 — CONTINUAR DO SOURCE SIGN-OFF E GERAR AS CANDIDATAS",
+    "evidence": "Decisão humana explícita: 'REQUEST_ADJUSTMENT → APPROVE_SOURCE após os ajustes abaixo. O Decreto Federal nº 9.758/2019 deve passar a ser tratado como VALIDATED_PRIMARY_NORM ... inclui expressamente Presidente e Vice-Presidente da República no âmbito previsto pelo decreto; estabelece \"senhor\" como forma de tratamento; veda formas como \"Vossa Excelência\" e \"Excelentíssimo\" nas hipóteses abrangidas pelo decreto ... NÃO utilizar como regra autoral atual qualquer afirmação de que \"Vossa Excelência\" ou \"Excelentíssimo Senhor Presidente da República\" permaneçam aplicáveis sem ressalva em situação abrangida pelo Decreto ... Marcar eventual regra conflitante antiga do escopo como SUPERSEDED_OR_REQUIRES_CONTEXT. Não apagar histórico. Decreto nº 9.758/2019 = VALIDATED_PRIMARY_NORM; MRPR 3ª ed. 2018 = VALIDATED_OFFICIAL_MANUAL; Manual RS = OFFICIAL_STATE_MANUAL (usar somente o que esteja efetivamente documentado). Q118 é questão REAL histórica — NÃO editar/inativar/alterar gabarito/reescrever; registrar historical_real_question_normative_caution: Q118; Q118 não deve ser usada como modelo normativo para geração autoral.' Registrado literalmente, não inferido."
+  },
+  "notes": [
+    "Unidade selecionada para o Lote 06 (déficit 6, última unidade deficitária de Língua Portuguesa antes do fechamento completo da matéria no curso).",
+    "Diferente das demais unidades de Português já trabalhadas nesta sessão (gramática pura, sem conteúdo normativo/legal), esta unidade é normativa por natureza (Manual de Redação + decreto federal) — por isso a validação de fonte foi tratada com rigor documental redobrado, incluindo pesquisa externa real (WebSearch/WebFetch) na fase de preparação, seguida de decisão humana explícita na fase de continuação.",
+    "O ponto sobre o Decreto Federal nº 9.758/2019 e o vocativo do Presidente da República era o motivo histórico do bloqueio anterior desta unidade (LEGAL_SOURCE_NOT_DOCUMENTALLY_VALIDATED) — RESOLVIDO por decisão humana explícita (Lote 06): o decreto passa a ser VALIDATED_PRIMARY_NORM e autorizado como subtema próprio de geração (subtema 6), com a regra antiga do escopo marcada como SUPERSEDED_OR_REQUIRES_CONTEXT (preservada como histórico).",
+    "validated=true e human_source_signoff=APPROVED refletem a decisão humana explícita registrada em human_signoff_record — nada foi inferido nem presumido além do que foi literalmente decidido."
+  ]
+}
