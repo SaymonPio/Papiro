@@ -1,3 +1,7 @@
+import Image from "next/image";
+import { HomeHeader } from "@/components/home/HomeHeader";
+import styles from "./home.module.css";
+
 const features = [
   {
     number: "01",
@@ -26,7 +30,7 @@ const features = [
 ];
 
 const steps = [
-  ["01", "Escolha seu alvo", "Guarda Municipal, Polícia Militar ou Polícia Civil, cargo, banca e data da prova."],
+  ["01", "Escolha seu alvo", "Guarda Municipal ou Polícia Militar, cargo, banca e data da prova."],
   ["02", "Envie o edital", "A plataforma transforma o documento em um plano claro de preparação."],
   ["03", "Execute a missão", "Estude, resolva questões, revise e acompanhe sua evolução todos os dias."],
 ];
@@ -52,170 +56,54 @@ const faq = [
 
 export default function Home() {
   return (
-    <main>
-      <header className="site-header">
-        <a className="brand" href="#inicio" aria-label="Papiro, página inicial">
-          <span className="brand-mark" aria-hidden="true">
-            P
-          </span>
-          <span>
-            <strong>PAPIRO</strong>
-            <small>PREPARAÇÃO POLICIAL</small>
-          </span>
-        </a>
-        <nav aria-label="Navegação principal">
-          <a href="#metodo">Como funciona</a>
-          <a href="#recursos">Recursos</a>
-          <a href="#taf">TAF</a>
-          <a href="#planos">Planos</a>
-        </nav>
-        <div className="header-actions">
-          <a className="login-link" href="/login">
-            Entrar
-          </a>
-          <a className="button button-small" href="/cadastro">
-            Começar agora
-          </a>
-        </div>
-      </header>
+    <main className={styles.home}>
+      <HomeHeader />
 
-      <section className="hero" id="inicio">
-        <div className="hero-grid" aria-hidden="true" />
-        <div className="hero-copy">
-          <p className="eyebrow">
-            <span /> FOCO • DISCIPLINA • APROVAÇÃO
+      <section className={styles.hero} id="inicio" data-header-theme="dark">
+        <div className={styles.heroCopy}>
+          <p className={styles.eyebrow}>
+            FOCO • DISCIPLINA • APROVAÇÃO
           </p>
-          <h1>
+          <h1 className={styles.heroTitle}>
             SUA FARDA
             <br />
             COMEÇA <em>AQUI.</em>
           </h1>
-          <p className="hero-lead">
-  Transforme seu edital em uma estratégia de aprovação. Um plano
-  inteligente para quem tem como alvo a{" "}
-  <strong>Guarda Municipal</strong>, a{" "}
-  <strong>Polícia Militar</strong> e a{" "}
-  <strong>Polícia Civil</strong>.
-</p>
-          <div className="hero-actions">
-            <a className="button" href="/cadastro">
-              MONTAR MEU PLANO <span aria-hidden="true">→</span>
-            </a>
-            <a className="text-action" href="#metodo">
-              CONHECER O MÉTODO <span aria-hidden="true">↓</span>
-            </a>
-          </div>
-          <div className="trust-row">
-            <div className="avatars" aria-hidden="true">
-              <span>GM</span>
-              <span>PM</span>
-              <span>PC</span>
-              <span>+</span>
-            </div>
-            <p>
-              <strong>Preparação centralizada</strong>
-              <br />
-              Da primeira questão ao dia do TAF
-            </p>
+          <p className={styles.heroLead}>
+            Transforme seu edital em uma estratégia de aprovação. Um plano
+            inteligente para quem tem como alvo a <strong>Guarda Municipal</strong> e a{" "}
+            <strong>Polícia Militar</strong>.
+          </p>
+        </div>
+
+        <div className={styles.heroArtwork} aria-hidden="true">
+          <div className={styles.reliefFrame}>
+            <Image
+              className={styles.reliefImage}
+              src="/home-hero-relief.png"
+              alt=""
+              fill
+              priority
+              unoptimized
+              sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1020px) calc(100vw - 96px), 520px"
+            />
           </div>
         </div>
 
-        <div className="hero-visual" aria-label="Exemplo do painel de desempenho do Papiro">
-          <div className="radar-ring ring-one" />
-          <div className="radar-ring ring-two" />
-          <div className="dashboard-card">
-            <div className="dash-top">
-              <div>
-                <small>MISSÃO ATUAL</small>
-                <strong>GM • Porto Alegre</strong>
-              </div>
-              <span className="live-dot">PLANO ATIVO</span>
-            </div>
-            <div className="dash-progress">
-              <div className="progress-main">
-                <small>PROGRESSO DO EDITAL</small>
-                <strong>68%</strong>
-                <div className="progress-track">
-                  <span />
-                </div>
-              </div>
-              <div className="days-left">
-                <strong>43</strong>
-                <small>DIAS PARA A PROVA</small>
-              </div>
-            </div>
-            <div className="today-plan">
-              <div className="section-label">
-                <span>PLANO DE HOJE</span>
-                <small>2H 30MIN</small>
-              </div>
-              <div className="task done">
-                <span className="check">✓</span>
-                <div>
-                  <strong>Direito Constitucional</strong>
-                  <small>Direitos e garantias fundamentais</small>
-                </div>
-                <b>45 min</b>
-              </div>
-              <div className="task active">
-                <span className="check">02</span>
-                <div>
-                  <strong>Legislação Especial</strong>
-                  <small>Estatuto do Desarmamento</small>
-                </div>
-                <b>55 min</b>
-              </div>
-              <div className="task">
-                <span className="check">03</span>
-                <div>
-                  <strong>Bloco de questões</strong>
-                  <small>30 questões • Fundatec</small>
-                </div>
-                <b>50 min</b>
-              </div>
-            </div>
-            <div className="dash-footer">
-              <span>
-                <small>APROVEITAMENTO</small>
-                <strong>82%</strong>
-              </span>
-              <span>
-                <small>QUESTÕES</small>
-                <strong>1.284</strong>
-              </span>
-              <span>
-                <small>SEQUÊNCIA</small>
-                <strong>12 dias</strong>
-              </span>
-            </div>
+        <div className={styles.careerStrip} aria-label="Principais recursos">
+          <div>
+            <span>Edital com IA</span>
+            <i aria-hidden="true" />
+            <span>Cronograma inteligente</span>
+            <i aria-hidden="true" />
+            <span>Questões e simulados</span>
+            <i aria-hidden="true" />
+            <span>Acompanhamento do TAF</span>
           </div>
-          <div className="floating-badge">
-            <span>↑</span>
-            <div>
-              <small>EVOLUÇÃO SEMANAL</small>
-              <strong>+14,2%</strong>
-            </div>
-          </div>
-        </div>
-
-        <div className="hero-index" aria-hidden="true">
-          <span>01</span>
-          <i />
-          <span>05</span>
         </div>
       </section>
 
-      <section className="proof-strip" aria-label="Principais recursos">
-        <span>EDITAL COM IA</span>
-        <i />
-        <span>CRONOGRAMA INTELIGENTE</span>
-        <i />
-        <span>QUESTÕES E SIMULADOS</span>
-        <i />
-        <span>ACOMPANHAMENTO DO TAF</span>
-      </section>
-
-      <section className="section section-light" id="metodo">
+      <section className="section section-light" id="metodo" data-header-theme="light">
         <div className="section-heading">
           <div>
             <p className="eyebrow dark"><span /> MÉTODO PAPIRO</p>
@@ -238,7 +126,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section section-dark" id="recursos">
+      <section className="section section-dark" id="recursos" data-header-theme="dark">
         <div className="section-heading inverse">
           <div>
             <p className="eyebrow"><span /> TUDO EM UM SÓ LUGAR</p>
@@ -262,18 +150,17 @@ export default function Home() {
               </div>
               <h3>{feature.title}</h3>
               <p>{feature.text}</p>
-              <a href="#planos" aria-label={`Conhecer ${feature.title}`}>EXPLORAR <span>↗</span></a>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="taf-section" id="taf">
+      <section className="taf-section" id="taf" data-header-theme="dark">
         <div className="taf-visual">
           <div className="taf-number">05:18</div>
           <div className="track-lines" aria-hidden="true"><i /><i /><i /></div>
           <div className="taf-chart">
-            <small>CORRIDA • 12 MIN</small>
+            <small>EXEMPLO ILUSTRATIVO • CORRIDA • 12 MIN</small>
             <strong>2.340 m</strong>
             <span>Meta do edital: 2.400 m</span>
             <div className="chart-line" />
@@ -295,14 +182,14 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section section-light pricing" id="planos">
+      <section className="section section-light pricing" id="planos" data-header-theme="light">
         <div className="pricing-heading">
           <p className="eyebrow dark"><span /> SEU PRÓXIMO PASSO</p>
           <h2>COMECE A CONSTRUIR<br />SUA <em>APROVAÇÃO.</em></h2>
-          <p>Entre para a lista de acesso antecipado do Papiro.</p>
+          <p>Crie sua conta e comece a organizar sua preparação no Papiro.</p>
         </div>
         <div className="plan-card">
-          <div className="plan-badge">ACESSO ANTECIPADO</div>
+          <div className="plan-badge">CADASTRO ABERTO</div>
           <div className="plan-title">
             <span className="brand-mark">P</span>
             <div>
@@ -317,14 +204,14 @@ export default function Home() {
             <li><span>✓</span> Controle de questões e simulados</li>
             <li><span>✓</span> Acompanhamento do TAF</li>
           </ul>
-          <span className="button button-full button-disabled" aria-disabled="true">
-            CADASTRO EM BREVE
-          </span>
-          <small className="plan-note">A LISTA DE ACESSO SERÁ LIBERADA NA PRÓXIMA ETAPA</small>
+          <a className="button button-full" href="/cadastro">
+            CRIAR MINHA CONTA
+          </a>
+          <small className="plan-note">CRIE SUA CONTA E COMECE A CONFIGURAR SEU OBJETIVO</small>
         </div>
       </section>
 
-      <section className="faq-section">
+      <section className="faq-section" data-header-theme="dark">
         <div>
           <p className="eyebrow"><span /> DÚVIDAS FREQUENTES</p>
           <h2>ANTES DE<br /><em>COMEÇAR.</em></h2>
@@ -339,13 +226,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="final-cta" id="acesso">
+      <section className="final-cta" id="acesso" data-header-theme="dark">
         <p className="eyebrow"><span /> PAPIRO</p>
         <h2>O EDITAL É O MESMO.<br /><em>SUA ESTRATÉGIA NÃO.</em></h2>
         <a className="button" href="/cadastro">COMEÇAR MINHA PREPARAÇÃO <span>→</span></a>
       </section>
 
-      <section className="whatsapp-strip" aria-label="Contato pelo WhatsApp">
+      <section className="whatsapp-strip" aria-label="Contato pelo WhatsApp" data-header-theme="dark">
         <div className="whatsapp-intro">
           <span className="whatsapp-icon" aria-hidden="true">W</span>
           <div>
@@ -355,17 +242,17 @@ export default function Home() {
         </div>
         <p>Atendimento rápido para dúvidas sobre a plataforma e sua preparação.</p>
         <span className="whatsapp-demo" aria-disabled="true">
-          <span>(51) 99754-1888</span>
-          <small>WHATSAPP DEMONSTRATIVO</small>
+          <span>CANAL EM PREPARAÇÃO</span>
+          <small>O CONTATO OFICIAL SERÁ DIVULGADO AQUI</small>
         </span>
       </section>
 
-      <footer>
+      <footer data-header-theme="dark">
         <a className="brand" href="#inicio">
           <span className="brand-mark">P</span>
           <span><strong>PAPIRO</strong><small>PREPARAÇÃO POLICIAL</small></span>
         </a>
-        <p>Preparação inteligente para Guarda Municipal, Polícia Militar e Polícia Civil.</p>
+        <p>Preparação inteligente para Guarda Municipal e Polícia Militar.</p>
         <div>
           <a href="#recursos">Recursos</a>
           <a href="#taf">TAF</a>
