@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_PT_CONCORDANCIA_NOMINAL_ESCOPO_UNIDADE",
+  "type": "pedagogical_reference",
+  "course_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unit_id": "9a4936e1-a9a6-452c-9385-d5a5899ae5c5",
+  "content_id": 19,
+  "applies_to_unit_ids": ["9a4936e1-a9a6-452c-9385-d5a5899ae5c5"],
+  "title": "Concordância nominal (BMRS/Fundatec) — escopo pedagógico da unidade [PENDENTE — aguardando sign-off humano, Fase Lote 04]",
+  "reference": "unidades_pedagogicas.escopo (curso_conteudo_id=19, materia_id=6, conteudo_id=52), confirmado ao vivo via consulta LIVE read-only nesta fase — 3 úteis vinculadas (0 REAL + 3 AUTORAL) antes do Lote 04",
+  "content_summary": "Núcleo pré-edital: concordância do predicativo em estruturas com verbo de ligação e sujeito determinado ou não por artigo/pronome — com determinante, o predicativo concorda obrigatoriamente em gênero e número ('É necessária a cautela'); sem determinante, a construção tradicional de concurso apresenta o masculino singular invariável ('É necessário cautela') — regra tradicional, não algoritmo cego, sempre analisada pela estrutura concreta da frase. Cobertura integrada autoral (fenômenos nominais presentes em questões que também dependem de concordância verbal, por isso hoje sem vínculo específico a esta unidade): variação do adjetivo 'anexo' (concorda em gênero/número, ex. 'seguem anexas as certidões') em contraste com a locução adverbial invariável 'em anexo'; e invariabilidade do advérbio de intensidade 'meio' (equivalente a 'um pouco', ex. 'meio cansadas') em contraste com a variabilidade de 'meia' como numeral fracionário ou substantivo. Evidência histórica (Q116, Q318, já classificadas em Concordância verbal, sem vínculo nesta unidade): concordância nominal apareceu integrada a transformações de número (ajuste de artigo/demonstrativo ao substantivo) — 2 ocorrências não sustentam recorrência ou padrão predominante da banca.",
+  "scope_limits": [
+    "PODE cobrar: concordância do predicativo com sujeito determinado por artigo/pronome (concordância obrigatória em gênero e número)",
+    "PODE cobrar: predicativo com sujeito sem determinante (forma tradicional masculino singular invariável), sempre analisando a estrutura concreta, nunca como fórmula mecânica aplicável a qualquer frase",
+    "PODE cobrar: contraste 'anexo' (variável, concorda com o substantivo) × 'em anexo' (locução adverbial invariável)",
+    "PODE cobrar: contraste 'meio' (advérbio de intensidade, invariável) × 'meia' (numeral fracionário ou substantivo, variável)",
+    "NAO PODE depender de concordância verbal como habilidade nuclear da questão — se o núcleo real for concordância entre sujeito e verbo, a questão pertence a Concordância verbal, não a esta unidade",
+    "NAO PODE apresentar qualquer regra nominal como absoluta e universal sem checar a estrutura concreta da frase (mesma cautela já registrada no escopo original para o predicativo sem determinante)",
+    "NAO PODE ampliar para concordância ideológica/atrativa avançada não documentada no escopo original — o núcleo é estritamente o já delimitado acima"
+  ],
+  "proposed_distribution_next_batch": [
+    { "subtema": "predicativo com determinante (concordância obrigatória)", "quantidade": 2 },
+    { "subtema": "predicativo sem determinante (masculino singular invariável, norma tradicional)", "quantidade": 2 },
+    { "subtema": "'anexo' × 'em anexo'", "quantidade": 2 },
+    { "subtema": "'meio' × 'meia'", "quantidade": 1 },
+    { "subtema": "candidata extra de reserva (qualquer dos 4 subtemas acima, variando exemplo)", "quantidade": 1, "authorization_status": "SCOPE_AUDITED_READY" }
+  ],
+  "incidencia_real": "INSUFICIENTE",
+  "incidencia_nota": "0 questão REAL vinculada especificamente a esta unidade (as 2 ocorrências históricas citadas, Q116/Q318, permanecem classificadas em Concordância verbal, não aqui). Toda a prática atual (3 questões) é AUTORAL_PAPIRO suplementar. Nenhuma alegação de recorrência, frequência ou padrão típico da Fundatec é feita ou pode ser inferida deste manifesto.",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote04",
+  "validated_at": "2026-09-12T00:00:00Z",
+  "process_validation": {
+    "status": "SCOPE_AUDITED_BY_ASSISTANT",
+    "audited_at": "2026-09-12T00:00:00Z",
+    "method": "Leitura integral de unidades_pedagogicas.escopo via consulta LIVE read-only (Lote 04, Seção 1/2), sem pesquisa externa, sem chamada de API. Isto é validação de PROCESSO, NÃO é, por si só, sign-off humano — a decisão humana explícita está registrada separadamente em human_signoff_record."
+  },
+  "human_source_signoff": "APPROVED",
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-12T00:00:00Z",
+    "phase": "Lote 04",
+    "evidence": "Aprovação explícita recebida no mandato 'PAPIRO — LOTE 04 — HUMAN SOURCE SIGN-OFF': 'APROVADOS os 4 source manifests do Lote 04: 1. Concordância nominal ...' com restrição humana obrigatória registrada literalmente: 'geração autorizada apesar de 0 questões REAL vinculadas; NÃO afirmar recorrência/incidência histórica; usar o escopo pedagógico validado como fonte de correção; usar BANK_STYLE_PROFILE/POLICE_DOMAIN_PROFILE apenas para estilo, dificuldade e forma de cobrança; manter os subtemas autorizados: predicativo com determinante; predicativo sem determinante; anexo × em anexo; meio × meia.' Registrado literalmente, não inferido."
+  },
+  "notes": [
+    "Unidade selecionada como 1ª prioridade do Lote 04 por maior déficit ao vivo (déficit 7, únicos 3 úteis) entre as unidades de Língua Portuguesa não bloqueadas.",
+    "Nenhum conteúdo normativo/legal citado no escopo (é gramática pura); mesmo assim, o pipeline (gerar-questoes.mjs) exige SOURCE_VALIDATED incondicionalmente, e esta unidade permaneceu BLOQUEADA até o sign-off humano explícito acima (Lote 04), exatamente como as 4 unidades do Lote 03 antes da Fase 3B.4.",
+    "validated=true e human_source_signoff=APPROVED refletem a decisão humana explícita registrada em human_signoff_record — nada foi inferido nem presumido.",
+    "Restrição humana obrigatória: não afirmar recorrência/incidência histórica na geração (0 questão REAL); usar BANK_STYLE/POLICE_DOMAIN apenas para estilo/dificuldade/forma, nunca para simular incidência real inexistente."
+  ]
+}

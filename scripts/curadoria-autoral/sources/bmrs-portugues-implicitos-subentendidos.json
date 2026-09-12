@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_PT_IMPLICITOS_SUBENTENDIDOS_ESCOPO_UNIDADE",
+  "type": "pedagogical_reference",
+  "course_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unit_id": "1a2158e8-f690-43ab-8ca5-051ba1c0fa3e",
+  "content_id": 25,
+  "applies_to_unit_ids": ["1a2158e8-f690-43ab-8ca5-051ba1c0fa3e"],
+  "title": "Implícitos e subentendidos (BMRS/Fundatec) — escopo pedagógico da unidade [PENDENTE — aguardando sign-off humano, Fase Lote 04]",
+  "reference": "unidades_pedagogicas.escopo (curso_conteudo_id=25, materia_id=6, conteudo_id=46), confirmado ao vivo via consulta LIVE read-only nesta fase — 4 úteis vinculadas (1 REAL + 3 AUTORAL) antes do Lote 04",
+  "content_summary": "Reconhecimento de conteúdo implícito em enunciados, em 4 eixos: EIXO 1 — efeito/leitura escalar (operadores 'até'/'inclusive'/'mesmo' sinalizam posição de menor expectativa do elemento destacado; tratar como conteúdo implícito escalar/implicatura, não rotular simplista e uniformemente como 'pressuposição'). EIXO 2 — pressuposto por mudança de estado ('parar de'/'deixar de'/'cessar'/'começar a' pressupõem a situação imediatamente anterior, sem extrapolar frequência/motivo/duração/resultado não informados). EIXO 3 — pressuposto de retomada ('voltar a' pressupõe interrupção e retomada, sem extrapolar aprovação/motivo/frequência/duração). EIXO 4 — pressuposto/gatilho lexical seriado, REAL Fundatec (adjetivos de renovação como 'novos' aplicados a substantivo de série, ex. 'novos recordes', autorizam a leitura de item(ns) anterior(es) da mesma série — nunca como regra universal 'novo sempre pressupõe algo anterior'; contraste: 'carro novo' tipicamente só indica 'não usado'). Distinção pressuposto (sobrevive à negação, ligado a estrutura/elemento explícito) × subentendido (inferido pragmaticamente do contexto, mas não por isso 'opinião subjetiva' — a inferência continua limitada pelo contexto e pelas condições comunicativas partilhadas). GAP registrado no escopo original: nenhuma questão do corpus testa subentendido pragmático puro (todas as 4 disponíveis dependem de marca linguística explícita) — gap de subassunto explicitamente reconhecido, não unidade separada.",
+  "scope_limits": [
+    "PODE cobrar: efeito escalar de operadores como 'até'/'inclusive'/'mesmo', com frases novas, tratando o efeito como conteúdo implícito/implicatura",
+    "PODE cobrar: pressuposto por mudança de estado ('parar de', 'deixar de', 'cessar', 'começar a'), sem extrapolar frequência/motivo/duração/resultado",
+    "PODE cobrar: pressuposto de retomada ('voltar a'), sem extrapolar aprovação/motivo/frequência/duração",
+    "PODE cobrar: gatilho lexical seriado (adjetivo de renovação/continuidade aplicado a substantivo de série), sempre com frase nova e sem generalizar como regra universal do adjetivo isolado",
+    "PODE cobrar: distinção conceitual pressuposto × subentendido, quando o núcleo da questão for essa distinção em si (não apenas rotular um exemplo)",
+    "NAO PODE testar subentendido pragmático puro sem nenhuma marca linguística explícita — o próprio escopo original registra que isso é GAP_DE_SUBASSUNTO ainda não coberto pelo corpus; se optar por cobrir agora, isso deve ser sinalizado explicitamente como extensão nova do núcleo, nunca apresentado como se já fosse prática consolidada",
+    "NAO PODE apresentar qualquer um dos 4 eixos como regra universal aplicável a qualquer ocorrência da palavra-gatilho fora de contexto — a leitura depende sempre da construção concreta (ex.: 'carro novo' não ativa o mesmo pressuposto seriado de 'novos recordes')",
+    "NAO PODE se ampliar para interpretação textual global de texto longo — os itens devem ser autocontidos (frase ou período curto), mantendo o padrão do corpus"
+  ],
+  "proposed_distribution_next_batch": [
+    { "subtema": "eixo 1 — efeito escalar ('até'/'inclusive'/'mesmo')", "quantidade": 2 },
+    { "subtema": "eixo 2 — pressuposto por mudança de estado", "quantidade": 2 },
+    { "subtema": "eixo 3 — pressuposto de retomada", "quantidade": 1 },
+    { "subtema": "eixo 4 — gatilho lexical seriado", "quantidade": 1 },
+    { "subtema": "candidata extra de reserva (distinção pressuposto × subentendido, ou variação de qualquer eixo acima)", "quantidade": 1, "authorization_status": "SCOPE_AUDITED_READY" }
+  ],
+  "incidencia_real": "PARCIAL",
+  "incidencia_nota": "1 questão REAL vinculada (eixo 4, gatilho lexical seriado), mais 3 AUTORAL suplementares. Amostra real de apenas 1 questão — não sustenta afirmação de recorrência ou de que a Fundatec priorize especificamente adjetivos como gatilho, exatamente como já registrado no escopo original.",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote04",
+  "validated_at": "2026-09-12T00:00:00Z",
+  "process_validation": {
+    "status": "SCOPE_AUDITED_BY_ASSISTANT",
+    "audited_at": "2026-09-12T00:00:00Z",
+    "method": "Leitura integral de unidades_pedagogicas.escopo via consulta LIVE read-only (Lote 04, Seção 1/2), sem pesquisa externa, sem chamada de API. Isto é validação de PROCESSO, NÃO é, por si só, sign-off humano — a decisão humana explícita está registrada separadamente em human_signoff_record."
+  },
+  "human_source_signoff": "APPROVED",
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-12T00:00:00Z",
+    "phase": "Lote 04",
+    "evidence": "Aprovação explícita recebida no mandato 'PAPIRO — LOTE 04 — HUMAN SOURCE SIGN-OFF': 'APROVADOS os 4 source manifests do Lote 04: ... 3. Implícitos e subentendidos ...' com restrição humana obrigatória registrada literalmente: 'geração autorizada; manter os 4 eixos auditados; NÃO gerar subentendido pragmático puro sem marca linguística explícita; não ampliar para interpretação textual longa.' Registrado literalmente, não inferido."
+  },
+  "notes": [
+    "Unidade selecionada por déficit 6 (empatada com Crase e Significação das palavras); escopo é o mais detalhado dos 4 candidatos (4 eixos + método + regra de bolso + GAP já documentado), risco normativo baixo (fenômeno linguístico, não legal), mas risco de ambiguidade editorial moderado por ser conteúdo pragmático/interpretativo — exige atenção redobrada na revisão humana de cada gabarito.",
+    "O GAP_DE_SUBASSUNTO (subentendido pragmático puro) foi deliberadamente NÃO incluído na distribuição proposta acima, e o sign-off humano do Lote 04 reafirmou explicitamente essa exclusão ('NÃO gerar subentendido pragmático puro sem marca linguística explícita').",
+    "validated=true e human_source_signoff=APPROVED refletem a decisão humana explícita registrada em human_signoff_record — nada foi inferido nem presumido."
+  ]
+}

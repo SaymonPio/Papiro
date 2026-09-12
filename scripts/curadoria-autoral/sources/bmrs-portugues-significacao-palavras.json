@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_PT_SIGNIFICACAO_PALAVRAS_ESCOPO_UNIDADE",
+  "type": "pedagogical_reference",
+  "course_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unit_id": "290650b5-0f55-49e1-871e-932003447e41",
+  "content_id": 23,
+  "applies_to_unit_ids": ["290650b5-0f55-49e1-871e-932003447e41"],
+  "title": "Significação das palavras (BMRS/Fundatec) — escopo pedagógico da unidade [PENDENTE — aguardando sign-off humano, Fase Lote 04]",
+  "reference": "unidades_pedagogicas.escopo (curso_conteudo_id=23, materia_id=6, conteudo_id=59), confirmado ao vivo via consulta LIVE read-only nesta fase — 4 úteis vinculadas (3 REAL + 1 AUTORAL) antes do Lote 04",
+  "content_summary": "Significado lexical de uma palavra dentro do seu contexto de ocorrência, e sinonímia contextual: antes de aceitar uma substituição lexical, verificar se sentido, contexto específico, registro/nuance de quem fala, classe gramatical/função sintática e correção gramatical da construção permanecem compatíveis, e se o sentido global do trecho é preservado (sinônimo de dicionário não é substituição automaticamente válida). Distinção explícita entre sinonímia contextual (equivalência aceitável só dentro do contexto dado, com nuances de registro entre os termos — ex. 'caquéticos', pejorativo, e 'matusaléns', humorístico/afetivo, ambos designando 'pessoas mais velhas' apenas na lógica do texto específico) e sinonímia absoluta (validade em qualquer contexto — não deve ser ensinada como regra geral). Cobertura secundária/suplementar (só questão autoral, sem incidência real): paronímia — pares de grafia/pronúncia semelhantes e significados distintos (ex. 'eminente' = ilustre/elevado/notável × 'iminente' = prestes a acontecer).",
+  "scope_limits": [
+    "PODE cobrar: reconhecimento do significado lexical de uma palavra/expressão dentro do contexto específico de ocorrência",
+    "PODE cobrar: julgamento de validade de uma substituição lexical proposta, verificando sentido, contexto, registro/nuance, classe gramatical e correção gramatical resultante",
+    "PODE cobrar: distinção explícita entre sinonímia contextual (válida só naquele contexto) e sinonímia absoluta (válida em qualquer contexto), quando o núcleo da questão for essa distinção",
+    "PODE cobrar: paronímia (pares como 'eminente'/'iminente'), como núcleo próprio de questão, ainda que sustentada hoje só por prática autoral",
+    "NAO PODE tratar um sinônimo de dicionário como automaticamente válido para qualquer contexto sem checar registro, nuance ou compatibilidade sintática — essa é exatamente a armadilha central que o escopo original pede para explorar",
+    "NAO PODE ampliar para figuras de linguagem nomeadas tecnicamente (metáfora, metonímia etc.) como habilidade nuclear — se a questão exigir nomear a figura, isso pertence a Denotação e conotação ou a outro conteúdo, não a esta unidade, cujo núcleo é a validade da substituição/o significado contextual",
+    "NAO PODE depender de compreensão global de texto longo — os itens devem ser autocontidos (frase ou período curto, ou par curto de termos), mantendo o padrão do corpus"
+  ],
+  "proposed_distribution_next_batch": [
+    { "subtema": "significado lexical em contexto (reconhecimento direto)", "quantidade": 2 },
+    { "subtema": "julgamento de validade de substituição lexical (sentido/registro/classe gramatical)", "quantidade": 2 },
+    { "subtema": "distinção sinonímia contextual × sinonímia absoluta", "quantidade": 1 },
+    { "subtema": "paronímia", "quantidade": 1 },
+    { "subtema": "candidata extra de reserva (variação de qualquer subtema acima, par lexical novo)", "quantidade": 1, "authorization_status": "SCOPE_AUDITED_READY" }
+  ],
+  "incidencia_real": "PARCIAL",
+  "incidencia_nota": "3 questões REAL já vinculadas (sinonímia contextual), mais 1 AUTORAL suplementar (paronímia, sem sustento real ainda). Déficit de 6 exige geração autoral suplementar; nenhuma alegação de recorrência é extrapolada além dos 3 casos reais.",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote04",
+  "validated_at": "2026-09-12T00:00:00Z",
+  "process_validation": {
+    "status": "SCOPE_AUDITED_BY_ASSISTANT",
+    "audited_at": "2026-09-12T00:00:00Z",
+    "method": "Leitura integral de unidades_pedagogicas.escopo via consulta LIVE read-only (Lote 04, Seção 1/2), sem pesquisa externa, sem chamada de API. Isto é validação de PROCESSO, NÃO é, por si só, sign-off humano — a decisão humana explícita está registrada separadamente em human_signoff_record."
+  },
+  "human_source_signoff": "APPROVED",
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-12T00:00:00Z",
+    "phase": "Lote 04",
+    "evidence": "Aprovação explícita recebida no mandato 'PAPIRO — LOTE 04 — HUMAN SOURCE SIGN-OFF': 'APROVADOS os 4 source manifests do Lote 04: ... 4. Significação das palavras' com restrição humana obrigatória registrada literalmente: 'geração autorizada; manter foco em significado contextual, substituição lexical, sinonímia contextual × absoluta e paronímia; não ampliar para figuras de linguagem como núcleo.' Registrado literalmente, não inferido."
+  },
+  "notes": [
+    "Unidade selecionada por déficit 6 (empatada com Crase e Implícitos e subentendidos); escopo claro, baixo risco normativo (fenômeno lexical, não legal), boa base real (3 questões) para calibrar dificuldade/formato das novas.",
+    "validated=true e human_source_signoff=APPROVED refletem a decisão humana explícita registrada em human_signoff_record — nada foi inferido nem presumido."
+  ]
+}

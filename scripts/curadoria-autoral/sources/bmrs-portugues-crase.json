@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_PT_CRASE_ESCOPO_UNIDADE",
+  "type": "pedagogical_reference",
+  "course_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "unit_id": "57bf73b4-ca89-4809-bc8d-7bf1ae7fa4c2",
+  "content_id": 15,
+  "applies_to_unit_ids": ["57bf73b4-ca89-4809-bc8d-7bf1ae7fa4c2"],
+  "title": "Crase (BMRS/Fundatec) — escopo pedagógico da unidade [PENDENTE — aguardando sign-off humano, Fase Lote 04]",
+  "reference": "unidades_pedagogicas.escopo (curso_conteudo_id=15, materia_id=6, conteudo_id=5), confirmado ao vivo via consulta LIVE read-only nesta fase — 4 úteis vinculadas (3 REAL + 1 AUTORAL) antes do Lote 04",
+  "content_summary": "Crase como fusão da preposição 'a' (exigida por regência do termo anterior) com o artigo definido feminino 'a/as' (admitido pelo termo seguinte), via raciocínio em 4 passos: o termo anterior exige preposição 'a'? o termo seguinte admite artigo 'a/as'? os dois coexistem? se sim, ocorre crase — nunca decidida por decoreba de listas isoladas. Casos de crase obrigatória por regência com substantivo feminino determinado (singular/plural) e locuções adverbiais femininas cristalizadas ('à tona'); casos de ausência de crase sem formulação absoluta: antes de palavra masculina (ressalva de construções elípticas 'à moda de'/'à maneira de'), antes de infinitivo, e entre palavras repetidas ('frente a frente', 'cara a cara', 'gota a gota'); teste de substituição por equivalente masculino tratado como heurística auxiliar, não definição universal (não resolve sozinho locuções, nomes próprios, possessivos, casos facultativos ou construções controversas); caso específico 'motor à combustão' (Q328) como zona de variação doutrinária/normativa da banca Fundatec (Bechara × Cegalla), sem universalizar a decisão específica da banca. Cobertura secundária (sem peso equivalente ao núcleo, ausente do corpus real): crase facultativa (possessivo feminino, nome próprio feminino) e outras fusões com 'a' (aquele/aquela/a qual/as quais).",
+  "scope_limits": [
+    "PODE cobrar: raciocínio em 4 passos (regência do termo anterior + admissão de artigo pelo termo seguinte) aplicado a frases novas",
+    "PODE cobrar: crase obrigatória por regência com substantivo feminino determinado, singular ou plural",
+    "PODE cobrar: locuções adverbiais femininas cristalizadas (ex. 'à tona'), com frases novas",
+    "PODE cobrar: ausência de crase antes de palavra masculina, antes de infinitivo, ou entre palavras repetidas — sempre com a ressalva de casos elípticos quando pertinente",
+    "PROIBIDO (restrição humana explícita, Lote 04): criar questão cujo GABARITO dependa da controvérsia 'motor à combustão' ou de qualquer outra zona de variação doutrinária — variação doutrinária NÃO PODE ser núcleo decisivo do gabarito; pode no máximo aparecer como menção lateral não decisória, nunca como base da resposta correta",
+    "NAO PODE apresentar o teste de substituição por equivalente masculino como regra infalível/universal — deve ser sempre acompanhado da ressalva de que não resolve locuções, nomes próprios, possessivos ou casos controversos sozinho",
+    "NAO PODE tratar crase facultativa como núcleo principal da questão (é cobertura apenas secundária, sem sustento no corpus real) — pode aparecer como distrator, nunca como gabarito central sem nota editorial",
+    "NAO PODE ampliar para regência verbal/nominal geral desvinculada do fenômeno específico da crase — isso pertence a Regência verbal e nominal, já concluída"
+  ],
+  "proposed_distribution_next_batch": [
+    { "subtema": "crase obrigatória por regência (substantivo feminino determinado)", "quantidade": 3 },
+    { "subtema": "locução adverbial feminina cristalizada", "quantidade": 1 },
+    { "subtema": "ausência de crase (palavra masculina / infinitivo / palavras repetidas)", "quantidade": 2 },
+    { "subtema": "candidata extra de reserva (crase facultativa como distrator secundário ou variação de qualquer subtema estável acima)", "quantidade": 1, "authorization_status": "SCOPE_AUDITED_READY" }
+  ],
+  "zona_variacao_doutrinaria_authorization": "PROHIBITED_AS_GABARITO_CORE",
+  "incidencia_real": "PARCIAL",
+  "incidencia_nota": "3 questões REAL já vinculadas a esta unidade (evidência de incidência genuína da Fundatec), mais 1 AUTORAL suplementar. Distinto das demais unidades deste lote — aqui já existe alguma base real, mas o déficit (6) ainda exige geração autoral suplementar; nenhuma alegação de recorrência é extrapolada além do que os 3 casos reais sustentam.",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote04",
+  "validated_at": "2026-09-12T00:00:00Z",
+  "process_validation": {
+    "status": "SCOPE_AUDITED_BY_ASSISTANT",
+    "audited_at": "2026-09-12T00:00:00Z",
+    "method": "Leitura integral de unidades_pedagogicas.escopo via consulta LIVE read-only (Lote 04, Seção 1/2), sem pesquisa externa, sem chamada de API. Isto é validação de PROCESSO, NÃO é, por si só, sign-off humano — a decisão humana explícita está registrada separadamente em human_signoff_record."
+  },
+  "human_source_signoff": "APPROVED",
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-12T00:00:00Z",
+    "phase": "Lote 04",
+    "evidence": "Aprovação explícita recebida no mandato 'PAPIRO — LOTE 04 — HUMAN SOURCE SIGN-OFF': 'APROVADOS os 4 source manifests do Lote 04: ... 2. Crase ...' com restrição humana obrigatória registrada literalmente: 'geração autorizada; privilegiar casos normativos estáveis; PROIBIDO criar questão cujo gabarito dependa da controvérsia \"motor à combustão\" ou outra zona de variação doutrinária; variação doutrinária não pode ser núcleo decisivo do gabarito; manter foco em: regência + artigo; crase obrigatória estável; locuções femininas estáveis; ausência de crase.' Registrado literalmente, não inferido. Em consequência, o slot de distribuição antes reservado à zona de variação doutrinária foi removido de proposed_distribution_next_batch e redistribuído para o subtema estável 'crase obrigatória por regência' (2→3), mantendo o total de 7 candidatas já definido, sem recriar planejamento de quantidade."
+  },
+  "notes": [
+    "Unidade selecionada por déficit 6 (empatada com Implícitos e subentendidos e Significação das palavras), escopo claro e detalhado, baixo risco normativo (fundamentação gramatical em Bechara/Cegalla, não em lei/decreto).",
+    "O caso 'motor à combustão' (zona de variação doutrinária) foi EXPLICITAMENTE PROIBIDO pelo humano como núcleo decisivo de gabarito no sign-off do Lote 04 — ver zona_variacao_doutrinaria_authorization=PROHIBITED_AS_GABARITO_CORE e human_signoff_record acima. O escopo original já registrava isso como zona de cautela; a restrição humana do Lote 04 tornou essa cautela uma proibição efetiva para fins de geração.",
+    "validated=true e human_source_signoff=APPROVED refletem a decisão humana explícita registrada em human_signoff_record — nada foi inferido nem presumido."
+  ]
+}
