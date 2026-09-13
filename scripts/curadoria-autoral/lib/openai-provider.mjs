@@ -59,7 +59,12 @@ export const QUESTION_GENERATION_JSON_SCHEMA = Object.freeze({
             type: "object",
             additionalProperties: false,
             properties: {
-              tipo: { type: "string", enum: ["regra_gramatical"] },
+              // "regra_normativa" (Lote 08): antes so "regra_gramatical" existia,
+              // o que forcava toda questao legislativa a rotular seu fundamento
+              // como regra de gramatica — nao e um enum inventado, e a correcao
+              // do proprio contrato para refletir que fundamento pode ser uma
+              // regra normativa (diploma+artigo), nunca so gramatical/semantica.
+              tipo: { type: "string", enum: ["regra_gramatical", "regra_normativa"] },
               referencia: { type: "string" },
               descricao: { type: "string" },
             },

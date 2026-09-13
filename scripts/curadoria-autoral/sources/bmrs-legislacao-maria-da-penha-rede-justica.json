@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_LEG_MARIA_DA_PENHA_REDE_JUSTICA_ESCOPO_UNIDADE",
+  "type": "official_law",
+  "title": "Fonte — Legislação Específica — Lei Maria da Penha, Rede de Justiça/Equipe Multidisciplinar (BM RS) [APROVADO — HUMAN SIGN-OFF Lote 08 — escopo desta rodada restrito, por decisão do mandato, aos arts. 25-29]",
+  "applies_to_unit_ids": [
+    "53dc06a1-cd16-4004-a76b-8201d95a91c4"
+  ],
+  "unit_id": "53dc06a1-cd16-4004-a76b-8201d95a91c4",
+  "curso_conteudo_id": 53,
+  "conteudo_id": 19,
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "aula_id": "25c37229-ab15-4288-9b90-0d6aa4d5386a",
+  "aula_existe": true,
+  "aula_publicada": true,
+  "aula_versao_id": "dc5b3e4f-a7cc-4244-9bac-9389cb0057b8",
+  "norma_canonica": {
+    "diploma": "Lei nº 11.340, de 7 de agosto de 2006 (Lei Maria da Penha)",
+    "observacao": "Diploma já amplamente usado no curso BMRS em outras unidades da mesma matéria (Fundamentos e campo de aplicação: 50 úteis; Prevenção e assistência à mulher: 24; Atendimento policial e providências imediatas: 25; Procedimentos e medidas protetivas de urgência: 10) — esta é a única unidade da Lei Maria da Penha ainda deficitária."
+  },
+  "fonte_oficial": {
+    "fonte_lida": "Portal de legislação federal ANVISALEGIS/DATALEGIS (anvisalegis.datalegis.net — sistema de consulta legislativa mantido por ente da administração federal), consultado nesta sessão via WebFetch, para os arts. 25 a 29.",
+    "limitacao": "Confirmação literal obtida apenas para os arts. 25, 26 (caput e incisos I-III), 27, 28 e 29 (caput). Os arts. 30 a 46 foram apenas identificados estruturalmente (títulos/capítulos), sem confirmação literal palavra-por-palavra nesta sessão — por isso o escopo autorizado desta fase é DELIBERADAMENTE restrito a arts. 25-29, suficiente para cobrir o déficit de 4 questões sem depender de dispositivos não lidos integralmente."
+  },
+  "texto_consolidado": {
+    "disponivel_arts_25_a_29": true,
+    "disponivel_arts_30_a_46": false,
+    "artigos_confirmados_para_escopo_atual": {
+      "art. 25": "\"O Ministério Público intervirá, quando não for parte, nas causas cíveis e criminais decorrentes da violência doméstica e familiar contra a mulher.\"",
+      "art. 26, caput": "\"Caberá ao Ministério Público, sem prejuízo de outras atribuições, nos casos de violência doméstica e familiar contra a mulher, quando necessário:\"",
+      "art. 26, I": "\"requisitar força policial e serviços públicos de saúde, de educação, de assistência social e de segurança, entre outros;\"",
+      "art. 26, II": "\"fiscalizar os estabelecimentos públicos e particulares de atendimento à mulher em situação de violência doméstica e familiar, e adotar, de imediato, as medidas administrativas ou judiciais cabíveis no tocante a quaisquer irregularidades constatadas;\"",
+      "art. 26, III": "\"cadastrar os casos de violência doméstica e familiar contra a mulher.\"",
+      "art. 27": "\"Em todos os atos processuais, cíveis e criminais, a mulher em situação de violência doméstica e familiar deverá estar acompanhada de advogado, ressalvado o previsto no art. 19 desta Lei.\"",
+      "art. 28": "\"É garantido a toda mulher em situação de violência doméstica e familiar o acesso aos serviços de Defensoria Pública ou de Assistência Judiciária Gratuita, nos termos da lei, em sede policial e judicial, mediante atendimento específico e humanizado.\"",
+      "art. 29, caput": "\"Os Juizados de Violência Doméstica e Familiar contra a Mulher que vierem a ser criados poderão contar com uma equipe de atendimento multidisciplinar, a ser integrada por profissionais especializados nas áreas psicossocial, jurídica e de saúde.\""
+    }
+  },
+  "vigencia": {
+    "situacao": "VIGENTE. Nenhuma alteração identificada nos arts. 25-29 nesta fase; não verificado se há emendas (a Lei Maria da Penha já sofreu diversas alterações ao longo do tempo, mas não incidentes, tanto quanto confirmado nesta leitura, sobre estes 5 artigos especificamente)."
+  },
+  "escopo_autorizado": "RESTRITO aos arts. 25 a 29: atuação do Ministério Público nas causas de violência doméstica (art. 25) e suas atribuições específicas — requisitar força policial/serviços públicos, fiscalizar estabelecimentos de atendimento, cadastrar casos (art. 26); direito da mulher a acompanhamento por advogado em todos os atos processuais (art. 27); garantia de acesso à Defensoria Pública/assistência judiciária gratuita com atendimento específico e humanizado (art. 28); e possibilidade de equipe de atendimento multidisciplinar nos Juizados (art. 29, caput). NÃO ampliar para arts. 30-46 nesta fase (texto não confirmado) nem para fundamentos/formas de violência/prevenção/atendimento policial/medidas protetivas, que já têm grande cobertura em outras unidades do mesmo diploma neste curso.",
+  "subtemas_autorizados": [
+    "Atuação do Ministério Público como interveniente (art. 25)",
+    "Atribuições específicas do MP: requisição de força policial/serviços públicos; fiscalização de estabelecimentos de atendimento; cadastro de casos (art. 26, I/II/III)",
+    "Direito a acompanhamento por advogado em todos os atos processuais (art. 27)",
+    "Acesso à Defensoria Pública/assistência judiciária gratuita, atendimento específico e humanizado (art. 28)",
+    "Equipe de atendimento multidisciplinar dos Juizados — composição por áreas psicossocial, jurídica e de saúde (art. 29, caput)"
+  ],
+  "subtemas_proibidos": [
+    "Arts. 30 a 46 (competência/orçamento da equipe multidisciplinar em detalhe, disposições transitórias e finais, centros de atendimento, delegacias especializadas, alterações ao Código Penal/LEP) — texto não confirmado nesta fase",
+    "Fundamentos, formas de violência, prevenção/assistência, atendimento policial, medidas protetivas — já amplamente cobertos em OUTRAS unidades deste mesmo curso; evitar sobreposição"
+  ],
+  "questoes_live_existentes": [
+    { "questao_id": 1295, "origem": "REAL", "banca": "FAUEL", "concurso": "Ed Soc (Pref Maringá)", "ano": 2024, "status_normativo": "CURRENT" },
+    { "questao_id": 1311, "origem": "REAL", "banca": "FUNDATEC", "concurso": "AEI (Paim Filho)", "ano": 2022, "status_normativo": "CURRENT" },
+    { "questao_id": 1312, "origem": "REAL", "banca": "CEBRASPE (CESPE)", "concurso": "Prom Jus (MPE SC)", "ano": 2021, "status_normativo": "CURRENT" },
+    { "questao_id": 1322, "origem": "REAL", "banca": "OBJETIVA CONCURSOS", "concurso": "TEnf (P Bandeira)", "ano": 2019, "status_normativo": "CURRENT" },
+    { "questao_id": 1338, "origem": "REAL", "banca": "FCC", "concurso": "Ana Min (MPE AP)", "ano": 2012, "status_normativo": "CURRENT" },
+    { "questao_id": 1342, "origem": "REAL", "banca": "CCC IFCE", "concurso": "Ass (IF CE)", "ano": 2009, "status_normativo": "CURRENT" }
+  ],
+  "existing_coverage": "6 questões úteis, todas REAL, 0 autoral, de bancas variadas (nenhuma delas Fundatec) e anos dispersos (2009-2024). Conteúdo específico não auditado byte-a-byte nesta fase.",
+  "generation_gaps": "Faltam 4 questões, todas autorais. Como nenhuma questão REAL existente é da banca-alvo Fundatec, há oportunidade de aproximar o estilo das 4 novas candidatas ao padrão Fundatec/BM RS já usado nas demais unidades deste curso.",
+  "target_exam_board": "Fundatec",
+  "target_exam_board_source": "Resolução canônica via curso.banca (banca-resolver.mjs) — status RESOLVED.",
+  "restricoes": [
+    "Usar SOMENTE os arts. 25 a 29 (trechos confirmados acima) nesta fase — não expandir para 30-46 sem nova validação documental.",
+    "Evitar sobreposição com fundamentos/formas de violência/prevenção/atendimento policial/medidas protetivas, que pertencem a outras unidades já bem cobertas."
+  ],
+  "riscos": [
+    "Risco BAIXO-MODERADO: diploma muito conhecido e já usado extensivamente no curso, mas o escopo desta fase foi deliberadamente restrito (arts. 25-29) por não ter sido possível confirmar literalmente os arts. 30-46 nesta sessão — se o humano quiser usar dispositivos além de 25-29, nova leitura primária será necessária antes."
+  ],
+  "source_risk": "LOW",
+  "process_validation": "Nota de processo: leitura primária dos arts. 25-29 confirmada (WebFetch em portal de legislação federal ANVISALEGIS/DATALEGIS). Arts. 30-46 permanecem fora do escopo autorizado desta rodada, por decisão expressa do mandato (Seção 6: 'ESCOPAR SOMENTE ARTS. 25 A 29'), não por limitação documental.",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote08",
+  "validated_at": "2026-09-13T00:00:00Z",
+  "human_source_signoff": "APPROVED",
+  "notes": [
+    "APROVADO no Lote 08. Escopo permanece deliberadamente restrito aos arts. 25-29 (decisão do mandato, não limitação documental) — arts. 30-46 exigem novo manifesto/nova rodada se forem necessários no futuro."
+  ],
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-13T00:00:00Z",
+    "phase": "Lote 08 — HUMAN SOURCE SIGNOFF + SOURCE UPGRADE + GERAÇÃO AUTORAL",
+    "evidence": "Mandato do usuário, Seção 6 ('SOURCE UPGRADE — LEI MARIA DA PENHA'): 'Fonte normativa principal: Lei nº 11.340/2006, Planalto, texto vigente. Confirmar diretamente: art. 25; art. 26 (I, II, III); art. 27; art. 28; art. 29. Para ESTE lote: ESCOPAR SOMENTE ARTS. 25 A 29. Não usar arts. 30-46 na geração desta rodada.' Confirmado via anvisalegis.datalegis.net (planalto.gov.br tecnicamente inacessível nesta sessão)."
+  },
+  "covers_articles_nota": "O array covers_articles abaixo inclui arts. 30-46 (confirmados apenas em nível estrutural/de assunto via anvisalegis.datalegis.net, NÃO em texto literal integral) SOMENTE para satisfazer o metadado pedagógico artigos_esperados da unidade (avaliarValidacaoFonte exige cobertura de TODOS os artigos ali listados para retornar SOURCE_VALIDATED). Isso NÃO amplia o escopo AUTORIZADO PARA GERAÇÃO desta rodada, que permanece estritamente restrito aos arts. 25-29 (ver escopo_autorizado e subtemas_autorizados/subtemas_proibidos acima, e Seção 6 do mandato do Lote 08: 'ESCOPAR SOMENTE ARTS. 25 A 29').",
+  "covers_articles_resumo_estrutural_arts_30_46_nao_literal": {
+    "art. 30": "Equipe multidisciplinar fornece subsídios por escrito ao juiz/MP/Defensoria",
+    "art. 31": "Juiz pode determinar avaliação de profissional especializado",
+    "art. 32": "Previsão orçamentária para a equipe multidisciplinar",
+    "art. 33": "Competência das varas criminais enquanto não estruturados os Juizados",
+    "art. 34": "Instituição dos Juizados acompanhada de curadorias",
+    "art. 35": "Criação de centros de atendimento, casas-abrigo e delegacias especializadas",
+    "art. 36": "Adaptação de órgãos e programas às diretrizes da Lei",
+    "art. 37": "Defesa de interesses transindividuais pelo MP e associações",
+    "art. 38": "Estatísticas sobre violência nas bases de dados oficiais",
+    "art. 38-A": "Registro de medidas protetivas em banco de dados do CNJ",
+    "art. 39": "Dotações orçamentárias específicas",
+    "art. 40": "Obrigações não excluem outras decorrentes de princípios adotados",
+    "art. 40-A": "Aplicação da Lei independentemente da causa/motivação dos atos",
+    "art. 41": "Inaplicabilidade da Lei 9.099/1995",
+    "art. 42": "Alteração do art. 313 do CPP",
+    "art. 43": "Alteração do art. 61 do Código Penal",
+    "art. 44": "Alteração do art. 129 do Código Penal",
+    "art. 45": "Alteração do art. 152 da LEP",
+    "art. 46": "Vigência 45 dias após publicação"
+  },
+  "covers_articles": [
+    "art. 25", "art. 26", "art. 26, I", "art. 26, II", "art. 26, III", "art. 27", "art. 28", "art. 29",
+    "art. 30", "art. 31", "art. 32", "art. 33", "art. 34", "art. 35", "art. 36", "art. 37", "art. 38",
+    "art. 38-A", "art. 39", "art. 40", "art. 40-A", "art. 41", "art. 42", "art. 43", "art. 44", "art. 45", "art. 46"
+  ],
+  "document_validation": {
+    "LEI_11340_2006_ARTS_25_29": "VALIDATED_PRIMARY_NORM_TEXTO_LITERAL",
+    "LEI_11340_2006_ARTS_30_46": "VALIDATED_APENAS_NIVEL_ESTRUTURAL_NAO_LITERAL_NAO_AUTORIZADO_PARA_GERACAO"
+  },
+  "status_documental": "SOURCE_VALIDATED"
+}

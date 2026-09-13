@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_LEG_IMPROBIDADE_ADMINISTRATIVA_ESCOPO_UNIDADES",
+  "type": "official_law",
+  "title": "Fonte — Legislação Específica — Improbidade Administrativa (BM RS) [APROVADO — HUMAN SIGN-OFF Lote 08 — cobre 2 unidades pedagógicas distintas, mesmo diploma — confirmado por 2 fontes oficiais convergentes]",
+  "applies_to_unit_ids": [
+    "9d4c7a1e-3f68-4b52-8a91-6c0d5e2f7b84",
+    "60927a85-1b4a-480a-b8da-8eb318520692"
+  ],
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "materia_id": 10,
+  "curso_conteudo_id": 55,
+  "conteudo_id": 64,
+  "unidades_pedagogicas": [
+    { "unit_id": "9d4c7a1e-3f68-4b52-8a91-6c0d5e2f7b84", "titulo": "Sujeitos, Sanções e Processo de Improbidade", "escopo_desta_unidade": ["art. 1º", "art. 2º", "art. 3º", "art. 8º-A", "art. 12", "art. 17", "art. 23"] },
+    { "unit_id": "60927a85-1b4a-480a-b8da-8eb318520692", "titulo": "Atos de Improbidade Administrativa", "escopo_desta_unidade": ["art. 1º, §§1º a 3º", "art. 9º", "art. 10", "art. 11"] }
+  ],
+  "norma_canonica": {
+    "diploma_original": "Lei nº 8.429, de 2 de junho de 1992",
+    "diploma_reforma": "Lei nº 14.230, de 25 de outubro de 2021 (reforma ampla — introduziu exigência de DOLO, revogou arts. 4º/5º/6º/9º-A/10-A, alterou substancialmente arts. 1º/2º/3º/9º/10/11/12/17/23, incluiu art. 8º-A, entre outras mudanças)",
+    "regra_absoluta_do_mandato": "NÃO usar a redação anterior a 2021 como fonte da regra vigente para questão AUTORAL — questões REAL anteriores a 2021 podem servir apenas como referência histórica de estilo/incidência."
+  },
+  "fonte_oficial": {
+    "fonte_normativa_principal_lote08": "anvisalegis.datalegis.net — sistema oficial de consulta legislativa federal (Poder Executivo Federal), lido via WebFetch nesta sessão (Lote 08, SOURCE UPGRADE): confirma diretamente e de forma independente o texto vigente (pós Lei 14.230/2021) dos arts. 9º, 10 e 11, caput.",
+    "limitacao_planalto": "planalto.gov.br apresentou falha de conexão persistente (ECONNRESET) em múltiplas tentativas ao longo de toda a sessão, para esta e outras leis — tecnicamente inacessível neste ambiente nesta execução, não por falta de tentativa. anvisalegis.datalegis.net é usado como fonte primária federal funcionalmente equivalente (sistema oficial de consulta legislativa mantido por órgão da administração federal).",
+    "secondary_official_support": "Tribunal de Justiça de São Paulo (TJSP), CADIP — Centro de Apoio ao Direito Público, publicação especial 'Alterações na Lei 8.429/1992' (5ª ed., revista e atualizada), documento oficial em PDF (tjsp.jus.br/Download/SecaoDireitoPublico/Pdf/Cadip/EspCadipImprobAdm20211026.pdf), contendo comparativo oficial coluna-a-coluna entre a redação de 1992 e a redação vigente dada pela Lei 14.230/2021, com anotações de julgamento das ADIs 7156 e 7236 pelo STF — usado como apoio/corroboração e fonte dos artigos não recobertos pelo datalegis (1º, 2º, 3º, 8º-A, 12, 17, 23), com leitura primária/quase-primária direta do texto vigente extraído localmente (pdftotext) nesta sessão.",
+    "convergencia": "Os arts. 9º, 10 e 11, caput, foram confirmados de forma IDÊNTICA em ambas as fontes (datalegis e TJSP/CADIP) — convergência total, reforçando a confiabilidade do texto."
+  },
+  "texto_consolidado": {
+    "disponivel": true,
+    "artigos_confirmados_para_escopo_atual_redacao_vigente_pos_lei_14230_2021": {
+      "art. 1º, caput": "\"O sistema de responsabilização por atos de improbidade administrativa tutelará a probidade na organização do Estado e no exercício de suas funções, como forma de assegurar a integridade do patrimônio público e social, nos termos desta Lei.\"",
+      "art. 1º, §1º": "\"Consideram-se atos de improbidade administrativa as condutas dolosas tipificadas nos arts. 9º, 10 e 11 desta Lei, ressalvados tipos previstos em leis especiais.\" (STF: dispositivo declarado constitucional — ADIs 7156/7236)",
+      "art. 1º, §2º": "\"Considera-se dolo a vontade livre e consciente de alcançar o resultado ilícito tipificado nos arts. 9º, 10 e 11 desta Lei, não bastando a voluntariedade do agente.\" (STF: constitucional)",
+      "art. 1º, §3º": "\"O mero exercício da função ou desempenho de competências públicas, sem comprovação de ato doloso com fim ilícito, afasta a responsabilidade por ato de improbidade administrativa.\" (STF: constitucional)",
+      "art. 1º, §8º": "\"Não configura improbidade a ação ou omissão decorrente de divergência interpretativa da lei, baseada em jurisprudência, ainda que não pacificada [...]\" — STF, em interpretação conforme (ADIs 7156/7236), fixou que a excludente vale exceto quando evidenciado dolo ou erro grosseiro.",
+      "art. 2º, caput": "\"Para os efeitos desta Lei, consideram-se agente público o agente político, o servidor público e todo aquele que exerce, ainda que transitoriamente ou sem remuneração, por eleição, nomeação, designação, contratação ou qualquer outra forma de investidura ou vínculo, mandato, cargo, emprego ou função nas entidades referidas no art. 1º desta Lei.\"",
+      "art. 3º, caput": "\"As disposições desta Lei são aplicáveis, no que couber, àquele que, mesmo não sendo agente público, induza ou concorra dolosamente para a prática do ato de improbidade.\"",
+      "art. 3º, §1º": "sócios/cotistas/diretores/colaboradores de pessoa jurídica de direito privado não respondem pelo ato de improbidade imputado à pessoa jurídica, salvo participação e benefício comprovados (STF retirou 'e benefícios diretos' — ADIs 7156/7236, efeitos ex tunc, ressalvado trânsito em julgado)",
+      "art. 8º-A": "\"A responsabilidade sucessória de que trata o art. 8º desta Lei aplica-se também na hipótese de alteração contratual, de transformação, de incorporação, de fusão ou de cisão societária.\" Parágrafo único: em fusão/incorporação, a sucessora responde apenas por reparação integral do dano até o limite do patrimônio transferido, salvo simulação/fraude comprovada.",
+      "art. 9º, caput": "\"Constitui ato de improbidade administrativa importando em enriquecimento ilícito auferir, mediante a prática de ato doloso, qualquer tipo de vantagem patrimonial indevida em razão do exercício de cargo, de mandato, de função, de emprego ou de atividade nas entidades referidas no art. 1º desta Lei, e notadamente: [...]\"",
+      "art. 10, caput": "\"Constitui ato de improbidade administrativa que causa lesão ao erário qualquer ação ou omissão dolosa, que enseje, efetiva e comprovadamente, perda patrimonial, desvio, apropriação, malbaratamento ou dilapidação dos bens ou haveres das entidades referidas no art. 1º desta Lei, e notadamente: [...]\" (STF: constitucional)",
+      "art. 11, caput": "\"Constitui ato de improbidade administrativa que atenta contra os princípios da administração pública a ação ou omissão dolosa que viole os deveres de honestidade, de imparcialidade e de legalidade, caracterizada por uma das seguintes condutas: [...]\" (STF: constitucional)",
+      "art. 12, caput": "\"Independentemente do ressarcimento integral do dano patrimonial, se efetivo, e das sanções penais comuns e de responsabilidade, civis e administrativas previstas na legislação específica, está o responsável pelo ato de improbidade sujeito às seguintes cominações, que podem ser aplicadas isolada ou cumulativamente, de acordo com a gravidade do fato:\"",
+      "art. 12, I": "sanções na hipótese do art. 9º: perda dos bens/valores, perda da função pública, suspensão dos direitos políticos até 14 anos, multa civil equivalente ao acréscimo patrimonial, proibição de contratar com o poder público pelo prazo não superior a 14 anos (STF: constitucional)",
+      "art. 17, caput": "\"A ação para a aplicação das sanções de que trata esta Lei será proposta pelo Ministério Público e seguirá o procedimento comum previsto na Lei nº 13.105, de 16 de março de 2015 (Código de Processo Civil), salvo o disposto nesta Lei.\" (texto LITERAL da lei; a redação de 1992 previa também a pessoa jurídica interessada. ATENÇÃO — CORREÇÃO PÓS HUMAN REVIEW LOTE 08, ver 'jurisprudencia_relevante_art_17' abaixo: o STF, nas ADIs 7042 e 7043, declarou a inconstitucionalidade parcial, sem redução de texto, da supressão da legitimidade da pessoa jurídica interessada, restabelecendo legitimidade ATIVA CONCORRENTE E DISJUNTIVA entre Ministério Público e pessoa jurídica interessada. A exclusividade do MP NÃO pode mais ser afirmada como regime vigente sem essa ressalva.)",
+      "art. 23, caput": "\"A ação para a aplicação das sanções previstas nesta Lei prescreve em 8 (oito) anos, contados a partir da ocorrência do fato ou, no caso de infrações permanentes, do dia em que cessou a permanência.\" (nota: substituiu integralmente o regime anterior de prazos múltiplos de 5 anos)"
+    }
+  },
+  "vigencia": {
+    "situacao": "VIGENTE na redação dada pela Lei nº 14.230/2021, com diversos dispositivos submetidos a controle de constitucionalidade pelo STF (ADIs 7156 e 7236) — julgamento confirmou constitucionalidade da maior parte dos dispositivos centrais (arts. 1º §§1º/2º/3º/8º, 10, 11, 12), com uma exceção pontual (expressão 'e benefícios diretos' do art. 3º §1º, declarada inconstitucional com efeitos ex tunc). O art. 17, caput (legitimidade ativa) também sofreu controle de constitucionalidade distinto, nas ADIs 7042 e 7043 — ver 'jurisprudencia_relevante_art_17' abaixo."
+  },
+  "jurisprudencia_relevante_art_17": {
+    "registrado_em": "Human Review Final do Lote 08 (correção documental pós-geração, antes do freeze)",
+    "julgado": "STF, Tribunal Pleno, ADI 7042 e ADI 7043, julgamento em 31/08/2022",
+    "resultado": "Declarada inconstitucionalidade parcial, SEM redução de texto, do art. 17, caput (e dispositivos correlatos) da Lei nº 8.429/1992 na redação da Lei nº 14.230/2021, na parte em que suprimiu a legitimidade ativa da pessoa jurídica interessada. Foi restabelecida a legitimidade ativa CONCORRENTE E DISJUNTIVA entre o Ministério Público e as pessoas jurídicas interessadas para a propositura da ação de improbidade administrativa.",
+    "regra_para_geracao_futura": "Fundamento/gabarito que trate da legitimidade ativa ATUAL para a ação de improbidade NÃO pode afirmar exclusividade do Ministério Público como regra vigente sem essa ressalva — deve considerar a legitimidade concorrente e disjuntiva (MP e pessoa jurídica interessada), reconhecida pelo STF nas ADIs 7042/7043, além do texto literal do art. 17, caput (que, isoladamente e sem a leitura conforme o STF, mencionaria apenas o Ministério Público).",
+    "candidata_afetada_no_lote_08": "ISSP-03 (8d9e16b5-9207-4b91-812b-5eb38f5a0642:q01) afirmava a exclusividade do MP com base apenas no texto literal do art. 17, sem essa ressalva jurisprudencial — classificada HUMAN_CURRENT_LAW_BLOCK, não selecionada, não é reserva, preservada apenas no histórico de curadoria."
+  },
+  "escopo_autorizado_unidade_A_sujeitos_sancoes_processo": "Sujeitos da improbidade (agente público — art. 2º; terceiro que induz/concorre dolosamente — art. 3º), responsabilidade sucessória (art. 8º-A), sanções em geral (art. 12, especialmente inciso I), legitimidade e rito da ação (art. 17), prescrição (art. 23) — e o regime geral do sistema de responsabilização (art. 1º, caput e §§1º-3º/8º).",
+  "escopo_autorizado_unidade_B_atos_de_improbidade": "As três categorias de atos de improbidade tipificados: enriquecimento ilícito (art. 9º, caput), lesão ao erário (art. 10, caput) e violação de princípios (art. 11, caput) — todas exigindo DOLO na redação vigente —, e o regime de sujeição do art. 1º, §§1º a 3º (que define exatamente essas três categorias como as únicas típicas).",
+  "subtemas_proibidos": [
+    "Usar a redação de 1992 (dolo OU culpa; rol exemplificativo não exaustivo do art.11; prazos múltiplos de prescrição) como se fosse a regra vigente — EXPRESSAMENTE PROIBIDO pelo mandato.",
+    "Confundir as duas unidades pedagógicas — a Unidade A (sujeitos/sanções/processo) não deve testar a tipificação dos arts. 9/10/11 em si (isso é da Unidade B), e a Unidade B não deve testar sanções/processo/prescrição (isso é da Unidade A).",
+    "Incisos específicos dos arts. 9º/10º/11º (I, II, III...) não confirmados nesta fase — usar apenas os CAPUTS confirmados, salvo nova validação.",
+    "AFIRMAR LEGITIMIDADE EXCLUSIVA DO MINISTÉRIO PÚBLICO (art. 17, caput) como regime vigente sem a ressalva das ADIs 7042/7043 do STF — a legitimidade ativa vigente é CONCORRENTE E DISJUNTIVA entre MP e pessoa jurídica interessada. Ver 'jurisprudencia_relevante_art_17'. Candidata futura sobre legitimidade ativa deve refletir essa ressalva ou evitar a alternativa 'exclusividade do MP' como gabarito correto."
+  ],
+  "questoes_live_existentes": {
+    "unidade_A_sujeitos_sancoes_processo": [
+      { "questao_id": 42, "origem": "REAL", "banca": "Fundatec", "concurso": "Brigada Militar RS - Soldado", "ano": 2022, "status_normativo": "POTENTIALLY_OUTDATED", "observacao": "Anterior à Lei 14.230/2021 — pode refletir redação revogada (dolo OU culpa, rol exemplificativo). NÃO usar como fonte da regra vigente; preservar como histórico." },
+      { "questao_id": 49, "origem": "REAL", "banca": "Fundatec", "concurso": "Brigada Militar RS - Soldado de Primeira Classe", "ano": 2025, "status_normativo": "CURRENT" },
+      { "questao_id": 361, "origem": "REAL", "banca": "Fundatec", "concurso": "Corpo de Bombeiros Militar RS - Soldado de Primeira Classe", "ano": 2025, "status_normativo": "CURRENT" },
+      { "questao_id": 669, "origem": "REAL", "banca": "Fundatec", "concurso": "GM (Pref Araquari)/Pref Araquari", "ano": 2026, "status_normativo": "CURRENT" },
+      { "questao_id": 731, "origem": "REAL", "banca": "Fundatec", "concurso": "GM (Pref Porto Alegre)/Pref Porto Alegre", "ano": 2025, "status_normativo": "CURRENT" },
+      { "questao_id": 732, "origem": "REAL", "banca": "Fundatec", "concurso": "Del Pol (PC RS)/PC RS", "ano": 2025, "status_normativo": "CURRENT" },
+      { "questao_id": 860, "origem": "REAL", "banca": "Fundatec", "concurso": "Ana Pol Pen (PP RS)/PP RS/Direito", "ano": 2022, "status_normativo": "POTENTIALLY_OUTDATED", "observacao": "Anterior à Lei 14.230/2021 — mesma ressalva de Q42." }
+    ],
+    "unidade_B_atos_de_improbidade": [
+      { "questao_id": 137, "origem": "REAL", "banca": "Fundatec", "concurso": "SUSEPE RS - Agente Penitenciário Administrativo", "ano": 2022, "status_normativo": "POTENTIALLY_OUTDATED" },
+      { "questao_id": 666, "origem": "REAL", "banca": "Fundatec", "concurso": "GM (Pref Araquari)/Pref Araquari", "ano": 2026, "status_normativo": "CURRENT" },
+      { "questao_id": 667, "origem": "REAL", "banca": "Fundatec", "concurso": "GM (Pref Araquari)/Pref Araquari", "ano": 2026, "status_normativo": "CURRENT" },
+      { "questao_id": 668, "origem": "REAL", "banca": "Fundatec", "concurso": "GM (Pref Araquari)/Pref Araquari", "ano": 2026, "status_normativo": "CURRENT" },
+      { "questao_id": 732, "origem": "REAL", "banca": "Fundatec", "concurso": "Del Pol (PC RS)/PC RS", "ano": 2025, "status_normativo": "CURRENT" },
+      { "questao_id": 856, "origem": "REAL", "banca": "Fundatec", "concurso": "Ag Sg Sc (SEJUSP MG)/SEJUSP MG", "ano": 2022, "status_normativo": "POTENTIALLY_OUTDATED" },
+      { "questao_id": 857, "origem": "REAL", "banca": "Fundatec", "concurso": "TA Pol Pen (PP RS)/PP RS", "ano": 2022, "status_normativo": "POTENTIALLY_OUTDATED" },
+      { "questao_id": 858, "origem": "REAL", "banca": "Fundatec", "concurso": "Pol Pen (PP RS)/PP RS", "ano": 2022, "status_normativo": "POTENTIALLY_OUTDATED" },
+      { "questao_id": 859, "origem": "REAL", "banca": "Fundatec", "concurso": "Pol Pen (PP RS)/PP RS", "ano": 2022, "status_normativo": "POTENTIALLY_OUTDATED" }
+    ]
+  },
+  "existing_coverage": "Unidade A: 7 úteis (7 REAL, 0 autoral), pelo menos 2 anteriores à reforma de 2021 (Q42, Q860) — marcadas POTENTIALLY_OUTDATED, não auditadas byte-a-byte nesta fase, mas sinalizadas para checagem antes de qualquer geração para não replicar redação revogada. Unidade B: 9 úteis (9 REAL, 0 autoral), pelo menos 5 anteriores a 2021 (Q137, Q856, Q857, Q858, Q859) — mesma ressalva.",
+  "generation_gaps": "Unidade A: faltam 3 questões (foco sugerido: sujeitos — art.2º/3º; sanções do art.12,I; legitimidade do MP no art.17; prescrição de 8 anos do art.23). Unidade B: falta 1 questão (foco sugerido: distinguir as 3 tipificações — enriquecimento ilícito x lesão ao erário x violação de princípios — todas exigindo dolo).",
+  "target_exam_board": "Fundatec",
+  "target_exam_board_source": "Resolução canônica via curso.banca (banca-resolver.mjs) — status RESOLVED.",
+  "restricoes": [
+    "PROIBIDO usar redação pré-2021 como fundamento de questão autoral nova.",
+    "Questões REAL POTENTIALLY_OUTDATED (Q42, Q860, Q137, Q856, Q857, Q858, Q859) podem servir apenas como referência histórica de estilo/incidência de banca — NUNCA como fonte da regra vigente.",
+    "NÃO usar incisos específicos dos arts. 9º/10º/11º sem nova validação — apenas os caputs confirmados.",
+    "PROIBIDO gerar/aprovar candidata futura que afirme legitimidade EXCLUSIVA do Ministério Público para a ação de improbidade (art. 17) sem a ressalva das ADIs 7042/7043 do STF (legitimidade concorrente e disjuntiva MP + pessoa jurídica interessada)."
+  ],
+  "riscos": [
+    "Risco MODERADO: reforma extensa e recente (2021) com julgamento de constitucionalidade concluído apenas recentemente pelo STF (ADIs 7156/7236) — exige atenção redobrada para não usar formulação pré-reforma, mesmo que amplamente disseminada em materiais desatualizados.",
+    "Maioria das questões REAL já existentes (7 de 16 no total) é anterior à reforma — risco de contaminação de estilo/redação se usadas descuidadamente como referência.",
+    "Risco ESPECÍFICO identificado na Human Review do Lote 08: o texto LITERAL do art. 17, caput, por si só, sugere exclusividade do MP, mas essa leitura isolada está superada pelas ADIs 7042/7043 do STF (legitimidade concorrente e disjuntiva) — fundamento normativo baseado apenas no texto literal do art. 17, sem checar jurisprudência do STF sobre o dispositivo, pode produzir questão juridicamente incorreta quanto ao regime vigente."
+  ],
+  "source_risk": "MODERATE",
+  "process_validation": "Nota de processo: leitura primária direta via anvisalegis.datalegis.net (fonte federal oficial) para arts. 9º/10º/11º, corroborada de forma idêntica pela publicação oficial do TJSP/CADIP (que também cobre os demais artigos do escopo). Documental forte, dupla fonte oficial convergente.",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote08",
+  "validated_at": "2026-09-13T00:00:00Z",
+  "human_source_signoff": "APPROVED",
+  "notes": [
+    "APROVADO no Lote 08 apos SOURCE UPGRADE — fonte normativa principal migrada para anvisalegis.datalegis.net (federal), TJSP/CADIP mantido como secondary_official_support, conforme instruído pelo mandato.",
+    "Manifesto único cobrindo as 2 unidades pedagógicas do mesmo diploma, por decisão do mandato ('sourcing conjunto, mas preservar manifests/unidades pedagógicas distintas') — os campos escopo_autorizado_unidade_A/B mantêm a distinção pedagógica exigida."
+  ],
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-13T00:00:00Z",
+    "phase": "Lote 08 — HUMAN SOURCE SIGNOFF + SOURCE UPGRADE + GERAÇÃO AUTORAL",
+    "evidence": "Mandato do usuário, Seção 1 e Seção 5 ('SOURCE UPGRADE — IMPROBIDADE'): 'Alterar a fonte normativa principal para: Lei nº 8.429/1992 TEXTO COMPILADO OFICIAL DO PLANALTO [...] TJSP/CADIP pode permanecer apenas como secondary_official_support [...] REGRA ABSOLUTA: questão AUTORAL deve refletir a REDAÇÃO VIGENTE.' Upgrade aplicado nesta sessão (fonte federal datalegis como principal, pois planalto.gov.br permaneceu tecnicamente inacessível; TJSP/CADIP rebaixado a secondary_official_support) antes do registro deste sign-off, condicionado conforme Seção 1 do mandato."
+  },
+  "covers_articles": [
+    "art. 1º", "art. 1º, §§1º a 3º", "art. 1º, §1º", "art. 1º, §2º", "art. 1º, §3º", "art. 1º, §8º",
+    "art. 2º", "art. 3º", "art. 8º-A", "art. 9º", "art. 10", "art. 11", "art. 12", "art. 17", "art. 23"
+  ],
+  "document_validation": {
+    "LEI_8429_1992_REDACAO_LEI_14230_2021": "VALIDATED_PRIMARY_NORM"
+  },
+  "status_documental": "SOURCE_VALIDATED"
+}

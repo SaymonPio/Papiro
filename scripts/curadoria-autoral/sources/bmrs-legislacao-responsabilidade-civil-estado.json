@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_LEG_RESPONSABILIDADE_CIVIL_ESTADO_ESCOPO_UNIDADE",
+  "type": "official_law",
+  "title": "Fonte — Legislação Específica — Responsabilidade Civil do Estado (BM RS) [APROVADO — HUMAN SIGN-OFF Lote 08]",
+  "applies_to_unit_ids": [
+    "d6f03d69-8943-4867-a2af-e37482d4ca99"
+  ],
+  "unit_id": "d6f03d69-8943-4867-a2af-e37482d4ca99",
+  "curso_conteudo_id": 61,
+  "conteudo_id": 76,
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "norma_canonica": {
+    "diploma": "Constituição Federal de 1988",
+    "dispositivo": "art. 37, §6º",
+    "ementa_do_dispositivo": "Responsabilidade civil objetiva das pessoas jurídicas de direito público e das de direito privado prestadoras de serviços públicos, por danos causados por seus agentes a terceiros, assegurado o direito de regresso em caso de dolo ou culpa."
+  },
+  "fonte_oficial": {
+    "fonte_lida": "Senado Federal, LEGIS (legis.senado.leg.br/norma/579494/publicacao/16434817) — texto multivigente atualizado da Constituição Federal, consultado nesta fase via WebFetch.",
+    "metodo": "Leitura primária direta do texto do art. 37, §6º nesta sessão.",
+    "limitacao": "Não foi lido o texto de nenhum outro parágrafo do art. 37 além do §6º — não presumir cobertura de outros incisos/parágrafos deste artigo."
+  },
+  "texto_consolidado": {
+    "disponivel": true,
+    "artigos_confirmados_para_escopo_atual": {
+      "art. 37, §6º": "\"As pessoas jurídicas de direito público e as de direito privado prestadoras de serviços públicos responderão pelos danos que seus agentes, nessa qualidade, causarem a terceiros, assegurado o direito de regresso contra o responsável nos casos de dolo ou culpa.\""
+    }
+  },
+  "vigencia": {
+    "situacao": "VIGENTE. Dispositivo constitucional original de 1988, sem alteração por emenda até a presente leitura.",
+    "observacao": "Não foi verificada, nesta fase, a existência de eventual PEC tramitando sobre a matéria — apenas confirmado que o texto lido corresponde à redação original vigente."
+  },
+  "escopo_autorizado": "Responsabilidade civil objetiva do Estado (e das pessoas jurídicas de direito privado prestadoras de serviço público) por danos causados por seus agentes, nos termos EXATOS do art. 37, §6º, da CF/88: (a) sujeitos responsáveis (pessoas jurídicas de direito público e de direito privado prestadoras de serviço público); (b) fato gerador (dano causado por agente, nessa qualidade, a terceiro); (c) direito de regresso contra o agente responsável, condicionado a dolo ou culpa deste. NÃO ampliar automaticamente para teorias doutrinárias (risco administrativo, risco integral, excludentes de responsabilidade, omissão estatal, responsabilidade por atos legislativos/judiciais) sem base pedagógica adicional real do projeto — o mandato do Lote 08 exige verificação antes de presumir esse conteúdo.",
+  "subtemas_autorizados": [
+    "Responsabilidade objetiva das pessoas jurídicas de direito público (art. 37, §6º)",
+    "Responsabilidade objetiva das pessoas jurídicas de direito privado prestadoras de serviço público (art. 37, §6º)",
+    "Direito de regresso contra o agente causador do dano, condicionado a dolo ou culpa (art. 37, §6º)"
+  ],
+  "subtemas_proibidos_ou_pendentes_de_validacao_adicional": [
+    "Teoria do risco administrativo / risco integral como categorias doutrinárias autônomas — mencionadas em fontes secundárias sobre o tema, mas não confirmadas como parte do escopo pedagógico real desta unidade nesta fase",
+    "Excludentes de responsabilidade (caso fortuito, força maior, culpa exclusiva da vítima) — não confirmadas no escopo pedagógico real",
+    "Responsabilidade por omissão estatal, por atos legislativos ou por atos judiciais — não confirmadas no escopo pedagógico real; exigem novo dispositivo/fundamento se forem incluídas"
+  ],
+  "questoes_live_existentes": [
+    { "questao_id": 213, "origem": "AUTORAL (Papiro)", "banca": "Papiro", "concurso": "PAPIRO - Estilo Fundatec - BM RS", "ano": 2026, "status_normativo": "NEEDS_REVIEW", "observacao": "Conteúdo integral não auditado byte-a-byte nesta fase." },
+    { "questao_id": 214, "origem": "AUTORAL (Papiro)", "banca": "Papiro", "concurso": "PAPIRO - Estilo Fundatec - BM RS", "ano": 2026, "status_normativo": "NEEDS_REVIEW" },
+    { "questao_id": 215, "origem": "AUTORAL (Papiro)", "banca": "Papiro", "concurso": "PAPIRO - Estilo Fundatec - BM RS", "ano": 2026, "status_normativo": "NEEDS_REVIEW" }
+  ],
+  "existing_coverage": "3 questões úteis, todas autorais (Papiro), 0 REAL. Conteúdo específico de cada uma não auditado byte-a-byte nesta fase (apenas confirmado que existem e estão vinculadas).",
+  "generation_gaps": "Faltam 7 questões para atingir o target de 10. Como o dispositivo único confirmado (art. 37, §6º) é curto, recomenda-se variar o ângulo de cobrança entre as 7 novas candidatas (sujeitos responsáveis; fato gerador; direito de regresso; combinações/pegadinhas trocando dolo/culpa) para evitar repetição, mantendo-se estritamente dentro do dispositivo confirmado.",
+  "target_exam_board": "Fundatec",
+  "target_exam_board_source": "Resolução canônica via curso.banca (banca-resolver.mjs) — status RESOLVED, não hardcoded.",
+  "restricoes": [
+    "Usar SOMENTE o art. 37, §6º, da CF/88 como fundamento normativo desta unidade nesta fase.",
+    "NÃO introduzir doutrina (teorias do risco, excludentes) como se fosse texto legal.",
+    "NÃO copiar nem parafrasear demasiadamente as 3 questões autorais já existentes (Q213/214/215) — usá-las apenas, se necessário, como referência de estilo/nível já praticado no banco, nunca como fonte normativa."
+  ],
+  "riscos": [
+    "Risco BAIXO: dispositivo único, curto, de redação estável e amplamente conhecida, confirmado por leitura primária nesta sessão.",
+    "Risco de redundância entre as 7 novas candidatas dado o escopo estreito (1 único dispositivo) — mitigável por variação de ângulo de cobrança, não por ampliação do escopo normativo."
+  ],
+  "source_risk": "LOW",
+  "process_validation": "Nota de processo: leitura primária direta do art. 37, §6º, da CF/88 realizada via WebFetch em fonte do Senado Federal/LEGIS, reconfirmada no Lote 08 (Seção 3 do mandato de upgrade).",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote08",
+  "validated_at": "2026-09-13T00:00:00Z",
+  "human_source_signoff": "APPROVED",
+  "notes": [
+    "APROVADO no Lote 08."
+  ],
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-13T00:00:00Z",
+    "phase": "Lote 08 — HUMAN SOURCE SIGNOFF + SOURCE UPGRADE + GERAÇÃO AUTORAL",
+    "evidence": "Mandato do usuário, Seção 1 (aprovação condicionada aos upgrades) e Seção 3 ('Confirmar: CF/88 art. 37, §6º [...] Texto normativo deve sustentar somente: pessoas jurídicas de direito público; [...] direito de regresso; dolo ou culpa do responsável no regresso.') — escopo já confirmado na fase de SOURCE PREP e reconfirmado nesta rodada."
+  },
+  "covers_articles": [
+    "art. 37, §6º"
+  ],
+  "document_validation": {
+    "CF_88_ART_37_PAR_6": "VALIDATED_PRIMARY_NORM"
+  },
+  "status_documental": "SOURCE_VALIDATED"
+}

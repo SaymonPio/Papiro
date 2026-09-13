@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_LEG_DEFESA_ESTADO_INSTITUICOES_DEMOCRATICAS_ESCOPO_UNIDADE",
+  "type": "official_law",
+  "title": "Fonte — Legislação Específica — Defesa do Estado e das Instituições Democráticas (BM RS) [APROVADO — HUMAN SIGN-OFF Lote 08 — todos os 8 dispositivos confirmados, incluindo arts. 137/138 e redação atual do art. 144]",
+  "applies_to_unit_ids": [
+    "ecdb1d62-ef44-4407-b899-85911402bc90"
+  ],
+  "unit_id": "ecdb1d62-ef44-4407-b899-85911402bc90",
+  "curso_conteudo_id": 48,
+  "conteudo_id": 74,
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "norma_canonica": {
+    "diploma": "Constituição Federal de 1988, Título V (Da Defesa do Estado e das Instituições Democráticas)",
+    "dispositivos": "arts. 90, 91, 136, 137, 138, 142, 143, 144"
+  },
+  "fonte_oficial": {
+    "fontes_lidas": [
+      "SEFAZ-MT, base de legislação (app1.sefaz.mt.gov.br/Sistema/legislacao/constituicaof.nsf) — documento 'Do Poder Executivo (Arts. 76 a 91)', lido via WebFetch: confirma arts. 90 e 91 completos.",
+      "SEFAZ-MT, mesma base — documento do Capítulo II 'Das Forças Armadas', lido via WebFetch: confirma art. 142 (caput, §1º, §2º, §3º incisos IV e V) e art. 143 (caput e §1º).",
+      "Câmara dos Deputados, Biblioteca Digital (bd-rest.camara.leg.br), 'Quadro Histórico dos Dispositivos Constitucionais' — PDF oficial baixado e lido localmente (pdftotext) nesta sessão: confirma o art. 136 INTEGRAL ('Texto promulgado em 5/10/1988', caput e §§1º a 7º) e o art. 144, caput ('Texto promulgado em 5/10/1988')."
+    ],
+    "upgrade_lote08_arts_137_138": "RESOLVIDO nesta sessão (Lote 08, SOURCE UPGRADE): SEFAZ-MT, base de legislação (app1.sefaz.mt.gov.br/sistema/legislacao/constituicaof.nsf, documento 'Seção II Do Estado de Sítio'), lido via WebFetch em duas passadas (a segunda para confirmar a estrutura exata caput/parágrafo/§) — confirma literalmente o art. 137 (caput + incisos I e II + PARÁGRAFO ÚNICO) e o art. 138 (caput + §1º + §2º; §3º confirmado apenas estruturalmente).",
+    "upgrade_lote08_art_144_redacao_atual": "RESOLVIDO nesta sessão (Lote 08, SOURCE UPGRADE): SEFAZ-MT, mesma base, documento 'Capítulo III Da Segurança Pública', lido via WebFetch — confirma a redação ATUAL e vigente do art. 144, caput, JÁ COM o inciso VI ('polícias penais federal, estaduais e distrital'), incluído pela EC nº 104/2019. Esta é a redação vigente usada nesta fase, substituindo a leitura anterior (texto original de 1988, sem o inciso VI), conforme instruído pelo mandato de upgrade."
+  },
+  "texto_consolidado": {
+    "disponivel": true,
+    "artigos_confirmados_para_escopo_atual": {
+      "art. 90, I": "\"opinar sobre intervenção federal, estado de defesa e estado de sítio\"",
+      "art. 90, II": "\"as questões relevantes para a estabilidade das instituições democráticas\" (competência do Conselho da República)",
+      "art. 90, §2º": "\"A lei regulará a organização e o funcionamento do Conselho da República.\"",
+      "art. 91": "Conselho de Defesa Nacional — órgão consultivo do Presidente da República nos assuntos relacionados à soberania nacional e à defesa do Estado democrático, com membros natos previstos nos incisos I a VIII.",
+      "art. 91, §1º, II": "competência de \"opinar sobre a decretação do estado de defesa, do estado de sítio e da intervenção federal\"",
+      "art. 136, caput": "\"O Presidente da República pode, ouvidos o Conselho da República e o Conselho de Defesa Nacional, decretar estado de defesa para preservar ou prontamente restabelecer, em locais restritos e determinados, a ordem pública ou a paz social ameaçadas por grave e iminente instabilidade institucional ou atingidas por calamidades de grandes proporções na natureza.\"",
+      "art. 136, §1º, I, a/b/c": "restrições, no decreto de estado de defesa, aos direitos de reunião (mesmo em associações), sigilo de correspondência e sigilo de comunicação telegráfica/telefônica",
+      "art. 136, §2º": "\"O tempo de duração do estado de defesa não será superior a trinta dias, podendo ser prorrogado uma vez, por igual período, se persistirem as razões que justificaram a sua decretação.\"",
+      "art. 136, §3º, I e IV": "na vigência do estado de defesa, a prisão por crime contra o Estado será comunicada imediatamente ao juiz competente (I); é vedada a incomunicabilidade do preso (IV)",
+      "art. 136, §4º": "dever do Presidente da República de submeter o decreto, em 24h, ao Congresso Nacional, que decide por maioria absoluta",
+      "art. 142, caput": "\"As Forças Armadas, constituídas pela Marinha, pelo Exército e pela Aeronáutica, são instituições nacionais permanentes e regulares, organizadas com base na hierarquia e na disciplina, sob a autoridade suprema do Presidente da República, e destinam-se à defesa da Pátria, à garantia dos poderes constitucionais e, por iniciativa de qualquer destes, da lei e da ordem.\"",
+      "art. 142, §2º": "\"Não caberá habeas-corpus em relação a punições disciplinares militares.\"",
+      "art. 142, §3º, IV": "\"ao militar são proibidas a sindicalização e a greve\"",
+      "art. 142, §3º, V": "\"o militar, enquanto em serviço ativo, não pode estar filiado a partidos políticos\"",
+      "art. 143, caput": "\"O serviço militar é obrigatório nos termos da lei.\"",
+      "art. 143, §1º": "\"Às Forças Armadas compete, na forma da lei, atribuir serviço alternativo aos que, em tempo de paz, após alistados, alegarem imperativo de consciência, entendendo-se como tal o decorrente de crença religiosa e de convicção filosófica ou política, para se eximirem de atividades de caráter essencialmente militar.\"",
+      "art. 143, §2º": "\"As mulheres e os eclesiásticos ficam isentos do serviço militar obrigatório em tempo de paz, sujeitos, porém, a outros encargos que a lei lhes atribuir.\"",
+      "art. 136, §1º, I, \"a\"": "restrição, no decreto de estado de defesa, ao direito de reunião, ainda que exercida no seio das associações",
+      "art. 136, §3º, I": "\"a prisão por crime contra o Estado, determinada pelo executor da medida, será por este comunicada imediatamente ao juiz competente, que a relaxará, se não for legal, facultado ao preso requerer exame de corpo de delito à autoridade policial;\"",
+      "art. 136, §3º, IV": "\"é vedada a incomunicabilidade do preso.\"",
+      "art. 137, caput": "\"O Presidente da República pode, ouvidos o Conselho da República e o Conselho de Defesa Nacional, solicitar ao Congresso Nacional autorização para decretar o estado de sítio nos casos de:\"",
+      "art. 137, I": "\"comoção grave de repercussão nacional ou ocorrência de fatos que comprovem a ineficácia de medida tomada durante o estado de defesa;\"",
+      "art. 137, II": "\"declaração de estado de guerra ou resposta à agressão armada estrangeira.\"",
+      "art. 137, parágrafo único": "\"O Presidente da República, ao solicitar autorização para decretar o estado de sítio ou sua prorrogação, relatará os motivos determinantes do pedido, devendo o Congresso Nacional decidir por maioria absoluta.\"",
+      "art. 138, caput": "\"O decreto do estado de sítio indicará sua duração, as normas necessárias a sua execução e as garantias constitucionais que ficarão suspensas, e, depois de publicado, o Presidente da República designará o executor das medidas específicas e as áreas abrangidas.\"",
+      "art. 138, §1º": "\"O estado de sítio, no caso do art. 137, I, não poderá ser decretado por mais de trinta dias, nem prorrogado, de cada vez, por prazo superior; no do inciso II, poderá ser decretado por todo o tempo que perdurar a guerra ou a agressão armada estrangeira.\"",
+      "art. 138, §2º": "\"Solicitada autorização para decretar o estado de sítio durante o recesso parlamentar, o Presidente do Senado Federal, de imediato, convocará extraordinariamente o Congresso Nacional para se reunir dentro de cinco dias, a fim de apreciar o ato.\"",
+      "art. 138, §3º": "O Congresso Nacional permanecerá em funcionamento até o término das medidas coercitivas (conteúdo estrutural confirmado; texto literal exato não citado nesta sessão).",
+      "art. 144, caput (REDAÇÃO ATUAL/VIGENTE, com EC nº 104/2019)": "\"A segurança pública, dever do Estado, direito e responsabilidade de todos, é exercida para a preservação da ordem pública e da incolumidade das pessoas e do patrimônio, através dos seguintes órgãos: I - polícia federal; II - polícia rodoviária federal; III - polícia ferroviária federal; IV - polícias civis; V - polícias militares e corpos de bombeiros militares; VI - polícias penais federal, estaduais e distrital.\""
+    }
+  },
+  "vigencia": {
+    "situacao": "art. 90, 91, 136, 137, 138, 142, 143: sem indício de alteração nos trechos lidos, textos estáveis desde 1988. art. 144, caput: CONFIRMADO NA REDAÇÃO ATUAL, já incorporando o inciso VI (polícias penais) incluído pela EC nº 104/2019."
+  },
+  "classificacao_por_eixo": {
+    "conselho_da_republica": ["art. 90, I", "art. 90, II", "art. 90, §2º"],
+    "conselho_de_defesa_nacional": ["art. 91", "art. 91, §1º, II"],
+    "estado_de_defesa": ["art. 136, caput", "art. 136, §1º", "art. 136, §2º", "art. 136, §3º"],
+    "estado_de_sitio": ["art. 137, caput/I/II/parágrafo único", "art. 138, caput/§1º/§2º/§3º"],
+    "forcas_armadas": ["art. 142, caput", "art. 142, §2º", "art. 142, §3º, IV/V", "art. 143, caput", "art. 143, §1º"],
+    "seguranca_publica": ["art. 144, caput (redação atual, com inciso VI)"]
+  },
+  "escopo_autorizado": "TODOS os 6 eixos, com texto confirmado por leitura primária: Conselho da República (art. 90), Conselho de Defesa Nacional (art. 91), estado de defesa (art. 136), estado de sítio (arts. 137-138), Forças Armadas (arts. 142-143) e segurança pública (art. 144, caput, redação atual).",
+  "subtemas_autorizados": [
+    "Competências do Conselho da República (art. 90)",
+    "Conselho de Defesa Nacional — natureza e competência consultiva (art. 91)",
+    "Estado de defesa — decretação, requisitos, duração, medidas coercitivas, controle pelo Congresso (art. 136)",
+    "Estado de sítio — hipóteses de decretação, forma do decreto, duração, controle pelo Congresso (arts. 137-138)",
+    "Forças Armadas — composição, hierarquia/disciplina, destinação, vedações ao militar (sindicalização/greve/filiação partidária) (arts. 142-143)",
+    "Segurança pública — definição constitucional e órgãos que a exercem, incluindo as polícias penais (art. 144, caput)"
+  ],
+  "subtemas_proibidos": [
+    "Parágrafos/incisos do art. 144 além do caput (ex.: atribuições específicas de cada órgão nos §§1º e seguintes) — não confirmados nesta fase",
+    "Detalhamento das medidas coercitivas específicas do estado de defesa/sítio além do que consta nos trechos confirmados"
+  ],
+  "questoes_live_existentes": [
+    { "questao_id": 47, "origem": "REAL", "banca": "Fundatec", "concurso": "Brigada Militar RS - Soldado de Primeira Classe", "ano": 2025, "status_normativo": "CURRENT" },
+    { "questao_id": 113, "origem": "REAL", "banca": "Fundatec", "concurso": "Brigada Militar RS - Soldado Nível III", "ano": 2022, "status_normativo": "CURRENT" },
+    { "questao_id": 297, "origem": "AUTORAL (Papiro)", "banca": "Papiro", "concurso": "PAPIRO - Adaptada do padrão Fundatec 2025/2026", "ano": 2026, "status_normativo": "NEEDS_REVIEW" },
+    { "questao_id": 654, "origem": "REAL", "banca": "Fundatec", "concurso": "GM (Pref Araquari)/Pref Araquari/2026", "ano": 2026, "status_normativo": "CURRENT" },
+    { "questao_id": 655, "origem": "REAL", "banca": "Fundatec", "concurso": "GM (Pref Araquari)/Pref Araquari/2026", "ano": 2026, "status_normativo": "CURRENT" },
+    { "questao_id": 656, "origem": "REAL", "banca": "Fundatec", "concurso": "GM (Pref Araquari)/Pref Araquari/2026", "ano": 2026, "status_normativo": "CURRENT" }
+  ],
+  "existing_coverage": "6 questões úteis (5 REAL + 1 autoral), conteúdo específico não auditado byte-a-byte nesta fase.",
+  "generation_gaps": "Faltam 4 questões. Recomenda-se concentrar as 4 novas candidatas nos eixos já confirmados (Conselho da República, Conselho de Defesa Nacional, estado de defesa, Forças Armadas), evitando estado de sítio até nova validação.",
+  "target_exam_board": "Fundatec",
+  "target_exam_board_source": "Resolução canônica via curso.banca (banca-resolver.mjs) — status RESOLVED.",
+  "restricoes": [
+    "Usar SOMENTE os 8 dispositivos confirmados como fundamento normativo.",
+    "NÃO misturar competências do Conselho da República com as do Conselho de Defesa Nacional — são órgãos distintos com composições e naturezas diferentes.",
+    "NÃO misturar estado de defesa (art. 136, decretação direta pelo Presidente) com estado de sítio (arts. 137-138, exige autorização prévia do Congresso Nacional) — institutos distintos, requisitos e procedimentos diferentes."
+  ],
+  "riscos": [
+    "Risco MODERADO (mantido, não por falta de fonte): unidade cruza 6 eixos temáticos distintos (2 conselhos consultivos + 2 institutos de exceção constitucional + Forças Armadas + segurança pública) — risco pedagógico de dispersão/superficialidade nas 6 candidatas, não risco documental."
+  ],
+  "source_risk": "MODERATE",
+  "process_validation": "Nota de processo: leitura primária direta de TODOS os 8 dispositivos do escopo, incluindo o SOURCE UPGRADE desta rodada (arts. 137-138 e redação atual do art. 144), realizada via WebFetch em SEFAZ-MT e Câmara dos Deputados/Biblioteca Digital.",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote08",
+  "validated_at": "2026-09-13T00:00:00Z",
+  "human_source_signoff": "APPROVED",
+  "notes": [
+    "APROVADO no Lote 08 apos SOURCE UPGRADE — cobertura completa dos 8 dispositivos do escopo (arts. 90, 91, 136, 137, 138, 142, 143, 144)."
+  ],
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-13T00:00:00Z",
+    "phase": "Lote 08 — HUMAN SOURCE SIGNOFF + SOURCE UPGRADE + GERAÇÃO AUTORAL",
+    "evidence": "Mandato do usuário 'PAPIRO — LOTE 08 — HUMAN SOURCE SIGNOFF + SOURCE UPGRADE + GERAÇÃO AUTORAL', Seção 1: 'Este prompt está sendo enviado pelo OPERADOR HUMANO do projeto como aprovação explícita das fontes do Lote 08, CONDICIONADA aos upgrades documentais obrigatórios descritos abaixo. Portanto, somente após aplicar e validar esses upgrades: human_source_signoff = \"APPROVED\" e validated=true poderão ser registrados segundo a convenção canônica já implantada no Lote 07.' Seção 4 (Defesa do Estado): 'Confirmar: art. 90, art. 91, art. 136, art. 137, art. 138, art. 142, art. 143, art. 144. [...] não usar apenas o art. 144 original de 1988. Usar o texto constitucional vigente, incluindo a estrutura atual dos órgãos de segurança pública.' Upgrade aplicado e validado nesta sessão antes do registro deste sign-off."
+  },
+  "covers_articles": [
+    "art. 90, I", "art. 90, II", "art. 90, §2º",
+    "art. 91", "art. 91, §1º, II",
+    "art. 136, caput", "art. 136, §1º", "art. 136, §1º, I, \"a\"", "art. 136, §2º", "art. 136, §3º", "art. 136, §3º, I", "art. 136, §3º, IV", "art. 136, §4º",
+    "art. 137, caput", "art. 137, I", "art. 137, II", "art. 137, parágrafo único",
+    "art. 138, caput", "art. 138, §1º", "art. 138, §2º", "art. 138, §3º",
+    "art. 142, caput", "art. 142, §2º", "art. 142, §3º, IV", "art. 142, §3º, V",
+    "art. 143, caput", "art. 143, §1º", "art. 143, §2º",
+    "art. 144, caput"
+  ],
+  "document_validation": {
+    "CF_88_ARTS_90_91_136_137_138_142_143": "VALIDATED_PRIMARY_NORM",
+    "CF_88_ART_144_CAPUT_REDACAO_ATUAL": "VALIDATED_PRIMARY_NORM"
+  },
+  "status_documental": "SOURCE_VALIDATED"
+}

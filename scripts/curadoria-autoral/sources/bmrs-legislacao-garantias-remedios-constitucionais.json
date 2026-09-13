@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_LEG_GARANTIAS_REMEDIOS_CONSTITUCIONAIS_ESCOPO_UNIDADE",
+  "type": "official_law",
+  "title": "Fonte — Legislação Específica — Garantias Constitucionais e Remédios Constitucionais (BM RS) [APROVADO — HUMAN SIGN-OFF Lote 08]",
+  "applies_to_unit_ids": [
+    "f3a6d9c2-8b41-4e0a-9c7d-2b5e8f1a4d63"
+  ],
+  "unit_id": "f3a6d9c2-8b41-4e0a-9c7d-2b5e8f1a4d63",
+  "curso_conteudo_id": 47,
+  "conteudo_id": 71,
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "norma_canonica": {
+    "diploma": "Constituição Federal de 1988",
+    "dispositivo": "art. 5º, incisos III, XLVII, XLIX, L, LIV, LV, LXVIII, LXIX, LXXI, LXXII"
+  },
+  "fonte_oficial": {
+    "fonte_lida": "Senado Federal, LEGIS (legis.senado.leg.br/norma/579494/publicacao/16434817) — texto multivigente atualizado da Constituição Federal, consultado nesta fase via WebFetch.",
+    "metodo": "Leitura primária direta de todos os 10 incisos do escopo, nesta sessão."
+  },
+  "texto_consolidado": {
+    "disponivel": true,
+    "artigos_confirmados_para_escopo_atual": {
+      "art. 5º, III": "\"ninguém será submetido a tortura nem a tratamento desumano ou degradante\"",
+      "art. 5º, XLVII": "\"não haverá penas: a) de morte, salvo em caso de guerra declarada, nos termos do art. 84, XIX; b) de caráter perpétuo; c) de trabalhos forçados; d) de banimento; e) cruéis\"",
+      "art. 5º, XLIX": "\"é assegurado aos presos o respeito à integridade física e moral\"",
+      "art. 5º, L": "\"às presidiárias serão asseguradas condições para que possam permanecer com seus filhos durante o período de amamentação\"",
+      "art. 5º, LIV": "\"ninguém será privado da liberdade ou de seus bens sem o devido processo legal\"",
+      "art. 5º, LV": "\"aos litigantes, em processo judicial ou administrativo, e aos acusados em geral são assegurados o contraditório e a ampla defesa, com os meios e recursos a ela inerentes\"",
+      "art. 5º, LXVIII": "\"conceder-se-á habeas corpus sempre que alguém sofrer ou se achar ameaçado de sofrer violência ou coação em sua liberdade de locomoção, por ilegalidade ou abuso de poder\"",
+      "art. 5º, LXIX": "\"conceder-se-á mandado de segurança para proteger direito líquido e certo, não amparado por habeas corpus ou habeas data, quando o responsável pela ilegalidade ou abuso de poder for autoridade pública ou agente de pessoa jurídica no exercício de atribuições do poder público\"",
+      "art. 5º, LXXI": "\"conceder-se-á mandado de injunção sempre que a falta de norma regulamentadora torne inviável o exercício dos direitos e liberdades constitucionais e das prerrogativas inerentes à nacionalidade, à soberania e à cidadania\"",
+      "art. 5º, LXXII": "\"conceder-se-á habeas data: a) para assegurar o conhecimento de informações relativas à pessoa do impetrante, constantes de registros ou bancos de dados de entidades governamentais ou de caráter público; b) para a retificação de dados, quando não se prefira fazê-lo por processo sigiloso, judicial ou administrativo\""
+    }
+  },
+  "vigencia": {
+    "situacao": "VIGENTE. Todos os 10 incisos são texto original de 1988, sem alteração por emenda até a presente leitura."
+  },
+  "classificacao_por_eixo": {
+    "garantias_gerais_do_preso_e_do_processo": ["art. 5º, III (vedação a tortura/tratamento degradante)", "art. 5º, XLVII (vedação a certas penas)", "art. 5º, XLIX (integridade física/moral do preso)", "art. 5º, L (amamentação em presídio)"],
+    "devido_processo_legal_contraditorio_ampla_defesa": ["art. 5º, LIV", "art. 5º, LV"],
+    "habeas_corpus": ["art. 5º, LXVIII"],
+    "mandado_de_seguranca": ["art. 5º, LXIX"],
+    "mandado_de_injuncao": ["art. 5º, LXXI"],
+    "habeas_data": ["art. 5º, LXXII"]
+  },
+  "escopo_autorizado": "Garantias e remédios constitucionais nos exatos termos dos 10 incisos confirmados do art. 5º da CF/88, separados pelos eixos: garantias gerais do preso (III, XLVII, XLIX, L); devido processo legal/contraditório/ampla defesa (LIV, LV); e os 4 remédios constitucionais propriamente ditos — habeas corpus (LXVIII), mandado de segurança (LXIX), mandado de injunção (LXXI) e habeas data (LXXII).",
+  "subtemas_autorizados": [
+    "Vedação a tortura/tratamento desumano/degradante (art. 5º, III)",
+    "Vedação a determinadas penas (art. 5º, XLVII)",
+    "Integridade física e moral do preso (art. 5º, XLIX)",
+    "Direito da presidiária de amamentar (art. 5º, L)",
+    "Devido processo legal (art. 5º, LIV)",
+    "Contraditório e ampla defesa (art. 5º, LV)",
+    "Habeas corpus (art. 5º, LXVIII)",
+    "Mandado de segurança (art. 5º, LXIX)",
+    "Mandado de injunção (art. 5º, LXXI)",
+    "Habeas data (art. 5º, LXXII)"
+  ],
+  "subtemas_proibidos": [
+    "Qualquer outro inciso do art. 5º além dos 10 listados, sem nova validação documental",
+    "Não presumir que TODOS os 10 dispositivos precisam necessariamente virar questão — apenas 2 candidatas serão geradas (déficit=2); a seleção de quais 2 eixos usar é decisão pedagógica humana, não automática"
+  ],
+  "questoes_live_existentes": [
+    { "questao_id": 46, "origem": "REAL", "banca": "Fundatec", "concurso": "Brigada Militar RS - Soldado de Primeira Classe", "ano": 2025, "status_normativo": "CURRENT" },
+    { "questao_id": 657, "origem": "REAL", "banca": "Fundatec", "concurso": "Esc Pol (PC RS)/PC RS/2026", "ano": 2026, "status_normativo": "CURRENT" },
+    { "questao_id": 662, "origem": "REAL", "banca": "Fundatec", "concurso": "GM (Pref Araquari)/Pref Araquari/2026", "ano": 2026, "status_normativo": "CURRENT" },
+    { "questao_id": 663, "origem": "REAL", "banca": "Fundatec", "concurso": "GM (Pref Araquari)/Pref Araquari/2026", "ano": 2026, "status_normativo": "CURRENT" },
+    { "questao_id": 775, "origem": "REAL", "banca": "Fundatec", "concurso": "GM (Pref Foz do Iguaçu)/Pref Foz do Iguaçu/2024", "ano": 2024, "status_normativo": "CURRENT" },
+    { "questao_id": 846, "origem": "REAL", "banca": "Fundatec", "concurso": "Ag Sg Sc (SEJUSP MG)/SEJUSP MG/2022", "ano": 2022, "status_normativo": "CURRENT" },
+    { "questao_id": 848, "origem": "REAL", "banca": "Fundatec", "concurso": "TA Pol Pen (PP RS)/PP RS/2022", "ano": 2022, "status_normativo": "CURRENT" },
+    { "questao_id": 849, "origem": "REAL", "banca": "Fundatec", "concurso": "Pol Pen (PP RS)/PP RS/2022", "ano": 2022, "status_normativo": "CURRENT" }
+  ],
+  "existing_coverage": "8 questões úteis, todas REAL (Fundatec, majoritariamente), 0 autoral. Conteúdo específico não auditado byte-a-byte nesta fase, mas o volume de questões REAL já existente (8) sugere boa cobertura prévia — recomenda-se checar antes de gerar quais dos 10 incisos já foram testados, para priorizar os menos cobertos.",
+  "generation_gaps": "Faltam apenas 2 questões. Dado o alto REAL já existente, recomenda-se, na fase de geração, inspecionar rapidamente o conteúdo das 8 questões REAL (não feito nesta fase de source prep) para não repetir o(s) mesmo(s) remédio(s) constitucional(is) já fortemente testado(s).",
+  "target_exam_board": "Fundatec",
+  "target_exam_board_source": "Resolução canônica via curso.banca (banca-resolver.mjs) — status RESOLVED.",
+  "restricoes": [
+    "Usar SOMENTE os 10 incisos confirmados do art. 5º como fundamento.",
+    "NÃO copiar nem parafrasear as questões REAL existentes."
+  ],
+  "riscos": [
+    "Risco BAIXO: dispositivos constitucionais amplamente conhecidos, texto estável, confirmados por leitura primária nesta sessão.",
+    "Risco de sobreposição com as 8 questões REAL já existentes se o conteúdo específico delas não for inspecionado antes da geração (não foi auditado byte-a-byte nesta fase)."
+  ],
+  "source_risk": "LOW",
+  "process_validation": "Nota de processo: leitura primária direta dos 10 incisos do art. 5º da CF/88 realizada via WebFetch em fonte do Senado Federal/LEGIS, reconfirmada no Lote 08 (Seção 3 do mandato de upgrade).",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote08",
+  "validated_at": "2026-09-13T00:00:00Z",
+  "human_source_signoff": "APPROVED",
+  "notes": [
+    "APROVADO no Lote 08."
+  ],
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-13T00:00:00Z",
+    "phase": "Lote 08 — HUMAN SOURCE SIGNOFF + SOURCE UPGRADE + GERAÇÃO AUTORAL",
+    "evidence": "Mandato do usuário, Seção 1 (aprovação condicionada aos upgrades) e Seção 3 ('Confirmar texto vigente do art. 5º: III, XLVII, XLIX, L, LIV, LV, LXVIII, LXIX, LXXI, LXXII. Especialmente: LXVIII — habeas corpus; LXIX — mandado de segurança; LXXI — mandado de injunção; LXXII — habeas data.') — escopo já confirmado na fase de SOURCE PREP e reconfirmado nesta rodada."
+  },
+  "covers_articles": [
+    "art. 5º, III", "art. 5º, XLVII", "art. 5º, XLIX", "art. 5º, L",
+    "art. 5º, LIV", "art. 5º, LV", "art. 5º, LXVIII", "art. 5º, LXIX",
+    "art. 5º, LXXI", "art. 5º, LXXII"
+  ],
+  "document_validation": {
+    "CF_88_ART_5": "VALIDATED_PRIMARY_NORM"
+  },
+  "status_documental": "SOURCE_VALIDATED"
+}

@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_LEG_ATOS_ADMINISTRATIVOS_ESCOPO_UNIDADE_LOTE08",
+  "type": "official_law",
+  "title": "Fonte — Legislação Específica — Atos Administrativos (BM RS) [APROVADO — HUMAN SIGN-OFF Lote 08 — arts. 53/55 confirmados por leitura primária direta nesta rodada]",
+  "applies_to_unit_ids": [
+    "85323ce5-772b-4bf1-bc32-a79e2316158b"
+  ],
+  "unit_id": "85323ce5-772b-4bf1-bc32-a79e2316158b",
+  "curso_conteudo_id": 54,
+  "conteudo_id": 67,
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "norma_canonica": {
+    "diploma_art_37_caput": "Constituição Federal de 1988",
+    "diploma_arts_53_55": "Lei nº 9.784, de 29 de janeiro de 1999 (regula o processo administrativo no âmbito da Administração Pública Federal)"
+  },
+  "investigacao_da_ambiguidade_documental_arts_53_55": {
+    "pergunta_do_mandato": "Descobrir documentalmente de qual diploma real os arts. 53 e 55 foram extraídos no escopo pedagógico do Papiro, sem assumir.",
+    "evidencia_1_interna": "scripts/curadoria-pedagogica/config/atos_administrativos.unidades.json (curadoria anterior já concluída neste projeto) documenta explicitamente: 'artigos_esperados contem SOMENTE os 3 dispositivos legais efetivamente cobrados (art. 37 caput CF; arts. 53 e 55 da Lei 9.784/1999)' e o escopo cita 'autotutela administrativa (art. 53, Lei nº 9.784/1999, e Súmula 473 do STF)' e 'convalidação de defeitos sanáveis (art. 55, Lei nº 9.784/1999)'.",
+    "evidencia_2_live": "A questão REAL Q840, já importada e ativa no curso (banca Fundatec), tem em seu PRÓPRIO ENUNCIADO OFICIAL a frase: 'De acordo com os termos da Lei nº 9.784/1999, que regula o processo administrativo no âmbito da Administração Pública Federal [...]', e sua explicação já publicada cita 'Artigo 55 da Lei do Processo Administrativo (Lei Federal nº 9.784/1999)' — ou seja, o próprio diploma já está afirmado pela banca real, não é inferência da IA.",
+    "evidencia_3_live_correlacionada": "A questão REAL Q714 (mesma unidade) usa Súmula 473 do STF sobre autotutela (anulação/revogação), tema do art. 53 da mesma lei, consistente com a documentação interna.",
+    "conclusao": "Diploma CONFIRMADO como Lei nº 9.784/1999 por evidência documental interna e por citação explícita em questão REAL já ativa no banco — não é presunção da IA. Classificação SOURCE_READY_FOR_HUMAN_SIGNOFF (não PEDAGOGICAL_SOURCE_AMBIGUOUS), com a ressalva registrada abaixo sobre o texto literal."
+  },
+  "fonte_oficial": {
+    "fonte_lida_art_37_caput": "Já amplamente confirmado e utilizado em questões REAL/AUTORAL já ativas neste mesmo curso (ex.: supabase/aplicar_macro_lote_le100.sql já traz explicações com citação literal do art. 37 caput e do art. 2º da Lei 9.784/1999) — dispositivo constitucional de conhecimento consolidado.",
+    "fonte_lida_arts_53_55_upgrade_lote08": "RESOLVIDO nesta sessão (Lote 08, SOURCE UPGRADE): anvisalegis.datalegis.net (sistema oficial de consulta legislativa federal), lido via WebFetch — leitura primária direta confirmada dos arts. 53 e 55, texto IDÊNTICO ao já corroborado por fontes convergentes na fase anterior.",
+    "qualificacao_da_evidencia": "Leitura primária direta confirmada nesta rodada (upgrade) — a ressalva anterior ('não fetched diretamente') está resolvida."
+  },
+  "texto_consolidado": {
+    "disponivel_art_37_caput": true,
+    "disponivel_arts_53_55": true,
+    "artigos": {
+      "art. 37, caput (CF/88)": "\"A administração pública direta e indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência [...]\" — já citado literalmente em explicações de questões já ativas neste curso.",
+      "art. 53 (Lei 9.784/1999)": "\"A Administração deve anular seus próprios atos, quando eivados de vício de legalidade, e pode revogá-los por motivo de conveniência ou oportunidade, respeitados os direitos adquiridos.\"",
+      "art. 55 (Lei 9.784/1999)": "\"Em decisão na qual se evidencie não acarretarem lesão ao interesse público nem prejuízo a terceiros, os atos que apresentarem defeitos sanáveis poderão ser convalidados pela própria Administração.\""
+    }
+  },
+  "vigencia": {
+    "situacao": "art. 37 caput: vigente, sem indicação de alteração relevante ao núcleo citado. arts. 53/55: sem confirmação de eventual alteração posterior nesta sessão (texto não lido diretamente da fonte primária)."
+  },
+  "escopo_autorizado": "Requisitos/elementos doutrinários dos atos administrativos (Hely Lopes Meirelles — competência, finalidade, forma, motivo, objeto — SEM dispositivo legal, é doutrina, não citar como artigo de lei); atributos doutrinários (presunção de legitimidade, imperatividade, autoexecutoriedade, coercibilidade — idem, doutrina); distinção validade/eficácia/efetividade e publicidade administrativa (art. 37, caput, CF, quando a publicidade for requisito para produção de efeitos externos, sem generalizar como requisito universal de validade); extinção dos atos — anulação/revogação por autotutela (art. 53, Lei 9.784/1999, e Súmula 473 STF) e convalidação de defeitos sanáveis (art. 55, Lei 9.784/1999).",
+  "subtemas_autorizados": [
+    "Requisitos/elementos do ato administrativo (doutrina — sem dispositivo legal)",
+    "Atributos do ato administrativo (doutrina — sem dispositivo legal)",
+    "Validade, eficácia e efetividade; publicidade administrativa (art. 37, caput, CF)",
+    "Autotutela — anulação e revogação (art. 53, Lei 9.784/1999; Súmula 473 STF)",
+    "Convalidação de defeitos sanáveis (art. 55, Lei 9.784/1999)"
+  ],
+  "subtemas_proibidos": [
+    "Afirmar dispositivo legal para requisitos/atributos doutrinários — não têm base legal específica, apenas doutrinária",
+    "Generalizar publicidade como requisito universal de validade de todo ato administrativo",
+    "Usar qualquer outro artigo da Lei 9.784/1999 além de 53 e 55 sem nova validação"
+  ],
+  "questoes_live_existentes": [
+    { "questao_id": 44, "origem": "REAL", "banca": "Fundatec", "concurso": "Brigada Militar RS - Soldado", "ano": 2022, "status_normativo": "CURRENT" },
+    { "questao_id": 267, "origem": "AUTORAL (Papiro)", "banca": "Papiro", "concurso": "PAPIRO - Adaptada do padrão Fundatec 2025/2026", "ano": 2026, "status_normativo": "NEEDS_REVIEW" },
+    { "questao_id": 268, "origem": "AUTORAL (Papiro)", "banca": "Papiro", "concurso": "PAPIRO - Adaptada do padrão Fundatec 2025/2026", "ano": 2026, "status_normativo": "NEEDS_REVIEW" },
+    { "questao_id": 358, "origem": "REAL", "banca": "Fundatec", "concurso": "Corpo de Bombeiros Militar RS - Soldado de Primeira Classe", "ano": 2025, "status_normativo": "CURRENT" },
+    { "questao_id": 646, "origem": "REAL", "banca": "Fundatec", "concurso": "Esc Pol (PC RS)/PC RS", "ano": 2026, "status_normativo": "CURRENT" },
+    { "questao_id": 714, "origem": "REAL", "banca": "Fundatec", "concurso": "Del Pol (PC RS)/PC RS", "ano": 2025, "status_normativo": "CURRENT" },
+    { "questao_id": 840, "origem": "REAL", "banca": "Fundatec", "concurso": "Ag Sg Sc (SEJUSP MG)/SEJUSP MG", "ano": 2022, "status_normativo": "CURRENT", "observacao": "Enunciado da própria questão já nomeia a Lei nº 9.784/1999 — evidência usada para resolver a ambiguidade documental do diploma." },
+    { "questao_id": 841, "origem": "REAL", "banca": "Fundatec", "concurso": "Ana Pol Pen (PP RS)/PP RS/Direito", "ano": 2022, "status_normativo": "CURRENT" }
+  ],
+  "existing_coverage": "8 questões úteis (6 REAL + 2 autorais). Q714 já testa autotutela (art. 53/Súmula 473); Q840 já testa convalidação (art. 55). Demais questões distribuídas por requisitos/atributos/validade-eficácia (doutrina + art. 37 caput).",
+  "generation_gaps": "Faltam apenas 2 questões. Recomenda-se, na fase de geração, verificar quais dos 4 grupos temáticos (requisitos/elementos; atributos; validade/eficácia/efetividade; anulação/revogação/convalidação) estão menos cobertos para orientar as 2 novas candidatas, evitando repetir exatamente o ângulo de Q714/Q840.",
+  "target_exam_board": "Fundatec",
+  "target_exam_board_source": "Resolução canônica via curso.banca (banca-resolver.mjs) — status RESOLVED.",
+  "restricoes": [
+    "Antes de gerar, buscar confirmar a leitura primária direta dos arts. 53 e 55 da Lei 9.784/1999 (não obtida nesta sessão) — recomendável nova tentativa de fetch, já que a única lacuna aqui é a fonte literal, não o diploma.",
+    "NÃO atribuir dispositivo legal a conteúdo puramente doutrinário (requisitos, atributos)."
+  ],
+  "riscos": [
+    "Risco BAIXO (rebaixado do MODERATE anterior): diploma dos arts. 53/55 confirmado por evidência documental interna + citação na questão REAL Q840, e agora também por leitura primária direta bem-sucedida (anvisalegis.datalegis.net) nesta rodada."
+  ],
+  "source_risk": "LOW",
+  "process_validation": "Nota de processo: diploma dos arts. 53/55 confirmado por evidência documental interna e por citação explícita na questão REAL Q840 já ativa no banco. Texto literal de ambos os artigos confirmado por leitura primária direta nesta rodada (anvisalegis.datalegis.net). art. 37 caput já é dispositivo de uso consolidado no projeto.",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote08",
+  "validated_at": "2026-09-13T00:00:00Z",
+  "human_source_signoff": "APPROVED",
+  "notes": [
+    "APROVADO no Lote 08 apos SOURCE UPGRADE — leitura primária direta dos arts. 53/55 concluída com sucesso.",
+    "NÃO classificado como PEDAGOGICAL_SOURCE_AMBIGUOUS: a pergunta do mandato ('de qual diploma são os arts. 53/55?') foi respondida com evidência documental (Lei 9.784/1999), não presumida."
+  ],
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-13T00:00:00Z",
+    "phase": "Lote 08 — HUMAN SOURCE SIGNOFF + SOURCE UPGRADE + GERAÇÃO AUTORAL",
+    "evidence": "Mandato do usuário, Seção 7 ('SOURCE UPGRADE — ATOS ADMINISTRATIVOS'): 'A ambiguidade está resolvida. [...] Fonte normativa principal dos arts. 53/55: PLANALTO, Lei nº 9.784/1999. [...] Remover dos manifests qualquer ressalva de \"texto primário não lido\" se a leitura direta for concluída com sucesso nesta execução.' Leitura direta concluída com sucesso via anvisalegis.datalegis.net (planalto.gov.br tecnicamente inacessível nesta sessão)."
+  },
+  "covers_articles": [
+    "art. 37, caput",
+    "art. 53",
+    "art. 55"
+  ],
+  "document_validation": {
+    "CF_88_ART_37_CAPUT": "USO_CONSOLIDADO_NO_PROJETO",
+    "LEI_9784_1999_ARTS_53_55": "VALIDATED_PRIMARY_NORM"
+  },
+  "status_documental": "SOURCE_VALIDATED"
+}
