@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_LEG_PLANO_CARREIRA_MILITARES_ESCOPO_UNIDADE",
+  "type": "official_law",
+  "title": "Fonte — Legislação Específica — Plano de Carreira dos Servidores Militares (BM RS) [APROVADO — HUMAN SIGN-OFF Lote 07]",
+  "applies_to_unit_ids": [
+    "9f8a76ec-2c8c-4bd8-9d72-9ecb7218a200"
+  ],
+  "unit_id": "9f8a76ec-2c8c-4bd8-9d72-9ecb7218a200",
+  "curso_conteudo_id": 65,
+  "conteudo_id": 77,
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "norma_canonica": {
+    "diploma": "Lei Complementar nº 10.992, de 18 de agosto de 1997 (RS)",
+    "ementa": "Dispõe sobre a carreira dos Servidores Militares do Estado do Rio Grande do Sul e dá outras providências.",
+    "texto_compilado_oficial": "Versão consolidada 'atualizada até a Lei Complementar n.º 15.454, de 17 de fevereiro de 2020', compilada pelo Gabinete de Consultoria Legislativa da Assembleia Legislativa do RS (http://www.al.rs.gov.br/legiscomp), lida integralmente nesta fase."
+  },
+  "fonte_oficial": {
+    "fonte_lida": "PDF oficial da Assembleia Legislativa do RS (Gabinete de Consultoria Legislativa), mirror em asprars.org.br, lido integralmente via WebFetch + leitura de PDF nesta sessão.",
+    "metodo": "Leitura primária direta do texto consolidado com marcação de redações históricas (tachado) e vigentes, incluindo todas as 'Redação dada pela Lei Complementar/Estadual nº ...' e 'REVOGADO'/'SUPRIMIDO' assinalados no próprio documento oficial."
+  },
+  "texto_consolidado": {
+    "disponivel": true,
+    "artigos_confirmados_para_escopo_atual": {
+      "art. 2º, §2º": "\"A inclusão no quadro de acesso para a promoção ao posto de Coronel poderá ser recusada pelo servidor.\" — texto original de 1997, sem nenhuma 'Redação dada por' posterior; vigente e não alterado.",
+      "art. 3º, §1º": "\"O ingresso no Curso Superior de Polícia Militar dar-se-á mediante concurso público de provas e títulos com exigência de diplomação no Curso de Ciências Jurídicas e Sociais.\" — original, não alterado.",
+      "art. 3º, §2º": "\"Os aprovados no concurso público de que trata o parágrafo anterior, enquanto estiverem freqüentando o Curso Superior de Polícia Militar, cujo prazo de duração não excederá a dois anos, serão considerados Alunos-Oficiais.\" — original, não alterado.",
+      "art. 5º, §1º": "\"Para a promoção ao posto de Major, o ocupante do posto de Capitão deverá ter prestado serviços em órgão de execução por um período, consecutivo ou não, de, no mínimo, três anos e ter concluído, com aprovação, o Curso Avançado de Administração Policial Militar - CAAPM.\" — original, não alterado.",
+      "art. 5º, §2º": "\"O acesso à promoção ao posto de Coronel, pelo ocupante do posto de Tenente-Coronel, exige a conclusão, com aprovação, do Curso de Especialização em Políticas e Gestão de Segurança Pública - CEPGSP.\" — original, não alterado."
+    }
+  },
+  "vigencia": {
+    "situacao": "VIGENTE. Não revogada. Última atualização identificada na compilação oficial: LC 15.454/2020 (que alterou artigos fora do escopo autorizado desta unidade — arts. 13, 14, 19).",
+    "artigos_do_escopo_afetados_por_alteracoes": "NENHUM dos 5 artigos do escopo autorizado (art. 2º §2º; art. 3º §1º/§2º; art. 5º §1º/§2º) recebeu qualquer 'Redação dada por' — todos permanecem em sua redação original de 1997."
+  },
+  "alteracoes_relevantes": [
+    "art. 6º, 13, 14, 15 (revogado), 16-21, 25-A, 26: sofreram múltiplas alterações por LCs posteriores (11.170/98, 11.248/98, 11.272/98, 11.803/02, 11.832/02, 12.374/05, 15.048/17, 15.454/20) — mas NENHUM desses artigos está no escopo autorizado desta unidade.",
+    "Nenhuma alteração relevante afeta os arts. 2º, 3º e 5º, que sustentam integralmente o escopo desta unidade."
+  ],
+  "escopo_autorizado": "Estrutura da carreira dos Servidores Militares Estaduais de Nível Superior (QOEM/QOES) — ingresso, formação, promoção — nos exatos termos dos arts. 2º, 3º e 5º da LC 10.992/1997, conforme já mapeado no escopo pré-existente do projeto.",
+  "subtemas_autorizados": [
+    "Estrutura da carreira via QOEM/QOES (art. 2º, caput e §2º)",
+    "Ingresso no QOEM: concurso público, Curso de Ciências Jurídicas e Sociais, Curso Superior de Polícia Militar, condição de Aluno-Oficial (art. 3º, §1º e §2º)",
+    "Requisitos para promoção a Major (CAAPM) e a Coronel (CEPGSP) (art. 5º, §1º e §2º)"
+  ],
+  "subtemas_proibidos": [
+    "Círculos hierárquicos, escala hierárquica e graduações de Praças (arts. 6, 11-21) — fora do escopo desta unidade",
+    "Reenquadramento de Soldados por níveis (art. 25-A, matéria recente de 2020) — fora do escopo",
+    "Qualquer regra de interstício/promoção de Praças de nível médio (arts. 17-19) — pertence a outro contexto normativo, não ao escopo QOEM/QOES desta unidade",
+    "Misturar QOEM/QOES (nível superior) com QTPM/QPM (nível médio) como se fossem a mesma carreira"
+  ],
+  "questoes_live_existentes": [
+    {
+      "questao_id": 201,
+      "origem": "AUTORAL (Papiro)",
+      "banca": "Papiro",
+      "concurso": "PAPIRO - Estilo Fundatec - BM RS",
+      "ano": 2026,
+      "subtema": "Progressão funcional",
+      "dispositivo_relacionado": "não determinado — não auditado nesta fase",
+      "status_normativo": "NEEDS_REVIEW",
+      "observacao": "Conteúdo integral não auditado byte-a-byte nesta fase."
+    },
+    {
+      "questao_id": 202,
+      "origem": "AUTORAL (Papiro)",
+      "banca": "Papiro",
+      "concurso": "PAPIRO - Estilo Fundatec - BM RS",
+      "ano": 2026,
+      "subtema": "Organização do plano de carreira",
+      "dispositivo_relacionado": "não determinado — não auditado nesta fase",
+      "status_normativo": "NEEDS_REVIEW"
+    },
+    {
+      "questao_id": 203,
+      "origem": "AUTORAL (Papiro)",
+      "banca": "Papiro",
+      "concurso": "PAPIRO - Estilo Fundatec - BM RS",
+      "ano": 2026,
+      "subtema": "Promoção na carreira militar",
+      "dispositivo_relacionado": "não determinado — não auditado nesta fase",
+      "status_normativo": "NEEDS_REVIEW"
+    },
+    {
+      "questao_id": 364,
+      "origem": "REAL",
+      "banca": "Fundatec",
+      "concurso": "Corpo de Bombeiros Militar RS - Soldado de Primeira Classe",
+      "ano": 2025,
+      "subtema": "Questão INCORRETA sobre LC 10.992/1997 em geral",
+      "dispositivo_relacionado": "LC 10.992/1997 (citada nominalmente e corretamente no enunciado)",
+      "status_normativo": "CURRENT"
+    }
+  ],
+  "gaps": [
+    "Déficit pedagógico: 6 questões úteis faltantes (4 úteis atuais, meta 10).",
+    "Apenas 5 artigos/parágrafos específicos confirmados no escopo — suficientes para sustentar candidatas sobre ingresso/promoção QOEM/QOES, mas geração deve evitar redundância excessiva entre os 8 candidatos futuros propostos."
+  ],
+  "restricoes": [
+    "Usar SOMENTE os arts. 2º, 3º e 5º (trechos confirmados acima) como fundamento normativo de questões futuras — não expandir para outros artigos sem nova validação documental.",
+    "NÃO confundir QOEM/QOES com o Plano de Carreira de nível médio (QTPM/QPM) do mesmo diploma."
+  ],
+  "riscos": [
+    "Risco baixo/moderado: escopo bem sustentado por texto primário lido diretamente; risco principal é de redundância temática entre as 8 candidatas futuras propostas dado o escopo relativamente estreito (5 dispositivos)."
+  ],
+  "process_validation": "Nota de processo: leitura primária direta do PDF oficial compilado da Assembleia Legislativa realizada nesta fase (WebFetch + leitura de PDF). Isto é análise documental forte, mas NÃO constitui, por si só, validação humana (human_source_signoff continua PENDING). Somente sign-off humano explícito promove este manifesto.",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote07",
+  "validated_at": "2026-09-12T00:00:00Z",
+  "human_source_signoff": "APPROVED",
+  "notes": [
+    "RASCUNHO — NÃO VALIDADO. Criado no Lote 07. Único manifesto entre os 4 desta fase cujo texto primário foi lido INTEGRALMENTE em versão oficial compilada com histórico de emendas explícito."
+  ],
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-12T00:00:00Z",
+    "phase": "Lote 07 — HUMAN SOURCE SIGN-OFF + CORREÇÃO DOCUMENTAL LOB + GERAÇÃO COMPLETA",
+    "evidence": "Mandato do usuário, Seção 3 ('PLANO DE CARREIRA — HUMAN SIGN-OFF'): 'APROVADO. Norma canônica: Lei Complementar nº 10.992/1997. Fonte: compilação oficial da Assembleia Legislativa do RS já lida nesta fase. Escopo autorizado já aprovado: art. 2º e parágrafos pertinentes (QOEM/QOES); art. 3º, §§ pertinentes (ingresso no QOEM); art. 5º, §§ pertinentes (requisitos para promoção a Major e Coronel). [...] Atualizar manifest: validated: true, human_source_signoff: 'APPROVED'.'"
+  },
+  "covers_articles": [
+    "art. 2º, §2º",
+    "art. 3º, §1º",
+    "art. 3º, §2º",
+    "art. 5º, §1º",
+    "art. 5º, §2º"
+  ],
+  "document_validation": {
+    "LC_10992_1997": "VALIDATED_PRIMARY_NORM"
+  }
+}

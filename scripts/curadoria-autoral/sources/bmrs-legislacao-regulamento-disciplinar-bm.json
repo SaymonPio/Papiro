@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_LEG_REGULAMENTO_DISCIPLINAR_BM_ESCOPO_UNIDADE",
+  "type": "official_law",
+  "title": "Fonte — Legislação Específica — Regulamento Disciplinar da Brigada Militar (BM RS) [APROVADO COM CAUTELA DOCUMENTAL — HUMAN SIGN-OFF Lote 07]",
+  "applies_to_unit_ids": [
+    "454f8501-7818-4dc4-b22a-337247678c58"
+  ],
+  "unit_id": "454f8501-7818-4dc4-b22a-337247678c58",
+  "curso_conteudo_id": 64,
+  "conteudo_id": 73,
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "norma_canonica": {
+    "diploma": "Decreto Estadual nº 43.245, de 19 de julho de 2004 (RS)",
+    "ementa": "Aprova o Regulamento Disciplinar da Brigada Militar do Estado do Rio Grande do Sul, regulamentando o art. 35 da Lei Complementar nº 10.990/1997.",
+    "texto_oficial": "PDF oficial da Brigada Militar do Estado do Rio Grande do Sul (brigadamilitar.rs.gov.br/upload/arquivos/201907/30210455-rdbm.pdf), lido integralmente nesta fase via WebFetch + leitura de PDF (incluindo Anexo I — tipos transgressionais — e Anexo II — processo administrativo disciplinar militar)."
+  },
+  "fonte_oficial": {
+    "fonte_lida": "PDF oficial hospedado diretamente pela Brigada Militar do RS.",
+    "limitacao_identificada": "Ao contrário dos manifestos de Estatuto e Plano de Carreira (compilados pela Assembleia Legislativa com marcação explícita de emendas), este documento da Brigada Militar NÃO exibe marcação de 'Redação dada por' — não é possível confirmar, apenas a partir deste PDF, se houve emendas supervenientes ao Decreto nº 43.245/2004 desde sua publicação em 2004. Não foi localizada, em pesquisa nesta fase, qualquer decreto revogador ou alterador posterior."
+  },
+  "texto_consolidado": {
+    "disponivel": true,
+    "artigos_confirmados_para_escopo_atual": {
+      "art. 1º, caput": "\"O Regulamento Disciplinar da Brigada Militar do Estado do Rio Grande do Sul tem a finalidade de especificar e classificar as transgressões disciplinares e estabelecer normas relativas às punições disciplinares, os recursos, o comportamento policial-militar das Praças e as recompensas policiais-militares.\"",
+      "art. 1º, §1º": "\"A camaradagem é indispensável à formação e ao convívio entre os integrantes da Corporação, devendo estes primar pela melhor relação social entre si.\"",
+      "art. 1º, §2º": "\"Incumbe ao superior hierárquico incentivar e manter a harmonia e a amizade entre seus subordinados.\"",
+      "art. 1º, §3º": "\"A civilidade, como parte da educação policial-militar, é de importância vital para a disciplina no âmbito da Brigada Militar e, assim sendo, é indispensável que o superior trate com cortesia, urbanidade e justiça os seus subordinados e, em contrapartida, o subordinado deve externar, aos seus superiores, toda manifestação de respeito e deferência.\"",
+      "art. 2º, §1º": "\"Os Militares Estaduais na inatividade não são alcançados pelas disposições deste Regulamento, excetuando-se quanto a divulgação de segredos militares, de que trata a Lei Federal n° 7.524/86, tanto quanto a manifestação pública, pela imprensa ou por outro meio de divulgação, de críticas a assuntos que afetem a previsão estatutária relativa ao valor e a ética policial-militar, naquilo que lhes for aplicável.\"",
+      "art. 3º": "\"A hierarquia e a disciplina são a base institucional da Brigada Militar.\"",
+      "art. 9º, V": "\"licenciamento a bem da disciplina;\"",
+      "art. 9º, VI": "\"exclusão a bem da disciplina.\"",
+      "art. 10": "\"A advertência, forma mais branda das sanções, será aplicada ostensivamente, por meio de publicação em Boletim, e será registrada nos assentamentos individuais do transgressor.\"",
+      "art. 11": "\"A repreensão é sanção imposta ao transgressor de forma ostensiva, mediante publicação em Boletim, devendo sempre ser averbada nos assentamentos individuais do transgressor.\"",
+      "art. 12, caput": "\"A detenção consiste no cerceamento da liberdade do punido, o qual deverá permanecer no local que lhe for determinado, sem que fique confinado.\"",
+      "art. 13": "\"Exclusivamente para o atendimento das disposições de conversão de infração penal em disciplinar, previstas na lei penal militar, haverá o instituto da prisão administrativa que consiste na permanência do punido no âmbito do aquartelamento, com prejuízo do serviço e da instrução.\"",
+      "art. 26": "\"Todo Militar Estadual que tiver conhecimento de um fato contrário à disciplina deverá participar ao seu superior imediato, por escrito ou verbalmente, neste último caso confirmando a participação, por escrito no prazo de até dois dias úteis.\"",
+      "art. 28, caput": "\"Nos casos em que são imputadas ao Militar Estadual ações ou omissões tidas como transgressões da disciplina policial-militar, estas serão devidamente apuradas na forma do contido neste Capítulo e nos Anexos I e II, deste Regulamento, propiciando-se ao imputado o devido processo administrativo para a sua ampla defesa e contraditório.\"",
+      "art. 28, parágrafo único": "\"O processo administrativo será orientado pelos princípios da instrumentalidade, simplicidade, informalidade, economia procedimental e celeridade, buscando sempre a verdade real sobre o fato apreciado.\"",
+      "art. 29, caput": "\"As autoridades competentes para instauração, procedimento e julgamento do processo são aquelas com competência para aplicar a sanção administrativa.\""
+    }
+  },
+  "vigencia": {
+    "situacao": "Aparentemente vigente — nenhuma revogação encontrada em pesquisa nesta fase.",
+    "vigencia_status": "CURRENT_AND_OFFICIALLY_IN_USE_WITHOUT_COMPLETE_AMENDMENT_HISTORY",
+    "observacao_formulacao_prudente": "Há evidência oficial contemporânea de 2025/2026 de aplicação do Regulamento aprovado pelo Decreto nº 43.245/2004 em atos disciplinares do Estado. NÃO se afirma que o Regulamento 'nunca sofreu alteração' ou que seu 'texto original integral permanece absolutamente inalterado' — isso não está documentalmente provado. O status correto e prudente é: vigente e oficialmente em uso, sem histórico completo de emendas confirmado por versão compilada."
+  },
+  "alteracoes_relevantes": [
+    "Nenhuma alteração relevante identificada nesta fase.",
+    "O próprio Decreto revogou o Decreto nº 43.053/2004 (norma imediatamente anterior, de 23/04/2004) em seu art. 2º."
+  ],
+  "escopo_autorizado": "Regulamento Disciplinar da Brigada Militar (Decreto nº 43.245/2004): finalidade do regulamento; camaradagem/harmonia/civilidade; âmbito de aplicação (incluindo hipóteses restritas sobre inativos); hierarquia e disciplina como base institucional; classificação e enumeração das sanções disciplinares; definições de advertência, repreensão, detenção e prisão administrativa; processo administrativo disciplinar militar (dever de comunicar, devido processo/ampla defesa, autoridades competentes) — nos exatos termos já mapeados no escopo pré-existente do projeto e agora confirmados por leitura primária integral.",
+  "subtemas_autorizados": [
+    "Finalidade do Regulamento e valores institucionais — camaradagem, harmonia, civilidade (art. 1º, caput a §3º)",
+    "Âmbito de aplicação, incluindo exceção quanto a inativos (art. 2º, §1º)",
+    "Hierarquia e disciplina como base institucional (art. 3º)",
+    "Classificação/enumeração das sanções disciplinares — licenciamento e exclusão a bem da disciplina (art. 9º, V e VI)",
+    "Definições de advertência (art. 10), repreensão (art. 11), detenção (art. 12, caput) e prisão administrativa (art. 13)",
+    "Processo administrativo disciplinar militar: dever de comunicar fato contrário à disciplina (art. 26); devido processo/ampla defesa e princípios do processo (art. 28); autoridades competentes para instauração/procedimento/julgamento (art. 29, caput)"
+  ],
+  "subtemas_proibidos": [
+    "Estatuto dos Militares Estaduais (LC 10.990/1997) como se fosse o mesmo diploma — são normas distintas; o Regulamento apenas regulamenta o art. 35 do Estatuto",
+    "Anexo I (tipos transgressionais específicos) e Anexo II (procedimento detalhado) além dos dispositivos do corpo principal já listados — não mapeados no escopo pedagógico pré-existente da unidade; não usar como fundamento sem nova validação de escopo",
+    "Demais incisos do art. 9º além de V e VI (advertência, repreensão, detenção e prisão já cobertos nominalmente pelos arts. 10-13)",
+    "Recursos disciplinares (Título VI, arts. 47-59), cancelamento/anulação (Título VII) e recompensas (Título VIII) — fora do escopo confirmado desta unidade"
+  ],
+  "questoes_live_existentes": [
+    {
+      "questao_id": 210,
+      "origem": "AUTORAL (Papiro)",
+      "banca": "Papiro",
+      "concurso": "PAPIRO - Estilo Fundatec - BM RS",
+      "ano": 2026,
+      "subtema": "Finalidade do Regulamento",
+      "dispositivo_relacionado": "art. 1º, caput",
+      "status_normativo": "NEEDS_REVIEW",
+      "observacao": "Conteúdo integral não auditado byte-a-byte nesta fase."
+    },
+    {
+      "questao_id": 211,
+      "origem": "AUTORAL (Papiro)",
+      "banca": "Papiro",
+      "concurso": "PAPIRO - Estilo Fundatec - BM RS",
+      "ano": 2026,
+      "subtema": "Aplicação de sanções disciplinares",
+      "dispositivo_relacionado": "não determinado — não auditado nesta fase",
+      "status_normativo": "NEEDS_REVIEW"
+    },
+    {
+      "questao_id": 212,
+      "origem": "AUTORAL (Papiro)",
+      "banca": "Papiro",
+      "concurso": "PAPIRO - Estilo Fundatec - BM RS",
+      "ano": 2026,
+      "subtema": "Hierarquia e disciplina",
+      "dispositivo_relacionado": "art. 3º",
+      "status_normativo": "NEEDS_REVIEW"
+    },
+    {
+      "questao_id": 368,
+      "origem": "REAL",
+      "banca": "Fundatec",
+      "concurso": "Corpo de Bombeiros Militar RS - Soldado de Primeira Classe",
+      "ano": 2025,
+      "subtema": "Regulamento em geral (INCORRETA)",
+      "dispositivo_relacionado": "Decreto nº 43.245/2004 em geral",
+      "status_normativo": "CURRENT"
+    },
+    {
+      "questao_id": 369,
+      "origem": "REAL",
+      "banca": "Fundatec",
+      "concurso": "Corpo de Bombeiros Militar RS - Soldado de Primeira Classe",
+      "ano": 2025,
+      "subtema": "Regulamento em geral",
+      "dispositivo_relacionado": "Decreto nº 43.245/2004 em geral",
+      "status_normativo": "CURRENT"
+    },
+    {
+      "questao_id": 370,
+      "origem": "REAL",
+      "banca": "Fundatec",
+      "concurso": "Corpo de Bombeiros Militar RS - Soldado de Primeira Classe",
+      "ano": 2025,
+      "subtema": "Processo administrativo disciplinar militar (INCORRETA)",
+      "dispositivo_relacionado": "Título IV (arts. 19-33)",
+      "status_normativo": "CURRENT"
+    }
+  ],
+  "gaps": [
+    "Déficit pedagógico: 4 questões úteis faltantes (6 úteis atuais, meta 10).",
+    "Verificação formal de ausência de emendas supervenientes ao Decreto nº 43.245/2004 permanece incompleta (ver ressalva em vigencia)."
+  ],
+  "restricoes": [
+    "Usar SOMENTE os 16 dispositivos confirmados acima como fundamento normativo de questões futuras.",
+    "NÃO absorver conteúdo do Estatuto (LC 10.990/1997) apenas por proximidade temática — são diplomas distintos, com o Regulamento regulamentando especificamente o art. 35 do Estatuto."
+  ],
+  "riscos": [
+    "Risco moderado: apesar de leitura primária integral do Decreto, a fonte não é uma versão compilada com histórico de emendas explícito (ao contrário dos outros 2 diplomas verificados nesta fase) — não há confirmação formal e definitiva de que o texto lido é a versão vigente sem qualquer alteração superveniente."
+  ],
+  "process_validation": "Nota de processo: leitura primária direta do PDF oficial da Brigada Militar realizada nesta fase (WebFetch + leitura de PDF, incluindo Anexos I e II). Análise documental forte quanto ao texto em si, mas com a ressalva metodológica registrada acima quanto à confirmação formal de vigência sem emendas. NÃO constitui, por si só, validação humana (human_source_signoff continua PENDING).",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote07",
+  "validated_at": "2026-09-12T00:00:00Z",
+  "human_source_signoff": "APPROVED",
+  "notes": [
+    "RASCUNHO — NÃO VALIDADO. Criado no Lote 07."
+  ],
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-12T00:00:00Z",
+    "phase": "Lote 07 — HUMAN SOURCE SIGN-OFF + CORREÇÃO DOCUMENTAL LOB + GERAÇÃO COMPLETA",
+    "evidence": "Mandato do usuário, Seção 5 ('REGULAMENTO DISCIPLINAR — HUMAN SIGN-OFF'): 'APROVADO COM CAUTELA DOCUMENTAL. [...] Há evidência oficial contemporânea de 2025/2026 de aplicação do Regulamento aprovado pelo Decreto nº 43.245/2004 em atos disciplinares do Estado. Portanto, pode ser utilizado para geração dentro dos dispositivos validados. NÃO afirmar no manifest \"nunca sofreu alteração\" ou \"texto original integral permanece absolutamente inalterado\" se isso não estiver documentalmente provado. Registrar formulação prudente equivalente a: vigencia_status: CURRENT_AND_OFFICIALLY_IN_USE_WITHOUT_COMPLETE_AMENDMENT_HISTORY. Escopo autorizado: art. 1º; art. 2º §1º; art. 3º; art. 9º, SOMENTE V e VI; arts. 10 a 13; arts. 26, 28 e 29. [...] Atualizar: validated: true, human_source_signoff: 'APPROVED'.'"
+  },
+  "covers_articles": [
+    "art. 1º, caput",
+    "art. 1º, §1º",
+    "art. 1º, §2º",
+    "art. 1º, §3º",
+    "art. 2º, §1º",
+    "art. 3º",
+    "art. 9º, V",
+    "art. 9º, VI",
+    "art. 10",
+    "art. 11",
+    "art. 12, caput",
+    "art. 13",
+    "art. 26",
+    "art. 28, caput",
+    "art. 28, parágrafo único",
+    "art. 29, caput"
+  ],
+  "document_validation": {
+    "DECRETO_43245_2004": "VALIDATED_PRIMARY_NORM"
+  },
+  "vigencia_status": "CURRENT_AND_OFFICIALLY_IN_USE_WITHOUT_COMPLETE_AMENDMENT_HISTORY"
+}

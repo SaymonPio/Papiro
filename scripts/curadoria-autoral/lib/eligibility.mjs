@@ -32,6 +32,37 @@ export function materiaPareceNormativa(escopoTexto) {
   return PADRAO_ESCOPO_NORMATIVO.test(escopoTexto || "");
 }
 
+// Reparo Lote 07 (mandato "REPAIR PASS SEM NOVA API", Secao 7): a lacuna
+// encontrada apos a geracao real foi que fundamento.referencia podia ficar
+// preenchido com justificativa gramatical/semantica generica mesmo quando a
+// fonte da unidade e uma norma (source.legal_source_required=true) — nada no
+// guard exigia que a referencia citasse, de fato, um dispositivo. As duas
+// heuristicas abaixo sao deliberadamente SEPARADAS (diploma vs artigo) e
+// aplicadas apenas quando o payload/contexto de geracao sinaliza
+// requiresNormativeDeviceReference=true (nascido de source.legal_source_required
+// no payload, nunca de materia_id ou do nome da materia).
+const PADRAO_ARTIGO_IDENTIFICAVEL = /\bart(igo)?s?\.?\s*\d/i;
+const PADRAO_DIPLOMA_IDENTIFICAVEL = /\b(lei\s+complementar|lei\s+(estadual|federal)|lei|decreto(\s+estadual)?|constitui[çc][ãa]o)\b[^\n]{0,30}?\d/i;
+
+/**
+ * Verifica se um texto de fundamento.referencia cita, de forma
+ * identificavel, um diploma legal E um artigo — as duas exigencias minimas
+ * do mandato de reparo do Lote 07 para "dispositivo normativo presente".
+ * Nao valida paragrafo/inciso/alinea (isso fica para revisao humana
+ * candidata a candidata, Secao 3 do mandato) nem confere se o dispositivo
+ * citado realmente sustenta o conteudo da questao — so confere se HA uma
+ * citacao identificavel.
+ * @param {string} referencia
+ * @returns {{ temDiploma: boolean, temArtigo: boolean }}
+ */
+export function referenciaTemDispositivoNormativo(referencia) {
+  const texto = typeof referencia === "string" ? referencia : "";
+  return {
+    temDiploma: PADRAO_DIPLOMA_IDENTIFICAVEL.test(texto),
+    temArtigo: PADRAO_ARTIGO_IDENTIFICAVEL.test(texto),
+  };
+}
+
 /**
  * "Sabemos O QUE ensinar/cobrar nesta unidade?" — NUNCA prova fonte
  * factual validada, so completude do metadado pedagogico.

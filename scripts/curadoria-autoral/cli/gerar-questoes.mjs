@@ -183,7 +183,9 @@ async function main() {
   const candidatosBaseline = baseline?.questoes_existentes ?? [];
 
   const resultados = questoesEnriquecidas.map((questao, indice) => {
-    const validacaoEstrutural = validarQuestaoGerada(questao);
+    const validacaoEstrutural = validarQuestaoGerada(questao, {
+      requiresNormativeDeviceReference: payload.source?.legal_source_required === true,
+    });
     const slotEsperado = extrairSlotDoQuestionKey(questao.question_key);
 
     const textoParaDedup = textoCompletoParaTripwires(questao);

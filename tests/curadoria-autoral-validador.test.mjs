@@ -110,3 +110,69 @@ test("um campo id de banco de questao presente e rejeitado", () => {
   assert.equal(resultado.ok, false);
   assert.ok(resultado.errors.some((e) => e.codigo === "BANK_ID_NOT_ALLOWED"));
 });
+
+// Reparo Lote 07 (mandato "REPAIR PASS SEM NOVA API", Secao 8) — os 6 casos
+// deterministicos exigidos pelo mandato para o novo guard
+// MISSING_NORMATIVE_DEVICE, acionado apenas via
+// contexto.requiresNormativeDeviceReference (nunca por heuristica de
+// materia_id/nome).
+
+test("CASO 1 — legislativa com diploma + artigo identificaveis: PASS", () => {
+  const questao = questaoValida({
+    fundamento: { tipo: "dispositivo_normativo", referencia: "Lei Complementar nº 10.990/1997, art. 12", descricao: "Hierarquia e disciplina como base institucional." },
+  });
+  const resultado = validarQuestaoGerada(questao, { requiresNormativeDeviceReference: true });
+  assert.equal(resultado.ok, true, JSON.stringify(resultado.errors));
+});
+
+test("CASO 2 — legislativa citando so o nome da lei, sem artigo: BLOCK", () => {
+  const questao = questaoValida({
+    fundamento: { tipo: "dispositivo_normativo", referencia: "Estatuto dos Militares Estaduais", descricao: "Trata da hierarquia." },
+  });
+  const resultado = validarQuestaoGerada(questao, { requiresNormativeDeviceReference: true });
+  assert.equal(resultado.ok, false);
+  assert.ok(resultado.errors.some((e) => e.codigo === "MISSING_NORMATIVE_DEVICE"));
+});
+
+test("CASO 3 — fundamento generico (gramatical/semantico): BLOCK", () => {
+  const questao = questaoValida({
+    fundamento: { tipo: "regra_gramatical", referencia: "Interpretação textual e semântica", descricao: "A correção decorre da compatibilidade semântica." },
+  });
+  const resultado = validarQuestaoGerada(questao, { requiresNormativeDeviceReference: true });
+  assert.equal(resultado.ok, false);
+  assert.ok(resultado.errors.some((e) => e.codigo === "MISSING_NORMATIVE_DEVICE"));
+});
+
+test("CASO 4 — materia nao normativa (Portugues) com fundamento gramatical, sem exigencia do contexto: PASS", () => {
+  const questao = questaoValida({
+    fundamento: { tipo: "regra_gramatical", referencia: "Regência verbal", descricao: "O verbo exige preposição." },
+  });
+  const resultado = validarQuestaoGerada(questao, { requiresNormativeDeviceReference: false });
+  assert.equal(resultado.ok, true, JSON.stringify(resultado.errors));
+});
+
+test("CASO 5 — legislativa com artigo mas sem diploma identificavel: BLOCK", () => {
+  const questao = questaoValida({
+    fundamento: { tipo: "dispositivo_normativo", referencia: "art. 12", descricao: "Hierarquia e disciplina." },
+  });
+  const resultado = validarQuestaoGerada(questao, { requiresNormativeDeviceReference: true });
+  assert.equal(resultado.ok, false);
+  assert.ok(resultado.errors.some((e) => e.codigo === "MISSING_NORMATIVE_DEVICE"));
+});
+
+test("CASO 6 — legislativa com diploma mas sem artigo identificavel: BLOCK", () => {
+  const questao = questaoValida({
+    fundamento: { tipo: "dispositivo_normativo", referencia: "Lei Complementar nº 10.990/1997", descricao: "Estatuto dos Militares Estaduais em geral." },
+  });
+  const resultado = validarQuestaoGerada(questao, { requiresNormativeDeviceReference: true });
+  assert.equal(resultado.ok, false);
+  assert.ok(resultado.errors.some((e) => e.codigo === "MISSING_NORMATIVE_DEVICE"));
+});
+
+test("contexto omitido (chamada antiga) preserva comportamento: fundamento generico ainda passa", () => {
+  const questao = questaoValida({
+    fundamento: { tipo: "regra_gramatical", referencia: "Interpretação textual e semântica", descricao: "..." },
+  });
+  const resultado = validarQuestaoGerada(questao);
+  assert.equal(resultado.ok, true, JSON.stringify(resultado.errors));
+});

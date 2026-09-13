@@ -10,7 +10,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { avaliarContextoPedagogico, avaliarElegibilidade, materiaPareceNormativa } from "../scripts/curadoria-autoral/lib/eligibility.mjs";
-import { avaliarValidacaoFonte, buscarFontesParaUnidade, carregarFontes } from "../scripts/curadoria-autoral/lib/source-manifest.mjs";
+import { avaliarValidacaoFonte, buscarFontesParaUnidade, carregarFontes, fonteTemSignoffHumanoAutorizado } from "../scripts/curadoria-autoral/lib/source-manifest.mjs";
 import { CODIGO_ABORTO_SESSAO_NAO_READONLY, travarSessaoSomenteLeituraOuAbortar } from "../scripts/curadoria-autoral/lib/context-resolver.mjs";
 import { STATUS_BANCA, STATUS_CONTEXTO_PEDAGOGICO, STATUS_ELEGIBILIDADE, STATUS_VALIDACAO_FONTE } from "../scripts/curadoria-autoral/lib/schemas.mjs";
 import { contemAgrupamentoIndevidoExistirImpessoal, verificarTripwiresGramaticais, violaGeneralizacaoFazerImpessoal, violaGeneralizacaoHaverImpessoal } from "../scripts/curadoria-autoral/lib/grammar-tripwires.mjs";
@@ -87,7 +87,17 @@ test("6. nenhuma fonte no manifesto para a unidade produz SOURCE_MISSING", () =>
   assert.equal(validacao.status, STATUS_VALIDACAO_FONTE.SOURCE_MISSING);
 });
 
-test("7. REGRESSAO LOB-BM: contexto pedagogico OK, mas source BLOQUEIA por falta de validacao humana", () => {
+test("7. REGRESSAO LOB-BM (fixture ISOLADA, sem sign-off): contexto pedagogico OK, mas source BLOQUEIA sem sign-off humano autorizado", () => {
+  // Reparo Lote 07 (mandato "COMPLEMENTO FINAL DA LOB", Secao 8): este teste
+  // usava carregarFontes() (disco real). Isso o tornava dependente do estado
+  // ATUAL dos manifestos — quando um humano de fato assina (Lote 07), o
+  // disco passa a ter uma fonte legitimamente validada, e o teste que so
+  // checava "nunca pode ser SOURCE_VALIDATED" ficava obsoleto (nao era mais
+  // um bug, era o sistema funcionando). A regressao real que importa
+  // preservar e "SEM sign-off humano autorizado, nunca pode virar
+  // SOURCE_VALIDATED" — testada aqui com uma fixture ISOLADA (nao o disco),
+  // para nao depender de quais manifestos existem hoje. O caso "COM
+  // sign-off real" e coberto pelo teste 7b, contra o disco atual.
   const contexto = avaliarContextoPedagogico({
     escopoUnidade: LOB_BM_ESCOPO,
     artigosEsperadosUnidade: LOB_BM_ARTIGOS_ESPERADOS,
@@ -95,13 +105,14 @@ test("7. REGRESSAO LOB-BM: contexto pedagogico OK, mas source BLOQUEIA por falta
   });
   assert.equal(contexto.status, STATUS_CONTEXTO_PEDAGOGICO.PEDAGOGICAL_CONTEXT_COMPLETE);
 
-  const todasFontes = carregarFontes();
-  const fontesDaUnidade = buscarFontesParaUnidade(todasFontes, LOB_BM_UNIDADE_ID);
-  const validacaoFonte = avaliarValidacaoFonte({ fontesDaUnidade, artigosEsperados: contexto.artigos_esperados_efetivos });
+  const fontesDaUnidadeSemSignoff = [
+    { source_key: "lob-bm-sem-signoff", type: "official_law", validated: false, covers_articles: ["art. 10"] },
+  ];
+  const validacaoFonte = avaliarValidacaoFonte({ fontesDaUnidade: fontesDaUnidadeSemSignoff, artigosEsperados: contexto.artigos_esperados_efetivos });
 
   // FALHA explicita se isto voltar a ser SOURCE_VALIDATED so por causa do
   // art. 10 estar em artigos_esperados (o bug original desta unidade).
-  assert.notEqual(validacaoFonte.status, STATUS_VALIDACAO_FONTE.SOURCE_VALIDATED, "LOB-BM NAO pode ser SOURCE_VALIDATED sem uma fonte com validated=true");
+  assert.notEqual(validacaoFonte.status, STATUS_VALIDACAO_FONTE.SOURCE_VALIDATED, "LOB-BM NAO pode ser SOURCE_VALIDATED sem uma fonte com sign-off humano autorizado");
   assert.equal(validacaoFonte.status, STATUS_VALIDACAO_FONTE.SOURCE_REQUIRES_HUMAN_VALIDATION);
 
   const requerFonteValidada = materiaPareceNormativa(LOB_BM_ESCOPO);
@@ -121,7 +132,37 @@ test("7. REGRESSAO LOB-BM: contexto pedagogico OK, mas source BLOQUEIA por falta
   assert.ok(elegibilidade.blocking_reasons.includes("LEGAL_SOURCE_NOT_DOCUMENTALLY_VALIDATED"));
 });
 
-test("8. REGRESSAO Estatuto dos Militares Estaduais (piloto Fase 2A): NAO deve mais ser SOURCE_VALIDATED", () => {
+test("7b. LOB-BM COM o manifesto real assinado no Lote 07 (disco atual): SOURCE_VALIDATED, elegibilidade libera", () => {
+  const contexto = avaliarContextoPedagogico({
+    escopoUnidade: LOB_BM_ESCOPO,
+    artigosEsperadosUnidade: LOB_BM_ARTIGOS_ESPERADOS,
+    materialVersoesExistem: false,
+  });
+
+  const todasFontes = carregarFontes();
+  const fontesDaUnidade = buscarFontesParaUnidade(todasFontes, LOB_BM_UNIDADE_ID);
+  const validacaoFonte = avaliarValidacaoFonte({ fontesDaUnidade, artigosEsperados: contexto.artigos_esperados_efetivos });
+
+  assert.equal(
+    validacaoFonte.status,
+    STATUS_VALIDACAO_FONTE.SOURCE_VALIDATED,
+    "o manifesto bmrs-legislacao-lob-brigada-militar.json tem sign-off humano autorizado (validated=true, human_source_signoff=APPROVED, validated_by=human_operator_...) e deve produzir SOURCE_VALIDATED"
+  );
+
+  const elegibilidade = avaliarElegibilidade({
+    unidadeAtiva: true,
+    faltantes: 2,
+    pedagogicalContextStatus: contexto.status,
+    sourceValidationStatus: validacaoFonte.status,
+    requerFonteValidada: materiaPareceNormativa(LOB_BM_ESCOPO),
+    bancaStatus: STATUS_BANCA.RESOLVED,
+    aulaExiste: true,
+    aulaPublicada: true,
+  });
+  assert.equal(elegibilidade.status, STATUS_ELEGIBILIDADE.ELIGIBLE_FOR_GENERATION);
+});
+
+test("8. REGRESSAO Estatuto (fixture ISOLADA, sem sign-off): NAO pode ser SOURCE_VALIDATED sem sign-off humano autorizado", () => {
   const contexto = avaliarContextoPedagogico({
     escopoUnidade: ESTATUTO_ESCOPO,
     artigosEsperadosUnidade: ESTATUTO_ARTIGOS_ESPERADOS,
@@ -132,9 +173,12 @@ test("8. REGRESSAO Estatuto dos Militares Estaduais (piloto Fase 2A): NAO deve m
   // sozinho o status de fonte.
   assert.equal(contexto.status, STATUS_CONTEXTO_PEDAGOGICO.PEDAGOGICAL_CONTEXT_COMPLETE);
 
-  const todasFontes = carregarFontes();
-  const fontesDaUnidade = buscarFontesParaUnidade(todasFontes, ESTATUTO_UNIDADE_ID);
-  const validacaoFonte = avaliarValidacaoFonte({ fontesDaUnidade, artigosEsperados: contexto.artigos_esperados_efetivos });
+  // Fixture ISOLADA (nao o disco) — reproduz o cenario original do bug:
+  // fonte candidata existe mas SEM sign-off humano autorizado ainda.
+  const fontesDaUnidadeSemSignoff = [
+    { source_key: "estatuto-sem-signoff", type: "official_law", validated: false, covers_articles: ESTATUTO_ARTIGOS_ESPERADOS },
+  ];
+  const validacaoFonte = avaliarValidacaoFonte({ fontesDaUnidade: fontesDaUnidadeSemSignoff, artigosEsperados: contexto.artigos_esperados_efetivos });
 
   assert.notEqual(
     validacaoFonte.status,
@@ -154,6 +198,36 @@ test("8. REGRESSAO Estatuto dos Militares Estaduais (piloto Fase 2A): NAO deve m
   });
   assert.equal(elegibilidade.status, STATUS_ELEGIBILIDADE.BLOCKED);
   assert.ok(elegibilidade.blocking_reasons.includes("LEGAL_SOURCE_NOT_DOCUMENTALLY_VALIDATED"));
+});
+
+test("8b. Estatuto COM o manifesto real assinado no Lote 07 (disco atual): SOURCE_VALIDATED, elegibilidade libera", () => {
+  const contexto = avaliarContextoPedagogico({
+    escopoUnidade: ESTATUTO_ESCOPO,
+    artigosEsperadosUnidade: ESTATUTO_ARTIGOS_ESPERADOS,
+    materialVersoesExistem: false,
+  });
+
+  const todasFontes = carregarFontes();
+  const fontesDaUnidade = buscarFontesParaUnidade(todasFontes, ESTATUTO_UNIDADE_ID);
+  const validacaoFonte = avaliarValidacaoFonte({ fontesDaUnidade, artigosEsperados: contexto.artigos_esperados_efetivos });
+
+  assert.equal(
+    validacaoFonte.status,
+    STATUS_VALIDACAO_FONTE.SOURCE_VALIDATED,
+    "o manifesto bmrs-legislacao-estatuto-militares-estaduais.json tem sign-off humano autorizado e deve produzir SOURCE_VALIDATED"
+  );
+
+  const elegibilidade = avaliarElegibilidade({
+    unidadeAtiva: true,
+    faltantes: 5,
+    pedagogicalContextStatus: contexto.status,
+    sourceValidationStatus: validacaoFonte.status,
+    requerFonteValidada: materiaPareceNormativa(ESTATUTO_ESCOPO),
+    bancaStatus: STATUS_BANCA.RESOLVED,
+    aulaExiste: false,
+    aulaPublicada: false,
+  });
+  assert.equal(elegibilidade.status, STATUS_ELEGIBILIDADE.ELIGIBLE_FOR_GENERATION);
 });
 
 test("9. conteudo juridico sem fonte validada BLOQUEIA (LEGAL_SOURCE_NOT_DOCUMENTALLY_VALIDATED)", () => {
@@ -225,17 +299,89 @@ test("13. sessao Postgres NAO read-only ABORTA com PG_SESSION_NOT_READ_ONLY, sem
   );
 });
 
-test("14. manifesto local de fontes (sources/*.json): fontes JURIDICAS (official_law) continuam validated=false", () => {
-  // Fase 2A.1: nenhuma fonte de LEGISLACAO pode virar validated=true so por
-  // pesquisa da IA (WebSearch) — exige leitura humana do texto oficial
-  // primario, que ainda nao aconteceu para LOB-BM/Estatuto.
+test("14. manifesto local de fontes (sources/*.json): TODA fonte JURIDICA (official_law) so e validated=true com sign-off humano autorizado", () => {
+  // Reparo Lote 07 (mandato "COMPLEMENTO FINAL DA LOB", Secoes 8-9): a
+  // premissa antiga era "nenhuma fonte juridica pode ter validated=true"
+  // — isso deixou de ser verdade quando o Lote 07 recebeu sign-off humano
+  // real para 4 manifestos. O invariante que de fato importa preservar nao
+  // e "nunca true", e sim "todo validated=true tem sign-off humano
+  // autorizado por tras dele" (fonteTemSignoffHumanoAutorizado), nunca so
+  // pesquisa/validacao feita por IA. Verificado aqui pelas DUAS pontas:
+  // (a) os manifestos legitimamente assinados no Lote 07, (b) os manifestos
+  // juridicos antigos que continuam SEM sign-off.
   const fontes = carregarFontes();
   const juridicas = fontes.filter((f) => f.type === "official_law");
-  assert.ok(juridicas.length >= 2, "esperado pelo menos os 2 rascunhos juridicos desta sessao (LOB-BM e Estatuto/LC10990)");
+  assert.ok(juridicas.length >= 6, "esperado pelo menos os 4 manifestos do Lote 07 + os 2 rascunhos estreitos anteriores (LOB-BM art.10 e Estatuto art.14/15)");
+
   for (const fonte of juridicas) {
-    assert.equal(fonte.validated, false, `fonte juridica ${fonte.source_key} nao deveria estar validated=true sem leitura humana do texto oficial primario`);
-    assert.equal(fonte.validated_by, null);
+    if (fonte.validated === true) {
+      assert.ok(
+        fonteTemSignoffHumanoAutorizado(fonte),
+        `fonte juridica ${fonte.source_key} esta validated=true mas NAO tem sign-off humano autorizado (human_source_signoff/validated_by) — isso e exatamente o bug que este teste existe para impedir`
+      );
+      assert.equal(fonte.human_source_signoff, "APPROVED", `fonte juridica ${fonte.source_key} validated=true precisa de human_source_signoff=APPROVED`);
+      assert.match(fonte.validated_by ?? "", /^human[_-]/i, `fonte juridica ${fonte.source_key} validated=true precisa de validated_by identificando um operador humano, nunca so pesquisa/IA`);
+    } else {
+      assert.equal(fonte.validated_by, null, `fonte juridica ${fonte.source_key} nao validada nao deveria ter validated_by preenchido`);
+    }
   }
+
+  const doLote07 = ["BMRS_LEG_LOB_BRIGADA_MILITAR_ESCOPO_UNIDADE", "BMRS_LEG_PLANO_CARREIRA_MILITARES_ESCOPO_UNIDADE", "BMRS_LEG_ESTATUTO_MILITARES_ESTADUAIS_ESCOPO_UNIDADE", "BMRS_LEG_REGULAMENTO_DISCIPLINAR_BM_ESCOPO_UNIDADE"];
+  for (const key of doLote07) {
+    const fonte = fontes.find((f) => f.source_key === key);
+    assert.ok(fonte, `esperado o manifesto ${key} do Lote 07`);
+    assert.equal(fonte.validated, true);
+    assert.ok(fonteTemSignoffHumanoAutorizado(fonte));
+  }
+
+  const semSignoffAinda = ["lc-16450-2025-art10-estado-maior", "lc-10990-1997-art14-art15-precedencia"];
+  for (const key of semSignoffAinda) {
+    const fonte = fontes.find((f) => f.source_key === key);
+    if (fonte) assert.equal(fonte.validated, false, `${key} continua sem sign-off humano — nao deveria estar validated=true`);
+  }
+});
+
+test("14b. INVARIANTE (Secao 10): fonte JURIDICA validated=true com validated_by so-IA nunca conta como sign-off humano (BLOCK)", () => {
+  const fonteAiOnly = {
+    source_key: "fonte-ai-only",
+    type: "official_law",
+    validated: true,
+    human_source_signoff: "APPROVED",
+    validated_by: "openai_websearch_secondary_research_only",
+    covers_articles: ["art. 1º"],
+  };
+  assert.equal(fonteTemSignoffHumanoAutorizado(fonteAiOnly), false);
+
+  const validacao = avaliarValidacaoFonte({ fontesDaUnidade: [fonteAiOnly], artigosEsperados: ["art. 1º"] });
+  assert.notEqual(validacao.status, STATUS_VALIDACAO_FONTE.SOURCE_VALIDATED, "validated_by so-IA nunca pode produzir SOURCE_VALIDATED para fonte juridica");
+});
+
+test("14c. INVARIANTE (Secao 10): fonte JURIDICA validated=true + human_source_signoff=APPROVED + validated_by humano => PASS (SOURCE_VALIDATED)", () => {
+  const fonteHumana = {
+    source_key: "fonte-humana",
+    type: "official_law",
+    validated: true,
+    human_source_signoff: "APPROVED",
+    validated_by: "human_operator_explicit_signoff_lote99",
+    covers_articles: ["art. 1º"],
+  };
+  assert.equal(fonteTemSignoffHumanoAutorizado(fonteHumana), true);
+
+  const validacao = avaliarValidacaoFonte({ fontesDaUnidade: [fonteHumana], artigosEsperados: ["art. 1º"] });
+  assert.equal(validacao.status, STATUS_VALIDACAO_FONTE.SOURCE_VALIDATED);
+});
+
+test("14d. INVARIANTE CASO B/C: fonte JURIDICA validated=true mas human_source_signoff ausente ou PENDING => NAO VALIDADA", () => {
+  const semSignoff = { source_key: "f1", type: "official_law", validated: true, validated_by: "human_operator_x", covers_articles: ["art. 1º"] };
+  assert.equal(fonteTemSignoffHumanoAutorizado(semSignoff), false, "CASO B: sem human_source_signoff aprovado");
+
+  const pendente = { source_key: "f2", type: "official_law", validated: true, human_source_signoff: "PENDING", validated_by: "human_operator_x", covers_articles: ["art. 1º"] };
+  assert.equal(fonteTemSignoffHumanoAutorizado(pendente), false, "CASO C: human_source_signoff=PENDING");
+});
+
+test("14e. INVARIANTE CASO F: fonte NAO juridica preserva o comportamento existente (so validated=true importa)", () => {
+  const pedagogicaSemSignoffField = { source_key: "f3", type: "pedagogical_reference", validated: true, validated_by: "human_curated_project_context", covers_articles: [] };
+  assert.equal(fonteTemSignoffHumanoAutorizado(pedagogicaSemSignoffField), true, "fonte pedagogica nao exige human_source_signoff — so validated=true");
 });
 
 test("15. manifesto local de fontes: fonte PEDAGOGICA (Concordancia verbal, Fase 2A.2) pode ser validated=true quando o conteudo-base foi verificado ao vivo no projeto", () => {

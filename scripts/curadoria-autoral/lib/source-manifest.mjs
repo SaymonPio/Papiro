@@ -55,6 +55,37 @@ export function buscarFontesParaUnidade(fontes, unidadeId) {
   return fontes.filter((f) => f.applies_to_unit_ids.includes(unidadeId));
 }
 
+// Reparo Lote 07 (mandato "COMPLEMENTO FINAL DA LOB", Secoes 8-9): o
+// invariante "validated=true" sozinho NUNCA foi suficiente para fontes
+// JURIDICAS (type=official_law) — precisa, alem disso, de sign-off humano
+// EXPLICITO e AUTORIZADO, nunca so pesquisa/validacao feita por IA. Fontes
+// NAO juridicas preservam o comportamento anterior (CASO F): so
+// validated=true, sem exigir human_source_signoff (campo que nem existe em
+// varios manifestos pedagogicos mais antigos, legitimamente).
+//
+// "Compativel com operador/curadoria humana autorizada" e verificado pelo
+// PREFIXO "human_" em validated_by — convencao ja em uso por TODOS os
+// manifestos deste projeto (human_operator_explicit_signoff_*,
+// human_curated_project_context). Um validated_by como "openai_websearch"
+// ou "ia_pesquisa_secundaria" NUNCA bate nesse padrao, entao nunca conta
+// como sign-off humano (CASO D).
+const PADRAO_VALIDATED_BY_HUMANO = /^human[_-]/i;
+
+/**
+ * CASO A-F do mandato "COMPLEMENTO FINAL DA LOB" (Secao 9): decide se uma
+ * fonte JA TEM sign-off humano autorizado o suficiente para contar como
+ * "validada" na agregacao de avaliarValidacaoFonte. Fontes nao juridicas
+ * (type != official_law) so precisam de validated=true (CASO F).
+ * @param {object} fonte
+ * @returns {boolean}
+ */
+export function fonteTemSignoffHumanoAutorizado(fonte) {
+  if (fonte?.validated !== true) return false; // CASO A
+  if (fonte.type !== "official_law") return true; // CASO F
+  if (fonte.human_source_signoff !== "APPROVED") return false; // CASO B (ausente) / CASO C (PENDING)
+  return typeof fonte.validated_by === "string" && PADRAO_VALIDATED_BY_HUMANO.test(fonte.validated_by.trim()); // CASO D (false) / CASO E (true)
+}
+
 /**
  * Decide o STATUS_VALIDACAO_FONTE de uma unidade a partir SOMENTE das
  * fontes que ja a referenciam (buscarFontesParaUnidade). Nunca olha
@@ -68,7 +99,7 @@ export function avaliarValidacaoFonte({ fontesDaUnidade, artigosEsperados = null
     return { status: STATUS_VALIDACAO_FONTE.SOURCE_MISSING, reason: "nenhuma fonte no manifesto local referencia esta unidade", validated_sources: [] };
   }
 
-  const validadas = fontesDaUnidade.filter((f) => f.validated === true);
+  const validadas = fontesDaUnidade.filter((f) => fonteTemSignoffHumanoAutorizado(f));
   if (validadas.length === 0) {
     return {
       status: STATUS_VALIDACAO_FONTE.SOURCE_REQUIRES_HUMAN_VALIDATION,

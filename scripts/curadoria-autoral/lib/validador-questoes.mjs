@@ -13,6 +13,7 @@
 // REVISAR sem re-parsear mensagens de erro.
 
 import { DIFICULDADES_VALIDAS, LETRAS_ALTERNATIVAS, ORIGEM_QUESTAO_FUTURA, QUESTION_SCHEMA_VERSION } from "./schemas.mjs";
+import { referenciaTemDispositivoNormativo } from "./eligibility.mjs";
 
 function ehStringNaoVazia(valor) {
   return typeof valor === "string" && valor.trim().length > 0;
@@ -27,9 +28,16 @@ function erro(codigo, mensagem) {
  * Nunca lanca excecao — sempre devolve { ok, errors, warnings }.
  *
  * @param {unknown} dados
+ * @param {{ requiresNormativeDeviceReference?: boolean }} [contexto] — Reparo
+ *   Lote 07 (Secao 7 do mandato "REPAIR PASS SEM NOVA API"): quando true
+ *   (nascido de payload.source.legal_source_required, nunca de materia_id ou
+ *   do nome da materia), fundamento.referencia precisa citar diploma E artigo
+ *   identificaveis, sob pena de MISSING_NORMATIVE_DEVICE. Omitido/false
+ *   preserva o comportamento anterior (usado por materias nao normativas
+ *   como Portugues, e por chamadas antigas que nao passam este parametro).
  * @returns {{ ok: boolean, errors: Array<{codigo:string, mensagem:string}>, warnings: Array<{codigo:string, mensagem:string}> }}
  */
-export function validarQuestaoGerada(dados) {
+export function validarQuestaoGerada(dados, contexto = {}) {
   const errors = [];
   const warnings = [];
 
@@ -92,14 +100,35 @@ export function validarQuestaoGerada(dados) {
     errors.push(erro("EMPTY_EXPLICACAO", "explicacao ausente ou vazia."));
   }
 
+  let referenciaFundamento = null;
   if (dados.fundamento === null || dados.fundamento === undefined) {
     errors.push(erro("MISSING_FUNDAMENTO", "fundamento ausente."));
   } else if (typeof dados.fundamento === "object" && !Array.isArray(dados.fundamento)) {
     if (!ehStringNaoVazia(dados.fundamento.descricao) && !ehStringNaoVazia(dados.fundamento.referencia)) {
       errors.push(erro("EMPTY_FUNDAMENTO", "fundamento presente mas sem referencia nem descricao preenchidas."));
     }
+    referenciaFundamento = dados.fundamento.referencia;
   } else if (!ehStringNaoVazia(dados.fundamento)) {
     errors.push(erro("EMPTY_FUNDAMENTO", "fundamento presente mas vazio."));
+  } else {
+    referenciaFundamento = dados.fundamento;
+  }
+
+  // Reparo Lote 07 (Secao 7): so roda quando o contexto de geracao pede
+  // (fonte legislativa, nunca por heuristica de materia_id/nome). Nao
+  // duplica MISSING_FUNDAMENTO/EMPTY_FUNDAMENTO — esta checagem so
+  // acrescenta MISSING_NORMATIVE_DEVICE quando ha algo em fundamento, mas
+  // sem diploma+artigo identificaveis.
+  if (contexto.requiresNormativeDeviceReference && ehStringNaoVazia(referenciaFundamento)) {
+    const { temDiploma, temArtigo } = referenciaTemDispositivoNormativo(referenciaFundamento);
+    if (!temDiploma || !temArtigo) {
+      errors.push(
+        erro(
+          "MISSING_NORMATIVE_DEVICE",
+          "fonte exige dispositivo normativo especifico (diploma + artigo identificaveis) em fundamento.referencia, mas nao foi encontrado."
+        )
+      );
+    }
   }
 
   if (!DIFICULDADES_VALIDAS.includes(dados.dificuldade)) {

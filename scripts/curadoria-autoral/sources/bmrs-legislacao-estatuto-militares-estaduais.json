@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_LEG_ESTATUTO_MILITARES_ESTADUAIS_ESCOPO_UNIDADE",
+  "type": "official_law",
+  "title": "Fonte — Legislação Específica — Estatuto dos Militares Estaduais (BM RS) [APROVADO — HUMAN SIGN-OFF Lote 07]",
+  "applies_to_unit_ids": [
+    "bf13f365-3dd9-4d22-9ad7-f369a298eb19"
+  ],
+  "unit_id": "bf13f365-3dd9-4d22-9ad7-f369a298eb19",
+  "curso_conteudo_id": 51,
+  "conteudo_id": 18,
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "norma_canonica": {
+    "diploma": "Lei Complementar nº 10.990, de 18 de agosto de 1997 (RS)",
+    "ementa": "Dispõe sobre o Estatuto dos Servidores Militares da Brigada Militar do Estado do Rio Grande do Sul e dá outras providências.",
+    "texto_oficial": "PDF oficial da Brigada Militar do Estado do Rio Grande do Sul (brigadamilitar.rs.gov.br/upload/arquivos/202005/18103919-lei-complementar-10-990.pdf), lido integralmente nesta fase via WebFetch + leitura de PDF."
+  },
+  "fonte_oficial": {
+    "fonte_lida": "PDF oficial hospedado diretamente pela Brigada Militar do RS, contendo o texto original de 1997 com marcação de redações posteriores ('Redação dada pela Lei estadual n° 11.831, de 18 de setembro de 2002' é a única emenda visível no documento, incidindo sobre os arts. 10 §2º, 14 §1º, 22 §2º, 47, 128 §5º, 133 — nenhum deles no escopo desta unidade).",
+    "metodo": "Leitura primária direta do texto com trechos riscados (redação histórica revogada) e trechos correntes."
+  },
+  "texto_consolidado": {
+    "disponivel": true,
+    "artigos_confirmados_para_escopo_atual": {
+      "art. 4º, caput": "\"O serviço policial-militar consiste no exercício de atividades inerentes à Brigada Militar e compreende todos os encargos previstos na legislação específica e peculiar.\" — original, não alterado.",
+      "art. 5º, parágrafo único": "\"A carreira servidor militar é privativa do pessoal da ativa, iniciando-se com o ingresso na Brigada Militar e obedecendo à seqüência de graus hierárquicos.\" — original, não alterado.",
+      "art. 8º, parágrafo único": "\"Os Oficiais nomeados Juizes do Tribunal Militar do Estado são regidos por legislação própria.\" — original, não alterado.",
+      "art. 12, caput": "\"A hierarquia e a disciplina militares são a base institucional da Brigada Militar, sendo que a autoridade e a responsabilidade crescem com o grau hierárquico.\" — original, não alterado.",
+      "art. 15, caput": "\"A precedência entre servidores militares da ativa, do mesmo grau hierárquico, é assegurada pela antigüidade no posto ou na graduação, salvo nos casos de precedência funcional do Comandante-Geral, do Subcomandante-Geral e do Chefe do Estado-Maior.\" — original, não alterado.",
+      "art. 15, §3º": "\"Em igualdade de posto ou graduação, os servidores militares na ativa têm precedência sobre os na inatividade.\" — original, não alterado.",
+      "art. 35, caput": "\"A violação das obrigações ou dos deveres policiais-militares constituirá crime, contravenção ou transgressão disciplinar, conforme dispuserem a legislação ou regulamentação específicas.\" — original, não alterado.",
+      "art. 35, §2º": "\"A responsabilidade disciplinar é independente das responsabilidades civil e penal.\" — original, não alterado.",
+      "art. 35, §3º": "\"Não se caracteriza como violação das obrigações e dos deveres do servidor militar o inadimplemento de obrigações pecuniárias assumidas na vida privada.\" — original, não alterado.",
+      "art. 36, caput": "\"A inobservância dos deveres especificados nas leis e regulamentos, ou a falta de exação no cumprimento dos mesmos, acarreta, para o servidor militar, responsabilidade funcional, pecuniária, disciplinar e penal, consoante legislação específica.\" — original, não alterado.",
+      "art. 46, VII": "\"a transferência para a reserva remunerada ou a reforma;\" — original, não alterado.",
+      "art. 46, VIII": "\"as férias e as licenças;\" — original, não alterado.",
+      "art. 46, XIII": "\"a assistência judiciária gratuita, quando processado em razão de atos praticados em objeto de serviço;\" — original, não alterado.",
+      "art. 46, XIV": "\"a assistência social e médico-hospitalar;\" — original, não alterado.",
+      "art. 46, XV": "\"a saúde, higiene e segurança do trabalho.\" — original, não alterado."
+    }
+  },
+  "vigencia": {
+    "situacao": "VIGENTE. Não revogada. Última emenda visível no PDF oficial: Lei estadual nº 11.831/2002 (não incide sobre o escopo desta unidade).",
+    "artigos_do_escopo_afetados_por_alteracoes": "NENHUM dos 15 artigos/dispositivos do escopo autorizado recebeu qualquer 'Redação dada por' — todos permanecem em sua redação original de 1997."
+  },
+  "alteracoes_relevantes": [
+    "Redações alteradas pela Lei estadual nº 11.831/2002 (arts. 10 §2º, 14 §1º, 22 §2º, 47, 128 §5º, 133) — todas FORA do escopo autorizado desta unidade.",
+    "Nenhuma alteração relevante identificada nos artigos 4, 5, 8, 12, 15, 35, 36 e 46 (escopo integral desta unidade)."
+  ],
+  "escopo_autorizado": "Estatuto dos Militares Estaduais (LC 10.990/1997): hierarquia e disciplina como base institucional (art. 12); serviço e carreira policial-militar, incluindo regime de Juízes do Tribunal Militar e precedência hierárquica (arts. 4º, 5º, 8º, 15); direitos dos servidores militares — reserva/reforma, férias/licenças, assistência judiciária/social/médico-hospitalar, saúde/higiene/segurança (art. 46); violação de obrigações e deveres, incluindo independência da responsabilidade disciplinar (arts. 35-36) — nos exatos termos já mapeados no escopo pré-existente do projeto e agora confirmados por leitura primária integral.",
+  "subtemas_autorizados": [
+    "Hierarquia e disciplina como base institucional (art. 12, caput)",
+    "Serviço policial-militar e carreira privativa do pessoal da ativa (arts. 4º, 5º parágrafo único)",
+    "Regime próprio dos Oficiais nomeados Juízes do Tribunal Militar do Estado (art. 8º, parágrafo único)",
+    "Precedência hierárquica entre servidores militares (art. 15, caput e §3º)",
+    "Violação das obrigações/deveres — crime, contravenção, transgressão disciplinar; independência das responsabilidades civil/penal; exceção de inadimplemento pecuniário privado (art. 35)",
+    "Responsabilidade funcional/pecuniária/disciplinar/penal por inobservância de deveres (art. 36)",
+    "Direitos específicos: reserva/reforma, férias/licenças, assistência judiciária/social/médico-hospitalar, saúde/higiene/segurança do trabalho (art. 46, VII, VIII, XIII, XIV, XV)"
+  ],
+  "subtemas_proibidos": [
+    "Regras de tratamento/vocativo do Decreto nº 9.758/2019 (pertence à unidade Redação Oficial, já tratada no Lote 06 — não confundir com o Estatuto)",
+    "Regulamento Disciplinar (Decreto nº 43.245/2004) como se fosse parte do Estatuto — são diplomas distintos; não absorver conteúdo do Regulamento apenas por proximidade temática",
+    "Qualquer outro inciso do art. 46 além de VII, VIII, XIII, XIV, XV, sem nova validação",
+    "Qualquer outro artigo do Estatuto fora dos listados acima, sem nova validação documental"
+  ],
+  "questoes_live_existentes": [
+    {
+      "questao_id": 20,
+      "origem": "AUTORAL (Papiro)",
+      "banca": "Papiro - estilo Fundatec",
+      "concurso": "Brigada Militar do Rio Grande do Sul",
+      "ano": null,
+      "subtema": "Hierarquia e disciplina",
+      "dispositivo_relacionado": "art. 12",
+      "status_normativo": "CURRENT"
+    },
+    {
+      "questao_id": 53,
+      "origem": "REAL",
+      "banca": "Fundatec",
+      "concurso": "Brigada Militar RS - Soldado de Primeira Classe",
+      "ano": 2025,
+      "subtema": "Estatuto em geral (INCORRETA)",
+      "dispositivo_relacionado": "LC 10.990/1997 em geral (citada nominalmente)",
+      "status_normativo": "CURRENT"
+    },
+    {
+      "questao_id": 300,
+      "origem": "AUTORAL (Papiro)",
+      "banca": "Papiro",
+      "concurso": "PAPIRO - Adaptada do padrão Fundatec 2025/2026",
+      "ano": 2026,
+      "subtema": "Hierarquia e disciplina",
+      "dispositivo_relacionado": "art. 12",
+      "status_normativo": "CURRENT"
+    },
+    {
+      "questao_id": 362,
+      "origem": "REAL",
+      "banca": "Fundatec",
+      "concurso": "Corpo de Bombeiros Militar RS - Soldado de Primeira Classe",
+      "ano": 2025,
+      "subtema": "Direitos dos servidores militares (EXCETO)",
+      "dispositivo_relacionado": "art. 46",
+      "status_normativo": "CURRENT"
+    },
+    {
+      "questao_id": 363,
+      "origem": "REAL",
+      "banca": "Fundatec",
+      "concurso": "Corpo de Bombeiros Militar RS - Soldado de Primeira Classe",
+      "ano": 2025,
+      "subtema": "Violação das obrigações e dos deveres",
+      "dispositivo_relacionado": "arts. 35-36",
+      "status_normativo": "CURRENT"
+    }
+  ],
+  "gaps": [
+    "Déficit pedagógico: 5 questões úteis faltantes (5 úteis atuais, meta 10).",
+    "art. 46 do Estatuto tem 15 incisos; apenas 5 (VII, VIII, XIII, XIV, XV) estão no escopo confirmado — atenção para não extrapolar para os demais incisos sem nova validação."
+  ],
+  "restricoes": [
+    "Usar SOMENTE os 15 dispositivos confirmados acima como fundamento normativo de questões futuras.",
+    "NÃO absorver conteúdo do Regulamento Disciplinar (Decreto 43.245/2004) apenas por proximidade temática (hierarquia/disciplina aparece em ambos os diplomas, mas com função distinta)."
+  ],
+  "riscos": [
+    "Risco baixo: escopo integralmente sustentado por leitura primária direta, sem qualquer conflito ou emenda incidente nos dispositivos confirmados."
+  ],
+  "process_validation": "Nota de processo: leitura primária direta do PDF oficial da Brigada Militar realizada nesta fase (WebFetch + leitura de PDF). Análise documental forte, mas NÃO constitui, por si só, validação humana (human_source_signoff continua PENDING).",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote07",
+  "validated_at": "2026-09-12T00:00:00Z",
+  "human_source_signoff": "APPROVED",
+  "notes": [
+    "RASCUNHO — NÃO VALIDADO. Criado no Lote 07.",
+    "Manifesto estreito pré-existente scripts/curadoria-autoral/sources/lc-10990-1997-art14-art15-precedencia.json cobre apenas a distinção art.14/art.15 usada para corrigir Q45/Q53 em lote anterior — não duplicado; este manifesto amplo cobre os 15 dispositivos do escopo integral da unidade."
+  ],
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-12T00:00:00Z",
+    "phase": "Lote 07 — HUMAN SOURCE SIGN-OFF + CORREÇÃO DOCUMENTAL LOB + GERAÇÃO COMPLETA",
+    "evidence": "Mandato do usuário, Seção 4 ('ESTATUTO — HUMAN SIGN-OFF'): 'APROVADO. Norma: Lei Complementar nº 10.990/1997. Fonte oficial já lida: PDF oficial da Brigada Militar. Escopo autorizado: arts. 4º e 5º; art. 8º; art. 12; art. 15; arts. 35 e 36; art. 46, SOMENTE incisos VII, VIII, XIII, XIV, XV. [...] Não absorver Regulamento Disciplinar. Atualizar: validated: true, human_source_signoff: 'APPROVED'.'"
+  },
+  "covers_articles": [
+    "art. 4º, caput",
+    "art. 5º, parágrafo único",
+    "art. 8º, parágrafo único",
+    "art. 12, caput",
+    "art. 15, caput",
+    "art. 15, §3º",
+    "art. 35, caput",
+    "art. 35, §2º",
+    "art. 35, §3º",
+    "art. 36, caput",
+    "art. 46, VII",
+    "art. 46, VIII",
+    "art. 46, XIII",
+    "art. 46, XIV",
+    "art. 46, XV"
+  ],
+  "document_validation": {
+    "LC_10990_1997": "VALIDATED_PRIMARY_NORM"
+  }
+}

@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_LEG_LOB_BRIGADA_MILITAR_ESCOPO_UNIDADE",
+  "type": "official_law",
+  "title": "Fonte — Legislação Específica — Lei de Organização Básica da Brigada Militar (BM RS) [APROVADO — HUMAN SIGN-OFF Lote 07 — LC nº 16.450/2025 tratada como VALIDATED_PRIMARY_NORM por decisão humana explícita]",
+  "applies_to_unit_ids": [
+    "3c033d9a-5543-422a-a935-c55095bdfc86"
+  ],
+  "unit_id": "3c033d9a-5543-422a-a935-c55095bdfc86",
+  "curso_conteudo_id": 63,
+  "conteudo_id": 72,
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "norma_canonica": {
+    "diploma_atual": "Lei Complementar nº 16.450, de 24 de dezembro de 2025 (RS)",
+    "ementa": "Dispõe sobre a organização, a estrutura básica e o efetivo da Brigada Militar do Estado do Rio Grande do Sul e dá outras providências.",
+    "diploma_historico_revogado": "Lei nº 10.991, de 18 de agosto de 1997 (revogada) — e Lei nº 10.993, de 18 de agosto de 1997 (revogada)",
+    "observacao_nomenclatura": "A unidade pedagógica é historicamente intitulada 'Lei de Organização Básica da Brigada Militar' (LOB). Não presumir que o número de lei é o da norma antiga (Lei 10.991/1997) apenas pelo nome da unidade: desde 26/12/2025 a norma vigente é a LC 16.450/2025."
+  },
+  "fonte_oficial": {
+    "tentativas_primarias": [
+      {
+        "fonte": "diariooficial.rs.gov.br/materia?id=1362391",
+        "resultado": "FALHOU — página carregada via JavaScript, WebFetch não capturou o conteúdo do Diário Oficial (apenas placeholder 'Carregando...')"
+      },
+      {
+        "fonte": "leisestaduais.com.br (LC 16.450/2025)",
+        "resultado": "FALHOU — HTTP 403 Forbidden ao WebFetch"
+      },
+      {
+        "fonte": "al.rs.gov.br/legiscomp (busca por texto compilado da LC 16.450/2025)",
+        "resultado": "NÃO ENCONTRADO — lei muito recente (dez/2025), aparentemente ainda sem versão compilada publicada pelo Gabinete de Consultoria Legislativa da Assembleia até a data desta pesquisa"
+      },
+      {
+        "fonte": "brigadamilitar.rs.gov.br/legislacao",
+        "resultado": "Página oficial não lista a LC 16.450/2025 diretamente; lista apenas a Portaria nº 999.A/EMBM/2026, que a regulamenta"
+      }
+    ],
+    "fonte_secundaria_corroborativa_oficial": {
+      "fonte": "Portaria nº 999.A/EMBM/2026 (Chefe do Estado-Maior da Brigada Militar), publicada em brigadamilitar.rs.gov.br, lida integralmente nesta fase via WebFetch",
+      "conteudo_confirmado": "Confirma expressamente: (1) a LC 16.450/2025 foi promulgada e entrou em vigor em 24/12/2025; (2) dispõe sobre organização, estrutura básica e efetivo da Brigada Militar; (3) revogou expressamente as Leis nº 10.991 e nº 10.993, ambas de 18/08/1997; (4) instituiu novo marco normativo para estrutura organizacional, níveis de direção/execução/apoio, e classificação/denominação/competências dos Órgãos de Polícia Militar (OPM); (5) a estrutura organizacional está definida no Anexo Único da LC.",
+      "limitacao": "Este documento CONFIRMA OFICIALMENTE a existência, data, ementa e revogações da LC 16.450/2025, mas NÃO reproduz o texto literal do art. 10 (competência do Chefe do Estado-Maior) nem de nenhum outro artigo substantivo da lei."
+    },
+    "tentativa_websearch_fase_a_anterior": "Na fase de preparação anterior (Fase A/SOURCE_PREP), pesquisa via WebSearch (evidência convergente de múltiplas fontes secundárias, nunca leitura byte-a-byte do texto oficial) indicou que o art. 10 da LC 16.450/2025 atribui ao Chefe do Estado-Maior a competência de assessorar o Comandante-Geral nos assuntos de ordem estratégica da Instituição e coordenar, em caráter geral, as atividades dos Órgãos do Nível de Direção Setorial. Isto está registrado, com o mesmo grau de cautela, no manifesto estreito pré-existente scripts/curadoria-autoral/sources/lc-16450-2025-art10-estado-maior.json (validated=false).",
+    "confirmacao_humana_lote07": {
+      "fonte_oficial_primaria": "Assembleia Legislativa do Estado do Rio Grande do Sul, Sistema LEGIS. Lei Complementar nº 16.450, de 24 de dezembro de 2025, publicada no DOE nº 252, de 26 de dezembro de 2025.",
+      "status": "Bloqueio anterior (ausência de leitura primária direta pelo pipeline) resolvido por validação humana independente, conduzida fora deste pipeline, com acesso ao PDF oficial integral da LC nº 16.450/2025 no repositório legislativo da Assembleia Legislativa.",
+      "nao_usar_mais_como_base_principal": [
+        "pesquisa secundária (WebSearch)",
+        "Portaria 999.A/EMBM/2026 como substituta da lei",
+        "antiga Lei nº 10.991/1997 (revogada)"
+      ]
+    }
+  },
+  "texto_consolidado": {
+    "disponivel": false,
+    "observacao": "Não disponível nesta fase. O texto literal do art. 10 (e demais artigos) da LC 16.450/2025 permanece NÃO lido diretamente de fonte primária oficial. Apenas evidência secundária convergente (WebSearch) e confirmação oficial indireta (Portaria 999.A/EMBM/2026, que cita a LC mas não a transcreve) estão disponíveis."
+  },
+  "vigencia": {
+    "situacao": "VIGENTE desde 26/12/2025 (entrada em vigor conforme considerandos da Portaria nº 999.A/EMBM/2026, que cita 'a promulgação e a entrada em vigor da Lei Complementar nº 16.450, de 24 de dezembro de 2025')",
+    "revogacoes_confirmadas": [
+      "Lei nº 10.991, de 18/08/1997 (antiga LOB)",
+      "Lei nº 10.993, de 18/08/1997"
+    ]
+  },
+  "alteracoes_relevantes": [
+    "A antiga Lei de Organização Básica (Lei nº 10.991/1997), sobre a qual a questão REAL Q43 (Fundatec 2022) foi construída, está REVOGADA desde 26/12/2025.",
+    "A competência do Chefe do Estado-Maior testada em Q43 corresponde materialmente, segundo pesquisa secundária da Fase A, ao art. 10 da LC 16.450/2025 — mas isso não foi confirmado por leitura direta do texto primário nesta fase."
+  ],
+  "escopo_autorizado": "Interseção entre unidades_pedagogicas.escopo real da unidade, conteúdo da unidade e a LC nº 16.450/2025 (natureza institucional; vinculação/integração ao Sistema de Segurança Pública; competências da BM; níveis de estrutura — Direção-Geral/Setorial/Execução; conceito/classificação de OPM; Comando-Geral, Subcomandante-Geral, Chefe do Estado-Maior, Conselho Superior — arts. 1º a 12; demais estruturas previstas nos artigos seguintes SOMENTE quando dentro do escopo pedagógico real).",
+  "subtemas_autorizados": [
+    "Natureza institucional da Brigada Militar (art. 1º)",
+    "Vinculação e integração ao Sistema de Segurança Pública (art. 2º)",
+    "Competências da Brigada Militar (art. 3º)",
+    "Níveis da estrutura organizacional — Direção-Geral, Direção Setorial, Execução (art. 4º)",
+    "Conceito, espécies, classificação e denominação dos OPM (art. 5º)",
+    "Comando-Geral, Comandante-Geral, Subcomandante-Geral, Chefe do Estado-Maior, Conselho Superior (arts. 6º a 12, incluindo art. 10)",
+    "Estrutura e órgãos institucionais previstos nos artigos seguintes (art. 13 e seguintes), somente quando dentro do escopo pedagógico real"
+  ],
+  "subtemas_proibidos": [
+    "Afirmar que a Lei nº 10.991/1997 permanece vigente",
+    "Anexo Único (organograma detalhado) além do já mapeado",
+    "Ampliar o currículo para artigos da LC 16.450/2025 fora da interseção com o escopo pedagógico real da unidade",
+    "Usar Q43 como modelo autoral normativo atual (é questão REAL histórica, preservada, não editada)"
+  ],
+  "questoes_live_existentes": [
+    {
+      "questao_id": 43,
+      "origem": "REAL",
+      "banca": "Fundatec",
+      "concurso": "Brigada Militar RS - Soldado",
+      "ano": 2022,
+      "subtema": "Competência do Chefe do Estado-Maior",
+      "dispositivo_relacionado": "Lei nº 10.991/1997 (nominalmente citada no enunciado) — corresponde materialmente ao art. 10 da LC 16.450/2025 por pesquisa secundária",
+      "status_normativo": "HISTORICAL_BUT_VALID_FOR_EXAM_CONTEXT",
+      "observacao": "Questão REAL histórica. NÃO editar, inativar, alterar gabarito ou reescrever. O enunciado cita nominalmente a lei revogada (10.991/1997), mas o conteúdo institucional testado (competência do Chefe do Estado-Maior) persiste, segundo pesquisa secundária, na norma sucessora."
+    },
+    {
+      "questao_id": 271,
+      "origem": "AUTORAL (Papiro)",
+      "banca": "Papiro",
+      "concurso": "PAPIRO - Adaptada do padrão Fundatec 2025/2026",
+      "ano": 2026,
+      "subtema": "Objeto geral da LOB",
+      "dispositivo_relacionado": "não determinado — não auditado nesta fase",
+      "status_normativo": "NEEDS_REVIEW",
+      "observacao": "Conteúdo integral (alternativas) não auditado byte-a-byte nesta fase de preparação documental. Enunciado genérico não cita lei revogada nominalmente, mas requer auditoria de conteúdo antes de nova geração se for usada como referência de estilo."
+    }
+  ],
+  "gaps": [
+    "Texto primário oficial da LC 16.450/2025 (art. 10 e demais dispositivos) não lido diretamente nesta fase — 4 tentativas técnicas falharam (Diário Oficial JS-only, leisestaduais.com.br HTTP 403, ausência de versão compilada no al.rs.gov.br/legiscomp, página oficial da BM não hospeda o texto da lei).",
+    "Déficit pedagógico: 8 questões úteis faltantes (2 úteis atuais, meta 10)."
+  ],
+  "restricoes": [
+    "NÃO gerar questões sobre a LC 16.450/2025 além do subtema já mapeado (competência do Chefe do Estado-Maior, art. 10) até confirmação humana ou leitura primária direta do texto.",
+    "NÃO usar Q43 como modelo autoral normativo — é questão REAL histórica preservada como evidência.",
+    "NÃO afirmar que a Lei nº 10.991/1997 é a norma vigente."
+  ],
+  "riscos": [
+    "Alto risco de o subtema autorizado (art. 10) ser insuficiente, isoladamente, para produzir 10 candidatas distintas sem repetição/redundância — déficit de 8 questões sobre um único dispositivo confirmado é desproporcional.",
+    "Texto primário nunca lido — toda geração futura sobre este diploma depende de confirmação humana adicional ou de nova tentativa de acesso ao texto oficial (ex.: certidão/cópia obtida por outro meio) antes de SOURCE_VALIDATED pleno."
+  ],
+  "process_validation": "Esta nota documenta apenas o processo de pesquisa/validação documental (WebSearch, WebFetch, leitura de PDF oficial da Portaria 999.A/EMBM/2026) realizado nesta fase. NÃO constitui validação humana. Somente um humano lendo o texto oficial primário da LC 16.450/2025 e assinando human_source_signoff pode promover este manifesto.",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote07",
+  "validated_at": "2026-09-12T00:00:00Z",
+  "human_source_signoff": "APPROVED",
+  "notes": [
+    "RASCUNHO — NÃO VALIDADO. Criado no Lote 07 (Fase de preparação documental de legislação específica institucional).",
+    "Existe também o manifesto estreito pré-existente scripts/curadoria-autoral/sources/lc-16450-2025-art10-estado-maior.json, cobrindo apenas o art. 10 com o mesmo grau de cautela (validated=false). Este manifesto (bmrs-legislacao-lob-brigada-militar.json) é o manifesto abrangente por unidade pedido pelo mandato do Lote 07 e não duplica, mas complementa, aquele registro."
+  ],
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-12T00:00:00Z",
+    "phase": "Lote 07 — HUMAN SOURCE SIGN-OFF + CORREÇÃO DOCUMENTAL LOB + GERAÇÃO COMPLETA",
+    "evidence": "Mandato do usuário 'PAPIRO — LOTE 07 — LEGISLAÇÃO ESPECÍFICA — HUMAN SOURCE SIGN-OFF + CORREÇÃO DOCUMENTAL LOB + GERAÇÃO COMPLETA', Seção 1 ('CORREÇÃO DOCUMENTAL — LOB') e Seção 2 ('LOB — SOURCE MANIFEST'): 'O bloqueio anterior da LOB por ausência de texto primário foi resolvido por validação humana independente. Fonte oficial primária confirmada: Assembleia Legislativa do Estado do Rio Grande do Sul, Sistema LEGIS, Lei Complementar nº 16.450, de 24 de dezembro de 2025, publicada no DOE nº 252, de 26 de dezembro de 2025. [...] A validação externa já confirmou, entre outros: Art. 1º: natureza institucional [...] Art. 10: Chefe do Estado-Maior [...]. Alterar: validated: true, human_source_signoff: 'APPROVED'. Fonte normativa: LC nº 16.450/2025 = VALIDATED_PRIMARY_NORM.'"
+  },
+  "covers_articles": [
+    "art. 1º",
+    "art. 2º",
+    "art. 3º",
+    "art. 4º",
+    "art. 5º",
+    "art. 6º",
+    "art. 7º",
+    "art. 8º",
+    "art. 9º",
+    "art. 10",
+    "art. 11",
+    "art. 12",
+    "art. 13"
+  ],
+  "document_validation": {
+    "LC_16450_2025": "VALIDATED_PRIMARY_NORM"
+  },
+  "regra_normativa_confirmada_por_decisao_humana": {
+    "art. 1º": "Natureza institucional da Brigada Militar.",
+    "art. 2º": "Vinculação e integração ao Sistema de Segurança Pública.",
+    "art. 3º": "Competências da Brigada Militar.",
+    "art. 4º": "Níveis da estrutura organizacional: Direção-Geral; Direção Setorial; Execução.",
+    "art. 5º": "Conceito, espécies, classificação e denominação dos Órgãos de Polícia Militar (OPM).",
+    "arts. 6º a 12": "Comando-Geral e funções do Comandante-Geral, Subcomandante-Geral, Chefe do Estado-Maior e Conselho Superior.",
+    "art. 10": "Chefe do Estado-Maior: assessora o Comandante-Geral nos assuntos de ordem estratégica; coordena, em caráter geral, as atividades dos Órgãos do Nível de Direção Setorial.",
+    "arts. 13 e seguintes": "Estrutura e órgãos institucionais previstos na nova LOB (uso restrito à interseção com o escopo pedagógico real da unidade)."
+  },
+  "dispositivos_confirmados_via_projeto_de_lei_497_2025": {
+    "proveniencia": "PLC nº 497/2025 (Poder Executivo), o projeto de lei que, aprovado pela Assembleia Legislativa em 16/12/2025 e sancionado pelo Governador em 24/12/2025, se tornou a LC nº 16.450/2025 — texto obtido em PDF hospedado por terceiro (asstbm.org.br), com cabeçalho identificando origem em al.rs.gov.br. NÃO é o texto compilado pós-sanção nem uma via oficial certificada; é o projeto que deu origem à lei.",
+    "nivel_de_confianca": "Corroborado, não idêntico a leitura primária pós-sanção: o art. 10 deste PLC ('Compete ao Chefe do Estado-Maior assessorar o Comandante-Geral nos assuntos de ordem estratégica da Instituição e coordenar, em caráter geral, as atividades dos Órgãos do Nível de Direção Setorial') é IDÊNTICO, palavra por palavra, ao texto do art. 10 já confirmado por validação humana independente (Seção 2 deste manifesto) — o que aumenta a confiança de que a numeração e a redação dos artigos institucionais (Capítulos I a III) não foram alteradas entre o projeto e a lei sancionada, mas não prova isso para 100% do articulado.",
+    "art. 1º, caput": "\"A Brigada Militar do Estado do Rio Grande do Sul é instituição permanente, regular, exclusiva e típica de Estado, considerada força auxiliar e reserva do Exército Brasileiro, nos termos do § 6º do art. 144 da Constituição Federal, sob a autoridade superior do Governador do Estado, e destina-se à preservação da ordem pública e da incolumidade das pessoas e do patrimônio.\"",
+    "art. 1º, parágrafo único": "\"A Brigada Militar, organizada com base na hierarquia e na disciplina militar, com competências de autotutela por meio do exercício da polícia judiciária militar, é comandada por Oficial da ativa do último posto do seu Quadro de Oficiais de Estado-Maior (QOEM).\"",
+    "art. 2º": "\"A Brigada Militar, vinculada à Secretaria de Estado responsável pela política de segurança pública, compõe o Sistema de Segurança Pública do Estado, atuando de forma integrada com os demais órgãos de defesa social, em parceria com os órgãos públicos, privados e a comunidade, de maneira a garantir a eficiência no cumprimento de suas competências.\"",
+    "art. 4º": "Confirma a lista humana já registrada (Direção-Geral/Direção Setorial/Execução) e acrescenta detalhe: I - Direção-Geral integrada pelo Comando-Geral; II - Direção Setorial integrada pelos Departamentos (gestão de pessoas; ensino e instrução; logística; gestão orçamentária e financeira; tecnologia da informação e comunicações; saúde; inteligência; pesquisa e desenvolvimento); III - Execução integrada por Comandos Regionais/Especializados, Batalhões/Regimentos/OPM equivalentes, e OPM de Apoio.",
+    "art. 5º": "\"Órgão de Polícia Militar (OPM) é a estrutura integrante de todos os níveis da Instituição, caracterizado por possuir responsabilidade territorial e/ou administrativa, vinculada ao cumprimento de suas competências e à autonomia de polícia judiciária militar, nos termos dos arts. 7º e 8º do Código de Processo Penal Militar.\" Classifica-se por espécie (§1º, I a X) e por nível/denominação (§2º, I a III).",
+    "art. 6º": "\"O Comando-Geral compreende: I - o Comandante-Geral; II - o Subcomandante-Geral; III - o Chefe do Estado-Maior.\"",
+    "art. 7º": "\"O Comandante-Geral é a autoridade primeira da Instituição, competindo-lhe a sua administração, com os poderes e deveres inerentes à função.\"",
+    "art. 8º": "\"O Comandante-Geral é indicado pelo Secretário de Estado responsável pela política de segurança pública e nomeado pelo Chefe do Poder Executivo Estadual, competindo-lhe: I - coordenar, de forma geral, as atividades da Instituição; II - presidir a Comissão de Avaliação e Mérito; III - dirigir o Conselho Superior.\"",
+    "art. 9º, caput": "\"Compete ao Subcomandante-Geral assessorar o Comandante-Geral no cumprimento das atribuições da Brigada Militar, além de coordenar, em caráter geral, as atividades de ordem operacional desenvolvidas pelos Comandos Regionais e Especializados.\"",
+    "art. 9º, parágrafo único": "\"O Subcomandante-Geral é o substituto do Comandante-Geral da Corporação em suas ausências e impedimentos.\"",
+    "art. 10": "\"Compete ao Chefe do Estado-Maior assessorar o Comandante-Geral nos assuntos de ordem estratégica da Instituição e coordenar, em caráter geral, as atividades dos Órgãos do Nível de Direção Setorial.\" (idêntico ao já confirmado por decisão humana — ver regra_normativa_confirmada_por_decisao_humana acima)",
+    "art. 10, parágrafo único": "\"O Chefe do Estado-Maior é o substituto do Subcomandante-Geral da Corporação em suas ausências e impedimentos.\"",
+    "art. 11": "\"O Subcomandante-Geral e o Chefe do Estado-Maior serão indicados pelo Comandante-Geral e nomeados pelo Governador do Estado.\"",
+    "art. 12": "\"O Conselho Superior, constituído pelos Coronéis da ativa em exercício na Instituição, presta assessoramento em assuntos de interesse da Corporação.\"",
+    "art. 13": "\"O Estado-Maior da Brigada Militar é o órgão de assessoramento do Comando-Geral, incumbido do estudo e do planejamento estratégico da Instituição.\""
+  },
+  "ponto_historico_superseded_or_requires_context": {
+    "texto_antigo_preservado": "Redação anterior do escopo (Fase A / Lote 07 SOURCE_PREP) classificava a LOB como SOURCE_REQUIRES_HUMAN_VALIDATION por ausência de leitura primária direta — preservado como histórico, não apagado.",
+    "status": "SUPERSEDED — resolvido por validação humana independente com acesso ao texto oficial integral da LC 16.450/2025."
+  },
+  "historical_real_question_normative_caution": [
+    "Q43"
+  ],
+  "cobertura_live_atual": []
+}
