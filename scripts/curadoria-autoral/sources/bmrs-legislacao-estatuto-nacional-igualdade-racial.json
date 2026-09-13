@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_LEG_ESTATUTO_NACIONAL_IGUALDADE_RACIAL_ESCOPO_UNIDADE_LOTE09A",
+  "type": "official_law",
+  "title": "Fonte — Legislação Específica — Estatuto Nacional da Igualdade Racial (BM RS) [SOURCE PREP Lote 09A — pendente human sign-off]",
+  "applies_to_unit_ids": ["5bf890e1-8e09-4f7a-9410-7f5e5168d9c4"],
+  "unit_id": "5bf890e1-8e09-4f7a-9410-7f5e5168d9c4",
+  "curso_conteudo_id": 67,
+  "conteudo_id": 75,
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "norma_canonica": {
+    "diploma": "Lei nº 12.288/2010 (Estatuto da Igualdade Racial) — diploma único, sem ambiguidade"
+  },
+  "investigacao_documental_interna": {
+    "evidencia_1": "scripts/curadoria-pedagogica/config/estatuto_nacional_da_igualdade_racial.unidades.json documenta que TODOS os 19 artigos_esperados já foram 'verificados no texto oficial vigente (Planalto)' em curadoria anterior, incluindo microchecagem de granularidade (arts. 23/25/42/54/55/58 são artigos só de parágrafo único, padronizados para 'caput' após confirmação de que a alternativa testada corresponde ao texto integral do artigo).",
+    "nota_atualizacao": "art.39 recebeu §§8º/9º pela Lei 14.553/2023, sem impacto sobre o §1º efetivamente coberto nesta unidade — já registrado na curadoria anterior.",
+    "conclusao": "Diploma e dispositivos já confirmados por curadoria interna prévia; esta rodada reforça com nova confirmação externa dos 4 dispositivos subcobertos (prioridade do mandato)."
+  },
+  "fonte_oficial": {
+    "planalto_status": "planalto.gov.br inacessível nesta sessão",
+    "fonte_lida_prioritaria": "Confirmação via pesquisa (WebSearch) dos 4 dispositivos subcobertos priorizados pelo mandato: art.39,§1º; art.42,caput; art.49,§3º; art.58,caput — texto literal obtido e conferido para todos os 4.",
+    "fonte_lida_demais": "art.1º (caput + par.único, incisos I/II/V/VI) confirmado literalmente nesta rodada. arts.23-26 e 52-55 mantidos conforme confirmação da curadoria interna anterior (não refetched nesta rodada — não priorizados pelo mandato, sem indício de redação desatualizada)."
+  },
+  "texto_consolidado": {
+    "artigos": {
+      "art. 1º, caput": "\"Esta Lei institui o Estatuto da Igualdade Racial, destinado a garantir à população negra a efetivação da igualdade de oportunidades, a defesa dos direitos étnicos individuais, coletivos e difusos e o combate à discriminação e às demais formas de intolerância étnica.\"",
+      "art. 1º, parágrafo único, I (discriminação racial)": "\"Toda distinção, exclusão, restrição ou preferência baseada em raça, cor, descendência ou origem nacional ou étnica que tenha por objeto anular ou restringir o reconhecimento, gozo ou exercício, em igualdade de condições, de direitos humanos e liberdades fundamentais [...]\"",
+      "art. 1º, parágrafo único, II (desigualdade racial)": "\"Toda situação injustificada de diferenciação de acesso e fruição de bens, serviços e oportunidades, nas esferas pública e privada, em virtude de raça, cor, descendência ou origem nacional ou étnica.\"",
+      "art. 1º, parágrafo único, V (políticas públicas)": "\"As ações, iniciativas e programas adotados pelo Estado no cumprimento de suas atribuições institucionais.\"",
+      "art. 1º, parágrafo único, VI (ações afirmativas)": "\"Os programas e medidas especiais adotados pelo Estado e pela iniciativa privada para a correção das desigualdades raciais e para a promoção da igualdade de oportunidades.\"",
+      "art. 39, caput": "\"O poder público promoverá ações que assegurem a igualdade de oportunidades no mercado de trabalho para a população negra, inclusive mediante a implementação de medidas visando à promoção da igualdade nas contratações do setor público e o incentivo à adoção de medidas similares nas empresas e organizações privadas.\" — CORRIGIDO no Lote09A HUMAN REVIEW FINAL: este texto estava anteriormente rotulado (por erro) como \"art. 39, §1º\" neste manifesto; é, na verdade, o CAPUT do art. 39. É o dispositivo efetivamente coberto por ER-09.",
+      "art. 39, §1º": "\"A igualdade de oportunidades será lograda mediante a implementação de políticas e programas de formação profissional, de emprego e de geração de renda voltados para a população negra.\" [dispositivo SUBCOBERTO — segue nunca tendo sido foco central de questão existente; conteúdo DIFERENTE do caput — trata de políticas/programas de formação profissional/emprego/renda, não de contratações públicas/privadas]",
+      "art. 42, caput": "\"O Poder Executivo federal poderá implementar critérios para provimento de cargos em comissão e funções de confiança destinados a ampliar a participação de negros, buscando reproduzir a estrutura da distribuição étnica nacional ou, quando for o caso, estadual, observados os dados demográficos oficiais.\" [dispositivo SUBCOBERTO]",
+      "art. 49, §3º": "\"As diretrizes das políticas nacional e regional de promoção da igualdade étnica serão elaboradas por órgão colegiado que assegure a participação da sociedade civil.\" [dispositivo SUBCOBERTO]",
+      "art. 58, caput": "\"As medidas instituídas nesta Lei não excluem outras, em prol da população negra, que tenham sido ou venham a ser adotadas no âmbito da União, dos Estados, do Distrito Federal ou dos Municípios.\" [dispositivo SUBCOBERTO — Q348 testa a NEGAÇÃO desse dispositivo como alternativa incorreta ('as medidas substituem as demais'), nunca a afirmação correta como foco. CORRIGIDO no Lote09A HUMAN REVIEW FINAL: a redação anterior deste campo continha a cláusula fabricada \"cabendo aos Estados, ao Distrito Federal e aos Municípios a adequação de sua legislação a esta Lei, no que couber\" — SEM correspondência no texto real do art. 58, que trata apenas de não exclusão/complementaridade de medidas. Essa cláusula indevida havia sido reproduzida pelo modelo na candidata ER-12 e foi corrigida por decisão humana; o texto acima é o corrigido.]"
+    },
+    "PEDAGOGICAL_METADATA_ARTICLE_MAPPING_NOTE": "Lote09A HUMAN REVIEW FINAL — reconciliação obrigatória: (1) ER-09 cobre materialmente o art. 39, CAPUT (não o §1º) — texto correto confirmado acima; (2) o art. 39, §1º tem conteúdo DIFERENTE (políticas/programas de formação profissional, emprego e geração de renda) e permanece sem questão própria; (3) covers_articles abaixo preserva EXATAMENTE \"art. 39, §1º\" (idêntico a unidades_pedagogicas.artigos_esperados no banco, exigido pelo source validator) — não foi adulterado, mas essa entrada não corresponde ao dispositivo real de ER-09; futuras gerações NÃO devem usar o texto do caput e citá-lo como §1º, nem vice-versa; (4) art. 58 teve cláusula fabricada removida do texto_consolidado (ver nota acima) — futuras gerações não devem afirmar dever de adaptação legislativa/procedimental dos entes subnacionais, que não consta da lei.",
+    "nota_arts_23_26_52_55": "Mantidos conforme confirmação da curadoria interna anterior (registrada em estatuto_nacional_da_igualdade_racial.unidades.json) — liberdade de consciência/culto (23-26) e acesso à justiça/Ouvidoria/violência policial/discriminação por servidores (52-55), já refletidos com fidelidade em Q135 e Q54 respectivamente."
+  },
+  "vigencia": {
+    "situacao": "Lei 12.288/2010 vigente. art.39 recebeu acréscimos posteriores (§§8º/9º, Lei 14.553/2023) sem impacto sobre o §1º usado nesta unidade. Demais dispositivos sem indicação de alteração."
+  },
+  "escopo_pedagogico": {
+    "normative_only_topics": ["Todo o escopo é normativo — Lei 12.288/2010 positivada, sem conteúdo doutrinário atribuído a esta unidade"],
+    "doctrinal_status": "NORMATIVE_ONLY"
+  },
+  "generation_scope_autorizado": [
+    "art.39,§1º — ações afirmativas no mercado de trabalho (SUBCOBERTO, prioridade máxima)",
+    "art.42,caput — critérios para cargos em comissão/funções de confiança (SUBCOBERTO, prioridade máxima)",
+    "art.49,§3º — PNPIR, órgão colegiado com participação da sociedade civil (SUBCOBERTO, prioridade máxima)",
+    "art.58,caput — não exclusão de outras medidas estaduais/municipais (SUBCOBERTO, prioridade máxima)",
+    "art.1º ou arts.23-26 ou arts.52-55 — quinta candidata pode reforçar um ângulo ainda não testado dentro desses dispositivos já centralmente cobertos, evitando repetir literalmente Q135/Q54/Q302/Q350"
+  ],
+  "excluded_topics": [
+    "Nenhum tópico excluído — diploma único, escopo integralmente normativo e já delimitado pelos artigos_esperados da unidade."
+  ],
+  "existing_question_map": [
+    { "questao_id": 54, "origem": "REAL", "banca": "Fundatec", "concurso": "Brigada Militar RS - Soldado", "ano": 2025, "tema": "Acesso à justiça / Ouvidoria / violência policial", "conceito_central": "INCORRETA: ação civil pública NÃO é via exclusiva para tutela de interesses da população negra", "dispositivo_fonte": "arts.52-55" },
+    { "questao_id": 135, "origem": "REAL", "banca": "Fundatec", "concurso": "SUSEPE RS", "ano": 2022, "tema": "Liberdade de consciência e culto matriz africana", "conceito_central": "INCORRETA: assistência religiosa é assegurada TAMBÉM a presos, não excluída", "dispositivo_fonte": "arts.23-26" },
+    { "questao_id": 302, "origem": "AUTORAL", "banca": "Papiro", "ano": 2026, "tema": "Objeto geral da lei", "conceito_central": "Efetivação da igualdade de oportunidades e defesa de direitos", "dispositivo_fonte": "art.1º,caput" },
+    { "questao_id": 348, "origem": "REAL", "banca": "Fundatec", "concurso": "Corpo de Bombeiros Militar RS", "ano": 2025, "tema": "Múltiplos dispositivos (INCORRETA)", "conceito_central": "INCORRETA: medidas da lei NÃO substituem outras já adotadas (art.58); alternativas corretas tocam de leve arts.39/42/49, nunca como foco", "dispositivo_fonte": "arts.39,42,49,58 (todos periféricos nesta questão)" },
+    { "questao_id": 350, "origem": "REAL", "banca": "Fundatec", "concurso": "Corpo de Bombeiros Militar RS", "ano": 2025, "tema": "Associação de conceitos", "conceito_central": "Discriminação racial / desigualdade racial / políticas públicas / ações afirmativas", "dispositivo_fonte": "art.1º,par.único,I/II/V/VI" }
+  ],
+  "existing_coverage": "5 questões úteis (4 REAL + 1 autoral). art.1º e arts.23-26/52-55 centralmente cobertos; art.39§1º, art.42, art.49§3º, art.58 apenas periféricos (nunca foco central) — concentração excessiva confirmada.",
+  "generation_gaps": "Faltam 5. Os 4 dispositivos subcobertos (art.39§1º, art.42, art.49§3º, art.58) sustentam 4 candidatas focais sem qualquer redundância; a 5ª candidata deve reforçar um ângulo novo dentro de arts.1º/23-26/52-55.",
+  "target_exam_board": "Fundatec",
+  "target_exam_board_source": "Resolução canônica via curso.banca (banca-resolver.mjs) — status RESOLVED.",
+  "restricoes": [
+    "NÃO reproduzir Q348 nem transformar suas alternativas periféricas em novo enunciado — construir contexto/situação nova para cada dispositivo subcoberto."
+  ],
+  "riscos": [
+    "Risco BAIXO: diploma único, textos literais confirmados (4 prioritários nesta rodada + 5 já confirmados em curadoria anterior)."
+  ],
+  "source_risk": "LOW",
+  "can_generate_needed_quantity": true,
+  "quantidade_maxima_segura": 5,
+  "process_validation": "Fonte prep Lote09A — diploma e 19 dispositivos já confirmados por curadoria interna prévia (Planalto, sessão anterior); esta rodada reconfirma via pesquisa externa os 4 dispositivos subcobertos priorizados pelo mandato (planalto inacessível nesta sessão).",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote09a",
+  "validated_at": "2026-09-13T00:00:00Z",
+  "human_source_signoff": "APPROVED",
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-13T00:00:00Z",
+    "phase": "Lote 09A — HUMAN SOURCE SIGNOFF + GERAÇÃO AUTORAL (17 questões seguras)",
+    "evidence": "Mandato do usuário, Seção 9: 'Norma: Lei nº 12.288/2010. Escopo autorizado conforme manifest. PRIORIDADE MÁXIMA: art. 39, §1º; art. 42, caput; art. 49, §3º; art. 58, caput. Esses dispositivos estavam SUBCOBERTOS [...] Gerar questões em que esses eixos sejam efetivamente o núcleo da cobrança.'"
+  },
+  "covers_articles": [
+    "art. 1º, caput", "art. 1º, parágrafo único, I", "art. 1º, parágrafo único, II",
+    "art. 1º, parágrafo único, V", "art. 1º, parágrafo único, VI",
+    "art. 23, caput", "art. 24, II", "art. 24, VII", "art. 25, caput", "art. 26, II",
+    "art. 39, §1º", "art. 42, caput", "art. 49, §3º",
+    "art. 52, caput", "art. 53, caput", "art. 53, parágrafo único",
+    "art. 54, caput", "art. 55, caput", "art. 58, caput"
+  ],
+  "document_validation": {
+    "LEI_12288_2010_ART_1": "VALIDATED_PRIMARY_NORM",
+    "LEI_12288_2010_ARTS_23_26": "VALIDATED_PRIMARY_NORM_PRIOR_SESSION",
+    "LEI_12288_2010_ART_39_PAR1": "VALIDATED_PRIMARY_NORM",
+    "LEI_12288_2010_ART_42": "VALIDATED_PRIMARY_NORM",
+    "LEI_12288_2010_ART_49_PAR3": "VALIDATED_PRIMARY_NORM",
+    "LEI_12288_2010_ARTS_52_55": "VALIDATED_PRIMARY_NORM_PRIOR_SESSION",
+    "LEI_12288_2010_ART_58": "VALIDATED_PRIMARY_NORM"
+  },
+  "status_documental": "SOURCE_READY_FOR_HUMAN_SIGNOFF"
+}

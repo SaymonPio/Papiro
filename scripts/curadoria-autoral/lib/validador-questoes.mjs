@@ -131,6 +131,35 @@ export function validarQuestaoGerada(dados, contexto = {}) {
     }
   }
 
+  // Guard defensivo (Lote 09A, Secao 21 do mandato de correcao do gerador):
+  // alem de MISSING_NORMATIVE_DEVICE (que so olha o TEXTO de
+  // fundamento.referencia), verifica tambem o campo fundamento.tipo
+  // diretamente contra o UNICO valor sabidamente incompativel com fonte
+  // legal exigida: "regra_gramatical" (o valor que o bug de prompt do
+  // Lote09A vazou para questoes juridicas). Nao trava em "precisa ser
+  // exatamente regra_normativa", porque o contrato mais amplo deste
+  // validador (usado tambem fora do pipeline OpenAI) aceita outros valores
+  // de tipo normativo ja em uso (ex.: "dispositivo_normativo", fixture do
+  // reparo Lote07) — quem decide se o CONTEUDO da referencia e normativo o
+  // suficiente e MISSING_NORMATIVE_DEVICE, nao este guard. Este guard so
+  // bloqueia o caso especifico e inequivoco: tipo gramatical numa unidade
+  // que exige fonte legal. Nao substitui MISSING_NORMATIVE_DEVICE (ambos
+  // podem coexistir na mesma questao).
+  if (
+    contexto.requiresNormativeDeviceReference &&
+    dados.fundamento &&
+    typeof dados.fundamento === "object" &&
+    !Array.isArray(dados.fundamento) &&
+    dados.fundamento.tipo === "regra_gramatical"
+  ) {
+    errors.push(
+      erro(
+        "LEGAL_SOURCE_REQUIRES_NORMATIVE_FOUNDATION",
+        'fonte exige fundamento normativo, mas fundamento.tipo="regra_gramatical" foi recebido — incompativel com unidade de fonte legal validada.'
+      )
+    );
+  }
+
   if (!DIFICULDADES_VALIDAS.includes(dados.dificuldade)) {
     errors.push(erro("INVALID_DIFICULDADE", `dificuldade precisa ser uma de: ${DIFICULDADES_VALIDAS.join(", ")}.`));
   }

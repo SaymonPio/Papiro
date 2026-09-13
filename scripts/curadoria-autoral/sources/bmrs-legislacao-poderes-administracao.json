@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_LEG_PODERES_ADMINISTRACAO_ESCOPO_UNIDADE_LOTE09A",
+  "type": "official_law",
+  "title": "Fonte — Legislação Específica — Poderes da Administração Pública (BM RS) [SOURCE PREP Lote 09A — pendente human sign-off]",
+  "applies_to_unit_ids": ["8cb82a8e-e0f4-4d46-a4a5-7443f31912a4"],
+  "unit_id": "8cb82a8e-e0f4-4d46-a4a5-7443f31912a4",
+  "curso_conteudo_id": 59,
+  "conteudo_id": 81,
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "norma_canonica": {
+    "diploma_poder_regulamentar": "Constituição Federal de 1988, art. 84, IV",
+    "diploma_abuso_de_poder": "Lei nº 4.717/1965 (Lei da Ação Popular), art. 2º, parágrafo único, alíneas \"a\" e \"e\""
+  },
+  "investigacao_documental_interna": {
+    "evidencia_1": "scripts/curadoria-pedagogica/config/poderes_da_administracao_publica.unidades.json (curadoria anterior já concluída neste projeto) documenta: art.84,IV confirmado por verificação literal; Lei 4.717/1965 art.2º,par.único,\"a\" (incompetência) e \"e\" (desvio de finalidade) confirmados, com nota explícita de que o texto legal usa 'incompetência', não 'excesso de poder' (termo doutrinário associado pela doutrina administrativista).",
+    "evidencia_2_live": "Questão REAL Q360 (Fundatec, Corpo de Bombeiros Militar RS 2025) testa exatamente essa distinção excesso×desvio×tredestinação no mesmo enquadramento doutrinário do art.2º, par.único, Lei 4.717/1965 — corrobora o diploma.",
+    "conclusao": "Diploma confirmado por evidência documental interna prévia + corroboração por questão REAL já ativa."
+  },
+  "fonte_oficial": {
+    "planalto_status": "planalto.gov.br inacessível nesta sessão (ECONNRESET em todas as tentativas, padrão já documentado em lotes anteriores)",
+    "fonte_lida_cf_art_84_iv": "Confirmado via pesquisa (WebSearch), citando teor idêntico ao já registrado internamente no projeto.",
+    "fonte_lida_lei_4717_art_2": "Confirmado via pesquisa (WebSearch) — texto integral do parágrafo único (alíneas a-e) obtido e conferido."
+  },
+  "texto_consolidado": {
+    "artigos": {
+      "CF/88, art. 84, IV": "\"Compete privativamente ao Presidente da República: [...] IV - sancionar, promulgar e fazer publicar as leis, bem como expedir decretos e regulamentos para sua fiel execução;\"",
+      "Lei 4.717/1965, art. 2º, parágrafo único": "\"Para a conceituação dos casos de nulidade observar-se-ão as seguintes normas: a) a incompetência fica caracterizada quando o ato não se incluir nas atribuições legais do agente que o praticou; [...] e) o desvio de finalidade se verifica quando o agente pratica o ato visando a fim diverso daquele previsto, explícita ou implicitamente, na regra de competência.\" (alíneas b, c, d — vício de forma, ilegalidade do objeto, inexistência dos motivos — não autorizadas para geração nesta unidade, fora do escopo pedagógico definido)."
+    }
+  },
+  "vigencia": {
+    "situacao": "CF art.84,IV: vigente, sem alteração relevante ao núcleo citado. Lei 4.717/1965 art.2º: vigente, dispositivo original da lei, sem indicação de alteração."
+  },
+  "escopo_pedagogico": {
+    "normative_only_topics": ["Poder regulamentar (CF art.84,IV)", "Abuso de poder — excesso/incompetência e desvio de finalidade (Lei 4.717/1965 art.2º,par.único,\"a\"/\"e\")"],
+    "doctrinal_status": "MIXED_NORMATIVE_DOCTRINAL",
+    "doctrinal_topics": ["Poder hierárquico", "Poder disciplinar"],
+    "doctrinal_source": "Nenhuma aula, material_versao ou fonte pedagógica formal identificada no projeto para estes dois conceitos (aula_id=null, 0 versões, 0 publicadas para esta unidade — confirmado via query direta ao banco). Conceitos doutrinários consolidados e amplamente convergentes na literatura de Direito Administrativo (ex.: distribuição/escalonamento de funções e fiscalização interna = poder hierárquico; apuração de infrações e aplicação de sanções a quem tem vínculo especial com a Administração = poder disciplinar), já refletidos sem contestação em Q207/Q208.",
+    "doctrinal_source_status": "DOCTRINAL_SOURCE_NOT_VALIDATED",
+    "doctrinal_scope_limitation": "DOCTRINAL_SCOPE_LIMITATION — poder hierárquico e poder disciplinar NÃO têm fonte pedagógica formal autorizada nem dispositivo legal citável; ficam preservados como já cobertos por Q207/Q208 (não removidos), mas EXCLUÍDOS do generation_scope autorizado para NOVAS candidatas neste lote, já que o pipeline exige fundamento tipo regra_normativa com diploma+artigo — o que não é honesto atribuir a esses dois conceitos."
+  },
+  "generation_scope_autorizado": [
+    "Poder regulamentar (CF art.84,IV) — ângulos ainda não testados: aplicação a caso concreto; limites do poder regulamentar (não pode contrariar ou inovar na ordem jurídica além da fiel execução da lei)",
+    "Abuso de poder — excesso/incompetência (Lei 4.717/1965 art.2º,par.único,\"a\") isolado, em caso concreto diferente de Q360",
+    "Abuso de poder — desvio de finalidade (Lei 4.717/1965 art.2º,par.único,\"e\") isolado, em caso concreto diferente de Q360"
+  ],
+  "excluded_topics": [
+    "Poder hierárquico e poder disciplinar como NOVAS candidatas (DOCTRINAL_SOURCE_NOT_VALIDATED — ver doctrinal_scope_limitation)",
+    "Poder de polícia (pertence à unidade separada 2f0d3b9c-fe22-4173-a712-cfb9e1060b8c — EXCLUDED_OVERLAP_TOPIC)",
+    "Alíneas b/c/d do art.2º,par.único da Lei 4.717/1965 (vício de forma, ilegalidade do objeto, inexistência dos motivos) — fora do escopo pedagógico já definido para esta unidade"
+  ],
+  "existing_question_map": [
+    { "questao_id": 207, "origem": "AUTORAL", "banca": "Papiro", "ano": 2026, "tema": "Poder hierárquico", "conceito_central": "Distribuir/escalonar funções e fiscalizar internamente", "dispositivo_fonte": "doutrina (sem dispositivo legal)" },
+    { "questao_id": 208, "origem": "AUTORAL", "banca": "Papiro", "ano": 2026, "tema": "Poder disciplinar", "conceito_central": "Apurar infrações e aplicar sanções a servidores/sujeitos à disciplina", "dispositivo_fonte": "doutrina (sem dispositivo legal)" },
+    { "questao_id": 209, "origem": "AUTORAL", "banca": "Papiro", "ano": 2026, "tema": "Poder regulamentar", "conceito_central": "Expedir atos normativos para fiel execução da lei", "dispositivo_fonte": "CF art.84,IV" },
+    { "questao_id": 360, "origem": "REAL", "banca": "Fundatec", "concurso": "Corpo de Bombeiros Militar RS", "ano": 2025, "tema": "Abuso de poder (excesso + desvio, combinados)", "conceito_central": "Excesso de poder = exorbitar da competência; desvio de finalidade/tredestinação = fim diverso do previsto", "dispositivo_fonte": "Lei 4.717/1965 art.2º,par.único,\"a\"/\"e\"" }
+  ],
+  "existing_coverage": "4 questões úteis (1 REAL + 3 autorais). Poder regulamentar e abuso de poder (excesso+desvio combinados) já testados uma vez cada; poder hierárquico e poder disciplinar testados como doutrina pura.",
+  "generation_gaps": "Faltam 6. Generation_scope normativo autorizado cobre apenas 2 dispositivos (poder regulamentar; abuso de poder). Risco real de redundância/paráfrase acima de ~4 candidatas sem tocar poder hierárquico/disciplinar (doutrina sem fonte validada).",
+  "target_exam_board": "Fundatec",
+  "target_exam_board_source": "Resolução canônica via curso.banca (banca-resolver.mjs) — status RESOLVED, idêntico às demais unidades deste curso.",
+  "restricoes": [
+    "NÃO gerar poder hierárquico/poder disciplinar como NOVAS candidatas nesta rodada (fonte doutrinária não validada).",
+    "NÃO atribuir texto literal às alíneas b/c/d do art.2º,par.único da Lei 4.717/1965 sem nova validação de escopo.",
+    "NÃO usar CF art.84,VI (decreto autônomo) — fora do escopo já definido, risco de confundir com poder regulamentar (art.84,IV)."
+  ],
+  "riscos": [
+    "Risco MODERADO de redundância temática: apenas 2 dispositivos normativos autorizados para cobrir até 6 novas questões — recomenda-se gerar no máximo 4 candidatas normativas nesta unidade nesta rodada (ver quantidade_maxima_segura na saída do mandato)."
+  ],
+  "source_risk": "MODERATE",
+  "can_generate_needed_quantity": false,
+  "quantidade_maxima_segura": 4,
+  "quantidade_maxima_segura_motivo": "Generation_scope normativo autorizado (poder regulamentar + abuso de poder) sustenta com segurança ~4 candidatas diversificadas (2 poder regulamentar + 2 abuso de poder isolados); os 2 restantes exigiriam poder hierárquico/disciplinar, que ficam excluídos por DOCTRINAL_SOURCE_NOT_VALIDATED.",
+  "process_validation": "Fonte prep Lote09A — diploma confirmado por evidência documental interna prévia + corroboração por questão REAL + nova confirmação via pesquisa externa (planalto inacessível). Doutrina pura (hierárquico/disciplinar) mantida como já coberta, mas excluída de novas gerações por falta de fonte pedagógica formal.",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote09a",
+  "validated_at": "2026-09-13T00:00:00Z",
+  "human_source_signoff": "APPROVED",
+  "human_source_signoff_scope_limitation": "APPROVED aplica-se SOMENTE às fontes/escopo explicitamente autorizados nesta rodada: poder regulamentar (CF art.84,IV) e abuso de poder — excesso de poder / desvio de finalidade (Lei 4.717/1965 art.2º,par.único,\"a\"/\"e\"). NÃO constitui aprovação de fonte para poder hierárquico ou poder disciplinar, que permanecem DOCTRINAL_SOURCE_NOT_VALIDATED e EXCLUÍDOS de qualquer nova geração nesta rodada — mesmo sendo conceitos doutrinários consolidados, não podem receber fundamento.tipo=regra_normativa. As 2 questões residuais do déficit desta unidade ficam DEFERRED_TO_LOTE09B, junto com Jurisprudência STF/STJ, até que exista fonte pedagógica formal para hierárquico/disciplinar.",
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-13T00:00:00Z",
+    "phase": "Lote 09A — HUMAN SOURCE SIGNOFF + GERAÇÃO AUTORAL (17 questões seguras)",
+    "evidence": "Mandato do usuário, Seção 4/5/18: 'Foi escolhida a alternativa (a). NÃO autorizar geração doutrinária pura sem fonte formal. [...] gerar apenas as 17 questões documentalmente seguras; deixar 2 questões de Poderes da Administração Pública pendentes [...] Para Poderes da Administração: human_source_signoff=APPROVED significa aprovação SOMENTE das fontes e do escopo explicitamente autorizados. Não significa aprovação de: poder hierárquico doutrinário puro; poder disciplinar doutrinário puro.'"
+  },
+  "PODERES_LOTE09A_ALLOWED_TOPICS": [
+    "poder regulamentar (CF art.84,IV)",
+    "excesso de poder (Lei 4.717/1965 art.2º,par.único,\"a\")",
+    "desvio de finalidade (Lei 4.717/1965 art.2º,par.único,\"e\")",
+    "abuso de poder combinando excesso e/ou desvio, desde que cada afirmação fundamentada permaneça rastreável a \"a\" e/ou \"e\""
+  ],
+  "covers_articles": ["art. 84, IV", "art. 2º, parágrafo único, \"a\"", "art. 2º, parágrafo único, \"e\""],
+  "document_validation": {
+    "CF_88_ART_84_IV": "VALIDATED_PRIMARY_NORM",
+    "LEI_4717_1965_ART_2_PAR_UNICO_A_E": "VALIDATED_PRIMARY_NORM"
+  },
+  "status_documental": "SOURCE_VALIDATED_PARTIAL_SCOPE"
+}

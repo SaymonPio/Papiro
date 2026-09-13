@@ -113,6 +113,35 @@ export function construirRequestOpenAI({ model, reasoningEffort, promptText, sch
   };
 }
 
+// Reparo Lote 09A (mandato "CORREÇÃO DO GERADOR + REGENERAÇÃO CONTROLADA"):
+// ate aqui, montarPromptGerador() sempre embutia a instrucao fixa
+// "Fundamento desta questao e GRAMATICAL. NAO cite lei, artigo juridico ou
+// jurisprudencia em nenhum campo" — inclusive para unidades juridicas, cujo
+// payload.source.legal_source_required=true e cujos constraints exigem
+// EXATAMENTE o oposto (fundamento.tipo="regra_normativa" + diploma+artigo).
+// Essa contradicao textual dentro do MESMO prompt fez o modelo, na maior
+// parte das chamadas do Lote09A, obedecer a instrucao hardcoded e ignorar
+// os requisitos/proibicoes injetados — 24/26 candidatas voltaram com
+// fundamento.tipo="regra_gramatical" e foram corretamente bloqueadas pelo
+// guard MISSING_NORMATIVE_DEVICE (source-manifest/validador ja funcionavam;
+// o defeito era so na montagem do texto enviado ao modelo).
+//
+// Fix arquitetural (nao um patch por lote/curso/materia_id): a instrucao de
+// fundamento passa a depender SOMENTE de payload.source.legal_source_required
+// — o mesmo campo canonico que ja acion a requiresNormativeDeviceReference
+// em gerar-questoes.mjs e que nasce de materiaPareceNormativa(escopo), nunca
+// de materia_id/curso_id/nome de lote. Quando true: instrucao normativa
+// (regra_normativa + diploma+artigo+paragrafo/inciso/alinea quando
+// necessario) e PROIBICAO explicita de fundamento gramatical. Quando
+// false/ausente: preserva EXATAMENTE o comportamento gramatical anterior
+// (Portugues e demais materias nao normativas continuam intocados).
+export function montarInstrucaoFundamento(payload) {
+  if (payload?.source?.legal_source_required === true) {
+    return `Fundamento desta questão é NORMATIVO (esta unidade exige fonte legal validada). fundamento.tipo DEVE ser exatamente "regra_normativa". fundamento.referencia DEVE citar o diploma legal E o artigo (e parágrafo/inciso/alínea quando isso for necessário para identificar o dispositivo exato), sempre dentro do escopo autorizado descrito acima. NÃO use fundamento.tipo="regra_gramatical" nesta questão. NÃO use referência genérica ("terminologia técnico-administrativa", "semântica e compreensão textual", "interpretação jurídica" ou equivalente) — a referência tem que ser rastreável a um dispositivo real do escopo autorizado.`;
+  }
+  return `Fundamento desta questão é GRAMATICAL. NÃO cite lei, artigo jurídico ou jurisprudência em nenhum campo.`;
+}
+
 /**
  * Monta o texto do prompt (Secoes 11-14) a partir do payload ja congelado
  * — nunca busca nada externo, nunca injeta segredo. Usa APENAS o que o
@@ -171,7 +200,7 @@ Perfil de estilo da banca: não há um perfil documentado além do que já foi d
 
 Prioridade absoluta, nesta ordem: (1) correção gramatical; (2) aderência estrita ao escopo desta unidade; (3) um único gabarito correto e inequívoco; (4) distratores plausíveis mas objetivamente falsos; (5) explicação suficiente para o candidato entender o raciocínio completo, incluindo por que os principais distratores estão errados; (6) nunca extrapolar o conteúdo-base.
 
-Fundamento desta questão é GRAMATICAL. NÃO cite lei, artigo jurídico ou jurisprudência em nenhum campo.
+${montarInstrucaoFundamento(payload)}
 
 Cada questão deve ter exatamente 5 alternativas (A-E), um único gabarito correspondente a exatamente uma delas, explicação e fundamento preenchidos, e dificuldade "media".
 

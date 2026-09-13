@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_LEG_DIREITO_ADMINISTRATIVO_ESCOPO_UNIDADE_LOTE09A",
+  "type": "official_law",
+  "title": "Fonte — Legislação Específica — Direito Administrativo (BM RS) [SOURCE PREP Lote 09A — pendente human sign-off]",
+  "applies_to_unit_ids": ["1172a885-1419-4ad8-b728-1a0c7492c133"],
+  "unit_id": "1172a885-1419-4ad8-b728-1a0c7492c133",
+  "curso_conteudo_id": 58,
+  "conteudo_id": 65,
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "norma_canonica": {
+    "diploma_principios": "Constituição Federal de 1988, art. 37, caput e III",
+    "diploma_administracao_indireta": "Decreto-Lei nº 200/1967, art. 4º, II",
+    "diploma_autotutela": "Lei nº 9.784/1999, art. 53, e Súmula 473 do STF"
+  },
+  "investigacao_documental_interna": {
+    "evidencia_1": "scripts/curadoria-pedagogica/config/direito_administrativo.unidades.json documenta todos os diplomas e registra explicitamente as sobreposições temáticas conhecidas e mantidas por decisão do usuário: autotutela (mesmo instituto já testado em Atos Administrativos, curso_conteudo_id 54); art.37 (mesmo artigo, outros incisos/enfoque, também em Constituição Federal de 1988, curso_conteudo_id 57) — sobreposições NÃO são questões duplicadas.",
+    "conclusao": "Diploma e sobreposições já mapeados e aprovados por curadoria interna prévia."
+  },
+  "fonte_oficial": {
+    "planalto_status": "planalto.gov.br inacessível nesta sessão",
+    "fonte_lida_cf_art_37": "art.37,caput já consolidado no manifesto bmrs-legislacao-atos-administrativos-lote08.json (Lote08, uso confirmado no projeto). art.37,III confirmado nesta rodada via pesquisa (WebSearch).",
+    "fonte_lida_dl200_art4": "Confirmado via pesquisa (WebSearch) — texto integral do art.4º,I e II (com as 4 alíneas a-d da Administração Indireta) obtido.",
+    "fonte_lida_lei9784_art53": "Já consolidado no manifesto bmrs-legislacao-atos-administrativos-lote08.json (leitura primária direta via anvisalegis.datalegis.net, Lote08) — reaproveitado aqui, mesmo dispositivo, mesmo diploma."
+  },
+  "texto_consolidado": {
+    "artigos": {
+      "CF/88, art. 37, caput": "\"A administração pública direta e indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência [...]\" (reaproveitado de bmrs-legislacao-atos-administrativos-lote08.json). Princípios já testados nesta unidade: legalidade (Q195), publicidade (Q721), eficiência (Q774). Princípios AINDA NÃO testados: moralidade, impessoalidade.",
+      "CF/88, art. 37, III": "\"O prazo de validade do concurso público será de até dois anos, prorrogável uma vez, por igual período.\" [já testado por Q796]",
+      "Decreto-Lei 200/1967, art. 4º": "\"A Administração Federal compreende: I - A Administração Direta, que se constitui dos serviços integrados na estrutura administrativa da Presidência da República e dos Ministérios; II - A Administração Indireta, que compreende as seguintes categorias de entidades, dotadas de personalidade jurídica própria: a) Autarquias; b) Empresas Públicas; c) Sociedades de Economia Mista; d) Fundações Públicas.\"",
+      "Lei 9.784/1999, art. 53": "\"A Administração deve anular seus próprios atos, quando eivados de vício de legalidade, e pode revogá-los por motivo de conveniência ou oportunidade, respeitados os direitos adquiridos.\" (reaproveitado de bmrs-legislacao-atos-administrativos-lote08.json)"
+    }
+  },
+  "vigencia": {
+    "situacao": "CF art.37,caput/III: vigente (incisos I-III recebida redação atual pela EC 19/1998). DL200/67 art.4º: vigente. Lei9.784/99 art.53: vigente."
+  },
+  "escopo_pedagogico": {
+    "normative_only_topics": ["Princípios do art.37,caput (legalidade/publicidade/eficiência já testados; moralidade/impessoalidade não testados)", "Prazo de validade de concurso (art.37,III)", "Administração indireta (DL200/67 art.4º,II)", "Autotutela (Lei9.784/99 art.53 + Súmula 473 STF)"],
+    "doctrinal_status": "MIXED_NORMATIVE_DOCTRINAL",
+    "doctrinal_topics": ["Regime jurídico dos agentes públicos (distinção servidor estatutário × empregado público celetista)"],
+    "doctrinal_source": "Sem aula/material formal (aula_id=null). Distinção doutrinária consolidada e sem controvérsia relevante, já refletida em Q722 sem contestação.",
+    "doctrinal_source_status": "DOCTRINAL_SOURCE_NOT_VALIDATED",
+    "doctrinal_scope_limitation": "Regime jurídico dos agentes fica preservado como já coberto (Q722), mas o déficit de apenas 2 já é integralmente sustentável pelo eixo normativo moralidade/impessoalidade — não é necessário recorrer a este eixo doutrinário nesta rodada."
+  },
+  "generation_scope_autorizado": [
+    "Princípio da moralidade (CF art.37,caput) — ainda não testado como foco central",
+    "Princípio da impessoalidade (CF art.37,caput) — ainda não testado como foco central"
+  ],
+  "excluded_topics": [
+    "Autotutela/anulação/revogação genérica de ato administrativo como NOVA candidata — já fechada em Atos Administrativos (Lote08) e já testada aqui (Q197); gerar mais uma aumentaria redundância cross-unidade sem necessidade, já que o déficit de 2 tem alternativa normativa clara (moralidade/impessoalidade)",
+    "Administração indireta (DL200/67 art.4º,II) como NOVA candidata — já testada 2x (Q196/Q845), sem subcobertura",
+    "Regime jurídico dos agentes (doutrina, sem fonte validada) como NOVA candidata — ver doctrinal_scope_limitation",
+    "Poder hierárquico/disciplinar/regulamentar e poder de polícia — pertencem às unidades separadas 8cb82a8e.../2f0d3b9c... (EXCLUDED_OVERLAP_TOPIC)"
+  ],
+  "existing_question_map": [
+    { "questao_id": 195, "origem": "AUTORAL", "banca": "Papiro", "ano": 2026, "tema": "Princípio da legalidade", "conceito_central": "Administração deve atuar conforme a lei e o Direito", "dispositivo_fonte": "CF art.37,caput" },
+    { "questao_id": 196, "origem": "AUTORAL", "banca": "Papiro", "ano": 2026, "tema": "Administração indireta", "conceito_central": "Autarquia integra a indireta", "dispositivo_fonte": "DL200/67 art.4º,II" },
+    { "questao_id": 197, "origem": "AUTORAL", "banca": "Papiro", "ano": 2026, "tema": "Autotutela", "conceito_central": "Anular atos ilegais / revogar por conveniência e oportunidade", "dispositivo_fonte": "Lei9.784/99 art.53 + Súmula 473 STF" },
+    { "questao_id": 721, "origem": "REAL", "banca": "Fundatec", "concurso": "GM Pref Porto Alegre", "ano": 2025, "tema": "Princípio da publicidade", "conceito_central": "Concurso sem edital fere a publicidade", "dispositivo_fonte": "CF art.37,caput" },
+    { "questao_id": 722, "origem": "REAL", "banca": "Fundatec", "concurso": "GM Pref Porto Nacional", "ano": 2025, "tema": "Regime jurídico dos agentes", "conceito_central": "Servidor CLT = empregado público", "dispositivo_fonte": "doutrina" },
+    { "questao_id": 774, "origem": "REAL", "banca": "Fundatec", "concurso": "GM Pref Foz do Iguaçu", "ano": 2024, "tema": "Princípio da eficiência", "conceito_central": "Critérios de avaliação/execução = eficiência", "dispositivo_fonte": "CF art.37,caput" },
+    { "questao_id": 796, "origem": "REAL", "banca": "Fundatec", "concurso": "GM Pref Imbé", "ano": 2023, "tema": "Prazo de validade do concurso", "conceito_central": "Até 2 anos, prorrogável uma vez por igual período", "dispositivo_fonte": "CF art.37,III" },
+    { "questao_id": 845, "origem": "REAL", "banca": "Fundatec", "concurso": "Ana Pol Pen (PP RS)", "ano": 2022, "tema": "Administração indireta", "conceito_central": "Autarquias, fundações públicas e sociedades de economia mista integram a indireta", "dispositivo_fonte": "DL200/67 art.4º,II" }
+  ],
+  "existing_coverage": "8 questões úteis (5 REAL + 3 autorais). Legalidade/publicidade/eficiência já testados (art.37,caput); moralidade/impessoalidade NUNCA testados. Administração indireta 2x. Autotutela 1x (+ já testada 2x em Atos Administrativos, Lote08). Prazo de concurso 1x. Regime jurídico 1x (doutrina).",
+  "generation_gaps": "Faltam apenas 2 — cobertos com segurança por moralidade e impessoalidade (CF art.37,caput), sem tocar nenhum eixo já saturado nem duplicar Atos Administrativos/Poderes/Poder de Polícia.",
+  "target_exam_board": "Fundatec",
+  "target_exam_board_source": "Resolução canônica via curso.banca (banca-resolver.mjs) — status RESOLVED.",
+  "restricoes": [
+    "NÃO gerar nova questão de autotutela/anulação/revogação nesta unidade nesta rodada — eixo já saturado cross-unidade (Direito Administrativo + Atos Administrativos).",
+    "NÃO gerar nova questão de administração indireta — já testada 2x sem subcobertura."
+  ],
+  "riscos": [
+    "Risco BAIXO: déficit pequeno (2), eixo normativo moralidade/impessoalidade claro e inédito, mesmo dispositivo (art.37,caput) já consolidado no projeto."
+  ],
+  "source_risk": "LOW",
+  "can_generate_needed_quantity": true,
+  "quantidade_maxima_segura": 2,
+  "process_validation": "Fonte prep Lote09A — art.37,caput e Lei9.784/99 art.53 reaproveitados do manifesto SOURCE_VALIDATED do Lote08 (mesmo dispositivo, mesmo diploma); art.37,III e DL200/67 art.4º confirmados nesta rodada via pesquisa externa (planalto inacessível).",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote09a",
+  "validated_at": "2026-09-13T00:00:00Z",
+  "human_source_signoff": "APPROVED",
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-13T00:00:00Z",
+    "phase": "Lote 09A — HUMAN SOURCE SIGNOFF + GERAÇÃO AUTORAL (17 questões seguras)",
+    "evidence": "Mandato do usuário, Seção 11: 'Fonte principal para esta rodada: Constituição Federal de 1988, art. 37, caput. Lacunas prioritárias: moralidade; impessoalidade. [...] NÃO gerar nova questão genérica sobre: anulação; revogação; convalidação; porque Atos Administrativos já foi fechado no Lote 08.'"
+  },
+  "covers_articles": ["art. 37, caput", "art. 37, III", "art. 4º, II", "art. 53"],
+  "document_validation": {
+    "CF_88_ART_37_CAPUT": "VALIDATED_PRIMARY_NORM_REUSED_LOTE08",
+    "CF_88_ART_37_III": "VALIDATED_PRIMARY_NORM",
+    "DL_200_1967_ART_4_II": "VALIDATED_PRIMARY_NORM",
+    "LEI_9784_1999_ART_53": "VALIDATED_PRIMARY_NORM_REUSED_LOTE08"
+  },
+  "status_documental": "SOURCE_READY_FOR_HUMAN_SIGNOFF"
+}

@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_LEG_PODER_POLICIA_ESCOPO_UNIDADE_LOTE09A",
+  "type": "official_law",
+  "title": "Fonte — Legislação Específica — Poder de Polícia (BM RS) [SOURCE PREP Lote 09A — pendente human sign-off]",
+  "applies_to_unit_ids": ["2f0d3b9c-fe22-4173-a712-cfb9e1060b8c"],
+  "unit_id": "2f0d3b9c-fe22-4173-a712-cfb9e1060b8c",
+  "curso_conteudo_id": 60,
+  "conteudo_id": 69,
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "norma_canonica": {
+    "diploma_conceito": "Código Tributário Nacional (Lei nº 5.172/1966), art. 78, caput e parágrafo único",
+    "diploma_principios": "Lei nº 9.784/1999, art. 2º, caput"
+  },
+  "investigacao_documental_interna": {
+    "evidencia_1": "scripts/curadoria-pedagogica/config/poder_de_policia.unidades.json documenta: CTN art.78,caput confirmado em fonte oficial (curadoria anterior); Lei 9.784/99 art.2º,caput confirmado — nota explícita de que legalidade/proporcionalidade/interesse público são PRINCÍPIOS/LIMITES gerais da atuação administrativa aplicáveis, não 'atributos do poder de polícia' (distinção terminológica preservada).",
+    "conclusao": "Diploma confirmado por evidência documental interna prévia."
+  },
+  "fonte_oficial": {
+    "planalto_status": "planalto.gov.br inacessível nesta sessão",
+    "fonte_lida_ctn_art_78": "Confirmado via pesquisa (WebSearch) — texto integral do caput E do parágrafo único obtido (parágrafo único ainda não testado em nenhuma questão existente).",
+    "fonte_lida_lei_9784_art_2": "Confirmado via pesquisa (WebSearch) — texto integral do caput (11 princípios) obtido; Q206 hoje testa apenas 3 desses 11 (legalidade, proporcionalidade, interesse público)."
+  },
+  "texto_consolidado": {
+    "artigos": {
+      "CTN, art. 78, caput": "\"Considera-se poder de polícia atividade da administração pública que, limitando ou disciplinando direito, interesse ou liberdade, regula a prática de ato ou abstenção de fato, em razão de interesse público concernente à segurança, à higiene, à ordem, aos costumes, à disciplina da produção e do mercado, ao exercício de atividades econômicas dependentes de concessão ou autorização do Poder Público, à tranquilidade pública ou ao respeito à propriedade e aos direitos individuais ou coletivos.\"",
+      "CTN, art. 78, parágrafo único": "\"Considera-se regular o exercício do poder de polícia quando desempenhado pelo órgão competente nos limites da lei aplicável, com observância do processo legal e, tratando-se de atividade que a lei tenha como discricionária, sem abuso ou desvio de poder.\"",
+      "Lei 9.784/1999, art. 2º, caput": "\"A Administração Pública obedecerá, dentre outros, aos princípios da legalidade, finalidade, motivação, razoabilidade, proporcionalidade, moralidade, ampla defesa, contraditório, segurança jurídica, interesse público e eficiência.\""
+    }
+  },
+  "vigencia": {
+    "situacao": "CTN art.78: vigente; caput recebeu nova redação por Ato Complementar nº 31/1966, sem alteração relevante ao núcleo já citado. Lei 9.784/99 art.2º: vigente, sem alteração no caput."
+  },
+  "escopo_pedagogico": {
+    "normative_only_topics": ["Conceito legal de poder de polícia (CTN art.78,caput)", "Exercício regular do poder de polícia (CTN art.78,parágrafo único — INÉDITO, ainda não testado)", "Princípios/limites da atuação administrativa (Lei9.784/99 art.2º,caput — apenas 3/11 princípios testados até agora)"],
+    "doctrinal_status": "MIXED_NORMATIVE_DOCTRINAL",
+    "doctrinal_topics": ["Atributos do poder de polícia (discricionariedade, autoexecutoriedade, coercibilidade)", "Distinção poder de polícia × poder hierárquico"],
+    "doctrinal_source": "Nenhuma aula/material formal identificado no projeto (aula_id=null, 0 versões). Conceitos doutrinários consolidados e sem controvérsia relevante entre autores de Direito Administrativo, já refletidos sem contestação em Q205/Q871.",
+    "doctrinal_source_status": "DOCTRINAL_SOURCE_NOT_VALIDATED",
+    "doctrinal_scope_limitation": "Atributos e distinção com poder hierárquico ficam preservados como já cobertos (Q205/Q871, não removidos), mas o generation_scope NORMATIVO já é suficiente para as 6 novas candidatas sem precisar recorrer a esses eixos doutrinários — não bloqueia a unidade."
+  },
+  "generation_scope_autorizado": [
+    "Conceito legal detalhado (CTN art.78,caput) — outro ângulo/elemento do conceito (ex.: os motivos de interesse público listados: segurança, higiene, ordem, costumes, disciplina da produção e do mercado, atividades econômicas dependentes de concessão, tranquilidade pública, respeito à propriedade)",
+    "Exercício regular do poder de polícia (CTN art.78,parágrafo único) — órgão competente, limites da lei, processo legal, ausência de abuso/desvio quando discricionário — dispositivo ainda não testado",
+    "Princípios da Lei9.784/99 art.2º,caput além dos 3 já testados (ex.: moralidade, eficiência, segurança jurídica, razoabilidade, motivação)"
+  ],
+  "excluded_topics": [
+    "Poder hierárquico como eixo positivo aqui (pertence à unidade 8cb82a8e-e0f4-4d46-a4a5-7443f31912a4 — EXCLUDED_OVERLAP_TOPIC)",
+    "Atributos (discricionariedade/autoexecutoriedade/coercibilidade) como NOVO eixo central sem necessidade — já coberto por Q205, generation_scope normativo é suficiente para o déficit"
+  ],
+  "existing_question_map": [
+    { "questao_id": 204, "origem": "AUTORAL", "banca": "Papiro", "ano": 2026, "tema": "Conceito", "conceito_central": "Atividade que limita/condiciona direitos em benefício do interesse público", "dispositivo_fonte": "CTN art.78,caput" },
+    { "questao_id": 205, "origem": "AUTORAL", "banca": "Papiro", "ano": 2026, "tema": "Atributos", "conceito_central": "Discricionariedade, autoexecutoriedade, coercibilidade", "dispositivo_fonte": "doutrina" },
+    { "questao_id": 206, "origem": "AUTORAL", "banca": "Papiro", "ano": 2026, "tema": "Princípios de atuação", "conceito_central": "Legalidade, proporcionalidade, interesse público (3 de 11 do caput)", "dispositivo_fonte": "Lei9.784/99 art.2º,caput" },
+    { "questao_id": 871, "origem": "REAL", "banca": "Fundatec", "concurso": "Ana Pol Pen (PP RS)", "ano": 2022, "tema": "Distinção com poder hierárquico", "conceito_central": "Fiscalização de subalternos NÃO é poder de polícia (é poder hierárquico)", "dispositivo_fonte": "doutrina" }
+  ],
+  "existing_coverage": "4 questões úteis (1 REAL + 3 autorais). Conceito, atributos, princípios (parcial) e distinção já testados uma vez cada. Parágrafo único do art.78 (exercício regular) inteiramente inédito.",
+  "generation_gaps": "Faltam 6. Espaço normativo real e diversificado: conceito (outro ângulo), parágrafo único inédito, 8 princípios do art.2º ainda não testados — sustenta as 6 com folga.",
+  "target_exam_board": "Fundatec",
+  "target_exam_board_source": "Resolução canônica via curso.banca (banca-resolver.mjs) — status RESOLVED.",
+  "restricoes": [
+    "NÃO apresentar os atributos doutrinários (discricionariedade/autoexecutoriedade/coercibilidade) como se fossem enumeração literal do CTN.",
+    "Ao usar CTN art.78, parágrafo único, citar exatamente este dispositivo (não confundir com o parágrafo único do art.2º da Lei9.784/99, que é de outro diploma e pertence ao processo administrativo em geral — fora do escopo desta unidade)."
+  ],
+  "riscos": [
+    "Risco BAIXO: diploma e texto literal confirmados para os 2 dispositivos centrais (CTN art.78 completo, Lei9.784/99 art.2º caput completo); espaço normativo amplo e ainda pouco explorado."
+  ],
+  "source_risk": "LOW",
+  "can_generate_needed_quantity": true,
+  "quantidade_maxima_segura": 6,
+  "process_validation": "Fonte prep Lote09A — diploma confirmado por evidência documental interna prévia + nova confirmação via pesquisa externa (planalto inacessível), incluindo dispositivo inédito (art.78,parágrafo único) não usado em nenhuma questão existente.",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote09a",
+  "validated_at": "2026-09-13T00:00:00Z",
+  "human_source_signoff": "APPROVED",
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-13T00:00:00Z",
+    "phase": "Lote 09A — HUMAN SOURCE SIGNOFF + GERAÇÃO AUTORAL (17 questões seguras)",
+    "evidence": "Mandato do usuário, Seção 7: 'Fontes validadas: [...] AUTORIZADO: conceito legal de poder de polícia; exercício regular do poder de polícia, se o manifest confirmar o parágrafo único; princípios administrativos ainda não cobertos; limites da atuação administrativa [...] NÃO apresentar como enumeração legal literal: discricionariedade; autoexecutoriedade; coercibilidade; caso esses atributos estejam apenas em fonte doutrinária não validada.'"
+  },
+  "covers_articles": ["art. 78, caput", "art. 2º, caput"],
+  "document_validation": {
+    "CTN_LEI_5172_1966_ART_78": "VALIDATED_PRIMARY_NORM",
+    "LEI_9784_1999_ART_2_CAPUT": "VALIDATED_PRIMARY_NORM"
+  },
+  "status_documental": "SOURCE_READY_FOR_HUMAN_SIGNOFF"
+}
