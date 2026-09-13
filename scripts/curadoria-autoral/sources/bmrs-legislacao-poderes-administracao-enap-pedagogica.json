@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_LEG_PODERES_ADMINISTRACAO_ENAP_PEDAGOGICA_LOTE09B",
+  "type": "official_pedagogical",
+  "title": "Fonte — Legislação Específica — Poderes da Administração Pública — Fonte Pedagógica Oficial ENAP (BM RS) [SOURCE PREP Lote 09B — pendente human sign-off]",
+  "applies_to_unit_ids": ["8cb82a8e-e0f4-4d46-a4a5-7443f31912a4"],
+  "unit_id": "8cb82a8e-e0f4-4d46-a4a5-7443f31912a4",
+  "curso_conteudo_id": 59,
+  "conteudo_id": 81,
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "proposito": "Fonte COMPLEMENTAR à fonte normativa já validada (bmrs-legislacao-poderes-administracao.json, type=official_law). Esta fonte NÃO substitui nem se mistura com aquela — cobre exclusivamente o eixo doutrinário (poder hierárquico + poder disciplinar) que a fonte normativa explicitamente deixou como DOCTRINAL_SOURCE_NOT_VALIDATED. Documenta agora a fonte institucional oficial encontrada, resolvendo esse bloqueio para um ângulo específico (distinção entre os dois poderes), sem forçar geração normativa indevida sobre eles.",
+  "instituicao": "ENAP — Escola Nacional de Administração Pública (Fundação vinculada, ente oficial do Poder Executivo federal)",
+  "documento": "Administração Pública e o Contexto Institucional Contemporâneo — Módulo 1 (Apostila)",
+  "programa": "Programa de Desenvolvimento de Gerentes Operacionais (DGO) — Diretoria de Desenvolvimento Gerencial",
+  "autoria": "Ricardo Corrêa Coelho (ficha catalográfica: C6725 COELHO, Ricardo Corrêa. Administração pública e contexto institucional Contemporâneo; módulo I. Brasília: ENAP/DDG, 2013, 73p.)",
+  "edicao_local_data": "Brasília, 2014 (© ENAP, 2014)",
+  "secao_localizacao": "Item 4.2 \"Poderes e Deveres do Administrador Público\", página 33 (sumário confirma: item 4, \"O Servidor e o Serviço Público\", subitem 4.2)",
+  "fonte_oficial_url": "https://repositorio.enap.gov.br/bitstream/1/2260/1/1.%20Apostila%20-%20M%C3%B3dulo%201%20-%20Administra%C3%A7%C3%A3o%20P%C3%BAblica.pdf",
+  "fonte_oficial_url_pagina_indice": "https://repositorio.enap.gov.br/handle/1/2260",
+  "data_verificacao": "2026-09-13",
+  "metodo_verificacao": "PDF baixado diretamente do Repositório Institucional da ENAP (repositorio.enap.gov.br — domínio oficial .gov.br) e lido integralmente (73 páginas) via ferramenta de leitura de PDF; texto abaixo é transcrição literal das páginas 33-34, não resumo de terceiros.",
+  "texto_consolidado": {
+    "poder_hierarquico": "\"O poder hierárquico é o que dispõe o Executivo para distribuir e escalonar as funções de seus órgãos, ordenar e rever a atuação de seus agentes. É o poder de reorganizar a Administração Pública de acordo com o que cada governo julgar ser a estrutura mais conveniente: Para a sua forma de administrar (centralizada, descentralizada, participativa etc); para acomodar os diferentes integrantes do governo (partidos e outros grupos de apoio considerados relevantes); e para atingir os objetivos propostos.\" (p.33)",
+    "poder_disciplinar": "\"O poder disciplinar também é exercido para dentro do Estado e tem como objetivo punir as infrações funcionais cometidas pelos servidores e demais pessoas sujeitas à disciplina dos órgãos da Administração. O poder disciplinar visa garantir, através da coerção, que vai da advertência à demissão, que os servidores da Administração Pública mantenham conduta compatível com os interesses do Estado (interesse público).\" (p.33)",
+    "classificacao_interno_externo": "\"O Estado exerce poderes que têm efeitos sobre a sociedade civil e outros que têm efeito sobre a Administração Pública. Dentre os primeiros, localiza-se o poder de polícia e o poder discricionário, e dentre os segundos, o poder hierárquico e o poder disciplinar.\" (p.33) — angulo NOVO, ainda nao testado: a distincao classificatoria entre poderes de efeito INTERNO (hierarquico/disciplinar, objeto desta unidade) e poderes de efeito EXTERNO (policia/discricionario, objeto da unidade separada 'Poder de Policia')."
+  },
+  "corroboracao_com_questoes_existentes": "A redação de Q207 (\"Distribuir e escalonar funções e fiscalizar a atuação interna\") e de Q208 (\"Apurar infrações e aplicar sanções administrativas a servidores e demais pessoas sujeitas à disciplina administrativa\") já ativas no curso são QUASE IDÊNTICAS à formulação desta apostila — forte indício de que essas questões autorais já foram originalmente redigidas a partir desta mesma linhagem doutrinária (ENAP/Ricardo Corrêa Coelho ou fonte equivalente), confirmando a estabilidade e adequação do conteúdo, não uma descoberta de fonte nova e contraditória.",
+  "escopo_pedagogico": {
+    "doctrinal_status": "OFFICIAL_PEDAGOGICAL",
+    "doctrinal_source_status": "VALIDATED_PENDING_HUMAN_SIGNOFF"
+  },
+  "generation_scope_autorizado_apos_signoff": [
+    "Distinção comparativa entre poder hierárquico e poder disciplinar (situação aplicada exigindo atribuir corretamente cada ação ao poder correto) — ângulo NOVO, não redundante com Q207 (define hierárquico isolado) nem Q208 (define disciplinar isolado)."
+  ],
+  "excluded_topics": [
+    "Definição isolada de poder hierárquico (já testada em Q207 — redundante)",
+    "Definição isolada de poder disciplinar (já testada em Q208 — redundante)",
+    "Classificação interno×externo estendida ao poder de polícia/discricionário — pertence à unidade separada Poder de Polícia (EXCLUDED_OVERLAP_TOPIC)"
+  ],
+  "existing_coverage_nesta_fonte": "0 questões geradas a partir desta fonte até o momento (fonte recém-documentada nesta rodada). Q207/Q208 já existiam antes desta fonte ser formalmente localizada — não foram gerados a partir dela nesta sessão, apenas corroborados por ela retroativamente.",
+  "generation_gaps": "1 questão (comparativa hierárquico×disciplinar) sustenta com segurança o eixo pedagógico oficial autorizado.",
+  "target_exam_board": "Fundatec",
+  "target_exam_board_source": "Resolução canônica via curso.banca (banca-resolver.mjs) — status RESOLVED, idêntico às demais unidades deste curso.",
+  "restricoes": [
+    "NÃO rotular fundamento.tipo como \"regra_normativa\" para candidatas geradas a partir desta fonte — usar exclusivamente \"fonte_pedagogica_oficial\".",
+    "NÃO apresentar o conteúdo como se estivesse previsto em lei específica — a apostila é doutrina consolidada de uso institucional oficial, não dispositivo legal.",
+    "NÃO estender esta fonte para justificar geração sobre poder de polícia/discricionário (pertencem a outra unidade)."
+  ],
+  "riscos": [
+    "Risco BAIXO: fonte institucional oficial (.gov.br), autoria identificada, localização exata (página/seção), conteúdo já indiretamente corroborado por questões existentes no banco."
+  ],
+  "source_risk": "LOW",
+  "can_generate_needed_quantity": true,
+  "quantidade_maxima_segura": 1,
+  "process_validation": "Fonte prep Lote09B — documento oficial ENAP localizado, baixado e lido integralmente (não apenas registro de catálogo bibliográfico, que havia sido insuficiente na rodada anterior). Conteúdo verificado literalmente nas páginas 33-34, com corroboração cruzada contra Q207/Q208 já ativas.",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote09b",
+  "validated_at": "2026-09-13T00:00:00Z",
+  "human_source_signoff": "APPROVED",
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-13T00:00:00Z",
+    "phase": "Lote 09B — HUMAN SOURCE SIGNOFF + EXPANSÃO CONTROLADA DO ESCOPO JURISPRUDENCIAL + GERAÇÃO DAS 12 CANDIDATAS FINAIS",
+    "evidence": "Mandato do usuário, Seção 1: 'fonte pedagógica institucional oficial: ENAP. Documento: \"Administração Pública e o Contexto Institucional Contemporâneo — Módulo 1\", Ricardo Corrêa Coelho, ENAP/DDG, Brasília, 2013/2014, item 4.2, página 33 [...] para sustentação dos conceitos de: poder hierárquico; poder disciplinar; com uso limitado ao conteúdo efetivamente presente no documento. source type esperado: official_pedagogical. foundation type esperado: fonte_pedagogica_oficial.'"
+  },
+  "covers_articles": [],
+  "covers_topics": ["poder hierárquico", "poder disciplinar", "distinção poder hierárquico x poder disciplinar"],
+  "document_validation": {
+    "ENAP_MODULO_1_ADMINISTRACAO_PUBLICA_SECAO_4_2": "VALIDATED_OFFICIAL_PEDAGOGICAL_SOURCE_PENDING_SIGNOFF"
+  },
+  "status_documental": "SOURCE_READY_FOR_HUMAN_SIGNOFF"
+}

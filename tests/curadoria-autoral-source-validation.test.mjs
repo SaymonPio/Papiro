@@ -384,6 +384,33 @@ test("14e. INVARIANTE CASO F: fonte NAO juridica preserva o comportamento existe
   assert.equal(fonteTemSignoffHumanoAutorizado(pedagogicaSemSignoffField), true, "fonte pedagogica nao exige human_source_signoff — so validated=true");
 });
 
+// Reparo Lote 09B (mandato "EXTENSAO CONTROLADA DO CONTRATO DE
+// FUNDAMENTO", Secao 8): official_jurisprudence e official_pedagogical
+// sao tao sensiveis quanto official_law e devem exigir o MESMO rigor de
+// sign-off humano — nao podem cair no CASO F generico (so validated=true).
+
+test("14f. INVARIANTE (Lote09B): fonte official_jurisprudence exige o MESMO rigor estrito de official_law", () => {
+  const semSignoff = { source_key: "j1", type: "official_jurisprudence", validated: true, validated_by: "human_operator_x", covers_articles: [] };
+  assert.equal(fonteTemSignoffHumanoAutorizado(semSignoff), false, "sem human_source_signoff aprovado, mesmo com validated=true, nao deve passar");
+
+  const aiOnly = { source_key: "j2", type: "official_jurisprudence", validated: true, human_source_signoff: "APPROVED", validated_by: "openai_websearch_secondary_research_only", covers_articles: [] };
+  assert.equal(fonteTemSignoffHumanoAutorizado(aiOnly), false, "validated_by so-IA nunca conta como sign-off humano, mesmo com human_source_signoff=APPROVED");
+
+  const completa = { source_key: "j3", type: "official_jurisprudence", validated: true, human_source_signoff: "APPROVED", validated_by: "human_operator_explicit_signoff_lote09b", covers_articles: [] };
+  assert.equal(fonteTemSignoffHumanoAutorizado(completa), true, "com todos os requisitos presentes, deve passar");
+});
+
+test("14g. INVARIANTE (Lote09B): fonte official_pedagogical exige o MESMO rigor estrito de official_law", () => {
+  const semSignoff = { source_key: "p1", type: "official_pedagogical", validated: true, validated_by: "human_operator_x", covers_articles: [] };
+  assert.equal(fonteTemSignoffHumanoAutorizado(semSignoff), false, "sem human_source_signoff aprovado, mesmo com validated=true, nao deve passar");
+
+  const aiOnly = { source_key: "p2", type: "official_pedagogical", validated: true, human_source_signoff: "APPROVED", validated_by: "ia_pesquisa_secundaria", covers_articles: [] };
+  assert.equal(fonteTemSignoffHumanoAutorizado(aiOnly), false, "validated_by so-IA nunca conta como sign-off humano");
+
+  const completa = { source_key: "p3", type: "official_pedagogical", validated: true, human_source_signoff: "APPROVED", validated_by: "human_operator_explicit_signoff_lote09b", covers_articles: [] };
+  assert.equal(fonteTemSignoffHumanoAutorizado(completa), true, "com todos os requisitos presentes, deve passar");
+});
+
 test("15. manifesto local de fontes: fonte PEDAGOGICA (Concordancia verbal, Fase 2A.2) pode ser validated=true quando o conteudo-base foi verificado ao vivo no projeto", () => {
   const fontes = carregarFontes();
   const pedagogica = fontes.find((f) => f.source_key === "BMRS_PT_CONCORDANCIA_VERBAL_ESCOPO_UNIDADE");

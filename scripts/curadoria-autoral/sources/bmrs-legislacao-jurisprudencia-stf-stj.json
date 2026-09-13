@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "source_key": "BMRS_LEG_JURISPRUDENCIA_STF_STJ_ESCOPO_UNIDADE_LOTE09B",
+  "type": "official_jurisprudence",
+  "type_note": "Atualizado nesta rodada (Lote09B, mandato 'EXTENSAO CONTROLADA DO CONTRATO DE FUNDAMENTO'): TIPOS_FONTE (schemas.mjs) agora possui o valor dedicado 'official_jurisprudence', com o MESMO rigor estrito de human sign-off de 'official_law' (fonteTemSignoffHumanoAutorizado em source-manifest.mjs generalizado para um set nomeado de tipos de alta confiança). Na rodada anterior este manifesto usava 'official_law' como aproximação deliberada, documentando a lacuna — a lacuna foi FECHADA nesta execução (ver pipeline_contract_findings.PIPELINE_JURISPRUDENCE_SUPPORT).",
+  "title": "Fonte — Legislação Específica — Jurisprudência do STF e STJ (BM RS) [Lote 09B — human sign-off APROVADO + escopo pedagógico expandido]",
+  "applies_to_unit_ids": ["8e1d1204-1f66-431c-a95f-6403e77882dc"],
+  "unit_id": "8e1d1204-1f66-431c-a95f-6403e77882dc",
+  "curso_conteudo_id": 69,
+  "conteudo_id": 66,
+  "materia_id": 10,
+  "curso_id": "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
+  "achado_critico_preexistente": "As 5 questões úteis atuais (Q198, Q199, Q200, Q670, Q733) são 100% STF. O escopo/artigos_esperados LIVE da unidade também são 100% STF — nenhum precedente STJ está mapeado no escopo pedagógico atual, apesar do nome da unidade ser 'Jurisprudência do STF E STJ'.",
+  "investigacao_realizada": "Pesquisa documental externa (WebSearch) cruzando: conteúdo real da unidade (100% STF, atuação policial), incidência em concursos policiais, temas diretamente ligados a abordagem/domicílio/prova/prisão/uso da força/servidores. NÃO usados: blogs, cursinhos, Wikipédia, resumos privados. Fontes primárias: portal STF (noticias.stf.jus.br, portal.stf.jus.br), portal STJ (stj.jus.br/sites/portalp), ConJur (usado apenas para localizar o precedente, nunca como fonte final).",
+  "verificacao_final_precedentes_aprovados_humanamente": {
+    "criterio_exigido_pelo_mandato": "tribunal; processo; órgão julgador; tese; situação atual; data relevante — confirmados abaixo para cada um dos 5 precedentes aprovados condicionalmente pelo humano.",
+    "ADPF_635_RJ": {
+      "tribunal": "STF",
+      "processo": "ADPF 635/RJ (\"ADPF das Favelas\")",
+      "orgao_julgador": "Tribunal Pleno, por unanimidade (11x0)",
+      "relator": "Min. Edson Fachin",
+      "relator_confirmacao": "Campo ausente nas rodadas anteriores deste manifesto (não fazia parte dos critérios exigidos pelo mandato: tribunal/processo/órgão julgador/tese/situação/data). Adicionado nesta rodada (Lote09B, mandato 'REPOSIÇÃO CONTROLADA DA SÚMULA 145 + REVIEW PACKET V2') a pedido humano, após revisão externa confirmar em fonte oficial do STF que o relator da ADPF 635/RJ é o Min. Edson Fachin. Não contradiz nenhum dado já registrado (tribunal, órgão julgador e demais campos permanecem inalterados) — RELATORSHIP_VALIDATION_PASS.",
+      "tese": "Homologação parcial do plano estadual (RJ) de redução da letalidade policial; determinações incluem instalação de câmeras corporais/em viaturas (prazo ampliado para 180 dias), observância dos parâmetros da Lei 13.060/2014 no uso da força, preservação de local de crime, presença de ambulância em ações de risco, remessa de relatórios ao MP, elaboração de plano de recuperação territorial e instauração de inquérito pela PF para crimes de repercussão interestadual/internacional.",
+      "situacao_atual": "Julgamento de mérito concluído — vigente, sem indicação de superação.",
+      "data_relevante": "Julgamento em 03/04/2025; acórdão publicado no DJe em 11/04/2025 e publicado em 14/04/2025.",
+      "confirmado": true
+    },
+    "ADPF_347_DF": {
+      "tribunal": "STF",
+      "processo": "ADPF 347/DF",
+      "orgao_julgador": "Plenário (medida cautelar original), com reiteração em jurisprudência e reclamações posteriores",
+      "tese": "Juízes e tribunais devem realizar audiência de custódia, viabilizando o comparecimento do preso perante autoridade judiciária em até 24 horas contadas do momento da prisão, em qualquer modalidade de prisão.",
+      "situacao_atual": "Vigente e vinculante — jurisprudência do STF continua a aplicar/reafirmar esse entendimento.",
+      "data_relevante": "Medida cautelar concedida em 2015 (prazo original de 90 dias para implementação), reafirmada em decisões e reclamações posteriores.",
+      "confirmado": true,
+      "ressalva": "Data exata do trânsito em julgado do mérito final da ADPF 347 não foi objeto de confirmação específica nesta pesquisa — o que está confirmado e é o que sustenta a candidata é a REGRA (obrigatoriedade da audiência de custódia em 24h), vigente e aplicada de forma reiterada, não a data processual completa do caso."
+    },
+    "TEMA_998_RG_ARE_959620": {
+      "tribunal": "STF",
+      "processo": "ARE 959.620/RS (Tema 998 de Repercussão Geral)",
+      "orgao_julgador": "Plenário, em repercussão geral",
+      "tese": "\"Em visitas sociais a presídios ou estabelecimentos de internação, é inadmissível revista íntima vexatória com desnudamento do visitante ou exames invasivos destinados a causar humilhação\"; prova obtida dessa forma é ilícita, ressalvada decisão judicial fundamentada em cada caso concreto; prazo de 24 meses para Estados instalarem equipamentos (body scanners etc.).",
+      "situacao_atual": "Mérito julgado; tese fixada e oficialmente anunciada.",
+      "data_relevante": "Julgamento de mérito em 02/04/2025; tese fixada/anunciada em 14/08/2025.",
+      "confirmado": true
+    },
+    "SUMULA_145_STF": {
+      "tribunal": "STF",
+      "processo": "N/A — verbete sumular (não é processo individual)",
+      "orgao_julgador": "N/A — súmula consolidada historicamente, não vinculante",
+      "tese": "\"Não há crime, quando a preparação do flagrante pela polícia torna impossível a sua consumação\" (flagrante preparado). Distingue-se do flagrante esperado (lícito), em que a polícia apenas monitora e intervém em conduta já em curso, sem induzir o agente.",
+      "situacao_atual": "Vigente, sem indicação de cancelamento ou superação, amplamente aplicada.",
+      "data_relevante": "Súmula antiga e consolidada — data de edição específica não foi objeto de confirmação nesta pesquisa; o texto e a vigência atual foram confirmados diretamente no portal oficial do STF.",
+      "confirmado": true,
+      "correcao_documental": "O diagnóstico inicial havia classificado esta súmula erroneamente como 'STJ' — confirmado documentalmente nesta rodada que é do STF (portal.stf.jus.br/jurisprudencia/sumariosumulas.asp). Corrigido aqui."
+    },
+    "HC_653515_RJ": {
+      "tribunal": "STJ",
+      "processo": "HC 653.515/RJ",
+      "orgao_julgador": "Sexta Turma, por maioria (Rel. Min. Laurita Vaz, Rel. para acórdão Min. Rogerio Schietti Cruz)",
+      "tese": "A quebra da cadeia de custódia da prova (arts. 158-A a 158-F do CPP) não implica, de maneira obrigatória, a inadmissibilidade ou nulidade da prova colhida ('princípio da mesmidade'); o juízo deve sopesar a irregularidade ao lado dos demais elementos da instrução para decidir se a prova ainda é confiável.",
+      "situacao_atual": "Vigente — linha consolidada e reiterada em decisões e comentários posteriores (2022-2024), sem indicação de superação.",
+      "data_relevante": "Julgado em 23/11/2021.",
+      "confirmado": true
+    }
+  },
+  "mapa_precedentes_candidatos": [
+    {
+      "tribunal": "STF", "tipo": "ADPF (julgamento de mérito)", "numero": "ADPF 635/RJ (\"ADPF das Favelas\")",
+      "tema_sumula": "N/A (controle concentrado)", "assunto": "Letalidade policial e uso da força em operações policiais no RJ",
+      "tese_resumida": "Homologação parcial do plano de redução da letalidade policial; câmeras corporais/viaturas; parâmetros da Lei 13.060/2014 no uso da força; preservação de local de crime; ambulância em ações de risco; relatórios ao MP.",
+      "fonte_oficial": "https://noticias.stf.jus.br/postsnoticias/adpf-das-favelas-stf-homologa-parcialmente-plano-do-estado-do-rio-de-janeiro-para-reduzir-letalidade-policial/",
+      "status_atual": "Julgado 03/04/2025, unânime, acórdão publicado 14/04/2025. Vigente.",
+      "relevancia_bmrs": "ALTA", "incidencia_policial": "ALTA", "ja_coberto": false, "risco": "LOW", "recomendado": true
+    },
+    {
+      "tribunal": "STF", "tipo": "ADPF (medida cautelar + jurisprudência consolidada)", "numero": "ADPF 347/DF",
+      "tema_sumula": "N/A", "assunto": "Audiência de custódia obrigatória em até 24h de qualquer prisão",
+      "tese_resumida": "Juízes e tribunais devem realizar audiência de custódia em até 24h da prisão, em qualquer modalidade.",
+      "fonte_oficial": "https://portal.stf.jus.br/noticias/verNoticiaDetalhe.asp?idConteudo=299385",
+      "status_atual": "Vigente e reiterada em jurisprudência posterior. Consolidada e vinculante.",
+      "relevancia_bmrs": "ALTA", "incidencia_policial": "ALTA", "ja_coberto": false, "risco": "LOW", "recomendado": true
+    },
+    {
+      "tribunal": "STF", "tipo": "Repercussão Geral — Tema de mérito julgado", "numero": "Tema 998 RG (ARE 959.620/RS)",
+      "tema_sumula": "Tema 998", "assunto": "Revista íntima vexatória de visitantes em estabelecimentos prisionais",
+      "tese_resumida": "Inadmissibilidade de revista íntima vexatória com desnudamento/exames invasivos humilhantes; prova obtida assim é ilícita.",
+      "fonte_oficial": "https://portal.stf.jus.br/jurisprudenciaRepercussao/verAndamentoProcesso.asp?incidente=4956054&numeroProcesso=959620&classeProcesso=ARE&numeroTema=998",
+      "status_atual": "Mérito julgado 02/04/2025; tese fixada/anunciada 14/08/2025.",
+      "relevancia_bmrs": "MODERADA-ALTA", "incidencia_policial": "MODERADA", "ja_coberto": false, "risco": "LOW", "recomendado": true
+    },
+    {
+      "tribunal": "STF", "tipo": "Súmula (não vinculante)", "numero": "Súmula 145",
+      "tema_sumula": "Súmula 145", "assunto": "Flagrante preparado",
+      "tese_resumida": "Não há crime quando a preparação do flagrante pela polícia torna impossível sua consumação; distingue-se do flagrante esperado (lícito).",
+      "fonte_oficial": "https://portal.stf.jus.br/jurisprudencia/sumariosumulas.asp?base=30&sumula=2119",
+      "status_atual": "Vigente, estável, sem cancelamento. É do STF (corrigido de erro inicial que a classificou como STJ).",
+      "relevancia_bmrs": "MODERADA", "incidencia_policial": "MODERADA", "ja_coberto": false, "risco": "LOW", "recomendado": true
+    },
+    {
+      "tribunal": "STJ", "tipo": "Habeas Corpus (jurisprudência consolidada da Sexta Turma)", "numero": "HC 653.515/RJ",
+      "tema_sumula": "N/A (linha jurisprudencial estável desde 2021, não é tema repetitivo/súmula)",
+      "assunto": "Cadeia de custódia da prova (arts. 158-A a 158-F CPP) — consequências da quebra",
+      "tese_resumida": "Quebra da cadeia de custódia não gera nulidade automática ('princípio da mesmidade'); juízo deve sopesar com os demais elementos da instrução.",
+      "fonte_oficial": "https://www.stj.jus.br/sites/portalp/Paginas/Comunicacao/Noticias/09122021-Quebra-da-cadeia-de-custodia-nao-gera-nulidade-obrigatoria-da-prova--define-Sexta-Turma.aspx",
+      "status_atual": "Julgado 23/11/2021, maioria, Sexta Turma. Linha consolidada.",
+      "relevancia_bmrs": "ALTA", "incidencia_policial": "ALTA", "ja_coberto": false, "risco": "LOW", "recomendado": true
+    },
+    {
+      "tribunal": "STJ", "tipo": "Tema Repetitivo (AFETADO, EM JULGAMENTO — NÃO CONSOLIDADO)", "numero": "Tema 1438 (REsp 2234550/PA, REsp 2225394/PE, REsp 2234010/PA)",
+      "tema_sumula": "Tema 1438", "assunto": "Parâmetros objetivos para 'fundada suspeita' (art. 244 CPP)",
+      "tese_resumida": "AINDA NÃO FIXADA. Afetado pela Terceira Seção em 29/05/2026 para pacificar divergência interna.",
+      "fonte_oficial": "https://www.stj.jus.br/docs_internet/processo/precedentes/2026/140_boletim_precedentes_stj_20260602.pdf",
+      "status_atual": "PENDENTE DE JULGAMENTO — situação incerta por definição. NÃO usar.",
+      "relevancia_bmrs": "MUITO ALTA", "incidencia_policial": "MUITO ALTA", "ja_coberto": false, "risco": "HIGH", "recomendado": false,
+      "observacao": "MONITOR_ONLY — candidato natural para Lote futuro assim que houver tese fixada. NÃO usado nesta rodada, por decisão humana explícita (Seção 20 do mandato)."
+    },
+    {
+      "tribunal": "STJ", "tipo": "Decisão de Turma (não vinculante, não é tema repetitivo)", "numero": "Acórdão noticiado em 18/07/2024 (Sexta Turma)",
+      "tema_sumula": "N/A", "assunto": "Denúncia anônima especificada + elementos concretos justificam abordagem/busca veicular",
+      "tese_resumida": "Denúncia anônima com elementos concretos pode justificar abordagem/busca veicular, diferente de denúncia genérica.",
+      "fonte_oficial": "https://www.stj.jus.br/sites/portalp/Paginas/Comunicacao/Noticias/2024/18072024-Denuncia-anonima-apoiada-em-elementos-concretos-justifica-abordagem-policial-e-busca-veicular.aspx",
+      "status_atual": "Decisão de Turma sobre a MESMA área do Tema 1438 (pendente) — risco de ser superada pela tese repetitiva.",
+      "relevancia_bmrs": "ALTA", "incidencia_policial": "ALTA", "ja_coberto": false, "risco": "HIGH", "recomendado": false,
+      "observacao": "MONITOR_ONLY — mesmo motivo do Tema 1438. NÃO usado nesta rodada, por decisão humana explícita."
+    }
+  ],
+  "descartados_explicitamente": [
+    { "item": "STJ Súmula 635", "motivo": "Trata da prescrição do art. 142 da Lei nº 8.112/1990 (servidores civis federais) — regime DIFERENTE do disciplinar da Brigada Militar (já coberto por unidade própria, Lote07, Decreto Estadual nº 43.245/2004). Risco de o aluno aplicar prazo/regra de um regime a outro. Descartada." },
+    { "item": "STJ Súmula 174 (arma de brinquedo)", "motivo": "CANCELADA em 2001 pela própria Terceira Seção do STJ. Precedente superado — excluído conforme regra de atualidade." }
+  ],
+  "human_decision_lote09b": {
+    "decidido_por": "human_operator",
+    "decidido_em": "2026-09-13",
+    "decisao": "APROVAR condicionalmente os 5 precedentes acima (4 STF + 1 STJ), condicionado à conferência final contra fonte oficial (tribunal, processo, órgão julgador, tese, situação atual, data relevante) — CONFIRMADA nesta rodada (ver verificacao_final_precedentes_aprovados_humanamente). NÃO forçar 2º precedente STJ. NÃO usar Tema 1438/1439 STJ nem a decisão de Turma sobre fundada suspeita (situação incerta/pendente). Mantidos como MONITOR_ONLY.",
+    "evidencia": "Mandato do usuário, Seção DECISÃO HUMANA, itens 1-3: 'NÃO forçar jurisprudência STJ instável. APROVAR como estratégia jurisprudencial: STF: ADPF 635/RJ, ADPF 347/DF, Tema 998 RG/ARE 959.620, Súmula 145; STJ: HC 653.515/RJ [...] NÃO utilizar nesta rodada: Tema 1438/STJ; Tema 1439/STJ; decisão de Turma sobre fundada suspeita [...]; Súmula 174/STJ cancelada; qualquer precedente com situação atual incerta.'"
+  },
+  "resumo_recomendacao": {
+    "stf_recomendados": 4, "stj_recomendados": 1, "stj_monitorados_nao_recomendados": 2, "total_documentados": 7,
+    "meta_minima_stj_atingida": false,
+    "justificativa_stj_insuficiente": "Apenas 1 linha jurisprudencial do STJ genuinamente estável e pertinente foi encontrada (HC 653.515/RJ). O tema STJ mais incidente (fundada suspeita/abordagem, art.244 CPP) está sob Tema Repetitivo AFETADO E AINDA NÃO JULGADO (Tema 1438) — usá-lo violaria a regra de atualidade. Decisão humana confirmou: aguardar julgamento do Tema 1438 em lote futuro, não forçar 2ª questão STJ instável."
+  },
+  "escopo_pedagogico_atual_vs_proposto": {
+    "escopo_atual_db_unidades_pedagogicas": "100% STF (SV11, Tema280, ADCs43/44/54, ADO26/MI4733, Tema541) — artigos_esperados atuais: art.5º,XI; art.5º,LVII; art.39,§4º; art.40,§4º-B; art.144,§9º; art.283.",
+    "achado_estrutural": "Nenhum dos 5 novos precedentes aprovados corresponde a nenhum dos 6 artigos_esperados atuais — todos tratam de dispositivos constitucionais/processuais DIFERENTES.",
+    "consequencia": "APLICADO nesta execução (Lote09B, rodada de GERAÇÃO): DB WRITE controlado em unidades_pedagogicas.escopo/artigos_esperados desta unidade (precheck/rollback-test/apply/pós-check independente executados via supabase/atualizar_escopo_jurisprudencia_stf_stj_lote09b.sql, 0 FAIL). covers_articles deste manifesto agora inclui os 5 novos identificadores de precedente lado a lado com os 6 artigos_esperados antigos (superset check de avaliarValidacaoFonte passa com os 11).",
+    "classificacao": "UPDATE_CANONICAL_EXISTING_SCOPE — CONCLUÍDO. Decisão de data model reconciliada nesta rodada: NÃO é extensão de schema/migration. O campo unidades_pedagogicas.artigos_esperados é tecnicamente text[] (confirmado via information_schema.columns), tratado pelo próprio avaliarValidacaoFonte como um array de STRINGS OPACAS comparadas por igualdade textual, nunca parseado estruturalmente como 'artigo de lei'. Portanto a inclusão dos 5 identificadores de precedente ('STF ADPF 635/RJ' etc.) ao lado dos artigos é uma ATUALIZAÇÃO DE DADOS canônica dentro da semântica já existente do campo, não uma mudança de tipo/estrutura. UPDATE aplicado com sucesso: 11 artigos_esperados (6 antigos preservados + 5 novos), sem duplicação, nenhuma outra linha/unidade tocada (contagem total e hash das demais linhas confirmados inalterados)."
+  },
+  "allowed_topics": [
+    "STF, ADPF 635/RJ — letalidade policial, uso da força, câmeras corporais (escopo DB expandido nesta rodada)",
+    "STF, ADPF 347/DF — audiência de custódia obrigatória em 24h (escopo DB expandido nesta rodada)",
+    "STF, Tema 998 RG / ARE 959.620/RS — revista íntima vexatória (escopo DB expandido nesta rodada)",
+    "STF, Súmula 145 — flagrante preparado × esperado (escopo DB expandido nesta rodada)",
+    "STJ, HC 653.515/RJ, Sexta Turma — cadeia de custódia da prova (escopo DB expandido nesta rodada)"
+  ],
+  "excluded_topics": [
+    "STJ, Tema 1438 (fundada suspeita/abordagem policial) — PENDENTE DE JULGAMENTO, MONITOR_ONLY",
+    "STJ, decisão de Turma sobre denúncia anônima (18/07/2024) — mesma área do Tema 1438, MONITOR_ONLY",
+    "STJ, Súmula 635 — diploma/regime incompatível com BM (Lei 8.112/1990)",
+    "STJ, Súmula 174 — CANCELADA",
+    "Tema 1439/STJ — não pesquisado nesta rodada, por instrução humana explícita de não usar (mantido fora de escopo, sem investigação)",
+    "Repetição dos 5 temas já cobertos (SV11, Tema280, ADCs43/44/54, ADO26/MI4733, Tema541) — salvo atualização material superveniente"
+  ],
+  "existing_coverage": "5 questões úteis (2 REAL + 3 autorais), 100% STF, 0% STJ.",
+  "generation_gaps": "Faltam 5. 5 precedentes aprovados humanamente (4 STF + 1 STJ) sustentam as 5 necessárias com folga para reservas. Escopo/artigos_esperados já expandido nesta rodada (DB write controlado aplicado e verificado).",
+  "target_exam_board": "Fundatec",
+  "target_exam_board_source": "Resolução canônica via curso.banca (banca-resolver.mjs) — status RESOLVED.",
+  "source_risk": "LOW",
+  "source_risk_motivo": "Os 5 precedentes têm aprovação humana condicional CONFIRMADA (tribunal/processo/órgão julgador/tese/situação/data) e o escopo pedagógico da unidade já foi expandido para incluí-los.",
+  "can_generate_needed_quantity": true,
+  "quantidade_maxima_segura": "5 (escopo/artigos_esperados da unidade já expandido e verificado nesta rodada).",
+  "validated": true,
+  "validated_by": "human_operator_explicit_signoff_lote09b",
+  "validated_at": "2026-09-13T00:00:00Z",
+  "human_source_signoff": "APPROVED",
+  "human_signoff_record": {
+    "decided_by": "human_operator",
+    "decided_at": "2026-09-13T00:00:00Z",
+    "phase": "Lote 09B — HUMAN SOURCE SIGNOFF + EXPANSÃO CONTROLADA DO ESCOPO JURISPRUDENCIAL + GERAÇÃO DAS 12 CANDIDATAS FINAIS",
+    "evidence": "Mandato do usuário, Seção 1: 'APROVADO — JURISPRUDÊNCIA: STF: 1. ADPF 635/RJ 2. ADPF 347/DF 3. Tema 998 RG / ARE 959.620 4. Súmula 145; STJ: 5. HC 653.515/RJ [...] Aprovação válida SOMENTE se cada entrada do manifest continuar correspondendo à fonte oficial já conferida [...] A proporção final de: 4 STF + 1 STJ está HUMANAMENTE APROVADA. Não forçar segundo precedente STJ.' Tema 1438/1439 permanecem MONITOR_ONLY, não aprovados, não usados."
+  },
+  "covers_articles": ["art. 5º, XI", "art. 5º, LVII", "art. 39, §4º", "art. 40, §4º-B", "art. 144, §9º", "art. 283", "STF ADPF 635/RJ", "STF ADPF 347/DF", "STF Tema 998 RG - ARE 959.620", "STF Súmula 145", "STJ HC 653.515/RJ"],
+  "document_validation": {
+    "STF_ADPF_635": "VALIDATED_JURISPRUDENTIAL_PRIMARY_SOURCE",
+    "STF_ADPF_347": "VALIDATED_JURISPRUDENTIAL_PRIMARY_SOURCE",
+    "STF_TEMA_998_ARE_959620": "VALIDATED_JURISPRUDENTIAL_PRIMARY_SOURCE",
+    "STF_SUMULA_145": "VALIDATED_JURISPRUDENTIAL_PRIMARY_SOURCE",
+    "STJ_HC_653515_RJ": "VALIDATED_JURISPRUDENTIAL_PRIMARY_SOURCE",
+    "STJ_TEMA_1438": "PENDING_JUDGMENT_NOT_USABLE_MONITOR_ONLY"
+  },
+  "status_documental": "JURISPRUDENTIAL_SOURCE_READY_FOR_GENERATION",
+  "pipeline_contract_findings": {
+    "JURISPRUDENTIAL_FOUNDATION_TYPE": "regra_jurisprudencial — IMPLEMENTADO nesta execução (schemas.mjs TIPOS_FUNDAMENTO; openai-provider.mjs enum + montarInstrucaoFundamento; validador-questoes.mjs dispatch dedicado). Deixou de ser proposta, passou a contrato real.",
+    "JURISPRUDENTIAL_REFERENCE_FORMAT": "\"STF, [órgão julgador], [classe] nº [número]/[UF], julgamento em [data]\" (ex.: \"STF, Tribunal Pleno, ADPF 635/RJ, julgamento em 03/04/2025\"); análogo para STJ. Para temas/súmulas: \"Tema [nº] de repercussão geral\" / \"Súmula [Vinculante] nº [nº]\". IMPLEMENTADO — validado por referenciaTemPrecedenteJurisprudencial() em eligibility.mjs (exige tribunal identificável + classe/tema/súmula identificável).",
+    "PIPELINE_JURISPRUDENCE_SUPPORT": "PASS — IMPLEMENTADO nesta execução. montarInstrucaoFundamento(payload) agora dispatch por payload.generation.foundation_type (\"jurisprudential\" → instrução própria, sem exigir diploma+artigo). validador-questoes.mjs dispatch por fundamento.tipo: \"regra_jurisprudencial\" → MISSING_JURISPRUDENTIAL_REFERENCE (tribunal+identificador), nunca MISSING_NORMATIVE_DEVICE. Testado com 240/240 (0 fail), incluindo 10 novos testes de regressão do prompt e 2 novos testes do validador especificamente para este tipo.",
+    "TECH_DEBT_NORMATIVE_REFERENCE_CODE_NAME_REGEX": "RESOLVIDA nesta execução, de forma genérica (não hardcoded a CTN): PADRAO_DIPLOMA_IDENTIFICAVEL agora reconhece qualquer 'Código ...' + dígito, não apenas Lei/Decreto/Constituição."
+  }
+}

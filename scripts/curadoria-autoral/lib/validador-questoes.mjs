@@ -13,7 +13,7 @@
 // REVISAR sem re-parsear mensagens de erro.
 
 import { DIFICULDADES_VALIDAS, LETRAS_ALTERNATIVAS, ORIGEM_QUESTAO_FUTURA, QUESTION_SCHEMA_VERSION } from "./schemas.mjs";
-import { referenciaTemDispositivoNormativo } from "./eligibility.mjs";
+import { referenciaTemDispositivoNormativo, referenciaTemPrecedenteJurisprudencial, referenciaPareceInstitucionalRastreavel } from "./eligibility.mjs";
 
 function ehStringNaoVazia(valor) {
   return typeof valor === "string" && valor.trim().length > 0;
@@ -114,20 +114,55 @@ export function validarQuestaoGerada(dados, contexto = {}) {
     referenciaFundamento = dados.fundamento;
   }
 
-  // Reparo Lote 07 (Secao 7): so roda quando o contexto de geracao pede
-  // (fonte legislativa, nunca por heuristica de materia_id/nome). Nao
-  // duplica MISSING_FUNDAMENTO/EMPTY_FUNDAMENTO — esta checagem so
-  // acrescenta MISSING_NORMATIVE_DEVICE quando ha algo em fundamento, mas
-  // sem diploma+artigo identificaveis.
+  // Reparo Lote 07 (Secao 7), com DISPATCH por tipo introduzido no Lote 09B
+  // (mandato "EXTENSAO CONTROLADA DO CONTRATO DE FUNDAMENTO", Secoes 9-12):
+  // so roda quando o contexto de geracao pede (fonte de alta confianca
+  // exigida, nunca por heuristica de materia_id/nome). Fundamento.tipo
+  // decide QUAL checagem de conteudo se aplica:
+  //   - "regra_jurisprudencial" -> exige tribunal+identificador de
+  //     precedente (NAO diploma+artigo — jurisprudencia nao e norma);
+  //   - "fonte_pedagogica_oficial" -> exige citacao institucional
+  //     rastreavel (NAO diploma+artigo — nem lei, nem jurisprudencia);
+  //   - qualquer outro tipo (regra_normativa, regra_gramatical,
+  //     dispositivo_normativo de fixtures legadas, tipo ausente) ->
+  //     comportamento EXATO de antes (diploma+artigo via
+  //     MISSING_NORMATIVE_DEVICE), sem nenhuma mudanca de superficie.
+  // Nenhum dos tres ramos duplica MISSING_FUNDAMENTO/EMPTY_FUNDAMENTO —
+  // so acrescentam erro quando ha algo em fundamento, mas sem o conteudo
+  // minimo esperado para aquele tipo especifico.
   if (contexto.requiresNormativeDeviceReference && ehStringNaoVazia(referenciaFundamento)) {
-    const { temDiploma, temArtigo } = referenciaTemDispositivoNormativo(referenciaFundamento);
-    if (!temDiploma || !temArtigo) {
-      errors.push(
-        erro(
-          "MISSING_NORMATIVE_DEVICE",
-          "fonte exige dispositivo normativo especifico (diploma + artigo identificaveis) em fundamento.referencia, mas nao foi encontrado."
-        )
-      );
+    const tipoFundamento = dados.fundamento && typeof dados.fundamento === "object" ? dados.fundamento.tipo : undefined;
+
+    if (tipoFundamento === "regra_jurisprudencial") {
+      const { temTribunal, temIdentificador } = referenciaTemPrecedenteJurisprudencial(referenciaFundamento);
+      if (!temTribunal || !temIdentificador) {
+        errors.push(
+          erro(
+            "MISSING_JURISPRUDENTIAL_REFERENCE",
+            "fonte exige precedente jurisprudencial rastreavel (tribunal + classe/tema/sumula identificaveis) em fundamento.referencia, mas nao foi encontrado."
+          )
+        );
+      }
+    } else if (tipoFundamento === "fonte_pedagogica_oficial") {
+      const { temSegmentosSuficientes, tamanhoSuficiente } = referenciaPareceInstitucionalRastreavel(referenciaFundamento);
+      if (!temSegmentosSuficientes || !tamanhoSuficiente) {
+        errors.push(
+          erro(
+            "MISSING_OFFICIAL_PEDAGOGICAL_REFERENCE",
+            "fonte exige citacao institucional rastreavel (instituicao + documento/material + localizacao, quando disponivel) em fundamento.referencia, mas a referencia parece vaga demais."
+          )
+        );
+      }
+    } else {
+      const { temDiploma, temArtigo } = referenciaTemDispositivoNormativo(referenciaFundamento);
+      if (!temDiploma || !temArtigo) {
+        errors.push(
+          erro(
+            "MISSING_NORMATIVE_DEVICE",
+            "fonte exige dispositivo normativo especifico (diploma + artigo identificaveis) em fundamento.referencia, mas nao foi encontrado."
+          )
+        );
+      }
     }
   }
 

@@ -176,3 +176,64 @@ test("contexto omitido (chamada antiga) preserva comportamento: fundamento gener
   const resultado = validarQuestaoGerada(questao);
   assert.equal(resultado.ok, true, JSON.stringify(resultado.errors));
 });
+
+// Reparo Lote 09B (mandato "EXTENSAO CONTROLADA DO CONTRATO DE
+// FUNDAMENTO", Secoes 9-11): os 2 novos tipos de fundamento tem checagem
+// PROPRIA, dispensada de diploma+artigo (MISSING_NORMATIVE_DEVICE nao deve
+// disparar para eles).
+
+test("CASO JURISPRUDENCIAL 1 — tribunal + precedente identificaveis: PASS", () => {
+  const questao = questaoValida({
+    fundamento: { tipo: "regra_jurisprudencial", referencia: "STF, Tribunal Pleno, ADPF 635/RJ, Rel. Min. Edson Fachin, julgamento em 03/04/2025", descricao: "Homologação parcial do plano de redução da letalidade policial." },
+  });
+  const resultado = validarQuestaoGerada(questao, { requiresNormativeDeviceReference: true });
+  assert.equal(resultado.ok, true, JSON.stringify(resultado.errors));
+});
+
+test("CASO JURISPRUDENCIAL 2 — referencia sem tribunal/identificador reconhecivel: BLOCK", () => {
+  const questao = questaoValida({
+    fundamento: { tipo: "regra_jurisprudencial", referencia: "Entendimento consolidado dos tribunais superiores", descricao: "..." },
+  });
+  const resultado = validarQuestaoGerada(questao, { requiresNormativeDeviceReference: true });
+  assert.equal(resultado.ok, false);
+  assert.ok(resultado.errors.some((e) => e.codigo === "MISSING_JURISPRUDENTIAL_REFERENCE"));
+  assert.equal(resultado.errors.some((e) => e.codigo === "MISSING_NORMATIVE_DEVICE"), false, "fundamento jurisprudencial nao deve ser cobrado por diploma+artigo");
+});
+
+test("CASO OFFICIAL_PEDAGOGICAL 1 — instituicao + documento identificaveis: PASS", () => {
+  const questao = questaoValida({
+    fundamento: { tipo: "fonte_pedagogica_oficial", referencia: "ENAP, Poderes da Administração e dos Administradores, módulo 3", descricao: "Definição de poder hierárquico conforme material didático institucional." },
+  });
+  const resultado = validarQuestaoGerada(questao, { requiresNormativeDeviceReference: true });
+  assert.equal(resultado.ok, true, JSON.stringify(resultado.errors));
+});
+
+test("CASO OFFICIAL_PEDAGOGICAL 2 — referencia vaga demais (sem segmentos rastreaveis): BLOCK", () => {
+  const questao = questaoValida({
+    fundamento: { tipo: "fonte_pedagogica_oficial", referencia: "doutrina administrativa", descricao: "..." },
+  });
+  const resultado = validarQuestaoGerada(questao, { requiresNormativeDeviceReference: true });
+  assert.equal(resultado.ok, false);
+  assert.ok(resultado.errors.some((e) => e.codigo === "MISSING_OFFICIAL_PEDAGOGICAL_REFERENCE"));
+  assert.equal(resultado.errors.some((e) => e.codigo === "MISSING_NORMATIVE_DEVICE"), false, "fundamento pedagogico-oficial nao deve ser cobrado por diploma+artigo");
+});
+
+test("CASO CTN — TECH_DEBT_NORMATIVE_REFERENCE_CODE_NAME_REGEX resolvido genericamente: 'Código X, art. N' agora e reconhecido como normativo", () => {
+  const questao = questaoValida({
+    fundamento: { tipo: "dispositivo_normativo", referencia: "Código Tributário Nacional, art. 78, caput.", descricao: "Conceito legal de poder de polícia." },
+  });
+  const resultado = validarQuestaoGerada(questao, { requiresNormativeDeviceReference: true });
+  assert.equal(resultado.ok, true, JSON.stringify(resultado.errors));
+});
+
+test("CASO CF POR EXTENSO — achado Lote09B (geração real): 'Constituição da República Federativa do Brasil de 1988, art. N' e reconhecido como normativo", () => {
+  const questao = questaoValida({
+    fundamento: {
+      tipo: "regra_normativa",
+      referencia: "Constituição da República Federativa do Brasil de 1988, art. 84, IV, primeira parte.",
+      descricao: "Competência privativa do Presidente da República para sancionar, promulgar e fazer publicar as leis.",
+    },
+  });
+  const resultado = validarQuestaoGerada(questao, { requiresNormativeDeviceReference: true });
+  assert.equal(resultado.ok, true, JSON.stringify(resultado.errors));
+});

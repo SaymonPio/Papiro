@@ -71,17 +71,30 @@ export function buscarFontesParaUnidade(fontes, unidadeId) {
 // como sign-off humano (CASO D).
 const PADRAO_VALIDATED_BY_HUMANO = /^human[_-]/i;
 
+// Reparo Lote 09B (mandato "EXTENSAO CONTROLADA DO CONTRATO DE
+// FUNDAMENTO", Secao 8): o rigor estrito de sign-off humano do CASO A-F
+// abaixo nasceu pensado so para "official_law", mas jurisprudencia
+// (official_jurisprudence) e material didatico institucional oficial
+// (official_pedagogical) sao igualmente sensiveis — nenhum dos tres deve
+// virar SOURCE_VALIDATED so por ter validated=true escrito por IA/pesquisa
+// automatica. Generalizado para um SET nomeado (nao um encadeamento de
+// if por tipo) para que um futuro quarto tipo de alta confianca baste
+// adicionar aqui, sem tocar a logica de decisao.
+const TIPOS_FONTE_EXIGEM_SIGNOFF_HUMANO_ESTRITO = new Set(["official_law", "official_jurisprudence", "official_pedagogical"]);
+
 /**
- * CASO A-F do mandato "COMPLEMENTO FINAL DA LOB" (Secao 9): decide se uma
- * fonte JA TEM sign-off humano autorizado o suficiente para contar como
- * "validada" na agregacao de avaliarValidacaoFonte. Fontes nao juridicas
- * (type != official_law) so precisam de validated=true (CASO F).
+ * CASO A-F do mandato "COMPLEMENTO FINAL DA LOB" (Secao 9), generalizado
+ * no Lote09B: decide se uma fonte JA TEM sign-off humano autorizado o
+ * suficiente para contar como "validada" na agregacao de
+ * avaliarValidacaoFonte. Fontes de ALTA CONFIANCA (official_law,
+ * official_jurisprudence, official_pedagogical) exigem o rigor estrito
+ * (CASO B-E); as demais so precisam de validated=true (CASO F).
  * @param {object} fonte
  * @returns {boolean}
  */
 export function fonteTemSignoffHumanoAutorizado(fonte) {
   if (fonte?.validated !== true) return false; // CASO A
-  if (fonte.type !== "official_law") return true; // CASO F
+  if (!TIPOS_FONTE_EXIGEM_SIGNOFF_HUMANO_ESTRITO.has(fonte.type)) return true; // CASO F
   if (fonte.human_source_signoff !== "APPROVED") return false; // CASO B (ausente) / CASO C (PENDING)
   return typeof fonte.validated_by === "string" && PADRAO_VALIDATED_BY_HUMANO.test(fonte.validated_by.trim()); // CASO D (false) / CASO E (true)
 }

@@ -16,6 +16,8 @@
 // schemas.mjs) e responsabilidade de generation-enrichment.mjs, nunca
 // deste schema.
 
+import { TIPOS_FUNDAMENTO } from "./schemas.mjs";
+
 export const OPENAI_RESPONSES_ENDPOINT = "https://api.openai.com/v1/responses";
 export const QUESTION_GENERATION_SCHEMA_NAME = "papiro_autoral_questoes_v1";
 
@@ -64,7 +66,13 @@ export const QUESTION_GENERATION_JSON_SCHEMA = Object.freeze({
               // como regra de gramatica — nao e um enum inventado, e a correcao
               // do proprio contrato para refletir que fundamento pode ser uma
               // regra normativa (diploma+artigo), nunca so gramatical/semantica.
-              tipo: { type: "string", enum: ["regra_gramatical", "regra_normativa"] },
+              // "regra_jurisprudencial"/"fonte_pedagogica_oficial" (Lote 09B,
+              // mandato "EXTENSAO CONTROLADA DO CONTRATO DE FUNDAMENTO"): pela
+              // MESMA razao — jurisprudencia (STF/STJ/outros tribunais) e
+              // material didatico institucional oficial (ex. ENAP) NAO sao
+              // normas; rotula-los como regra_normativa seria desonesto. Ver
+              // TIPOS_FUNDAMENTO em schemas.mjs (fonte unica desta lista).
+              tipo: { type: "string", enum: TIPOS_FUNDAMENTO },
               referencia: { type: "string" },
               descricao: { type: "string" },
             },
@@ -126,20 +134,36 @@ export function construirRequestOpenAI({ model, reasoningEffort, promptText, sch
 // guard MISSING_NORMATIVE_DEVICE (source-manifest/validador ja funcionavam;
 // o defeito era so na montagem do texto enviado ao modelo).
 //
-// Fix arquitetural (nao um patch por lote/curso/materia_id): a instrucao de
-// fundamento passa a depender SOMENTE de payload.source.legal_source_required
-// — o mesmo campo canonico que ja acion a requiresNormativeDeviceReference
-// em gerar-questoes.mjs e que nasce de materiaPareceNormativa(escopo), nunca
-// de materia_id/curso_id/nome de lote. Quando true: instrucao normativa
-// (regra_normativa + diploma+artigo+paragrafo/inciso/alinea quando
-// necessario) e PROIBICAO explicita de fundamento gramatical. Quando
-// false/ausente: preserva EXATAMENTE o comportamento gramatical anterior
-// (Portugues e demais materias nao normativas continuam intocados).
+// Reparo Lote 09B (mandato "EXTENSAO CONTROLADA DO CONTRATO DE
+// FUNDAMENTO"): o Lote09A deixou a instrucao binaria (normativo vs
+// gramatical), o que ja bastava para legislacao mas nao para jurisprudencia
+// nem para material didatico institucional oficial (ex. ENAP) — nenhum dos
+// dois e norma, e instrui-los a "citar diploma+artigo" seria tao desonesto
+// quanto o bug original do Lote09A. Correcao arquitetural (nao um patch por
+// lote/curso/materia_id): a instrucao passa a depender de
+// payload.generation.foundation_type — campo OPCIONAL e ADITIVO, preenchido
+// manualmente pela curadoria no momento de montar o payload (mesmo padrao
+// ja usado para generation.pedagogical_objectives desde o Lote08). Valores
+// aceitos: "normative", "jurisprudential", "official_pedagogical",
+// "grammatical". Quando AUSENTE (todo payload de lotes anteriores a este),
+// cai no fallback EXATO de antes: payload.source.legal_source_required
+// true->normative, false/ausente->grammatical — nenhum payload existente
+// muda de comportamento.
+const INSTRUCOES_FUNDAMENTO = Object.freeze({
+  normative: `Fundamento desta questão é NORMATIVO (esta unidade exige fonte legal validada). fundamento.tipo DEVE ser exatamente "regra_normativa". fundamento.referencia DEVE citar o diploma legal E o artigo (e parágrafo/inciso/alínea quando isso for necessário para identificar o dispositivo exato), sempre dentro do escopo autorizado descrito acima. NÃO use fundamento.tipo="regra_gramatical" nesta questão. NÃO use referência genérica ("terminologia técnico-administrativa", "semântica e compreensão textual", "interpretação jurídica" ou equivalente) — a referência tem que ser rastreável a um dispositivo real do escopo autorizado.`,
+  jurisprudential: `Fundamento desta questão é JURISPRUDENCIAL (esta unidade exige precedente de tribunal validado, NÃO norma legal). fundamento.tipo DEVE ser exatamente "regra_jurisprudencial". fundamento.referencia DEVE identificar o TRIBUNAL e a CLASSE/NÚMERO do precedente (ou tema de repercussão geral/tema repetitivo/súmula, quando for o caso) — ex.: "STF, Tribunal Pleno, ADPF 635/RJ, Rel. Min. [nome], julgamento em [data]" ou "STJ, Sexta Turma, HC 653.515/RJ, julgamento em [data]". A tese descrita em fundamento.descricao DEVE ser fiel à tese realmente fixada pelo tribunal, sempre dentro do escopo autorizado descrito acima. NÃO use fundamento.tipo="regra_normativa" nem "regra_gramatical" nesta questão. NÃO invente diploma+artigo como se a regra nascesse de lei — a regra nasce do precedente.`,
+  official_pedagogical: `Fundamento desta questão é de FONTE PEDAGÓGICA OFICIAL (material didático institucional oficial, NÃO lei, NÃO jurisprudência). fundamento.tipo DEVE ser exatamente "fonte_pedagogica_oficial". fundamento.referencia DEVE identificar a INSTITUIÇÃO e o DOCUMENTO/MATERIAL de origem (e localização interna — módulo/seção/página — quando disponível), sempre dentro do escopo autorizado descrito acima. NÃO use fundamento.tipo="regra_normativa" nem "regra_gramatical" nesta questão. NÃO apresente o conteúdo como se estivesse previsto em lei ou em precedente judicial — ele vem de material didático institucional, e isso deve ficar claro em fundamento.descricao.`,
+  grammatical: `Fundamento desta questão é GRAMATICAL. NÃO cite lei, artigo jurídico ou jurisprudência em nenhum campo.`,
+});
+
 export function montarInstrucaoFundamento(payload) {
-  if (payload?.source?.legal_source_required === true) {
-    return `Fundamento desta questão é NORMATIVO (esta unidade exige fonte legal validada). fundamento.tipo DEVE ser exatamente "regra_normativa". fundamento.referencia DEVE citar o diploma legal E o artigo (e parágrafo/inciso/alínea quando isso for necessário para identificar o dispositivo exato), sempre dentro do escopo autorizado descrito acima. NÃO use fundamento.tipo="regra_gramatical" nesta questão. NÃO use referência genérica ("terminologia técnico-administrativa", "semântica e compreensão textual", "interpretação jurídica" ou equivalente) — a referência tem que ser rastreável a um dispositivo real do escopo autorizado.`;
+  const foundationType = payload?.generation?.foundation_type;
+  if (foundationType && INSTRUCOES_FUNDAMENTO[foundationType]) {
+    return INSTRUCOES_FUNDAMENTO[foundationType];
   }
-  return `Fundamento desta questão é GRAMATICAL. NÃO cite lei, artigo jurídico ou jurisprudência em nenhum campo.`;
+  // Fallback legado (Lote09A): nenhum payload anterior a este reparo tem
+  // generation.foundation_type — preserva o comportamento binario exato.
+  return payload?.source?.legal_source_required === true ? INSTRUCOES_FUNDAMENTO.normative : INSTRUCOES_FUNDAMENTO.grammatical;
 }
 
 /**

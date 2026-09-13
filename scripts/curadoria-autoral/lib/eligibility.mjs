@@ -42,7 +42,26 @@ export function materiaPareceNormativa(escopoTexto) {
 // requiresNormativeDeviceReference=true (nascido de source.legal_source_required
 // no payload, nunca de materia_id ou do nome da materia).
 const PADRAO_ARTIGO_IDENTIFICAVEL = /\bart(igo)?s?\.?\s*\d/i;
-const PADRAO_DIPLOMA_IDENTIFICAVEL = /\b(lei\s+complementar|lei\s+(estadual|federal)|lei|decreto(\s+estadual)?|constitui[çc][ãa]o)\b[^\n]{0,30}?\d/i;
+// Reparo Lote 09B: generaliza TECH_DEBT_NORMATIVE_REFERENCE_CODE_NAME_REGEX
+// (achado no Lote09A com "Código Tributário Nacional, art. 78") de forma
+// NAO hardcoded a um unico codigo — qualquer diploma referido pelo nome
+// popular "Código ..." (Código Tributário Nacional, Código Penal, Código
+// de Processo Penal, Código Civil, Código de Trânsito Brasileiro, etc.)
+// passa a ser reconhecido como diploma identificavel, com uma janela maior
+// (nomes de codigo tendem a ser mais longos que "Lei nº X").
+//
+// Reparo Lote 09B (geração real): achado analogo ao do "Código X" acima,
+// mas para "constituição" — o nome oficial completo "Constituição da
+// República Federativa do Brasil de 1988" (uso corriqueiro e correto,
+// nao um erro do modelo) tem ~38 caracteres entre a palavra-chave e o
+// primeiro digito (o ano), o que excedia a janela de 30 usada por
+// lei/decreto/constituição em conjunto — CF era a UNICA das palavras-chave
+// deste grupo cujo nome por extenso rotineiramente ultrapassa 30
+// caracteres (leis/decretos citados por numero ficam bem abaixo disso).
+// Correcao generica (nao hardcoded a uma unica formulacao de CF):
+// unifica a janela de constituição com a mesma janela de 60 ja usada
+// para código, pela mesma razao (nome por extenso mais longo).
+const PADRAO_DIPLOMA_IDENTIFICAVEL = /\b(lei\s+complementar|lei\s+(estadual|federal)|lei|decreto(\s+estadual)?)\b[^\n]{0,30}?\d|\b(c[oó]digo|constitui[çc][ãa]o)\b[^\n]{0,60}?\d/i;
 
 /**
  * Verifica se um texto de fundamento.referencia cita, de forma
@@ -60,6 +79,67 @@ export function referenciaTemDispositivoNormativo(referencia) {
   return {
     temDiploma: PADRAO_DIPLOMA_IDENTIFICAVEL.test(texto),
     temArtigo: PADRAO_ARTIGO_IDENTIFICAVEL.test(texto),
+  };
+}
+
+// Reparo Lote 09B (mandato "EXTENSAO CONTROLADA DO CONTRATO DE
+// FUNDAMENTO", Secoes 9-12): jurisprudencia e fonte pedagogica oficial NAO
+// sao normas — exigir diploma+artigo delas seria tao desonesto quanto o
+// problema que MISSING_NORMATIVE_DEVICE corrigiu no Lote07. Os dois
+// padroes abaixo sao deliberadamente GENERICOS (nao hardcoded a
+// STF/STJ/ENAP especificamente): qualquer tribunal brasileiro reconhecivel
+// e qualquer classe processual/tema/sumula contam; qualquer fonte
+// institucional com >=2 segmentos rastreaveis (instituicao, documento,
+// localizacao) conta.
+const PADRAO_TRIBUNAL_IDENTIFICAVEL = /\b(STF|STJ|TST|TSE|STM|TRF-?\d{0,2}|TJ[A-Z]{2}|TRT-?\d{1,2}|Tribunal\s+Pleno|\d[ªa]\s+(Turma|Se[cç][ãa]o|C[aâ]mara))\b/i;
+const PADRAO_PRECEDENTE_IDENTIFICAVEL = /\b(ADPF|ADI|ADIN|ADC|ADO|RE|REsp|RExt|ARE|HC|MS|MI|RMS|AgRg|Tema|S[uú]mula(\s+Vinculante)?)\b/i;
+
+/**
+ * Verifica se um texto de fundamento.referencia cita, de forma
+ * identificavel, um TRIBUNAL e um IDENTIFICADOR de precedente (classe
+ * processual com/sem numero, ou tema/sumula) — as duas exigencias minimas
+ * para "precedente jurisprudencial rastreavel" (Lote09B, analogo ao
+ * diploma+artigo do Lote07 mas para fundamento.tipo="regra_jurisprudencial").
+ * Nao confere se o precedente citado realmente sustenta o conteudo da
+ * questao nem se a tese esta corretamente descrita — isso fica para
+ * revisao humana/normative_validation candidata a candidata.
+ * @param {string} referencia
+ * @returns {{ temTribunal: boolean, temIdentificador: boolean }}
+ */
+export function referenciaTemPrecedenteJurisprudencial(referencia) {
+  const texto = typeof referencia === "string" ? referencia : "";
+  return {
+    temTribunal: PADRAO_TRIBUNAL_IDENTIFICAVEL.test(texto),
+    temIdentificador: PADRAO_PRECEDENTE_IDENTIFICAVEL.test(texto),
+  };
+}
+
+/**
+ * Verifica se um texto de fundamento.referencia PARECE uma citacao
+ * institucional rastreavel (instituicao + documento/material +,
+ * idealmente, localizacao interna) para fundamento.tipo=
+ * "fonte_pedagogica_oficial". Diferente do par diploma/artigo (regex de
+ * palavras-chave fixas), aqui NAO existe um vocabulario fechado de nomes
+ * de instituicao (ENAP hoje, outro orgao amanha) — hardcodear nomes de
+ * instituicao especificos repetiria o erro que este mandato pede para
+ * evitar. Em vez disso, exige uma heuristica estrutural minima: pelo
+ * menos 2 segmentos separados por virgula/travessao, cada um com
+ * conteudo real (>=3 caracteres), e comprimento total minimo — o
+ * suficiente para distinguir "ENAP, Poderes da Administração e dos
+ * Administradores, módulo 3" (rastreavel) de "doutrina administrativa"
+ * ou "material da ENAP" (vago, nao auditavel).
+ * @param {string} referencia
+ * @returns {{ temSegmentosSuficientes: boolean, tamanhoSuficiente: boolean }}
+ */
+export function referenciaPareceInstitucionalRastreavel(referencia) {
+  const texto = typeof referencia === "string" ? referencia.trim() : "";
+  const segmentos = texto
+    .split(/[,–—-]/)
+    .map((s) => s.trim())
+    .filter((s) => s.length >= 3);
+  return {
+    temSegmentosSuficientes: segmentos.length >= 2,
+    tamanhoSuficiente: texto.length >= 20,
   };
 }
 

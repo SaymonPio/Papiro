@@ -57,6 +57,49 @@ function payloadGramaticalFixture() {
   });
 }
 
+// Reparo Lote 09B (mandato "EXTENSAO CONTROLADA DO CONTRATO DE
+// FUNDAMENTO"): os dois novos fixtures usam generation.foundation_type
+// (campo aditivo/opcional) para acionar as novas instrucoes — nenhum
+// payload legado (sem esse campo) muda de comportamento, ver CASO 1/2
+// acima que continuam passando inalterados.
+function payloadJurisprudencialFixture() {
+  return payloadBase({
+    subject: { id: "10", name: "Legislação Específica" },
+    content: { course_content_id: "69", subject_topic_id: "66", name: "Jurisprudência do STF e STJ" },
+    unit: { id: "unidade-jurisprudencial-1", title: "Jurisprudência do STF e STJ" },
+    pedagogical_context: { scope: "Jurisprudência do STF e STJ: escopo de teste." },
+    generation: {
+      quantity: 2,
+      origin: "AUTORAL_PAPIRO",
+      foundation_type: "jurisprudential",
+      pedagogical_objectives: [
+        { slot: 1, nucleo: "Precedente STF", objetivo: "Testar precedente STF de teste.", dificuldade_sugerida: "media" },
+        { slot: 2, nucleo: "Precedente STJ", objetivo: "Testar precedente STJ de teste.", dificuldade_sugerida: "media" },
+      ],
+    },
+    source: { status: "SOURCE_VALIDATED", legal_source_required: true, validated_source_keys: ["fonte-teste"] },
+  });
+}
+
+function payloadOfficialPedagogicalFixture() {
+  return payloadBase({
+    subject: { id: "10", name: "Legislação Específica" },
+    content: { course_content_id: "59", subject_topic_id: "81", name: "Poderes da Administração Pública" },
+    unit: { id: "unidade-pedagogica-oficial-1", title: "Poderes da Administração Pública" },
+    pedagogical_context: { scope: "Poderes da Administração Pública: escopo de teste." },
+    generation: {
+      quantity: 2,
+      origin: "AUTORAL_PAPIRO",
+      foundation_type: "official_pedagogical",
+      pedagogical_objectives: [
+        { slot: 1, nucleo: "Poder hierárquico", objetivo: "Testar poder hierárquico via fonte institucional.", dificuldade_sugerida: "media" },
+        { slot: 2, nucleo: "Poder disciplinar", objetivo: "Testar poder disciplinar via fonte institucional.", dificuldade_sugerida: "media" },
+      ],
+    },
+    source: { status: "SOURCE_VALIDATED", legal_source_required: true, validated_source_keys: ["fonte-teste"] },
+  });
+}
+
 const FRASE_PROIBICAO_GRAMATICAL = "NÃO cite lei, artigo jurídico ou jurisprudência em nenhum campo";
 const FRASE_FUNDAMENTO_GRAMATICAL = "Fundamento desta questão é GRAMATICAL";
 
@@ -103,10 +146,54 @@ test("CASO 2 (gramatical) — Portugues NAO recebe instrucao normativa indevida"
   assert.equal(prompt.includes('fundamento.tipo DEVE ser exatamente "regra_normativa"'), false, "materia gramatical nao pode ser instruida a produzir fundamento normativo");
 });
 
-// ---------- CASO 3 — contradicao nunca pode coexistir ----------
+// ---------- CASO JURISPRUDENCIAL ----------
+
+test("CASO JURISPRUDENCIAL — instrucao jurisprudencial presente", () => {
+  const prompt = montarPromptGerador(payloadJurisprudencialFixture());
+  assert.match(prompt, /regra_jurisprudencial/);
+  assert.match(prompt, /JURISPRUDENCIAL/);
+});
+
+test("CASO JURISPRUDENCIAL — exige tribunal + precedente identificaveis", () => {
+  const prompt = montarPromptGerador(payloadJurisprudencialFixture());
+  assert.match(prompt, /TRIBUNAL/);
+  assert.match(prompt, /classe|n[uú]mero/i);
+});
+
+test("CASO JURISPRUDENCIAL — NAO exige falsamente diploma+artigo como forma obrigatoria de fundamento", () => {
+  const prompt = montarPromptGerador(payloadJurisprudencialFixture());
+  assert.equal(prompt.includes('fundamento.referencia DEVE citar o diploma legal E o artigo'), false, "prompt jurisprudencial nao pode exigir diploma+artigo — jurisprudencia nao e norma");
+});
+
+test("CASO JURISPRUDENCIAL — NAO contem instrucao gramatical", () => {
+  const prompt = montarPromptGerador(payloadJurisprudencialFixture());
+  assert.equal(prompt.includes(FRASE_FUNDAMENTO_GRAMATICAL), false);
+});
+
+// ---------- CASO OFFICIAL_PEDAGOGICAL ----------
+
+test("CASO OFFICIAL_PEDAGOGICAL — instituicao/documento exigidos", () => {
+  const prompt = montarPromptGerador(payloadOfficialPedagogicalFixture());
+  assert.match(prompt, /fonte_pedagogica_oficial/);
+  assert.match(prompt, /INSTITUI[ÇC][ÃA]O/);
+  assert.match(prompt, /DOCUMENTO/);
+});
+
+test("CASO OFFICIAL_PEDAGOGICAL — NAO transforma material pedagogico em lei", () => {
+  const prompt = montarPromptGerador(payloadOfficialPedagogicalFixture());
+  assert.match(prompt, /N[ÃA]O apresente o conte[uú]do como se estivesse previsto em lei/i);
+  assert.equal(prompt.includes('fundamento.referencia DEVE citar o diploma legal E o artigo'), false, "prompt pedagogico-oficial nao pode exigir diploma+artigo — nao e norma");
+});
+
+test("CASO OFFICIAL_PEDAGOGICAL — NAO contem instrucao gramatical incompativel", () => {
+  const prompt = montarPromptGerador(payloadOfficialPedagogicalFixture());
+  assert.equal(prompt.includes(FRASE_FUNDAMENTO_GRAMATICAL), false);
+});
+
+// ---------- CASO 3 — contradicao nunca pode coexistir (4 tipos) ----------
 
 test("CASO 3 (contradicao) — nenhum prompt pode conter simultaneamente instrucao normativa E proibicao de citar lei", () => {
-  for (const payload of [payloadBase(), payloadGramaticalFixture()]) {
+  for (const payload of [payloadBase(), payloadGramaticalFixture(), payloadJurisprudencialFixture(), payloadOfficialPedagogicalFixture()]) {
     const prompt = montarPromptGerador(payload);
     const temInstrucaoNormativa = /fundamento\.tipo\s*DEVE ser exatamente "regra_normativa"/i.test(prompt);
     const temProibicaoCitarLei = /n[ãa]o cite lei/i.test(prompt);
@@ -118,15 +205,34 @@ test("CASO 3 (contradicao) — nenhum prompt pode conter simultaneamente instruc
   }
 });
 
+test("CASO 3 (contradicao) — nenhum prompt tem mais de UMA instrucao POSITIVA de tipo de fundamento ao mesmo tempo", () => {
+  const PADROES_POSITIVOS = {
+    normative: /fundamento\.tipo DEVE ser exatamente "regra_normativa"/,
+    jurisprudential: /fundamento\.tipo DEVE ser exatamente "regra_jurisprudencial"/,
+    official_pedagogical: /fundamento\.tipo DEVE ser exatamente "fonte_pedagogica_oficial"/,
+    grammatical: new RegExp(FRASE_FUNDAMENTO_GRAMATICAL),
+  };
+  for (const payload of [payloadBase(), payloadGramaticalFixture(), payloadJurisprudencialFixture(), payloadOfficialPedagogicalFixture()]) {
+    const prompt = montarPromptGerador(payload);
+    const tiposPresentes = Object.entries(PADROES_POSITIVOS).filter(([, re]) => re.test(prompt)).map(([nome]) => nome);
+    assert.equal(tiposPresentes.length, 1, `payload ${payload.unit.id}: esperado exatamente 1 instrucao positiva de fundamento, encontrado ${JSON.stringify(tiposPresentes)}`);
+  }
+});
+
 test("CASO 3 (contradicao) — montarInstrucaoFundamento e a unica fonte da instrucao de fundamento no prompt (funcao pura, sem I/O)", () => {
   const instrucaoJuridica = montarInstrucaoFundamento(payloadBase());
   const instrucaoGramatical = montarInstrucaoFundamento(payloadGramaticalFixture());
-  assert.notEqual(instrucaoJuridica, instrucaoGramatical);
+  const instrucaoJurisprudencial = montarInstrucaoFundamento(payloadJurisprudencialFixture());
+  const instrucaoPedagogicaOficial = montarInstrucaoFundamento(payloadOfficialPedagogicalFixture());
+  const todas = [instrucaoJuridica, instrucaoGramatical, instrucaoJurisprudencial, instrucaoPedagogicaOficial];
+  assert.equal(new Set(todas).size, 4, "as 4 instrucoes devem ser todas distintas entre si");
   assert.match(instrucaoJuridica, /regra_normativa/);
   assert.match(instrucaoGramatical, /GRAMATICAL/);
+  assert.match(instrucaoJurisprudencial, /regra_jurisprudencial/);
+  assert.match(instrucaoPedagogicaOficial, /fonte_pedagogica_oficial/);
 });
 
-// ---------- Smoke test explicito (Secao 12 do mandato) ----------
+// ---------- Smoke test explicito (Secao 12 do mandato Lote09A, Secao 30 do Lote09B) ----------
 
 test("SMOKE TEST — prompt juridico real do Lote09A: os 4 sinais esperados", () => {
   const prompt = montarPromptGerador(payloadBase());
@@ -140,4 +246,32 @@ test("SMOKE TEST — prompt juridico real do Lote09A: os 4 sinais esperados", ()
   assert.equal(sinais.contains_diploma_article_requirement, true);
   assert.equal(sinais.contains_grammatical_foundation_instruction, false);
   assert.equal(sinais.contains_do_not_cite_law_instruction, false);
+});
+
+test("SMOKE TEST — prompt jurisprudencial (Lote09B): sinais esperados", () => {
+  const prompt = montarPromptGerador(payloadJurisprudencialFixture());
+  const sinais = {
+    contains_jurisprudential_instruction: /regra_jurisprudencial/.test(prompt),
+    requires_precedent_identification: /TRIBUNAL/.test(prompt) && /classe/i.test(prompt),
+    contains_fake_mandatory_law_article_requirement: prompt.includes("fundamento.referencia DEVE citar o diploma legal E o artigo"),
+    contains_grammatical_foundation_instruction: prompt.includes(FRASE_FUNDAMENTO_GRAMATICAL),
+  };
+  assert.equal(sinais.contains_jurisprudential_instruction, true);
+  assert.equal(sinais.requires_precedent_identification, true);
+  assert.equal(sinais.contains_fake_mandatory_law_article_requirement, false);
+  assert.equal(sinais.contains_grammatical_foundation_instruction, false);
+});
+
+test("SMOKE TEST — prompt official-pedagogical (Lote09B): sinais esperados", () => {
+  const prompt = montarPromptGerador(payloadOfficialPedagogicalFixture());
+  const sinais = {
+    contains_official_pedagogical_instruction: /fonte_pedagogica_oficial/.test(prompt),
+    requires_institution_document: /INSTITUI[ÇC][ÃA]O/.test(prompt) && /DOCUMENTO/.test(prompt),
+    pretends_source_is_law: /N[ÃA]O apresente o conte[uú]do como se estivesse previsto em lei/i.test(prompt) === false,
+    contains_grammatical_foundation_instruction: prompt.includes(FRASE_FUNDAMENTO_GRAMATICAL),
+  };
+  assert.equal(sinais.contains_official_pedagogical_instruction, true);
+  assert.equal(sinais.requires_institution_document, true);
+  assert.equal(sinais.pretends_source_is_law, false);
+  assert.equal(sinais.contains_grammatical_foundation_instruction, false);
 });

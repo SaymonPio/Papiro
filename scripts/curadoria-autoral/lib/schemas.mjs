@@ -131,11 +131,38 @@ export const SOURCE_MANIFEST_SCHEMA_VERSION = 1;
 
 export const TIPOS_FONTE = Object.freeze([
   "official_law",
+  "official_jurisprudence",
+  "official_pedagogical",
   "official_document",
   "lesson_material",
   "technical_documentation",
   "pedagogical_reference",
   "other",
+]);
+
+// Reparo Lote 09B (mandato "EXTENSAO CONTROLADA DO CONTRATO DE FUNDAMENTO"):
+// "official_jurisprudence" (acordao/sumula/tema de tribunal) e
+// "official_pedagogical" (material didatico institucional oficial, ex.
+// ENAP/TCU/escola de governo) sao tao sensiveis quanto "official_law" e
+// por isso exigem o MESMO rigor de human sign-off — ver
+// TIPOS_FONTE_EXIGEM_SIGNOFF_HUMANO_ESTRITO em source-manifest.mjs. Nunca
+// tratar esses dois tipos como fonte "generica" (CASO F de
+// fonteTemSignoffHumanoAutorizado) so porque nao sao "official_law"
+// literalmente.
+
+// Fase 2B (Lote08): fundamento.tipo comecou com um unico valor possivel
+// (regra_gramatical), o que forcava toda questao legislativa a mentir
+// sobre a natureza do proprio fundamento. Lote08 acrescentou
+// "regra_normativa" (diploma+artigo). Lote09B acrescenta mais dois, pela
+// mesma razao: jurisprudencia e fonte pedagogica oficial NAO sao normas,
+// e rotula-las como regra_normativa seria tao desonesto quanto o problema
+// original que o Lote08 corrigiu. Ver openai-provider.mjs
+// (montarInstrucaoFundamento) e validador-questoes.mjs (dispatch por tipo).
+export const TIPOS_FUNDAMENTO = Object.freeze([
+  "regra_gramatical",
+  "regra_normativa",
+  "regra_jurisprudencial",
+  "fonte_pedagogica_oficial",
 ]);
 
 export const CHAVES_FONTE_MANIFESTO = Object.freeze([

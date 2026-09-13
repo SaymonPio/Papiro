@@ -95,5 +95,26 @@
     "CF_88_ART_84_IV": "VALIDATED_PRIMARY_NORM",
     "LEI_4717_1965_ART_2_PAR_UNICO_A_E": "VALIDATED_PRIMARY_NORM"
   },
-  "status_documental": "SOURCE_VALIDATED_PARTIAL_SCOPE"
+  "status_documental": "SOURCE_VALIDATED_PARTIAL_SCOPE",
+  "lote09b_pesquisa_deficit_residual": {
+    "objetivo": "Investigar se existem 2 ângulos normativamente sustentáveis e não redundantes dentro das fontes já validadas (CF art.84,IV; Lei4.717/1965 art.2º,par.único,\"a\"/\"e\"), antes de concluir que é necessário ampliar o contrato do pipeline ou aceitar bloqueio doutrinário permanente.",
+    "comparacao_contra_8_uteis_live": "Confrontadas as 8 questões úteis atuais (Q207 hierárquico; Q208 disciplinar; Q209/Q2757/Q2760 poder regulamentar — conceito, limite, competência presidencial; Q360/Q2758/Q2759 abuso de poder — combinado, excesso isolado, desvio isolado).",
+    "gap_1_encontrado": {
+      "classificacao": "NORMATIVE_GAPS_FOUND",
+      "dispositivo": "CF art.84,IV — PRIMEIRA parte do inciso: \"sancionar, promulgar e fazer publicar as leis\" (competência presidencial de sanção/promulgação/publicação de leis), distinta da SEGUNDA parte (\"expedir decretos e regulamentos para sua fiel execução\" = poder regulamentar).",
+      "motivo_nao_redundante": "As 3 questões existentes sobre art.84,IV (Q209, Q2757, Q2760) testam EXCLUSIVAMENTE a segunda parte do inciso (poder regulamentar/decretos). A primeira parte (sanção/promulgação/publicação de leis) NUNCA foi testada — é conteúdo normativo distinto, do MESMO dispositivo já validado (covers_articles já contém \"art. 84, IV\" sem restrição à segunda parte), portanto dentro do escopo já aprovado, sem necessidade de novo human sign-off.",
+      "quantidade_sustentavel": 1
+    },
+    "gap_2_nao_encontrado": {
+      "classificacao": "DOCTRINAL_SOURCE_REQUIRED",
+      "investigacao_realizada": "Pesquisa documental (WebSearch) por fonte OFFICIAL_PEDAGOGICAL/OFFICIAL_INSTITUTIONAL para poder hierárquico/poder disciplinar como categorias doutrinárias gerais (não vinculadas a um regime disciplinar específico). Encontrado apenas um registro bibliográfico no acervo da ENAP ('Poderes da Administração e dos Administradores') — é uma ENTRADA DE CATÁLOGO (referência a uma obra/livro do acervo físico/digital da biblioteca ENAP), não um texto institucional próprio, oficial e livremente verificável online. NÃO atende ao padrão exigido (fonte com autoria institucional clara E verificável, não apenas catalogada). NÃO qualifica como OFFICIAL_PEDAGOGICAL nem OFFICIAL_INSTITUTIONAL utilizável.",
+      "alternativa_descartada": "Usar o Regulamento Disciplinar da Brigada Militar (Decreto Estadual nº 43.245/2004, já validado e usado no Lote07/curso_conteudo_id 64) para fundamentar 'poder disciplinar' aqui foi CONSIDERADA E DESCARTADA: geraria sobreposição direta com a unidade já fechada 'Regulamento Disciplinar da Brigada Militar', risco que este pipeline tem evitado consistentemente em todos os lotes anteriores (EXCLUDED_OVERLAP_TOPIC).",
+      "conclusao": "Nenhuma fonte adequada encontrada nesta rodada. Gap 2 permanece bloqueado.",
+      "quantidade_sustentavel": 0
+    },
+    "sintese": "1 de 2 lacunas resolvida normativamente (sem novo sign-off necessário, já dentro do escopo aprovado). A 2ª lacuna permanece DOCTRINAL_SOURCE_REQUIRED — não foi inventada lacuna artificial para forçar 10/10, conforme instrução expressa do mandato.",
+    "existing_coverage_atualizado": 8,
+    "remaining_gap_atualizado": 2,
+    "remaining_gap_source_strategy": "1 questão adicional pode ser gerada com segurança total dentro do escopo JÁ APROVADO (CF art.84,IV, parte \"sancionar/promulgar/publicar leis\") — SOURCE_READY_FOR_HUMAN_SIGNOFF para esta parte (tecnicamente nem exige novo sign-off, escopo já coberto). A 2ª questão permanece SOURCE_BLOCKED_DOCTRINAL_CONTRACT (poder hierárquico/disciplinar sem fonte formal) — só desbloqueável por (a) achado de fonte institucional genuína em pesquisa futura, ou (b) decisão humana de estender o contrato do pipeline para aceitar fundamento doutrinário tipado (PIPELINE_CONTRACT_EXTENSION_REQUIRED), ambos fora do escopo desta execução read-only."
+  }
 }
