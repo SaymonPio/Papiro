@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import ComponenteAulaView, { type ComponenteAula } from "@/components/teoria/ComponenteAulaView";
 import ComentariosAula from "@/components/teoria/ComentariosAula";
 import MarcaCarregando from "@/components/ui/MarcaCarregando";
+import { classificarOrigemQuestao, inicioEnunciado } from "./banco-unidade";
 
 // crypto.randomUUID() exige um "contexto seguro" do navegador — indisponível
 // em HTTP por IP local (ex.: http://10.0.0.100:5173), só em localhost/HTTPS.
@@ -128,6 +129,25 @@ type AulaRascunho = {
   fontes: FonteRascunho[];
 };
 
+// Painel "BANCO DA UNIDADE" — read-only, admin only. Reflete exatamente o
+// RETURNS TABLE de public.inspecionar_candidatas_papiro_admin (mesma RPC já
+// usada por app/admin/aulas/preview/page.tsx, aqui só no modo "unidade",
+// com p_unidade_pedagogica_id sempre preenchido). "origem", nesse modo, é
+// sempre a string fixa "unidade" (só distingue "vinculada"/"banco_geral" no
+// modo Missão Final, com unidade nula) — não é a classificação REAL/AUTORAL
+// usada abaixo, que vem de um campo diferente (ver classificarOrigemQuestao).
+type AlternativaCandidata = { ordem: number; texto: string; correta: boolean };
+type CandidataBancoUnidade = {
+  questao_id: number;
+  origem: string;
+  enunciado: string;
+  fonte: string | null;
+  banca: string | null;
+  concurso: string | null;
+  explicacao: string | null;
+  alternativas: AlternativaCandidata[] | null;
+};
+
 export default function AdminAulas() {
   const [verificando, setVerificando] = useState(true);
   const [admin, setAdmin] = useState(false);
@@ -154,6 +174,35 @@ export default function AdminAulas() {
   const [rascunho, setRascunho] = useState<AulaRascunho | null>(null);
   const [carregandoRascunho, setCarregandoRascunho] = useState(false);
   const [publicando, setPublicando] = useState(false);
+
+  const [candidatas, setCandidatas] = useState<CandidataBancoUnidade[]>([]);
+  const [carregandoCandidatas, setCarregandoCandidatas] = useState(false);
+  const [erroCandidatas, setErroCandidatas] = useState("");
+  const [questoesExpandidas, setQuestoesExpandidas] = useState<Set<number>>(new Set());
+  // Guarda de corrida: cada troca de unidade/conteúdo incrementa este
+  // contador; a resposta de uma requisição só é aplicada se ainda for a
+  // mais recente — evita o corpus da unidade anterior "vazar" na tela
+  // quando o admin troca de unidade rápido e a resposta antiga chega depois.
+  const candidatasRequisicaoRef = useRef(0);
+  // Reset síncrono durante o RENDER (nunca dentro de um useEffect) quando
+  // unidadeId muda — mesmo padrão recomendado pelo próprio React para
+  // "ajustar estado quando uma prop muda" sem disparar o aviso
+  // react-hooks/set-state-in-effect. Garante que o corpus da unidade
+  // anterior nunca fique visível enquanto a nova seleção ainda carrega.
+  const [unidadeAnteriorBanco, setUnidadeAnteriorBanco] = useState(unidadeId);
+  if (unidadeId !== unidadeAnteriorBanco) {
+    setUnidadeAnteriorBanco(unidadeId);
+    setCandidatas([]);
+    setErroCandidatas("");
+    setQuestoesExpandidas(new Set());
+    setCarregandoCandidatas(Boolean(conteudoId && unidadeId));
+    // O rascunho exibido abaixo (verRascunho) não guarda a que unidade
+    // pertence — limpar aqui garante que trocar de unidade nunca deixe um
+    // rascunho de OUTRA unidade visível, e que o link "abrir preview
+    // completo" (que usa rascunho?.aula_versao_id) nunca aponte para a
+    // unidade errada.
+    setRascunho(null);
+  }
 
   useEffect(() => {
     async function verificar() {
@@ -213,6 +262,34 @@ export default function AdminAulas() {
     carregarMateriais();
     carregarGeracoes(conteudoId);
   }, [conteudoId]);
+
+  // Banco da unidade (painel read-only, admin-only): busca as questões
+  // elegíveis desta unidade sempre que conteudoId/unidadeId mudarem. Sem
+  // unidade selecionada, não busca nada e limpa qualquer corpus anterior
+  // (nunca mostra dado desatualizado). Usa a MESMA RPC já usada pela prévia
+  // de app/admin/aulas/preview/page.tsx (inspecionar_candidatas_papiro_admin,
+  // somente leitura) — nenhuma RPC nova, nenhuma migration.
+  useEffect(() => {
+    candidatasRequisicaoRef.current += 1;
+    const idRequisicao = candidatasRequisicaoRef.current;
+    if (!conteudoId || !unidadeId) return;
+    createClient()
+      .rpc("inspecionar_candidatas_papiro_admin", { p_conteudo_id: conteudoId, p_unidade_pedagogica_id: unidadeId })
+      .then(({ data, error }) => {
+        if (candidatasRequisicaoRef.current !== idRequisicao) return; // resposta de uma seleção já superada
+        if (error) setErroCandidatas("Não foi possível carregar as questões desta unidade.");
+        else setCandidatas((data as CandidataBancoUnidade[] | null) ?? []);
+        setCarregandoCandidatas(false);
+      });
+  }, [conteudoId, unidadeId]);
+
+  function alternarExpansaoQuestao(questaoId: number) {
+    setQuestoesExpandidas((atuais) => {
+      const novo = new Set(atuais);
+      if (novo.has(questaoId)) novo.delete(questaoId); else novo.add(questaoId);
+      return novo;
+    });
+  }
 
   function alternarFonte(materialVersaoId: string) {
     setFontesSelecionadas((atuais) => {
@@ -327,6 +404,10 @@ export default function AdminAulas() {
     ? geracoes.filter((g) => g.contexto?.unidade_pedagogica_id === unidadeId)
     : [];
 
+  const totalCandidatas = candidatas.length;
+  const totalCandidatasReal = candidatas.filter((c) => classificarOrigemQuestao(c.banca) === "REAL").length;
+  const totalCandidatasAutoral = totalCandidatas - totalCandidatasReal;
+
   return (
     <main className="admin-page">
       <header className="admin-header">
@@ -386,6 +467,74 @@ export default function AdminAulas() {
           </label>
         </div>
       </section>
+
+      {conteudoId && (
+        <section className="admin-foundations">
+          <div className="admin-section-heading">
+            <div><p className="dashboard-label">BANCO DA UNIDADE</p><h2>Questões elegíveis desta unidade</h2></div>
+            {unidadeId && !carregandoCandidatas && !erroCandidatas && (
+              <span>{totalCandidatas} questão(ões) elegível(is) · REAL: {totalCandidatasReal} · AUTORAL: {totalCandidatasAutoral}</span>
+            )}
+          </div>
+
+          {unidadeId && (
+            <p>
+              <Link
+                href={`/admin/aulas/preview?conteudo=${conteudoId}&unidade=${unidadeId}${
+                  rascunho ? `&versao=${rascunho.aula_versao_id}` : ""
+                }${conteudos.find((c) => c.conteudo_id === conteudoId) ? `&nome=${encodeURIComponent(conteudos.find((c) => c.conteudo_id === conteudoId)!.nome)}` : ""}`}
+              >
+                Abrir preview completo desta unidade (aula + prática simulada)
+              </Link>
+            </p>
+          )}
+
+          {!unidadeId && <p>Selecione uma unidade pedagógica acima para ver as questões elegíveis vinculadas a ela.</p>}
+          {unidadeId && carregandoCandidatas && <p>Carregando questões desta unidade...</p>}
+          {unidadeId && !carregandoCandidatas && erroCandidatas && <p role="alert">{erroCandidatas}</p>}
+          {unidadeId && !carregandoCandidatas && !erroCandidatas && candidatas.length === 0 && (
+            <p>Nenhuma questão elegível encontrada para esta unidade.</p>
+          )}
+
+          {unidadeId && !carregandoCandidatas && !erroCandidatas && candidatas.length > 0 && (
+            <div className="admin-recent">
+              {candidatas.map((c) => {
+                const origemQuestao = classificarOrigemQuestao(c.banca);
+                const expandida = questoesExpandidas.has(c.questao_id);
+                return (
+                  <article key={c.questao_id}>
+                    <span className={`notice-status ${origemQuestao === "REAL" ? "concluido" : "processando"}`}>
+                      {origemQuestao}
+                    </span>
+                    <div>
+                      <strong>Q{c.questao_id}{c.banca ? ` · ${c.banca}` : ""}</strong>
+                      <small>{inicioEnunciado(c.enunciado)}</small>
+                      {expandida && (
+                        <>
+                          <p>{c.enunciado}</p>
+                          {Array.isArray(c.alternativas) && c.alternativas.length > 0 && (
+                            <ul>
+                              {c.alternativas.map((alt) => (
+                                <li key={alt.ordem}>{alt.correta ? <strong>{alt.texto} (gabarito)</strong> : alt.texto}</li>
+                              ))}
+                            </ul>
+                          )}
+                          <small>{[c.banca, c.concurso].filter(Boolean).join(" — ") || "Fonte não registrada"}</small>
+                          {c.fonte && <small>{c.fonte}</small>}
+                          {c.explicacao && <p>{c.explicacao}</p>}
+                        </>
+                      )}
+                    </div>
+                    <button type="button" onClick={() => alternarExpansaoQuestao(c.questao_id)}>
+                      {expandida ? "Ocultar detalhes" : "Ver detalhes"}
+                    </button>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+        </section>
+      )}
 
       {conteudoId && (
         <>
