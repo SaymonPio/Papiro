@@ -2492,6 +2492,9 @@ footer > small {
   margin: 30px 0 34px;
   font-size: clamp(25px, 3vw, 38px);
   line-height: 1.32;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
 }
 
 .answer-list {
@@ -2619,7 +2622,7 @@ footer > small {
 .answer-feedback.correct .answer-feedback-head strong { color: #8fe0ae; }
 .answer-feedback.wrong .answer-feedback-head strong { color: var(--gold-bright); }
 
-.answer-feedback p { margin: 0; color: #b9c2bd; line-height: 1.65; }
+.answer-feedback p { margin: 0; color: #b9c2bd; line-height: 1.65; text-align: justify; text-justify: inter-word; hyphens: auto; }
 
 .error-diagnosis-title {
   margin: 0 0 22px;
@@ -2973,6 +2976,9 @@ footer > small {
   margin: 0 0 14px;
   color: #c3ccc6;
   line-height: 1.7;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
 }
 
 .teoria-texto:last-child {
@@ -2993,6 +2999,9 @@ footer > small {
   color: var(--cream);
   font-weight: 600;
   line-height: 1.6;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
 }
 
 .teoria-pergunta strong {
@@ -3004,6 +3013,9 @@ footer > small {
   color: #8fa097;
   font-size: 13px;
   font-style: italic;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
 }
 
 .teoria-revelar {
@@ -3039,6 +3051,9 @@ footer > small {
   background: rgba(255, 255, 255, 0.03);
   color: #dbe4de;
   line-height: 1.6;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
 }
 
 .teoria-subtitulo {
@@ -3808,6 +3823,9 @@ footer > small {
   background: rgba(255, 255, 255, 0.02);
   color: #dbe4de;
   line-height: 1.5;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
 }
 
 .teoria-resumo-item svg {
@@ -3953,7 +3971,7 @@ footer > small {
 
 .error-heading small { color: #82928a; }
 .error-list h2 { margin: 13px 0 9px; font-family: Georgia, serif; }
-.error-list article > p { color: #acb8b2; line-height: 1.55; }
+.error-list article > p { color: #acb8b2; line-height: 1.55; text-align: justify; text-justify: inter-word; hyphens: auto; }
 
 .review-dates {
   display: flex;
