@@ -385,6 +385,35 @@ export default function PreviewAula() {
               <div className="teoria-unidade-titulo">
                 <p>{ehMissaoFinal ? "MISSÃO FINAL PAPIRO" : `UNIDADE ${unidadeAtual?.ordem}`}</p>
                 <h2>{ehMissaoFinal ? "30 questões misturadas do conteúdo inteiro" : unidadeAtual?.titulo}</h2>
+                {/* Inspeção admin da versão para impressão/PDF — reaproveita a
+                    MESMA rota/componente do aluno (app/teoria/imprimir), via o
+                    modo admin (?admin=1&aula_versao_id=...), atrás de
+                    eh_admin(). Funciona também para rascunho, exatamente para
+                    inspecionar antes de publicar. Usa aulaVersaoIdAtual (já
+                    resolvido pelo próprio preview, nunca dependente de
+                    ?versao= estar presente na URL) — por isso aparece assim
+                    que a versão é conhecida, sem esperar a aula terminar de
+                    carregar, e logo abaixo do título, antes de qualquer
+                    componente, para nunca ficar escondido no fim da rolagem
+                    depois de 11 componentes + comentários.
+                    Só o ID do conteúdo vai na URL (navegação) — nunca texto
+                    de matéria/curso: um admin poderia editar a URL à mão e
+                    gerar um PDF com metadados falsos na capa. A própria rota
+                    de impressão resolve materia/curso a partir desse id via
+                    a mesma RPC canônica (listar_geracoes_conteudo_admin),
+                    conferindo que a geração corresponde à aula_versao_id
+                    sendo impressa. */}
+                {!ehMissaoFinal && aulaVersaoIdAtual && (
+                  <p>
+                    <Link
+                      href={`/teoria/imprimir?admin=1&aula_versao_id=${aulaVersaoIdAtual}&conteudo_id=${conteudoId}`}
+                      className="teoria-baixar-pdf"
+                    >
+                      Ver PDF da aula
+                    </Link>
+                    <small className="admin-preview-link-hint">Inspeção administrativa</small>
+                  </p>
+                )}
               </div>
 
               {!ehMissaoFinal && (

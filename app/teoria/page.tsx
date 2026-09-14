@@ -616,6 +616,17 @@ export default function Teoria() {
                 <div className="teoria-unidade-titulo">
                   <p>UNIDADE {aula.unidade_ordem}</p>
                   <h2>{aula.unidade_titulo}</h2>
+                  {/* Só aparece para aula efetivamente PUBLICADA — esta
+                      linha só é alcançada quando estadoAula === "disponivel",
+                      que só existe quando carregar_unidades_publicadas_da_missao
+                      devolveu ao menos uma linha, e essa RPC só retorna
+                      aula_versoes.status = 'publicada' (nunca rascunho). */}
+                  <Link
+                    href={`/teoria/imprimir?missao=${missao.id}&unidade=${aula.unidade_pedagogica_id}`}
+                    className="teoria-baixar-pdf"
+                  >
+                    Baixar aula em PDF
+                  </Link>
                 </div>
                 {componentes.map((componente, indice) => (
                   <ComponenteAulaView key={componente?.tipo ? `${componente.tipo}-${indice}` : indice} componente={componente} />

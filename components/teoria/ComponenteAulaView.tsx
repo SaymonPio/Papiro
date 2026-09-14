@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { ROTULOS_TIPO_COMPONENTE, ehString, type ComponenteAula } from "./tiposComponenteAula";
 
 // Apresentação visual de um componente de aula da Teoria Interativa —
 // ÚNICO renderer visual dos 5 tipos documentados (diagnostico, conceito,
@@ -11,26 +12,14 @@ import { useState, type ReactNode } from "react";
 // carregamento da aula ou Supabase — só recebe um componente já carregado
 // e decide como desenhá-lo.
 //
-// estrutura.componentes não tem nenhuma garantia de formato a nível de
-// banco (só estrutura em si é validada como objeto JSON) — por isso
-// ComponenteAula não presume mais nada além de `tipo`.
-export type ComponenteAula = {
-  tipo: string;
-  [chave: string]: unknown;
-};
-
-// Os 5 tipos documentados em teoria_versionada.sql têm rótulo definido, mais
-// o tipo nativo OPCIONAL "jurisprudencia_essencial" (só existe quando a
-// própria aula o incluir — nunca obrigatório, ver validador.mjs); qualquer
-// outro valor de `tipo` é exibido cru, sem inventar um nome.
-const ROTULOS_TIPO_COMPONENTE: Record<string, string> = {
-  diagnostico: "Diagnóstico",
-  conceito: "Conceito",
-  recall: "Recall",
-  questao_resolvida: "Questão resolvida",
-  resumo_visual: "Resumo visual",
-  jurisprudencia_essencial: "Jurisprudência essencial",
-};
+// ComponenteAula/ROTULOS_TIPO_COMPONENTE/ehString agora vivem em
+// ./tiposComponenteAula (arquivo .ts puro, sem JSX — Node/node --test não
+// consegue importar um arquivo com JSX, nem indiretamente, então essas
+// definições saíram daqui para poderem ser reaproveitadas por
+// ./prepararAulaImpressao.ts, testado com node --test puro). Reexportado
+// abaixo só para não quebrar quem já importa ComponenteAula a partir deste
+// arquivo.
+export type { ComponenteAula };
 
 function tituloComponente(tipo: string): string {
   return ROTULOS_TIPO_COMPONENTE[tipo] ?? tipo;
@@ -50,10 +39,6 @@ function formatarValorComponente(valor: unknown): string {
 // rótulos na identidade verbal do Papiro. O JSON/schema em si (nomes de
 // campo, contrato do validador, geração) não muda — só a apresentação.
 // ---------------------------------------------------------------------
-
-function ehString(valor: unknown): valor is string {
-  return typeof valor === "string" && valor.trim().length > 0;
-}
 
 // Ícones inline no mesmo estilo já usado pelo projeto (viewBox 24x24,
 // stroke currentColor, sem preenchimento — ver app/questoes/page.tsx) —
@@ -144,7 +129,9 @@ function IconeBalanca() {
 // reforço já adicionado ao prompt em gerar-aula/index.ts). Nunca usa
 // dangerouslySetInnerHTML — só quebra a string em pedaços de texto puro e
 // <strong>, então não existe caminho de HTML/script vindo da IA.
-function renderizarComDestaque(valor: unknown): ReactNode {
+// Exportado: também usado por components/teoria/AulaImpressao.tsx (versão
+// para PDF/impressão) — a mesma regra de negrito, nunca reimplementada lá.
+export function renderizarComDestaque(valor: unknown): ReactNode {
   if (!ehString(valor)) return null;
   const partes = valor.split(/\*\*(.+?)\*\*/g);
   return partes.map((parte, indice) => (indice % 2 === 1 ? <strong key={indice}>{parte}</strong> : parte));
