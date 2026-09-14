@@ -1530,6 +1530,38 @@ footer > small {
   min-width: 220px;
 }
 
+/* Botão de acesso ao preview completo (app/admin/aulas/page.tsx) — mesmo
+   par de cores dourado/texto escuro já usado em .admin-publish/.admin-page
+   button, só que aplicado a um <Link> (âncora), que não herda o
+   display:inline-block automático de <button> nem os estilos ligados a
+   ".admin-page form > button" (essa página não usa <form> aqui). */
+.admin-preview-acesso {
+  margin: 4px 0 18px;
+}
+
+.admin-preview-link {
+  display: inline-block;
+  padding: 12px 26px;
+  border-radius: 7px;
+  color: #07120f;
+  background: var(--gold);
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.admin-preview-link:hover {
+  background: var(--gold-bright);
+}
+
+.admin-preview-link-hint {
+  display: block;
+  margin-top: 6px;
+  color: #82928a;
+  font-size: 12px;
+}
+
 .admin-recent {
   display: grid;
   gap: 10px;

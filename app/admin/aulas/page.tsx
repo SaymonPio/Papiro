@@ -478,15 +478,17 @@ export default function AdminAulas() {
           </div>
 
           {unidadeId && (
-            <p>
+            <div className="admin-preview-acesso">
               <Link
+                className="admin-preview-link"
                 href={`/admin/aulas/preview?conteudo=${conteudoId}&unidade=${unidadeId}${
                   rascunho ? `&versao=${rascunho.aula_versao_id}` : ""
                 }${conteudos.find((c) => c.conteudo_id === conteudoId) ? `&nome=${encodeURIComponent(conteudos.find((c) => c.conteudo_id === conteudoId)!.nome)}` : ""}`}
               >
-                Abrir preview completo desta unidade (aula + prática simulada)
+                Ver aula completa
               </Link>
-            </p>
+              <small className="admin-preview-link-hint">Aula + prática simulada + Missão Final</small>
+            </div>
           )}
 
           {!unidadeId && <p>Selecione uma unidade pedagógica acima para ver as questões elegíveis vinculadas a ela.</p>}
