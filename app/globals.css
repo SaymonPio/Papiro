@@ -7,6 +7,8 @@
   --gold: #d8ad4c;
   --gold-bright: #f1ca6b;
   --cream: #f2efe6;
+  --juris: #6f9bd1;
+  --juris-bright: #9cc0ea;
   --paper: #faf8f1;
   --muted: #91a099;
   --line: rgba(255, 255, 255, 0.12);
@@ -3043,6 +3045,65 @@ footer > small {
 .teoria-alerta {
   border: 1px solid rgba(216, 173, 76, 0.28);
   background: rgba(8, 20, 16, 0.6);
+}
+
+/* Jurisprudência essencial: acento azul-frio, deliberadamente diferente do
+   dourado usado por conceito/bizu/exemplo — o aluno precisa perceber de
+   imediato que este bloco é uma INTERPRETAÇÃO JURISPRUDENCIAL, não o texto
+   legal/conceito em si. Mesma estrutura de cartão do restante da Teoria
+   Interativa (sem elemento visual novo), só a cor muda. */
+.teoria-jurisprudencia {
+  margin-top: 16px;
+  padding: 16px 18px;
+  border: 1px solid rgba(111, 155, 209, 0.35);
+  border-radius: 10px;
+  background: rgba(111, 155, 209, 0.07);
+}
+
+.teoria-jurisprudencia .teoria-subtitulo {
+  color: var(--juris-bright);
+}
+
+.teoria-jurisprudencia .teoria-subtitulo svg {
+  color: var(--juris);
+}
+
+.teoria-jurisprudencia-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 0 0 12px;
+  font-size: 12px;
+  color: #a9bcd4;
+}
+
+.teoria-jurisprudencia-meta strong {
+  color: var(--juris-bright);
+  font-weight: 800;
+}
+
+.teoria-jurisprudencia-campo {
+  margin: 0 0 12px;
+}
+
+.teoria-jurisprudencia-campo:last-child {
+  margin-bottom: 0;
+}
+
+.teoria-jurisprudencia-rotulo {
+  margin: 0 0 4px;
+  color: #a9bcd4;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.teoria-jurisprudencia-fonte {
+  margin: 12px 0 0;
+  color: #7f92a8;
+  font-size: 12px;
+  font-style: italic;
 }
 
 .teoria-alternativas {

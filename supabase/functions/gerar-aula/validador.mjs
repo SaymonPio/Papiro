@@ -10,13 +10,30 @@
 // validação passar (ver index.ts). Qualquer componente com "id" já
 // presente na resposta da IA é tratado como resposta INVÁLIDA — nunca
 // removido e confiado silenciosamente.
+//
+// Fase "jurisprudência essencial": os 5 tipos acima continuam sendo o
+// mínimo obrigatório de toda aula (nenhuma aula antiga ou de matéria não
+// jurídica muda de comportamento). "jurisprudencia_essencial" é um tipo
+// NATIVO porém OPCIONAL — só é exigido quando a própria aula o incluir;
+// nunca entra na checagem de "tipos obrigatórios faltando".
 
-export const TIPOS_COMPONENTE = [
+export const TIPOS_COMPONENTE_OBRIGATORIOS = [
   "diagnostico",
   "conceito",
   "recall",
   "questao_resolvida",
   "resumo_visual",
+];
+
+export const TIPOS_COMPONENTE_OPCIONAIS = ["jurisprudencia_essencial"];
+
+// Mantido por compatibilidade com quem já importa TIPOS_COMPONENTE
+// esperando "os tipos reconhecidos" (uso histórico pré-jurisprudência).
+export const TIPOS_COMPONENTE = TIPOS_COMPONENTE_OBRIGATORIOS;
+
+const TODOS_TIPOS_RECONHECIDOS = [
+  ...TIPOS_COMPONENTE_OBRIGATORIOS,
+  ...TIPOS_COMPONENTE_OPCIONAIS,
 ];
 
 function ehStringNaoVazia(valor) {
@@ -91,12 +108,24 @@ function validarResumoVisual(c) {
   return null;
 }
 
+function validarJurisprudenciaEssencial(c) {
+  if (!ehStringNaoVazia(c.tribunal)) return "jurisprudencia_essencial.tribunal ausente ou vazio";
+  if (!ehStringNaoVazia(c.identificacao_precedente)) return "jurisprudencia_essencial.identificacao_precedente ausente ou vazia";
+  if (!ehStringNaoVazia(c.dispositivo_relacionado)) return "jurisprudencia_essencial.dispositivo_relacionado ausente ou vazio";
+  if (!ehStringNaoVazia(c.entendimento)) return "jurisprudencia_essencial.entendimento ausente ou vazio";
+  if (!ehStringNaoVazia(c.como_cai_na_prova)) return "jurisprudencia_essencial.como_cai_na_prova ausente ou vazio";
+  if (!ehStringNaoVazia(c.fonte)) return "jurisprudencia_essencial.fonte ausente ou vazia";
+  if (!ehStringOuNull(c.titulo)) return "jurisprudencia_essencial.titulo precisa ser string ou null";
+  return null;
+}
+
 const VALIDADORES_POR_TIPO = {
   diagnostico: validarDiagnostico,
   conceito: validarConceito,
   recall: validarRecall,
   questao_resolvida: validarQuestaoResolvida,
   resumo_visual: validarResumoVisual,
+  jurisprudencia_essencial: validarJurisprudenciaEssencial,
 };
 
 /**
@@ -159,7 +188,7 @@ export function validarRespostaGerador(dados) {
       return { ok: false, erro: `Componente #${indice} veio com um campo "id" — a IA não pode decidir ids.` };
     }
 
-    if (!ehStringNaoVazia(c.tipo) || !TIPOS_COMPONENTE.includes(c.tipo)) {
+    if (!ehStringNaoVazia(c.tipo) || !TODOS_TIPOS_RECONHECIDOS.includes(c.tipo)) {
       return { ok: false, erro: `Componente #${indice} tem "tipo" ausente ou desconhecido: ${JSON.stringify(c.tipo)}.` };
     }
 
@@ -172,7 +201,7 @@ export function validarRespostaGerador(dados) {
     componentesValidados.push(c);
   }
 
-  const tiposFaltando = TIPOS_COMPONENTE.filter((tipo) => !tiposEncontrados.has(tipo));
+  const tiposFaltando = TIPOS_COMPONENTE_OBRIGATORIOS.filter((tipo) => !tiposEncontrados.has(tipo));
   if (tiposFaltando.length > 0) {
     return { ok: false, erro: `Faltam componentes obrigatórios dos tipos: ${tiposFaltando.join(", ")}.` };
   }

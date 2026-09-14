@@ -56,6 +56,20 @@ function componenteQuestaoResolvida(extra = {}) {
   };
 }
 
+function componenteJurisprudencia(extra = {}) {
+  return {
+    tipo: "jurisprudencia_essencial",
+    titulo: null,
+    tribunal: "STF",
+    identificacao_precedente: "HC 111.840",
+    dispositivo_relacionado: "art. 1º, §7º",
+    entendimento: "A imposição do regime inicial fechado não deve ocorrer automaticamente apenas pela literalidade do §7º, devendo ser observadas individualização da pena e fundamentação adequada.",
+    como_cai_na_prova: "Alternativas podem afirmar, incorretamente, que o regime fechado é consequência automática.",
+    fonte: "STF, HC 111.840",
+    ...extra,
+  };
+}
+
 function componenteResumoVisual(extra = {}) {
   return {
     tipo: "resumo_visual",
@@ -348,6 +362,64 @@ test("rejeita quando artigos_abordados tem duplicata exata", () => {
   const resultado = validarRespostaGerador(dados);
   assert.equal(resultado.ok, false);
   assert.match(resultado.erro, /duplicata/);
+});
+
+// --- jurisprudencia_essencial: componente nativo OPCIONAL -----------------
+
+test("aceita uma resposta com os 5 tipos obrigatórios e SEM jurisprudencia_essencial (não é obrigatório para nenhuma matéria)", () => {
+  const resultado = validarRespostaGerador(respostaValida());
+  assert.equal(resultado.ok, true);
+  assert.ok(!resultado.componentes.some((c) => c.tipo === "jurisprudencia_essencial"));
+});
+
+test("aceita uma resposta válida que inclui jurisprudencia_essencial além dos 5 obrigatórios", () => {
+  const dados = respostaValida();
+  dados.componentes.splice(2, 0, componenteJurisprudencia());
+  const resultado = validarRespostaGerador(dados);
+  assert.equal(resultado.ok, true);
+  assert.equal(resultado.componentes.length, 6);
+  assert.ok(resultado.componentes.some((c) => c.tipo === "jurisprudencia_essencial"));
+});
+
+test("rejeita jurisprudencia_essencial sem entendimento", () => {
+  const dados = respostaValida();
+  dados.componentes.push(componenteJurisprudencia({ entendimento: "" }));
+  const resultado = validarRespostaGerador(dados);
+  assert.equal(resultado.ok, false);
+  assert.match(resultado.erro, /entendimento/);
+});
+
+test("rejeita jurisprudencia_essencial sem tribunal", () => {
+  const dados = respostaValida();
+  dados.componentes.push(componenteJurisprudencia({ tribunal: "" }));
+  const resultado = validarRespostaGerador(dados);
+  assert.equal(resultado.ok, false);
+  assert.match(resultado.erro, /tribunal/);
+});
+
+test("rejeita jurisprudencia_essencial estruturalmente inválida (dispositivo_relacionado ausente)", () => {
+  const dados = respostaValida();
+  const invalida = componenteJurisprudencia();
+  delete invalida.dispositivo_relacionado;
+  dados.componentes.push(invalida);
+  const resultado = validarRespostaGerador(dados);
+  assert.equal(resultado.ok, false);
+  assert.match(resultado.erro, /dispositivo_relacionado/);
+});
+
+test("aceita jurisprudencia_essencial com titulo null (rótulo visual é sempre fixo)", () => {
+  const dados = respostaValida();
+  dados.componentes.push(componenteJurisprudencia({ titulo: null }));
+  const resultado = validarRespostaGerador(dados);
+  assert.equal(resultado.ok, true);
+});
+
+test("continua rejeitando tipo desconhecido mesmo com jurisprudencia_essencial reconhecido", () => {
+  const dados = respostaValida();
+  dados.componentes.push(componenteJurisprudencia());
+  dados.componentes.push({ tipo: "video_aula", titulo: "x" });
+  const resultado = validarRespostaGerador(dados);
+  assert.equal(resultado.ok, false);
 });
 
 test("rejeita resposta minúscula demais (sinal de truncamento)", () => {

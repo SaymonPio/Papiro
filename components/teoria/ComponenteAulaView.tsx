@@ -19,14 +19,17 @@ export type ComponenteAula = {
   [chave: string]: unknown;
 };
 
-// Só os 5 tipos documentados em teoria_versionada.sql têm rótulo definido;
-// qualquer outro valor de `tipo` é exibido cru, sem inventar um nome.
+// Os 5 tipos documentados em teoria_versionada.sql têm rótulo definido, mais
+// o tipo nativo OPCIONAL "jurisprudencia_essencial" (só existe quando a
+// própria aula o incluir — nunca obrigatório, ver validador.mjs); qualquer
+// outro valor de `tipo` é exibido cru, sem inventar um nome.
 const ROTULOS_TIPO_COMPONENTE: Record<string, string> = {
   diagnostico: "Diagnóstico",
   conceito: "Conceito",
   recall: "Recall",
   questao_resolvida: "Questão resolvida",
   resumo_visual: "Resumo visual",
+  jurisprudencia_essencial: "Jurisprudência essencial",
 };
 
 function tituloComponente(tipo: string): string {
@@ -122,6 +125,20 @@ function IconeCortar() {
   );
 }
 
+// Ícone de "balança da justiça" — mesma família visual dos demais (linha
+// fina, sem preenchimento), usado só pelo componente "jurisprudencia_essencial".
+function IconeBalanca() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <path d="M12 3v18" strokeLinecap="round" />
+      <path d="M6 7h12" strokeLinecap="round" />
+      <path d="M3 20h18" strokeLinecap="round" />
+      <path d="M6 7 3 13a3 3 0 0 0 6 0L6 7Z" strokeLinejoin="round" />
+      <path d="M18 7 15 13a3 3 0 0 0 6 0L18 7Z" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 // Destaque seguro dentro do texto: a IA usa **texto** para marcar o que
 // precisa de negrito (conceitos-chave, exceções, prazos etc. — ver o
 // reforço já adicionado ao prompt em gerar-aula/index.ts). Nunca usa
@@ -197,6 +214,44 @@ function ConceitoView({ c }: { c: ComponenteAula }) {
           <p className="teoria-texto">{renderizarComDestaque(c.pegadinha)}</p>
         </div>
       )}
+    </>
+  );
+}
+
+// Jurisprudência essencial — visualmente distinto de CONCEITO de propósito
+// (acento azul-frio via .teoria-jurisprudencia, ver globals.css): o aluno
+// precisa perceber de imediato que este bloco é uma INTERPRETAÇÃO
+// JURISPRUDENCIAL sobre o dispositivo, não o texto legal/conceito em si.
+// Título visível é sempre "Jurisprudência essencial" (rótulo fixo do
+// kicker) — c.titulo, quando vier preenchido, é só um subtítulo opcional
+// dentro do bloco, nunca substitui o rótulo do tipo.
+function JurisprudenciaEssencialView({ c }: { c: ComponenteAula }) {
+  return (
+    <>
+      <RotuloBloco icone={<IconeBalanca />}>JURISPRUDÊNCIA ESSENCIAL</RotuloBloco>
+      {ehString(c.titulo) && <h3>{renderizarComDestaque(c.titulo)}</h3>}
+      <div className="teoria-jurisprudencia">
+        {(ehString(c.tribunal) || ehString(c.identificacao_precedente) || ehString(c.dispositivo_relacionado)) && (
+          <p className="teoria-jurisprudencia-meta">
+            {ehString(c.tribunal) && <span><strong>Tribunal:</strong> {c.tribunal}</span>}
+            {ehString(c.identificacao_precedente) && <span><strong>Precedente:</strong> {c.identificacao_precedente}</span>}
+            {ehString(c.dispositivo_relacionado) && <span><strong>Dispositivo:</strong> {c.dispositivo_relacionado}</span>}
+          </p>
+        )}
+        {ehString(c.entendimento) && (
+          <div className="teoria-jurisprudencia-campo">
+            <p className="teoria-jurisprudencia-rotulo">Entendimento</p>
+            <p className="teoria-texto">{renderizarComDestaque(c.entendimento)}</p>
+          </div>
+        )}
+        {ehString(c.como_cai_na_prova) && (
+          <div className="teoria-jurisprudencia-campo">
+            <p className="teoria-jurisprudencia-rotulo">Como cai na prova</p>
+            <p className="teoria-texto">{renderizarComDestaque(c.como_cai_na_prova)}</p>
+          </div>
+        )}
+        {ehString(c.fonte) && <p className="teoria-jurisprudencia-fonte">Fonte: {renderizarComDestaque(c.fonte)}</p>}
+      </div>
     </>
   );
 }
@@ -402,6 +457,7 @@ function ComponenteGenericoView({ componente }: { componente: ComponenteAula }) 
 const VIEWS_POR_TIPO: Record<string, (props: { c: ComponenteAula }) => ReactNode> = {
   diagnostico: DiagnosticoView,
   conceito: ConceitoView,
+  jurisprudencia_essencial: JurisprudenciaEssencialView,
   recall: RecallView,
   questao_resolvida: QuestaoResolvidaView,
   resumo_visual: ResumoVisualView,
