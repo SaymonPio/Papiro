@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import ComponenteAulaView, { type ComponenteAula } from "@/components/teoria/ComponenteAulaView";
@@ -114,34 +115,29 @@ function CardCandidata({ c, mostrarOrigem }: { c: Candidata; mostrarOrigem: bool
   );
 }
 
-// Lê o contexto da própria URL de forma síncrona (lazy initializer de
-// useState, nunca um useEffect — window não existe durante o render no
-// servidor, mas esta página só mostra conteúdo real depois do gate
-// eh_admin(), que só resolve no cliente, então não há risco de
-// hydration mismatch visível).
-function lerContextoDaUrl() {
-  if (typeof window === "undefined") {
-    return { conteudoId: null as number | null, unidadeQuery: null as string | null, versaoQuery: null as string | null, nomeQuery: null as string | null };
-  }
-  const params = new URLSearchParams(window.location.search);
-  const conteudoParam = params.get("conteudo");
-  return {
-    conteudoId: conteudoParam && /^\d+$/.test(conteudoParam) ? Number(conteudoParam) : null,
-    unidadeQuery: params.get("unidade"),
-    versaoQuery: params.get("versao"),
-    nomeQuery: params.get("nome"),
-  };
-}
-
 export default function PreviewAula() {
   const [verificando, setVerificando] = useState(true);
   const [admin, setAdmin] = useState(false);
 
-  // Contexto vindo da própria URL (?conteudo=&unidade=&versao=&nome=).
+  // Contexto vindo da própria URL (?conteudo=&unidade=&versao=&nome=), via
+  // o hook reativo do router (next/navigation) — nunca lendo
+  // window.location.search diretamente. Numa navegação client-side (Link),
+  // o histórico do navegador só é atualizado depois que esta página já
+  // renderizou pela primeira vez; ler window.location.search num lazy
+  // initializer de useState capturava a URL ANTERIOR (ex.: /admin/aulas,
+  // sem ?conteudo=), travando "Nenhum conteúdo informado" para sempre,
+  // já que o initializer nunca roda de novo. useSearchParams() resolve
+  // isso porque é a mesma fonte reativa que o router já sincroniza a cada
+  // navegação.
   // unidadeQuery/versaoQuery, quando presentes, indicam a unidade/versão
   // exatas que app/admin/aulas/page.tsx já tinha carregadas no momento em
   // que o admin clicou para abrir este preview.
-  const [{ conteudoId, unidadeQuery, versaoQuery, nomeQuery }] = useState(lerContextoDaUrl);
+  const searchParams = useSearchParams();
+  const conteudoParam = searchParams.get("conteudo");
+  const conteudoId = conteudoParam && /^\d+$/.test(conteudoParam) ? Number(conteudoParam) : null;
+  const unidadeQuery = searchParams.get("unidade");
+  const versaoQuery = searchParams.get("versao");
+  const nomeQuery = searchParams.get("nome");
 
   const [unidades, setUnidades] = useState<UnidadePreview[]>([]);
   const [carregandoUnidades, setCarregandoUnidades] = useState(Boolean(conteudoId));

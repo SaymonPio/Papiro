@@ -7,6 +7,7 @@ import ComponenteAulaView, { type ComponenteAula } from "@/components/teoria/Com
 import ComentariosAula from "@/components/teoria/ComentariosAula";
 import MarcaCarregando from "@/components/ui/MarcaCarregando";
 import { classificarOrigemQuestao, inicioEnunciado } from "./banco-unidade";
+import { geracaoBloqueiaNovaGeracao } from "./geracao-guard";
 
 // crypto.randomUUID() exige um "contexto seguro" do navegador — indisponível
 // em HTTP por IP local (ex.: http://10.0.0.100:5173), só em localhost/HTTPS.
@@ -88,6 +89,16 @@ type GeracaoAdmin = {
     unidade_pedagogica?: string;
     validacao_escopo?: ValidacaoEscopo;
   } | null;
+  // tem_response_id (correção do bloqueio circular do botão "Gerar aula",
+  // supabase/teoria_geracoes_admin_tem_response_id.sql): calculado no
+  // banco como (openai_response_id IS NOT NULL) — o identificador bruto
+  // da OpenAI NUNCA chega ao cliente, só este booleano. Usado para
+  // distinguir uma geração async real (já entregue à OpenAI, pode
+  // legitimamente levar mais de 10 minutos em background) de um registro
+  // legado/órfão do fluxo síncrono antigo (nunca chegou a ter
+  // response_id, e o próprio backend só consegue expirá-lo na PRÓXIMA
+  // tentativa de geração — ver geracaoBloqueiaNovaGeracao em ./geracao-guard).
+  tem_response_id: boolean;
 };
 
 // Nunca lança, nunca presume formato — contexto pode não existir ainda
@@ -249,6 +260,27 @@ export default function AdminAulas() {
     setGeracoes((data as GeracaoAdmin[] | null) ?? []);
   }
 
+  // Fase 3A — geração assíncrona: gerar-aula agora só INICIA a geração e
+  // responde rápido (202); quem termina o trabalho é o finalizador
+  // (supabase/functions/finalizar-geracao-aula), chamado por um job
+  // agendado — NUNCA por este browser. Esta tela só OBSERVA o status via
+  // polling, reaproveitando a mesma carregarGeracoes/RPC já usada para o
+  // histórico — nenhuma chamada nova ao finalizador nem à OpenAI a partir
+  // daqui. Roda enquanto existir alguma geração realmente ATIVA (ver
+  // geracaoBloqueiaNovaGeracao — nunca um registro legado/órfão) para o
+  // conteúdo atual (não só a que este clique disparou — cobre também o
+  // caso de reabrir/recarregar a página com algo já em andamento).
+  // Intervalo de 8s: rápido o bastante para dar feedback dentro de uma
+  // sessão normal de revisão, sem gerar tráfego excessivo.
+  const existeGeracaoAtiva = geracoes.some((g) => geracaoBloqueiaNovaGeracao(g));
+  useEffect(() => {
+    if (!conteudoId || !existeGeracaoAtiva) return;
+    const intervalo = window.setInterval(() => {
+      carregarGeracoes(conteudoId);
+    }, 8000);
+    return () => window.clearInterval(intervalo);
+  }, [conteudoId, existeGeracaoAtiva]);
+
   useEffect(() => {
     setRascunho(null); setMensagem("");
     setUnidades([]); setUnidadeId("");
@@ -339,9 +371,13 @@ export default function AdminAulas() {
     await carregarMateriais();
   }
 
+  // Fase 3A: gerar-aula agora responde rápido (202, async:true) — nunca
+  // fica esperando a IA terminar. O resultado real (rascunho pronto ou
+  // erro) só aparece depois, via polling (ver useEffect acima), quando o
+  // finalizador (job agendado, não este browser) processar a geração.
   async function gerarAula() {
-    if (!conteudoId || !unidadeId || gerando) return; // camada 1 de idempotência: bloqueia clique duplo
-    setGerando(true); setMensagem("Gerando aula — isso pode levar alguns minutos...");
+    if (!conteudoId || !unidadeId || gerando || existeGeracaoAtiva) return; // camada 1 de idempotência: bloqueia clique duplo E clique enquanto já existe algo em andamento (inclusive de uma sessão/aba anterior) — nunca um registro legado/órfão (ver geracaoBloqueiaNovaGeracao)
+    setGerando(true); setMensagem("Iniciando a geração...");
 
     const { data, error } = await createClient().functions.invoke("gerar-aula", {
       body: { conteudoId, unidadePedagogicaId: unidadeId, materialVersaoIds: Array.from(fontesSelecionadas) },
@@ -353,11 +389,11 @@ export default function AdminAulas() {
       const erroDados = data as { error?: string } | null;
       setMensagem(
         erroDados?.error === "geracao_em_andamento"
-          ? "Já existe uma geração em andamento para este conteúdo. Aguarde a conclusão."
-          : "Não foi possível gerar a aula agora. Veja o histórico de gerações para detalhes.",
+          ? "Já existe uma geração em andamento para esta unidade. Aguarde a conclusão."
+          : "Não foi possível iniciar a geração agora. Veja o histórico de gerações para detalhes.",
       );
     } else {
-      setMensagem("Aula gerada como rascunho.");
+      setMensagem("Geração iniciada. Você pode permanecer nesta página ou voltar depois — o status atualiza sozinho.");
     }
 
     await carregarGeracoes(conteudoId);
@@ -582,8 +618,8 @@ export default function AdminAulas() {
               <span>{geracoesDaUnidade.length} geração(ões) desta unidade</span>
             </div>
 
-            <button className="admin-publish" type="button" onClick={gerarAula} disabled={gerando}>
-              {gerando ? "Gerando aula..." : "Gerar aula"}
+            <button className="admin-publish" type="button" onClick={gerarAula} disabled={gerando || existeGeracaoAtiva}>
+              {gerando ? "Iniciando..." : existeGeracaoAtiva ? "Geração em andamento..." : "Gerar aula"}
             </button>
             {mensagem && <p className="upload-message" role="status">{mensagem}</p>}
 
