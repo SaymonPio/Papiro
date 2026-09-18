@@ -3164,6 +3164,101 @@ footer > small {
   font-style: italic;
 }
 
+/* Exemplo visual (quadrinho didático, v1 sem imagem): roteiro em quadros
+   numerados. Mesmo cartão sóbrio e mesma paleta dourada do restante da
+   Teoria Interativa — nenhum elemento visual novo além da grade. Grade
+   fluida: 2-3 colunas em telas largas, uma coluna no celular (o min() evita
+   estouro horizontal em telas estreitas). Texto sempre alinhado à esquerda
+   (balões/cenas curtas, nada de texto corrido). */
+.teoria-quadrinho-quadros {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: 14px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.teoria-quadrinho-quadro {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.teoria-quadrinho-numero {
+  margin: 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(216, 173, 76, 0.22);
+  color: var(--gold-bright);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.teoria-quadrinho-cena {
+  margin: 0;
+  color: #c3ccc6;
+  font-size: 14px;
+  line-height: 1.55;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.teoria-quadrinho-cena strong,
+.teoria-quadrinho-fala-texto strong {
+  color: var(--gold-bright);
+  font-weight: 800;
+}
+
+.teoria-quadrinho-falas {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.teoria-quadrinho-falas > div {
+  padding: 8px 12px;
+  border-left: 3px solid var(--gold);
+  border-radius: 6px;
+  background: rgba(216, 173, 76, 0.06);
+}
+
+.teoria-quadrinho-emissor {
+  margin: 0;
+  color: var(--gold-bright);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.teoria-quadrinho-fala-texto {
+  margin: 2px 0 0;
+  color: var(--cream);
+  line-height: 1.5;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.teoria-quadrinho-legenda {
+  margin: auto 0 0;
+  color: #8fa097;
+  font-size: 12px;
+  font-style: italic;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.teoria-quadrinho-fechamento {
+  margin-top: 16px;
+}
+
 /* ==========================================================================
    Versão para impressão/PDF da aula (components/teoria/AulaImpressao.tsx,
    app/teoria/imprimir/page.tsx) — linguagem de APOSTILA EDITORIAL, não de
@@ -3572,6 +3667,53 @@ footer > small {
   text-align: justify;
   text-justify: inter-word;
   hyphens: auto;
+}
+
+/* EXEMPLO VISUAL (quadrinho didático): sequência simples de blocos
+   numerados, uma coluna, cada quadro sem quebrar entre páginas — prioridade
+   é legibilidade, não estética de HQ. */
+.impressao-quadrinho-quadros {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+
+.impressao-quadrinho-quadro {
+  padding: 8px 14px;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-left: 3px solid #b3862a;
+  border-radius: 4px;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.impressao-quadrinho-falas {
+  margin: 6px 0 0;
+}
+
+.impressao-quadrinho-falas > div {
+  margin: 0 0 4px;
+}
+
+.impressao-quadrinho-falas dd {
+  margin: 0;
+}
+
+.impressao-quadrinho-emissor {
+  color: #6b4f14;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.impressao-quadrinho-legenda {
+  margin: 6px 0 0;
+  color: #5c665e;
+  font-size: 12px;
+  font-style: italic;
 }
 
 .impressao-campos-genericos dt {

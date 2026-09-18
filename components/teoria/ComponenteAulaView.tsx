@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { ROTULOS_TIPO_COMPONENTE, ehString, type ComponenteAula } from "./tiposComponenteAula";
+import { ROTULOS_TIPO_COMPONENTE, ehString, normalizarQuadrinho, type ComponenteAula } from "./tiposComponenteAula";
 
 // Apresentação visual de um componente de aula da Teoria Interativa —
 // ÚNICO renderer visual dos 5 tipos documentados (diagnostico, conceito,
@@ -120,6 +120,18 @@ function IconeBalanca() {
       <path d="M3 20h18" strokeLinecap="round" />
       <path d="M6 7 3 13a3 3 0 0 0 6 0L6 7Z" strokeLinejoin="round" />
       <path d="M18 7 15 13a3 3 0 0 0 6 0L18 7Z" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+// Ícone de "quadros em sequência" — mesma família visual dos demais (linha
+// fina, sem preenchimento), usado só pelo componente "quadrinho_didatico".
+function IconeQuadros() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <rect x="3.5" y="4.5" width="7" height="6.5" rx="1" />
+      <rect x="13.5" y="4.5" width="7" height="6.5" rx="1" />
+      <rect x="3.5" y="13" width="17" height="6.5" rx="1" />
     </svg>
   );
 }
@@ -418,6 +430,52 @@ function ResumoVisualView({ c }: { c: ComponenteAula }) {
   );
 }
 
+// Exemplo visual (quadrinho didático) — v1 SEM imagem: o roteiro é o próprio
+// conteúdo, exibido como quadros numerados em sequência (cena, falas,
+// legenda opcional) e um fechamento com a regra de prova. Não existe
+// placeholder de imagem nem estado de carregamento. Semântica: <ol> mantém a
+// ordem de leitura, "Quadro N" é texto (o número nunca é o único indicador),
+// e cada fala é um par <dt>emissor / <dd>texto lido como texto normal.
+function QuadrinhoDidaticoView({ c }: { c: ComponenteAula }) {
+  const quadrinho = normalizarQuadrinho(c);
+  return (
+    <>
+      <RotuloBloco icone={<IconeQuadros />}>EXEMPLO VISUAL</RotuloBloco>
+      {quadrinho.titulo && <h3>{renderizarComDestaque(quadrinho.titulo)}</h3>}
+      {quadrinho.quadros.length > 0 && (
+        <ol className="teoria-quadrinho-quadros">
+          {quadrinho.quadros.map((quadro) => (
+            <li className="teoria-quadrinho-quadro" key={quadro.numero}>
+              <p className="teoria-quadrinho-numero">Quadro {quadro.numero}</p>
+              {quadro.cena && <p className="teoria-quadrinho-cena">{renderizarComDestaque(quadro.cena)}</p>}
+              {quadro.falas.length > 0 && (
+                <dl className="teoria-quadrinho-falas">
+                  {quadro.falas.map((fala, indice) => (
+                    <div key={indice}>
+                      <dt className="teoria-quadrinho-emissor">{fala.emissor}</dt>
+                      <dd className="teoria-quadrinho-fala-texto">{renderizarComDestaque(fala.texto)}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+              {quadro.legenda && <p className="teoria-quadrinho-legenda">{renderizarComDestaque(quadro.legenda)}</p>}
+            </li>
+          ))}
+        </ol>
+      )}
+      {quadrinho.fechamento && (
+        <div className="teoria-bizu teoria-quadrinho-fechamento">
+          <p className="teoria-subtitulo">
+            <IconeAlvo />
+            REGRA DE PROVA
+          </p>
+          <p className="teoria-texto">{renderizarComDestaque(quadrinho.fechamento)}</p>
+        </div>
+      )}
+    </>
+  );
+}
+
 // Fallback genérico: só usado para um `tipo` fora dos 5 documentados —
 // nunca presume o significado de um campo desconhecido, mostra a chave
 // crua mesmo.
@@ -448,6 +506,7 @@ const VIEWS_POR_TIPO: Record<string, (props: { c: ComponenteAula }) => ReactNode
   recall: RecallView,
   questao_resolvida: QuestaoResolvidaView,
   resumo_visual: ResumoVisualView,
+  quadrinho_didatico: QuadrinhoDidaticoView,
 };
 
 export default function ComponenteAulaView({ componente }: { componente: ComponenteAula }) {

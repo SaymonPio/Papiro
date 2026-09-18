@@ -34,6 +34,9 @@ function ehString(valor: unknown): valor is string {
 
 export type AlternativaImpressao = { letra: string; texto: string; correta: boolean };
 
+export type FalaImpressao = { emissor: string; texto: string };
+export type QuadroImpressao = { numero: number; cena: string | null; falas: FalaImpressao[]; legenda: string | null };
+
 export type ComponenteImpressao =
   | { tipo: "diagnostico"; titulo: string | null; introducao: string | null; pergunta: string | null; respostaEsperada: string | null }
   | { tipo: "conceito"; titulo: string | null; explicacao: string | null; exemplo: string | null; pontoDeProva: string | null; pegadinha: string | null }
@@ -50,6 +53,7 @@ export type ComponenteImpressao =
   | { tipo: "recall"; titulo: string | null; pergunta: string | null; dica: string | null; resposta: string | null }
   | { tipo: "questao_resolvida"; enunciado: string | null; alternativas: AlternativaImpressao[]; gabarito: string | null; raciocinio: string | null; pegadinha: string | null }
   | { tipo: "resumo_visual"; titulo: string | null; pontos: string[] }
+  | { tipo: "quadrinho_didatico"; titulo: string | null; quadros: QuadroImpressao[]; fechamento: string | null }
   | { tipo: "desconhecido"; tipoOriginal: string; rotulo: string; campos: { chave: string; valor: string }[] };
 
 export type FonteImpressao = {
@@ -86,6 +90,26 @@ function normalizarAlternativas(bruto: unknown, gabaritoBruto: unknown): Alterna
     alternativas.push({ letra: letraNormalizada, texto, correta: letraNormalizada === gabarito });
   }
   return alternativas;
+}
+
+// Mesma regra defensiva de normalizarQuadrinho (tiposComponenteAula.ts),
+// repetida aqui de propósito: este módulo é autocontido (ver nota no topo).
+function normalizarQuadros(bruto: unknown): QuadroImpressao[] {
+  const quadros: QuadroImpressao[] = [];
+  for (const item of Array.isArray(bruto) ? bruto : []) {
+    if (typeof item !== "object" || item === null || Array.isArray(item)) continue;
+    const q = item as Record<string, unknown>;
+    const falas: FalaImpressao[] = [];
+    for (const fala of Array.isArray(q.falas) ? q.falas : []) {
+      if (typeof fala !== "object" || fala === null) continue;
+      const { emissor, texto } = fala as Record<string, unknown>;
+      if (ehString(emissor) && ehString(texto)) falas.push({ emissor, texto });
+    }
+    const cena = valorOuNull(q.cena);
+    if (!cena && falas.length === 0) continue;
+    quadros.push({ numero: quadros.length + 1, cena, falas, legenda: valorOuNull(q.legenda) });
+  }
+  return quadros;
 }
 
 function normalizarComponenteDesconhecido(componente: ComponenteAula): ComponenteImpressao {
@@ -158,6 +182,13 @@ export function normalizarComponenteImpressao(componente: ComponenteAula): Compo
         tipo: "resumo_visual",
         titulo: valorOuNull(componente.titulo),
         pontos: Array.isArray(componente.pontos) ? componente.pontos.filter(ehString) : [],
+      };
+    case "quadrinho_didatico":
+      return {
+        tipo: "quadrinho_didatico",
+        titulo: valorOuNull(componente.titulo),
+        quadros: normalizarQuadros(componente.quadros),
+        fechamento: valorOuNull(componente.fechamento),
       };
     default:
       return normalizarComponenteDesconhecido(componente);

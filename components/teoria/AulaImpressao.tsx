@@ -204,6 +204,38 @@ function renderizarComponente(componente: ComponenteImpressao, indice: number): 
         </section>
       );
 
+    // Exemplo visual (quadrinho didático) no papel: sequência simples de
+    // blocos numerados (sem estética de HQ), cada quadro sem quebrar no meio.
+    case "quadrinho_didatico":
+      return (
+        <section key={indice} className="impressao-secao impressao-secao--quadrinho">
+          <p className="impressao-secao-kicker">Exemplo visual</p>
+          {componente.titulo && <h2 className="impressao-secao-titulo">{renderizarComDestaque(componente.titulo)}</h2>}
+          {componente.quadros.length > 0 && (
+            <ol className="impressao-quadrinho-quadros">
+              {componente.quadros.map((quadro) => (
+                <li key={quadro.numero} className="impressao-quadrinho-quadro">
+                  <p className="impressao-subsecao-rotulo">Quadro {quadro.numero}</p>
+                  {quadro.cena && <p className="impressao-texto">{renderizarComDestaque(quadro.cena)}</p>}
+                  {quadro.falas.length > 0 && (
+                    <dl className="impressao-quadrinho-falas">
+                      {quadro.falas.map((fala, i) => (
+                        <div key={i}>
+                          <dt className="impressao-quadrinho-emissor">{fala.emissor}</dt>
+                          <dd className="impressao-texto">{renderizarComDestaque(fala.texto)}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  )}
+                  {quadro.legenda && <p className="impressao-quadrinho-legenda">{renderizarComDestaque(quadro.legenda)}</p>}
+                </li>
+              ))}
+            </ol>
+          )}
+          <SubSecao rotulo="Regra de prova" valor={componente.fechamento} destaque="bizu" />
+        </section>
+      );
+
     // Nenhum tipo desaparece silenciosamente: componente com tipo não
     // reconhecido pelo contrato atual ainda aparece, rotulado com o nome
     // bruto do tipo e os campos que tinha, em vez de sumir do PDF.
