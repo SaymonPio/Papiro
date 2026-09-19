@@ -2,12 +2,22 @@
 //
 // Sem I/O, sem chamada de rede, sem dependência de Deno nem de Node —
 // arquivo .mjs simples para poder ser importado tanto pela Edge Function
-// (Deno, import relativo "./validador.mjs") quanto pelos testes deste
-// projeto (Node, node:test), sem duplicar a lógica em dois lugares.
+// (Deno, import relativo "../_shared/gerar-aula/validador.mjs") quanto
+// pelos testes deste projeto (Node, node:test), sem duplicar a lógica em
+// dois lugares.
+//
+// Movido de supabase/functions/gerar-aula/validador.mjs para
+// supabase/functions/_shared/gerar-aula/validador.mjs (Fase 3A, geração
+// assíncrona) — passa a ser usado tanto pela Edge Function gerar-aula
+// (iniciador) quanto por finalizar-geracao-aula (finalizador), que agora
+// é quem realmente faz o parse/validação da resposta da IA. Conteúdo
+// idêntico ao original, só o local mudou — ver
+// supabase/functions/gerar-aula/index.ts e
+// supabase/functions/finalizar-geracao-aula/index.ts.
 //
 // Contrato V1 dos 5 tipos de componente (Fase 2J-A, seção 3) — a IA NUNCA
 // deve mandar "id": os UUIDs são gerados no servidor DEPOIS desta
-// validação passar (ver index.ts). Qualquer componente com "id" já
+// validação passar (ver o finalizador). Qualquer componente com "id" já
 // presente na resposta da IA é tratado como resposta INVÁLIDA — nunca
 // removido e confiado silenciosamente.
 //
@@ -25,7 +35,7 @@ export const TIPOS_COMPONENTE_OBRIGATORIOS = [
   "resumo_visual",
 ];
 
-export const TIPOS_COMPONENTE_OPCIONAIS = ["jurisprudencia_essencial"];
+export const TIPOS_COMPONENTE_OPCIONAIS = ["jurisprudencia_essencial", "quadrinho_didatico"];
 
 // Mantido por compatibilidade com quem já importa TIPOS_COMPONENTE
 // esperando "os tipos reconhecidos" (uso histórico pré-jurisprudência).
@@ -119,6 +129,89 @@ function validarJurisprudenciaEssencial(c) {
   return null;
 }
 
+// quadrinho_didatico (Fase Q2) — componente OPCIONAL (nunca entra em
+// TIPOS_COMPONENTE_OBRIGATORIOS): roteiro estruturado de 3 a 6 quadros. A
+// IA manda SÓ o roteiro; imagem/alt/asset/url/html/fundamento/
+// objetivo_pedagogico são reservados (rejeitados por allowlist estrita) e
+// id é rejeitado pelo laço principal, como em todo tipo. A ordem dos
+// quadros é a do array. Validação ESTRUTURAL apenas — a qualidade jurídica
+// fica a cargo do prompt, do escopo e da revisão humana. Os limites de
+// tamanho abaixo não têm precedente em outros tipos (nenhum tem limite de
+// caracteres); existem para impedir "textão em balão" e roteiro inflado.
+export const QUADRINHO_LIMITES = {
+  quadrosMin: 3,
+  quadrosMax: 6,
+  falasPorQuadroMax: 3,
+  tituloMax: 120,
+  cenaMax: 300,
+  emissorMax: 40,
+  falaTextoMax: 140,
+  legendaMax: 160,
+  fechamentoMax: 400,
+};
+
+const CAMPOS_QUADRINHO = new Set(["tipo", "titulo", "quadros", "fechamento"]);
+const CAMPOS_QUADRO = new Set(["cena", "falas", "legenda"]);
+const CAMPOS_FALA = new Set(["emissor", "texto"]);
+
+function campoInesperado(objeto, permitidos) {
+  return Object.keys(objeto).find((chave) => !permitidos.has(chave)) ?? null;
+}
+
+function excede(valor, max) {
+  return valor.trim().length > max;
+}
+
+function validarQuadrinhoDidatico(c) {
+  const L = QUADRINHO_LIMITES;
+  const extra = campoInesperado(c, CAMPOS_QUADRINHO);
+  if (extra) return `quadrinho_didatico tem campo não permitido: ${JSON.stringify(extra)}`;
+
+  if (!ehStringNaoVazia(c.titulo)) return "quadrinho_didatico.titulo ausente ou vazio";
+  if (excede(c.titulo, L.tituloMax)) return `quadrinho_didatico.titulo excede ${L.tituloMax} caracteres`;
+
+  if (!Array.isArray(c.quadros)) return "quadrinho_didatico.quadros precisa ser um array";
+  if (c.quadros.length < L.quadrosMin || c.quadros.length > L.quadrosMax) {
+    return `quadrinho_didatico.quadros precisa ter de ${L.quadrosMin} a ${L.quadrosMax} itens (recebido: ${c.quadros.length})`;
+  }
+
+  for (let i = 0; i < c.quadros.length; i += 1) {
+    const q = c.quadros[i];
+    const rotulo = `quadrinho_didatico.quadros[${i}]`;
+    if (typeof q !== "object" || q === null || Array.isArray(q)) return `${rotulo} não é um objeto`;
+    const extraQuadro = campoInesperado(q, CAMPOS_QUADRO);
+    if (extraQuadro) return `${rotulo} tem campo não permitido: ${JSON.stringify(extraQuadro)}`;
+
+    if (!ehStringNaoVazia(q.cena)) return `${rotulo}.cena ausente ou vazia`;
+    if (excede(q.cena, L.cenaMax)) return `${rotulo}.cena excede ${L.cenaMax} caracteres`;
+
+    if (!Array.isArray(q.falas)) return `${rotulo}.falas precisa ser um array (pode ser vazio)`;
+    if (q.falas.length > L.falasPorQuadroMax) {
+      return `${rotulo}.falas tem mais de ${L.falasPorQuadroMax} falas (recebido: ${q.falas.length})`;
+    }
+    for (let j = 0; j < q.falas.length; j += 1) {
+      const f = q.falas[j];
+      const rotuloFala = `${rotulo}.falas[${j}]`;
+      if (typeof f !== "object" || f === null || Array.isArray(f)) return `${rotuloFala} não é um objeto`;
+      const extraFala = campoInesperado(f, CAMPOS_FALA);
+      if (extraFala) return `${rotuloFala} tem campo não permitido: ${JSON.stringify(extraFala)}`;
+      if (!ehStringNaoVazia(f.emissor)) return `${rotuloFala}.emissor ausente ou vazio`;
+      if (excede(f.emissor, L.emissorMax)) return `${rotuloFala}.emissor excede ${L.emissorMax} caracteres`;
+      if (!ehStringNaoVazia(f.texto)) return `${rotuloFala}.texto ausente ou vazio`;
+      if (excede(f.texto, L.falaTextoMax)) return `${rotuloFala}.texto excede ${L.falaTextoMax} caracteres`;
+    }
+
+    if (!ehStringOuNull(q.legenda)) return `${rotulo}.legenda precisa ser string não vazia ou null`;
+    if (typeof q.legenda === "string" && excede(q.legenda, L.legendaMax)) {
+      return `${rotulo}.legenda excede ${L.legendaMax} caracteres`;
+    }
+  }
+
+  if (!ehStringNaoVazia(c.fechamento)) return "quadrinho_didatico.fechamento ausente ou vazio";
+  if (excede(c.fechamento, L.fechamentoMax)) return `quadrinho_didatico.fechamento excede ${L.fechamentoMax} caracteres`;
+  return null;
+}
+
 const VALIDADORES_POR_TIPO = {
   diagnostico: validarDiagnostico,
   conceito: validarConceito,
@@ -126,6 +219,7 @@ const VALIDADORES_POR_TIPO = {
   questao_resolvida: validarQuestaoResolvida,
   resumo_visual: validarResumoVisual,
   jurisprudencia_essencial: validarJurisprudenciaEssencial,
+  quadrinho_didatico: validarQuadrinhoDidatico,
 };
 
 /**

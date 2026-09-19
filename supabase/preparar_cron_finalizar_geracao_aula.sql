@@ -1,0 +1,119 @@
+-- Fase 3A — PREPARAÇÃO do Cron que chama finalizar-geracao-aula
+-- periodicamente. Fase 3B (próxima), NÃO ESTA.
+--
+-- ============================================================================
+-- NÃO EXECUTAR AGORA. Nenhuma linha deste arquivo deve rodar em produção
+-- nesta fase. Isto é um TEMPLATE/RASCUNHO documentado para quando a
+-- equipe decidir avançar para a Fase 3B.
+-- ============================================================================
+--
+-- Pré-condição confirmada por auditoria read-only (Fase 3, diagnóstico
+-- arquitetural): nem pg_cron nem pg_net estão instalados neste projeto
+-- hoje (select extname from pg_extension só retorna pg_stat_statements,
+-- pgcrypto, plpgsql, supabase_vault, uuid-ossp). Habilitá-los é uma
+-- mudança de infraestrutura real — por isso fica para uma fase separada,
+-- com aprovação explícita, nunca dentro desta rodada de "só preparar
+-- código".
+--
+-- O Cron é o ÚNICO chamador automático do finalizador. A UI
+-- (app/admin/aulas/page.tsx) só OBSERVA status via polling — nunca chama
+-- finalizar-geracao-aula nem a OpenAI diretamente.
+--
+-- Nota de precisão (Fase 4.1): o pg_cron, por padrão, mantém no máximo
+-- UMA instância SQL em execução por job — não dispara duas instâncias SQL
+-- do mesmo job em paralelo consigo mesmo. A concorrência real vem de
+-- `pg_net` ser ASSÍNCRONO: o job SQL só ENFILEIRA a chamada
+-- `net.http_post` e termina rapidamente, sem esperar a Edge Function
+-- responder — então, no tick seguinte, uma NOVA chamada HTTP pode ser
+-- enfileirada enquanto a invocação anterior de finalizar-geracao-aula
+-- ainda está rodando do lado do runtime das Edge Functions. Por isso a
+-- reivindicação por lease (ver _shared/gerar-aula/idempotencia.mjs)
+-- continua necessária mesmo com essa garantia do pg_cron — a arquitetura
+-- do Cron em si não muda por causa disso.
+--
+-- ============================================================================
+-- PASSO 1 — habilitar as extensões (requer privilégio de superusuário/
+-- owner do projeto; normalmente feito pelo Dashboard > Database >
+-- Extensions, não precisa necessariamente rodar via SQL Editor).
+-- ============================================================================
+
+-- create extension if not exists pg_cron with schema pg_catalog;
+-- create extension if not exists pg_net with schema extensions;
+
+-- ============================================================================
+-- PASSO 2 — segredo interno do finalizador (FINALIZAR_GERACAO_SECRET),
+-- via Supabase Vault. NUNCA em texto plano num arquivo versionado, NUNCA
+-- o valor real aqui — só o COMANDO template, com placeholder explícito.
+-- O valor real deve ser gerado (ex.: openssl rand -hex 32) e colado
+-- diretamente no SQL Editor no momento da execução real, nunca commitado.
+-- ============================================================================
+
+-- select vault.create_secret(
+--   '<COLAR_AQUI_UM_SEGREDO_ALEATORIO_LONGO_NUNCA_COMMITADO>',
+--   'finalizar_geracao_secret',
+--   'Segredo interno usado pelo Cron para autenticar chamadas a finalizar-geracao-aula. Rotacionar periodicamente.'
+-- );
+--
+-- Esse MESMO valor também precisa ser configurado como secret da Edge
+-- Function (supabase secrets set FINALIZAR_GERACAO_SECRET=<mesmo valor>
+-- --project-ref <ref>) — os dois lados (Vault, lido pelo cron job; e o
+-- secret da function, lido por Deno.env.get dentro de
+-- finalizar-geracao-aula/index.ts) precisam bater.
+
+-- ============================================================================
+-- PASSO 3 — o job periódico em si. Intervalo sugerido: a cada 1 MINUTO —
+-- rápido o bastante para o admin ver o resultado poucos ciclos depois de
+-- a IA terminar (a chamada da OpenAI em si pode levar minutos; 1 min de
+-- granularidade não adiciona atraso perceptível a isso), sem gerar
+-- volume de chamadas desnecessário (a query que lista pendentes é
+-- barata: índice em status + openai_response_id, no máximo
+-- MAX_GERACOES_POR_EXECUCAO=5 linhas por execução).
+--
+-- net.http_post chama a Edge Function via HTTPS, com o segredo interno
+-- no header dedicado (nunca Authorization de usuário, nunca
+-- service_role). O corpo pode ser vazio — o finalizador não precisa de
+-- nenhum parâmetro, ele mesmo decide o que processar consultando o
+-- banco.
+--
+-- timeout_milliseconds EXPLÍCITO (Fase 4 — auditoria final: o default do
+-- pg_net, se omitido, é 5000ms — curto demais quando o finalizador
+-- processa até MAX_GERACOES_POR_EXECUCAO=5 gerações em sequência, cada
+-- uma com 1-2 chamadas HTTP à OpenAI). 30000ms dá folga real sem deixar
+-- o timeout indefinido, e continua bem menor que o intervalo de 1 minuto
+-- entre execuções — nunca faz uma chamada pendurar até a próxima.
+-- ============================================================================
+
+-- select cron.schedule(
+--   'finalizar-geracao-aula-a-cada-minuto',
+--   '* * * * *',
+--   $$
+--   select net.http_post(
+--     url := 'https://<PROJECT_REF>.supabase.co/functions/v1/finalizar-geracao-aula',
+--     headers := jsonb_build_object(
+--       'Content-Type', 'application/json',
+--       'x-finalizador-secret', (select decrypted_secret from vault.decrypted_secrets where name = 'finalizar_geracao_secret')
+--     ),
+--     body := '{}'::jsonb,
+--     timeout_milliseconds := 30000
+--   );
+--   $$
+-- );
+
+-- ============================================================================
+-- ROLLBACK / UNSCHEDULE — desfaz o job e os secrets, nesta ordem.
+-- ============================================================================
+
+-- select cron.unschedule('finalizar-geracao-aula-a-cada-minuto');
+-- select vault.delete_secret((select id from vault.secrets where name = 'finalizar_geracao_secret'));
+-- -- Extensões (pg_cron/pg_net) normalmente ficam instaladas mesmo depois
+-- -- de remover o job — só desinstalar se nenhum outro job/uso depender
+-- -- delas:
+-- -- drop extension if exists pg_cron;
+-- -- drop extension if exists pg_net;
+
+-- ============================================================================
+-- PÓS-CHECK sugerido, depois do apply real (Fase 3B):
+-- ============================================================================
+
+-- select * from cron.job where jobname = 'finalizar-geracao-aula-a-cada-minuto';
+-- select * from cron.job_run_details where jobid = (select jobid from cron.job where jobname = 'finalizar-geracao-aula-a-cada-minuto') order by start_time desc limit 10;

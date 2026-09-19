@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { normalizarArtigoBase, auditarEscopoArtigos } from "../supabase/functions/gerar-aula/escopo.mjs";
+import { normalizarArtigoBase, auditarEscopoArtigos } from "../supabase/functions/_shared/gerar-aula/escopo.mjs";
 
 // Nenhum destes testes chama a OpenAI ou o banco — validam só a lógica
 // pura de normalização/auditoria de escopo (Fase 2J-B).

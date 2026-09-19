@@ -3,7 +3,7 @@ import test from "node:test";
 import {
   validarJurisprudenciasValidadasEntrada,
   montarBlocoJurisprudencia,
-} from "../supabase/functions/gerar-aula/jurisprudencia.mjs";
+} from "../supabase/functions/_shared/gerar-aula/jurisprudencia.mjs";
 
 // Nenhum destes testes chama a OpenAI nem o banco — validam só a lógica
 // pura de entrada/prompt do módulo. O fixture HC 111.840 abaixo é usado

@@ -5,8 +5,13 @@
 // importado tanto pela Edge Function (Deno) quanto pelos testes deste
 // projeto (Node, node:test), sem duplicar a lógica em dois lugares.
 //
+// Movido de supabase/functions/gerar-aula/escopo.mjs para
+// supabase/functions/_shared/gerar-aula/escopo.mjs (Fase 3A, geração
+// assíncrona) — conteúdo idêntico ao original, só o local mudou, para
+// poder ser usado tanto por gerar-aula quanto por finalizar-geracao-aula.
+//
 // Esta auditoria NUNCA bloqueia a geração — é só um sinal para revisão
-// humana (ver index.ts: mesmo com alerta, a aula_versao é criada
+// humana (ver o finalizador: mesmo com alerta, a aula_versao é criada
 // normalmente, status continua 'rascunho', aula_geracoes nunca é marcada
 // 'erro' por causa disso).
 //

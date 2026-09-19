@@ -4,6 +4,11 @@ import { readFile } from "node:fs/promises";
 
 const migration = await readFile(new URL("../supabase/unidades_pedagogicas.sql", import.meta.url), "utf8");
 const generator = await readFile(new URL("../supabase/functions/gerar-aula/index.ts", import.meta.url), "utf8");
+// Fase 3A: PROMPT_VERSION, montarPromptContexto e a configuração de
+// modelo/fallback saíram de gerar-aula/index.ts para o módulo
+// compartilhado (agora usado também pelo finalizador) — mesma mudança já
+// refletida nos testes gerar-aula-{escopo,jurisprudencia,validador}.test.mjs.
+const openaiResponses = await readFile(new URL("../supabase/functions/_shared/gerar-aula/openaiResponses.mjs", import.meta.url), "utf8");
 const reader = await readFile(new URL("../supabase/unidades_pedagogicas_leitura_rpc.sql", import.meta.url), "utf8");
 const publisher = await readFile(new URL("../supabase/unidades_pedagogicas_publicacao_rpc.sql", import.meta.url), "utf8");
 const curadoriaMariaPenha = await readFile(new URL("../supabase/curadoria_unidades_lei_maria_penha.sql", import.meta.url), "utf8");
@@ -48,17 +53,19 @@ test("curadoria da Lei Maria da Penha usa somente artigos existentes e destaca a
   assert.match(curadoriaMariaPenha, /Leis 15\.380, 15\.438, 15\.383 e 15\.412/);
 });
 
-test("gerador prioriza a redação legal vigente e versiona a mudança de prompt", () => {
-  assert.match(generator, /const PROMPT_VERSION = "2j-c-v2"/);
-  assert.match(generator, /REGRA DE VIGÊNCIA — OBRIGATÓRIA PARA FONTES LEGAIS/);
-  assert.match(generator, /ensine SOMENTE a redação vigente mais recente/);
+test("gerador prioriza a redação legal vigente e versiona a mudança de prompt (Fase 3A: PROMPT_VERSION e o texto do prompt agora vivem em _shared/gerar-aula/openaiResponses.mjs)", () => {
+  assert.match(openaiResponses, /export const PROMPT_VERSION = "3b-quadrinho-v1"/);
+  assert.match(openaiResponses, /REGRA DE VIGÊNCIA — OBRIGATÓRIA PARA FONTES LEGAIS/);
+  assert.match(openaiResponses, /ensine SOMENTE a redação vigente mais recente/);
+  assert.match(generator, /PROMPT_VERSION\b/, "o gerador deve continuar usando PROMPT_VERSION (importado), não uma cópia local");
 });
 
-test("gerador permite configurar o modelo e preserva o Luna como padrão", () => {
-  assert.match(generator, /const MODELO_PADRAO = "gpt-5\.6-luna"/);
-  assert.match(generator, /Deno\.env\.get\("OPENAI_MODEL"\)\?\.trim\(\) \|\| MODELO_PADRAO/);
-  assert.match(generator, /model: MODELO/);
+test("gerador permite configurar o modelo e preserva o Luna como padrão (Fase 3A: resolverConfiguracaoModelo em _shared/gerar-aula/openaiResponses.mjs)", () => {
+  assert.match(openaiResponses, /const MODELO_PADRAO = "gpt-5\.6-luna"/);
+  assert.match(openaiResponses, /getEnv\("OPENAI_MODEL"\)\?\.trim\(\) \|\| MODELO_PADRAO/);
+  assert.match(openaiResponses, /model: modelo/);
   assert.doesNotMatch(generator, /ainda NÃO aplicada/);
+  assert.doesNotMatch(openaiResponses, /ainda NÃO aplicada/);
 });
 
 test("painel administrativo mostra somente gerações da unidade selecionada", () => {

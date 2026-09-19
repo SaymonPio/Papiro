@@ -1,22 +1,28 @@
-// Jurisprudência essencial — entrada e montagem de prompt (Fase 1 desta
-// evolução).
+// Jurisprudência essencial — entrada e montagem de prompt.
 //
 // Sem I/O, sem chamada de rede, sem dependência de Deno nem de Node —
 // mesmo princípio de escopo.mjs/validador.mjs: arquivo .mjs puro para
 // poder ser importado tanto pela Edge Function (Deno) quanto pelos testes
 // deste projeto (Node, node:test), sem duplicar a lógica em dois lugares.
 //
+// Movido de supabase/functions/gerar-aula/jurisprudencia.mjs para
+// supabase/functions/_shared/gerar-aula/jurisprudencia.mjs (Fase 3A,
+// geração assíncrona) — conteúdo idêntico ao original, só o local mudou.
+// Usado por AMBAS as Edge Functions: gerar-aula (monta o bloco no prompt
+// inicial) e finalizar-geracao-aula (monta o bloco de novo se precisar
+// remontar o prompt de correção).
+//
 // Genérico e multi-curso de propósito: nada aqui sabe o nome de nenhuma
 // unidade/matéria/curso/tribunal/precedente específico. Quem decide QUAIS
 // jurisprudências são "previamente validadas" para uma geração é sempre o
-// chamador (hoje, o admin no momento de gerar a aula — ver index.ts), nunca
-// este módulo nem o modelo de IA.
+// chamador (hoje, o admin no momento de gerar a aula — ver
+// gerar-aula/index.ts), nunca este módulo nem o modelo de IA.
 //
-// Regra central (proteção contra alucinação, Fase 1 seção 7 do mandato):
-// jurisprudência ausente/vazia na entrada -> o prompt instrui
-// explicitamente a NÃO criar nenhum componente "jurisprudencia_essencial"
-// e a NÃO inventar nenhum precedente. O modelo nunca é instruído a
-// "buscar" jurisprudência por conta própria.
+// Regra central (proteção contra alucinação): jurisprudência ausente/vazia
+// na entrada -> o prompt instrui explicitamente a NÃO criar nenhum
+// componente "jurisprudencia_essencial" e a NÃO inventar nenhum
+// precedente. O modelo nunca é instruído a "buscar" jurisprudência por
+// conta própria.
 
 const CAMPOS_OBRIGATORIOS_ENTRADA = [
   "tribunal",
@@ -78,10 +84,9 @@ export function validarJurisprudenciasValidadasEntrada(entrada) {
 
 /**
  * Monta o bloco de prompt sobre jurisprudência — mesma filosofia do bloco
- * de fontes já existente em index.ts (montarPromptContexto/linhaFontes):
- * quando há itens, lista exatamente o que foi validado e instrui fidelidade
- * estrita; quando não há, instrui explicitamente a NÃO criar o componente
- * e a NÃO inventar nada.
+ * de fontes já existente (linhaFontes): quando há itens, lista exatamente
+ * o que foi validado e instrui fidelidade estrita; quando não há,
+ * instrui explicitamente a NÃO criar o componente e a NÃO inventar nada.
  *
  * @param {Array<{tribunal:string, identificacao:string, dispositivo_relacionado:string, entendimento_validado:string, fonte_validada:string}>} itens
  * @returns {string}
