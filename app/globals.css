@@ -3179,15 +3179,39 @@ footer > small {
   list-style: none;
 }
 
+/* Grade por quantidade de quadros (data-quadros, definido no renderer). O
+   padrão acima (auto-fit) serve 3 quadros e qualquer caso inesperado; 4 quadros
+   ficam SEMPRE em 2x2 a partir de 640px (nunca 3+1 com buraco); 5 e 6 usam 2
+   colunas (6 vira 3x2 em telas largas) e, com 5, o último quadro ocupa a linha
+   inteira para não sobrar vazio. Abaixo de 640px: 1 coluna. */
+@media (min-width: 640px) {
+  .teoria-quadrinho-quadros[data-quadros="4"],
+  .teoria-quadrinho-quadros[data-quadros="5"],
+  .teoria-quadrinho-quadros[data-quadros="6"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .teoria-quadrinho-quadros[data-quadros="5"] > .teoria-quadrinho-quadro:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1100px) {
+  .teoria-quadrinho-quadros[data-quadros="6"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 .teoria-quadrinho-quadro {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   min-width: 0;
-  padding: 14px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  min-height: 190px;
+  padding: 16px 18px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.025);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .teoria-quadrinho-numero {
@@ -3201,11 +3225,12 @@ footer > small {
   text-transform: uppercase;
 }
 
+/* Cena = contexto: menor e mais apagada que as falas, que são o foco. */
 .teoria-quadrinho-cena {
   margin: 0;
-  color: #c3ccc6;
-  font-size: 14px;
-  line-height: 1.55;
+  color: #98a69f;
+  font-size: 13px;
+  line-height: 1.5;
   text-align: left;
   overflow-wrap: anywhere;
 }
@@ -3218,19 +3243,32 @@ footer > small {
 
 .teoria-quadrinho-falas {
   display: grid;
-  gap: 8px;
+  flex: 1 1 auto;
+  align-content: start;
+  gap: 14px;
   margin: 0;
 }
 
+/* Fala = cartão de balão sóbrio (sem imagem): cantos arredondados, um canto
+   "de rabicho" e falas alternadas em lados opostos para dar ritmo de diálogo. */
 .teoria-quadrinho-falas > div {
-  padding: 8px 12px;
-  border-left: 3px solid var(--gold);
-  border-radius: 6px;
-  background: rgba(216, 173, 76, 0.06);
+  position: relative;
+  width: min(100%, 92%);
+  padding: 10px 14px 11px;
+  border: 1px solid rgba(216, 173, 76, 0.38);
+  border-radius: 14px 14px 14px 4px;
+  background: rgba(216, 173, 76, 0.09);
+}
+
+.teoria-quadrinho-falas > div:nth-child(even) {
+  justify-self: end;
+  border-radius: 14px 14px 4px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .teoria-quadrinho-emissor {
-  margin: 0;
+  margin: 0 0 3px;
   color: var(--gold-bright);
   font-size: 11px;
   font-weight: 800;
@@ -3239,15 +3277,18 @@ footer > small {
 }
 
 .teoria-quadrinho-fala-texto {
-  margin: 2px 0 0;
+  margin: 0;
   color: var(--cream);
-  line-height: 1.5;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.45;
   text-align: left;
   overflow-wrap: anywhere;
 }
 
 .teoria-quadrinho-legenda {
   margin: auto 0 0;
+  padding-top: 4px;
   color: #8fa097;
   font-size: 12px;
   font-style: italic;
@@ -3255,8 +3296,11 @@ footer > small {
   text-align: left;
 }
 
+/* Regra de prova: seção final em largura total, fora da grade dos quadros. */
 .teoria-quadrinho-fechamento {
-  margin-top: 16px;
+  width: 100%;
+  margin-top: 22px;
+  box-sizing: border-box;
 }
 
 /* ==========================================================================
@@ -3669,15 +3713,22 @@ footer > small {
   hyphens: auto;
 }
 
-/* EXEMPLO VISUAL (quadrinho didático): sequência simples de blocos
-   numerados, uma coluna, cada quadro sem quebrar entre páginas — prioridade
-   é legibilidade, não estética de HQ. */
+/* EXEMPLO VISUAL (quadrinho didático): quadros numerados em ordem, cada um
+   sem quebrar entre páginas — prioridade é legibilidade. Até 3 quadros: uma
+   coluna; 4 ou mais: 2 colunas (4 = 2x2). A regra de prova (SubSecao) fica
+   fora da grade, em largura total. */
 .impressao-quadrinho-quadros {
   display: grid;
   gap: 10px;
-  margin: 0 0 12px;
+  margin: 0 0 14px;
   padding: 0;
   list-style: none;
+}
+
+.impressao-quadrinho-quadros[data-quadros="4"],
+.impressao-quadrinho-quadros[data-quadros="5"],
+.impressao-quadrinho-quadros[data-quadros="6"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .impressao-quadrinho-quadro {
@@ -3689,16 +3740,29 @@ footer > small {
   page-break-inside: avoid;
 }
 
+/* Cena = contexto (menor, mais apagada); falas = foco. */
+.impressao-quadrinho-quadro > .impressao-texto {
+  color: #5c665e;
+  font-size: 12px;
+}
+
 .impressao-quadrinho-falas {
-  margin: 6px 0 0;
+  margin: 8px 0 0;
 }
 
 .impressao-quadrinho-falas > div {
-  margin: 0 0 4px;
+  margin: 0 0 6px;
+  padding: 6px 10px;
+  border: 1px solid rgba(179, 134, 42, 0.45);
+  border-radius: 10px 10px 10px 3px;
+  background: rgba(179, 134, 42, 0.08);
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 .impressao-quadrinho-falas dd {
   margin: 0;
+  font-weight: 600;
 }
 
 .impressao-quadrinho-emissor {

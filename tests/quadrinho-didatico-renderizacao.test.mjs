@@ -209,3 +209,77 @@ test("Q3-21: nenhum código de imagem/asset foi introduzido no renderer, no PDF 
   }
   assert.doesNotMatch(viewQuadrinho, /dangerouslySetInnerHTML/);
 });
+
+// ---------------------------------------------------------------------------
+// Refinamento visual (layout 2x2, balões de fala, hierarquia, regra de prova)
+// ---------------------------------------------------------------------------
+const cssSemComentarios = css.replace(/\r\n/g, "\n").replace(/\/\*[\s\S]*?\*\//g, "");
+
+test("Q7-1: renderer continua aceitando quadrinho_didatico e expõe a contagem de quadros ao CSS", () => {
+  assert.match(view, /quadrinho_didatico:\s*QuadrinhoDidaticoView/);
+  assert.match(viewQuadrinho, /<ol className="teoria-quadrinho-quadros" data-quadros=\{quadrinho\.quadros\.length\}>/);
+  assert.match(impressaoQuadrinho, /<ol className="impressao-quadrinho-quadros" data-quadros=\{componente\.quadros\.length\}>/);
+});
+
+test("Q7-2: 4 quadros têm regra própria 2x2 no desktop e 1 coluna abaixo de 640px", () => {
+  const media = cssSemComentarios.match(/@media \(min-width: 640px\)\s*\{[\s\S]*?\n\}\n/)?.[0] ?? "";
+  assert.match(media, /\.teoria-quadrinho-quadros\[data-quadros="4"\]/);
+  assert.match(media, /grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/);
+  // A regra 2x2 só existe dentro do @media: no mobile vale a base (auto-fit → 1 coluna).
+  const fora = cssSemComentarios.replace(media, "");
+  assert.doesNotMatch(fora, /\.teoria-quadrinho-quadros\[data-quadros="4"\]/);
+  assert.match(fora, /\.teoria-quadrinho-quadros\s*\{[^}]*repeat\(auto-fit,\s*minmax\(min\(100%,\s*250px\),\s*1fr\)\)/);
+});
+
+test("Q7-2b: 5 quadros fecham a última linha e 6 viram 3x2 em telas largas", () => {
+  assert.match(cssSemComentarios, /\[data-quadros="5"\]\s*>\s*\.teoria-quadrinho-quadro:last-child\s*\{[^}]*grid-column:\s*1\s*\/\s*-1/);
+  assert.match(cssSemComentarios, /@media \(min-width: 1100px\)\s*\{\s*\.teoria-quadrinho-quadros\[data-quadros="6"\]\s*\{[^}]*repeat\(3,/);
+});
+
+test("Q7-3: a regra de prova fica FORA da grade dos quadros e em largura total", () => {
+  const iOl = viewQuadrinho.indexOf("</ol>");
+  const iFech = viewQuadrinho.indexOf("teoria-quadrinho-fechamento");
+  assert.ok(iOl > -1 && iFech > iOl, "fechamento deve vir depois do fechamento do <ol>");
+  assert.match(viewQuadrinho, /REGRA DE PROVA/);
+  assert.match(cssSemComentarios, /\.teoria-quadrinho-fechamento\s*\{[^}]*width:\s*100%/);
+  const iOlPdf = impressaoQuadrinho.indexOf("</ol>");
+  assert.ok(impressaoQuadrinho.indexOf('rotulo="Regra de prova"') > iOlPdf, "PDF: regra de prova fora da grade");
+});
+
+test("Q7-4: falas seguem em ordem (map direto) e a fala tem mais peso que a cena", () => {
+  assert.match(viewQuadrinho, /quadro\.falas\.map\(\(fala, indice\)/);
+  const tamanho = (seletor) => Number(cssSemComentarios.match(new RegExp(`${seletor.replace(/\./g, "\\.")}\\s*\\{[^}]*font-size:\\s*(\\d+)px`))?.[1]);
+  assert.ok(tamanho(".teoria-quadrinho-fala-texto") > tamanho(".teoria-quadrinho-cena"), "fala maior que cena");
+  assert.ok(tamanho(".teoria-quadrinho-cena") >= 12, "cena continua legível");
+  // Fala como balão: borda arredondada assimétrica, alternando o lado.
+  assert.match(cssSemComentarios, /\.teoria-quadrinho-falas > div\s*\{[^}]*border-radius:\s*14px 14px 14px 4px/);
+  assert.match(cssSemComentarios, /\.teoria-quadrinho-falas > div:nth-child\(even\)/);
+});
+
+test("Q7-5: falas=[] e legenda opcional continuam condicionais (sem bloco artificial)", () => {
+  assert.match(viewQuadrinho, /quadro\.falas\.length > 0 && \(/);
+  assert.match(viewQuadrinho, /quadro\.legenda && <p className="teoria-quadrinho-legenda">/);
+  assert.doesNotMatch(viewQuadrinho, /sem falas/i);
+  assert.match(impressaoQuadrinho, /quadro\.falas\.length > 0 && \(/);
+  assert.match(impressaoQuadrinho, /quadro\.legenda && <p className="impressao-quadrinho-legenda">/);
+});
+
+test("Q7-6: quadros sem alturas rígidas (só min-height) e o quadro se alonga com as falas", () => {
+  const bloco = cssSemComentarios.match(/\.teoria-quadrinho-quadro\s*\{[^}]*\}/)?.[0] ?? "";
+  assert.match(bloco, /min-height:/);
+  assert.doesNotMatch(bloco, /(^|[^-])height:/);
+  assert.match(cssSemComentarios, /\.teoria-quadrinho-falas\s*\{[^}]*flex:\s*1 1 auto/);
+});
+
+test("Q7-7: PDF mantém hierarquia (2 colunas só com 4+ quadros, quadro e fala sem quebrar entre páginas)", () => {
+  assert.match(cssSemComentarios, /\.impressao-quadrinho-quadros\[data-quadros="4"\][\s\S]*?repeat\(2,/);
+  assert.doesNotMatch(cssSemComentarios, /\.impressao-quadrinho-quadros\[data-quadros="3"\]/);
+  assert.match(cssSemComentarios, /\.impressao-quadrinho-falas > div\s*\{[^}]*break-inside:\s*avoid/);
+  const ordem = ["Quadro {quadro.numero}", "quadro.cena", "quadro.falas", "quadro.legenda", 'rotulo="Regra de prova"'].map((t) => impressaoQuadrinho.indexOf(t));
+  assert.ok(ordem.every((i) => i > -1) && [...ordem].sort((a, b) => a - b).join() === ordem.join(), "ordem: quadro, cena, falas, legenda, regra de prova");
+});
+
+test("Q7-8: o refinamento não introduziu cor nova nem imagem no CSS do quadrinho", () => {
+  const regras = cssSemComentarios.match(/[^{}]*quadrinho[^{}]*\{[^}]*\}/g)?.join("\n") ?? "";
+  assert.doesNotMatch(regras, /\burl\(|<img|background-image|gradient/i);
+});

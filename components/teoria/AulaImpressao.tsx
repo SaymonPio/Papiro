@@ -212,7 +212,7 @@ function renderizarComponente(componente: ComponenteImpressao, indice: number): 
           <p className="impressao-secao-kicker">Exemplo visual</p>
           {componente.titulo && <h2 className="impressao-secao-titulo">{renderizarComDestaque(componente.titulo)}</h2>}
           {componente.quadros.length > 0 && (
-            <ol className="impressao-quadrinho-quadros">
+            <ol className="impressao-quadrinho-quadros" data-quadros={componente.quadros.length}>
               {componente.quadros.map((quadro) => (
                 <li key={quadro.numero} className="impressao-quadrinho-quadro">
                   <p className="impressao-subsecao-rotulo">Quadro {quadro.numero}</p>

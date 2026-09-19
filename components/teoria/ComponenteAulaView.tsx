@@ -443,7 +443,7 @@ function QuadrinhoDidaticoView({ c }: { c: ComponenteAula }) {
       <RotuloBloco icone={<IconeQuadros />}>EXEMPLO VISUAL</RotuloBloco>
       {quadrinho.titulo && <h3>{renderizarComDestaque(quadrinho.titulo)}</h3>}
       {quadrinho.quadros.length > 0 && (
-        <ol className="teoria-quadrinho-quadros">
+        <ol className="teoria-quadrinho-quadros" data-quadros={quadrinho.quadros.length}>
           {quadrinho.quadros.map((quadro) => (
             <li className="teoria-quadrinho-quadro" key={quadro.numero}>
               <p className="teoria-quadrinho-numero">Quadro {quadro.numero}</p>
