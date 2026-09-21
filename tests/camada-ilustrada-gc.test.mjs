@@ -290,6 +290,7 @@ test("Q11.2-18: segurança e escopo — sem segredos; Edge de GC não existe; co
       assert.doesNotMatch(sql, padrao, `${nome}: ${padrao}`);
     }
   }
-  for (const dir of ["limpar-uploads-orfaos-quadrinho", "gerar-arte-quadro", "assinar-quadrinho-assets"]) assert.ok(!existsSync(path.join(raiz, "supabase/functions", dir)), `Edge ${dir} não deve existir nesta fase`);
+  // assinar-quadrinho-assets passou a existir na Q12.12 (coberta por tests/quadrinho-arte-q1212.test.mjs)
+  for (const dir of ["limpar-uploads-orfaos-quadrinho"]) assert.ok(!existsSync(path.join(raiz, "supabase/functions", dir)), `Edge ${dir} não deve existir nesta fase`);
   assert.match(apply, /a remoção física é da futura Edge, por Storage API, path a path/);
 });
