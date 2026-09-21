@@ -1,12 +1,16 @@
 import Image from "next/image";
+import { FeatureCarousel } from "@/components/home/FeatureCarousel";
+import { HeroParticlesCanvas } from "@/components/home/HeroParticlesCanvas";
+import { SlideTextLink } from "@/components/home/SlideTextLink";
+import { Target, CalendarDays, ChartNoAxesColumnIncreasing } from "lucide-react";
 import { HomeHeader } from "@/components/home/HomeHeader";
 import styles from "./home.module.css";
 
 const features = [
   {
     number: "01",
-    title: "Edital decodificado",
-    text: "Envie o PDF. O Papiro organiza disciplinas, pesos, requisitos e etapas em um mapa simples de executar.",
+    title: "Edital organizado",
+    text: "O Papiro organiza o conteúdo do concurso, prioridades e etapas em uma jornada clara de execução.",
     tag: "ANÁLISE COM IA",
   },
   {
@@ -31,9 +35,11 @@ const features = [
 
 const steps = [
   ["01", "Escolha seu alvo", "Guarda Municipal ou Polícia Militar, cargo, banca e data da prova."],
-  ["02", "Envie o edital", "A plataforma transforma o documento em um plano claro de preparação."],
+  ["02", "Receba sua rota de estudos", "O Papiro organiza sua preparação em um plano claro e executável."],
   ["03", "Execute a missão", "Estude, resolva questões, revise e acompanhe sua evolução todos os dias."],
 ];
+
+const stepIcons = [Target, CalendarDays, ChartNoAxesColumnIncreasing];
 
 const faq = [
   [
@@ -74,20 +80,12 @@ export default function Home() {
             inteligente para quem tem como alvo a <strong>Guarda Municipal</strong> e a{" "}
             <strong>Polícia Militar</strong>.
           </p>
+          <div className={styles.heroAction}><SlideTextLink href="/cadastro">COMECE SUA PREPARAÇÃO AGORA</SlideTextLink></div>
         </div>
 
         <div className={styles.heroArtwork} aria-hidden="true">
-          <div className={styles.reliefFrame}>
-            <Image
-              className={styles.reliefImage}
-              src="/home-hero-relief.png"
-              alt=""
-              fill
-              priority
-              unoptimized
-              sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1020px) calc(100vw - 96px), 520px"
-            />
-          </div>
+          <Image className={styles.heroBackground} src="/home-hero-particles.webp" alt="" fill priority unoptimized sizes="100vw" />
+          <HeroParticlesCanvas />
         </div>
 
         <div className={styles.careerStrip} aria-label="Principais recursos">
@@ -115,14 +113,17 @@ export default function Home() {
           </p>
         </div>
         <div className="steps-grid">
-          {steps.map(([number, title, text]) => (
+          {steps.map(([number, title, text], index) => {
+            const Icon = stepIcons[index];
+            return (
             <article className="step-card" key={number}>
               <span>{number}</span>
+              <Icon className={styles.stepIcon} size={34} strokeWidth={1.5} aria-hidden="true" />
               <h3>{title}</h3>
               <p>{text}</p>
               <i aria-hidden="true">→</i>
             </article>
-          ))}
+          ); })}
         </div>
       </section>
 
@@ -137,33 +138,22 @@ export default function Home() {
             da evolução física até o dia da prova.
           </p>
         </div>
-        <div className="features-grid">
-          {features.map((feature) => (
-            <article className="feature-card" key={feature.number}>
-              <div className="feature-top">
-                <span>{feature.number}</span>
-                <small>{feature.tag}</small>
-              </div>
-              <div className={`feature-icon feature-icon-${feature.number}`} aria-hidden="true">
-                <i />
-                <b />
-              </div>
-              <h3>{feature.title}</h3>
-              <p>{feature.text}</p>
-            </article>
-          ))}
-        </div>
+        <FeatureCarousel features={features} />
       </section>
 
       <section className="taf-section" id="taf" data-header-theme="dark">
         <div className="taf-visual">
-          <div className="taf-number">05:18</div>
+          <Image className={styles.tafBackground} src="/home-taf-runner.webp" alt="" fill unoptimized sizes="(max-width: 760px) 100vw, 50vw" />
+          <div className="taf-number" aria-hidden="true">05:18</div>
           <div className="track-lines" aria-hidden="true"><i /><i /><i /></div>
           <div className="taf-chart">
             <small>EXEMPLO ILUSTRATIVO • CORRIDA • 12 MIN</small>
             <strong>2.340 m</strong>
             <span>Meta do edital: 2.400 m</span>
-            <div className="chart-line" />
+            <svg className={styles.tafGraph} viewBox="0 0 360 70" aria-hidden="true" focusable="false">
+              <path d="M0 61 L42 55 L83 59 L126 42 L168 48 L213 27 L260 33 L305 12 L360 3 L360 70 L0 70Z" fill="currentColor" opacity=".1" />
+              <path d="M0 61 L42 55 L83 59 L126 42 L168 48 L213 27 L260 33 L305 12 L360 3" fill="none" stroke="currentColor" strokeWidth="2" />
+            </svg>
           </div>
         </div>
         <div className="taf-copy">
@@ -178,7 +168,7 @@ export default function Home() {
             <li><span>✓</span> Histórico de corrida, barra, flexão e abdominal</li>
             <li><span>✓</span> Alertas para índices abaixo do mínimo</li>
           </ul>
-          <a className="button" href="#planos">ACOMPANHAR MEU TAF <span>→</span></a>
+          <SlideTextLink href="#planos">ACOMPANHAR MEU TAF</SlideTextLink>
         </div>
       </section>
 
@@ -204,9 +194,7 @@ export default function Home() {
             <li><span>✓</span> Controle de questões e simulados</li>
             <li><span>✓</span> Acompanhamento do TAF</li>
           </ul>
-          <a className="button button-full" href="/cadastro">
-            CRIAR MINHA CONTA
-          </a>
+          <SlideTextLink href="/cadastro" full>CRIAR MINHA CONTA</SlideTextLink>
           <small className="plan-note">CRIE SUA CONTA E COMECE A CONFIGURAR SEU OBJETIVO</small>
         </div>
       </section>
@@ -219,7 +207,7 @@ export default function Home() {
         <div className="faq-list">
           {faq.map(([question, answer], index) => (
             <details key={question}>
-              <summary><span>0{index + 1}</span>{question}<b>+</b></summary>
+              <summary><span>0{index + 1}</span>{question}<b aria-hidden="true">+</b></summary>
               <p>{answer}</p>
             </details>
           ))}
@@ -229,7 +217,7 @@ export default function Home() {
       <section className="final-cta" id="acesso" data-header-theme="dark">
         <p className="eyebrow"><span /> PAPIRO</p>
         <h2>O EDITAL É O MESMO.<br /><em>SUA ESTRATÉGIA NÃO.</em></h2>
-        <a className="button" href="/cadastro">COMEÇAR MINHA PREPARAÇÃO <span>→</span></a>
+        <SlideTextLink href="/cadastro">COMEÇAR MINHA PREPARAÇÃO</SlideTextLink>
       </section>
 
       <section className="whatsapp-strip" aria-label="Contato pelo WhatsApp" data-header-theme="dark">

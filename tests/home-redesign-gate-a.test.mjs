@@ -28,9 +28,8 @@ test("hero usa uma peça visual limpa em vez de miniatura carregada do painel", 
     assert.doesNotMatch(home, new RegExp(metric.replace(/[+.]/g, "\\$&")));
   }
 
-  assert.match(home, /src="\/home-hero-relief\.png"/);
-  assert.match(home, /styles\.reliefFrame/);
-  assert.match(home, /styles\.reliefImage/);
+  assert.match(home, /src="\/home-hero-particles\.webp"/);
+  assert.match(home, /styles\.heroBackground/);
   assert.doesNotMatch(home, /styles\.previewSidebar/);
   assert.doesNotMatch(home, /Seu plano está pronto para continuar\./);
   assert.doesNotMatch(home, /cursosDisponiveis/);
@@ -72,10 +71,9 @@ test("estilos do Gate Home A ficam isolados e responsivos", () => {
     /\.navigation\s*\{[\s\S]*border:\s*0;[\s\S]*background:\s*transparent;[\s\S]*box-shadow:\s*none/,
   );
   assert.match(styles, /background-color:\s*transparent/);
-  assert.doesNotMatch(styles, /scroll-margin-top/);
+  assert.match(styles, /scroll-margin-top:\s*90px/);
   assert.match(styles, /\.heroArtwork\s*\{/);
-  assert.match(styles, /\.reliefFrame\s*\{/);
-  assert.match(styles, /\.reliefImage\s*\{/);
+  assert.match(styles, /\.heroBackground\s*\{/);
   assert.match(styles, /\.careerStrip\s*\{/);
   assert.match(styles, /@media \(max-width: 1020px\)/);
   assert.match(styles, /@media \(max-width: 700px\)/);
