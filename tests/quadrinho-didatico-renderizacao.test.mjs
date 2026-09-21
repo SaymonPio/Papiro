@@ -59,7 +59,7 @@ test("Q3-2: VIEWS_POR_TIPO conhece quadrinho_didatico", () => {
 });
 
 test("Q3-3: QuadrinhoDidaticoView existe e usa o kicker EXEMPLO VISUAL", () => {
-  assert.match(view, /function QuadrinhoDidaticoView\(\{ c \}: \{ c: ComponenteAula \}\)/);
+  assert.match(view, /function QuadrinhoDidaticoView\(\{ c, artes, aoErroArte \}: \{ c: ComponenteAula; artes\?: MapaArtes; aoErroArte\?: \(\) => void \}\)/);
   assert.match(viewQuadrinho, /EXEMPLO VISUAL/);
 });
 
@@ -125,7 +125,7 @@ test("Q3-14b: aulas antigas seguem idênticas — os 6 tipos anteriores continua
   for (const tipo of ["diagnostico", "conceito", "jurisprudencia_essencial", "recall", "questao_resolvida", "resumo_visual"]) {
     assert.match(mapa, new RegExp(`${tipo}:\\s*\\w+View`));
   }
-  assert.match(view, /Vista \? <Vista c=\{componente\} \/> : <ComponenteGenericoView componente=\{componente\} \/>/);
+  assert.match(view, /Vista \? <Vista c=\{componente\} artes=\{artes\} aoErroArte=\{aoErroArte\} \/> : <ComponenteGenericoView componente=\{componente\} \/>/);
 });
 
 test("Q3-14c: aluno e preview admin usam o MESMO ComponenteAulaView (implementação única)", () => {
@@ -198,16 +198,19 @@ test("Q3-20b: responsivo sem carrossel/JS e sem estouro (grade fluida com min(10
   assert.match(css, /\.impressao-quadrinho-quadro\s*\{[^}]*break-inside:\s*avoid/);
 });
 
-test("Q3-21: nenhum código de imagem/asset foi introduzido no renderer, no PDF nem no CSS do quadrinho", () => {
-  // Só regras reais: remove comentários /* … */ (que explicam "sem imagem").
+test("Q3-21: o PDF e o CSS do quadrinho continuam sem imagem; o renderer da tela só tem imagem via ArteDoQuadro (Q12.12) e nunca toca em Supabase/Storage", () => {
+  // O PDF continua textual (impressão fora do escopo da Q12.12) e o CSS não referencia asset/url()/storage.
+  // Só regras reais: remove comentários /* … */.
   const cssQuadrinho = css.replace(/\/\*[\s\S]*?\*\//g, "").match(/[^{}]*quadrinho[^{}]*\{[^}]*\}/g)?.join("\n");
   assert.ok(cssQuadrinho && cssQuadrinho.length > 0);
   for (const proibido of [/<img\b/i, /<Image\b/, /\bsrc=/, /\balt=/, /\bimagem\b/i, /asset/i, /\burl\(/, /supabase/i, /storage/i]) {
-    assert.doesNotMatch(viewQuadrinho, proibido, `renderer: ${proibido}`);
     assert.doesNotMatch(impressaoQuadrinho, proibido, `pdf: ${proibido}`);
-    assert.doesNotMatch(cssQuadrinho, proibido, `css: ${proibido}`);
   }
-  assert.doesNotMatch(viewQuadrinho, /dangerouslySetInnerHTML/);
+  for (const proibido of [/asset/i, /\burl\(/, /supabase/i, /storage/i]) assert.doesNotMatch(cssQuadrinho, proibido, `css: ${proibido}`);
+  // Renderer da tela: sem cliente Supabase, sem storage_path/prompt_visual/scene_hash, sem HTML injetado.
+  for (const proibido of [/<Image\b/, /supabase/i, /storage/i, /prompt_visual/, /scene_hash/, /createSignedUrl/, /dangerouslySetInnerHTML/]) {
+    assert.doesNotMatch(view.replace(/^\s*\/\/.*$/gm, ""), proibido, `renderer: ${proibido}`); // só código (comentários podem citar Supabase)
+  }
 });
 
 // ---------------------------------------------------------------------------

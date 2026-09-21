@@ -40,13 +40,15 @@ export function ehString(valor: unknown): valor is string {
 // fala sem emissor/texto), para que um dado histórico/manual estranho não
 // quebre a página.
 export type FalaQuadrinho = { emissor: string; texto: string };
-export type QuadroQuadrinho = { numero: number; cena: string | null; falas: FalaQuadrinho[]; legenda: string | null };
+// `indiceOriginal` = posição do quadro em componente.quadros ANTES de qualquer descarte; é a chave da arte
+// (aula_quadrinho_assets.quadro_indice). `numero` é só o rótulo visual (renumerado após descartar quadros vazios).
+export type QuadroQuadrinho = { numero: number; indiceOriginal: number; cena: string | null; falas: FalaQuadrinho[]; legenda: string | null };
 export type QuadrinhoNormalizado = { titulo: string | null; quadros: QuadroQuadrinho[]; fechamento: string | null };
 
 export function normalizarQuadrinho(componente: ComponenteAula): QuadrinhoNormalizado {
   const quadrosBrutos = Array.isArray(componente.quadros) ? componente.quadros : [];
   const quadros: QuadroQuadrinho[] = [];
-  for (const bruto of quadrosBrutos) {
+  for (const [indiceOriginal, bruto] of quadrosBrutos.entries()) {
     if (typeof bruto !== "object" || bruto === null || Array.isArray(bruto)) continue;
     const item = bruto as Record<string, unknown>;
     const falas: FalaQuadrinho[] = [];
@@ -57,7 +59,7 @@ export function normalizarQuadrinho(componente: ComponenteAula): QuadrinhoNormal
     }
     const cena = ehString(item.cena) ? item.cena : null;
     if (!cena && falas.length === 0) continue;
-    quadros.push({ numero: quadros.length + 1, cena, falas, legenda: ehString(item.legenda) ? item.legenda : null });
+    quadros.push({ numero: quadros.length + 1, indiceOriginal, cena, falas, legenda: ehString(item.legenda) ? item.legenda : null });
   }
   return {
     titulo: ehString(componente.titulo) ? componente.titulo : null,

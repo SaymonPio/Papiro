@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { lerMissaoCronograma, lerMissionId, montarLinkMissao } from "@/utils/missao-cronograma.mjs";
 import { createClient } from "@/utils/supabase/client";
 import ComponenteAulaView, { type ComponenteAula } from "@/components/teoria/ComponenteAulaView";
+import { useArtesQuadrinho } from "@/components/teoria/useArtesQuadrinho";
 import ComentariosAula from "@/components/teoria/ComentariosAula";
 import MarcaCarregando from "@/components/ui/MarcaCarregando";
 
@@ -496,6 +497,12 @@ export default function Teoria() {
     }));
   };
 
+  // Artes aprovadas do quadrinho (URLs assinadas pela Edge assinar-quadrinho-assets). A Edge/RPC só devolvem arte
+  // para versão PUBLICADA e acessível ao aluno (matrícula ativa); em qualquer outro caso o mapa fica vazio e o
+  // quadrinho segue só com o texto. Hook antes dos retornos antecipados (regra dos hooks).
+  const aulaVersaoIdArte = estadoAula === "disponivel" ? (unidadesPublicadas[indiceUnidade] ?? unidadesPublicadas[0])?.aula_versao_id ?? null : null;
+  const { artes: artesQuadrinho, aoErroArte } = useArtesQuadrinho({ modo: "aluno", aulaVersaoId: aulaVersaoIdArte, missaoId: missao?.id ?? null });
+
   if (carregando) return <main className="dashboard-loading"><MarcaCarregando texto="Preparando a teoria de hoje..." /></main>;
 
   if (erro || !missao || !identidade) {
@@ -629,7 +636,7 @@ export default function Teoria() {
                   </Link>
                 </div>
                 {componentes.map((componente, indice) => (
-                  <ComponenteAulaView key={componente?.tipo ? `${componente.tipo}-${indice}` : indice} componente={componente} />
+                  <ComponenteAulaView key={componente?.tipo ? `${componente.tipo}-${indice}` : indice} componente={componente} artes={artesQuadrinho} aoErroArte={aoErroArte} />
                 ))}
                 <ComentariosAula aulaId={aula.aula_id} />
 

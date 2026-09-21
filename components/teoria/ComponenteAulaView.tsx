@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { ROTULOS_TIPO_COMPONENTE, ehString, normalizarQuadrinho, type ComponenteAula } from "./tiposComponenteAula";
+import { chaveArte, idDoComponente, textoAltArte, type MapaArtes } from "./arteQuadrinho";
 
 // Apresentação visual de um componente de aula da Teoria Interativa —
 // ÚNICO renderer visual dos 5 tipos documentados (diagnostico, conceito,
@@ -430,14 +431,46 @@ function ResumoVisualView({ c }: { c: ComponenteAula }) {
   );
 }
 
-// Exemplo visual (quadrinho didático) — v1 SEM imagem: o roteiro é o próprio
-// conteúdo, exibido como quadros numerados em sequência (cena, falas,
-// legenda opcional) e um fechamento com a regra de prova. Não existe
-// placeholder de imagem nem estado de carregamento. Semântica: <ol> mantém a
+// Exemplo visual (quadrinho didático): o roteiro é o próprio conteúdo, exibido
+// como quadros numerados em sequência (cena, falas, legenda opcional) e um
+// fechamento com a regra de prova. A ARTE (imagem aprovada) é OPCIONAL e
+// complementar: quando existe URL assinada para componente.id + índice ORIGINAL
+// do quadro, a imagem aparece no cartão; o texto (cena, falas, legenda,
+// fechamento) continua SEMPRE em HTML — nunca dentro da imagem. Sem arte (ou se
+// a imagem falhar), o cartão textual é exatamente o de antes; não há placeholder
+// nem estado de carregamento. Semântica: <ol> mantém a
 // ordem de leitura, "Quadro N" é texto (o número nunca é o único indicador),
 // e cada fala é um par <dt>emissor / <dd>texto lido como texto normal.
-function QuadrinhoDidaticoView({ c }: { c: ComponenteAula }) {
+// Imagem do quadro. Se o navegador não conseguir carregá-la (URL expirada/inválida), some sem deixar
+// buraco e avisa o chamador UMA vez (para uma renovação controlada); a URL nova reabilita a imagem.
+function ArteDoQuadro({ url, alt, aoErro }: { url: string; alt: string; aoErro?: () => void }) {
+  const [falhou, setFalhou] = useState(false);
+  useEffect(() => {
+    setFalhou(false);
+  }, [url]);
+  if (falhou) return null;
+  return (
+    <div className="teoria-quadrinho-arte">
+      <img
+        src={url}
+        alt={alt}
+        width={1536}
+        height={1024}
+        loading="lazy"
+        decoding="async"
+        referrerPolicy="no-referrer"
+        onError={() => {
+          setFalhou(true);
+          aoErro?.();
+        }}
+      />
+    </div>
+  );
+}
+
+function QuadrinhoDidaticoView({ c, artes, aoErroArte }: { c: ComponenteAula; artes?: MapaArtes; aoErroArte?: () => void }) {
   const quadrinho = normalizarQuadrinho(c);
+  const componenteId = idDoComponente(c);
   return (
     <>
       <RotuloBloco icone={<IconeQuadros />}>EXEMPLO VISUAL</RotuloBloco>
@@ -447,6 +480,11 @@ function QuadrinhoDidaticoView({ c }: { c: ComponenteAula }) {
           {quadrinho.quadros.map((quadro) => (
             <li className="teoria-quadrinho-quadro" key={quadro.numero}>
               <p className="teoria-quadrinho-numero">Quadro {quadro.numero}</p>
+              {(() => {
+                // Chave da arte = id do componente + índice ORIGINAL (nunca a posição depois de descartar quadros vazios).
+                const arte = componenteId && artes ? artes[chaveArte(componenteId, quadro.indiceOriginal)] : undefined;
+                return arte ? <ArteDoQuadro url={arte.url} alt={textoAltArte(quadro.numero, quadrinho.titulo)} aoErro={aoErroArte} /> : null;
+              })()}
               {quadro.cena && <p className="teoria-quadrinho-cena">{renderizarComDestaque(quadro.cena)}</p>}
               {quadro.falas.length > 0 && (
                 <dl className="teoria-quadrinho-falas">
@@ -499,7 +537,7 @@ function ComponenteGenericoView({ componente }: { componente: ComponenteAula }) 
   );
 }
 
-const VIEWS_POR_TIPO: Record<string, (props: { c: ComponenteAula }) => ReactNode> = {
+const VIEWS_POR_TIPO: Record<string, (props: { c: ComponenteAula; artes?: MapaArtes; aoErroArte?: () => void }) => ReactNode> = {
   diagnostico: DiagnosticoView,
   conceito: ConceitoView,
   jurisprudencia_essencial: JurisprudenciaEssencialView,
@@ -509,11 +547,12 @@ const VIEWS_POR_TIPO: Record<string, (props: { c: ComponenteAula }) => ReactNode
   quadrinho_didatico: QuadrinhoDidaticoView,
 };
 
-export default function ComponenteAulaView({ componente }: { componente: ComponenteAula }) {
+// `artes`/`aoErroArte` são opcionais e só o quadrinho didático os usa; os demais tipos ignoram.
+export default function ComponenteAulaView({ componente, artes, aoErroArte }: { componente: ComponenteAula; artes?: MapaArtes; aoErroArte?: () => void }) {
   const Vista = VIEWS_POR_TIPO[componente.tipo];
   return (
     <article className={`teoria-bloco teoria-bloco--${componente.tipo}`}>
-      {Vista ? <Vista c={componente} /> : <ComponenteGenericoView componente={componente} />}
+      {Vista ? <Vista c={componente} artes={artes} aoErroArte={aoErroArte} /> : <ComponenteGenericoView componente={componente} />}
     </article>
   );
 }
