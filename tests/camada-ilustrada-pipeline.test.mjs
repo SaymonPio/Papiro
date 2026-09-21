@@ -339,7 +339,8 @@ test("Q10-22: escopo — nenhuma Edge, Image API, OpenAI, upload, cron novo, Vau
     assert.doesNotMatch(sql, /\b(insert into|update|delete from)\s+public\.(aulas|aula_versoes|aula_geracoes|unidades_pedagogicas|matriculas|missoes)\b/i, nome);
   }
   assert.doesNotMatch(applySql, /1f4065f2|52756262|33a2dcd4/, "o SQL de apply não conhece o piloto");
-  for (const dir of ["gerar-arte-quadro", "assinar-quadrinho-assets"]) assert.ok(!existsSync(path.join(raiz, "supabase/functions", dir)), `Edge ${dir} não deve existir nesta fase`);
+  // gerar-arte-quadro passou a existir na Q12.1 (tests/gerar-arte-quadro.test.mjs) e assinar-quadrinho-assets na Q12.12
+  // (tests/quadrinho-arte-q1212.test.mjs); nenhuma das Edges deste pipeline é mais proibida por este teste.
 });
 
 test("Q10-23: segurança — nenhum segredo, JWT, chave, URL assinada ou valor de Vault em nenhum arquivo do pacote", () => {
