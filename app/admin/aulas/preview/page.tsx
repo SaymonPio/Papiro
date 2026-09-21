@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import ComponenteAulaView, { type ComponenteAula } from "@/components/teoria/ComponenteAulaView";
+import { useArtesQuadrinho } from "@/components/teoria/useArtesQuadrinho";
 import ComentariosAula from "@/components/teoria/ComentariosAula";
 import MarcaCarregando from "@/components/ui/MarcaCarregando";
 import { classificarOrigemQuestao } from "@/app/admin/aulas/banco-unidade";
@@ -261,6 +262,10 @@ export default function PreviewAula() {
       });
   }, [admin, ehMissaoFinal, aulaVersaoIdAtual]);
 
+  // Artes APROVADAS da versão (mesmo em rascunho): a Edge confere eh_admin() e só assina o que a RPC admin devolve.
+  // Só busca depois de confirmado admin; sem arte, o quadrinho segue só com o texto.
+  const { artes: artesQuadrinho, aoErroArte } = useArtesQuadrinho({ modo: "admin", aulaVersaoId: admin && !ehMissaoFinal ? aulaVersaoIdAtual : null });
+
   useEffect(() => {
     candidatasRequisicaoRef.current += 1;
     const idRequisicao = candidatasRequisicaoRef.current;
@@ -425,7 +430,7 @@ export default function PreviewAula() {
                   {!carregandoAula && !erro && componentes.length > 0 && aula && (
                     <>
                       {componentes.map((componente, i) => (
-                        <ComponenteAulaView key={componente?.tipo ? `${componente.tipo}-${i}` : i} componente={componente} />
+                        <ComponenteAulaView key={componente?.tipo ? `${componente.tipo}-${i}` : i} componente={componente} artes={artesQuadrinho} aoErroArte={aoErroArte} />
                       ))}
                       <ComentariosAula aulaId={aula.aula_id} modoPrevia />
                       <p className="teoria-progresso-mensagem">
