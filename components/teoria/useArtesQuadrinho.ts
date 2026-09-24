@@ -39,6 +39,8 @@ export type DepsControladorArtes = {
   /** Chama a Edge para o contexto; deve REJEITAR em qualquer erro. */
   buscar: (contexto: ContextoArtes) => Promise<unknown>;
   aoMudarArtes: (chave: string, mapa: MapaArtes) => void;
+  /** Sinaliza só "a consulta INICIAL deste contexto já terminou" — nunca vira `false` de novo por renovação. */
+  aoMudarConcluida: (chave: string, concluida: boolean) => void;
   agendar: (fn: () => void, ms: number) => unknown;
   cancelar: (id: unknown) => void;
   agora: () => number;
@@ -95,6 +97,10 @@ export function criarControladorArtes(deps: DepsControladorArtes): ControladorAr
       // sem arte / falha da Edge: a aula segue só com o texto; sem retry automático
     } finally {
       if (emVoo === meuId) emVoo = null; // só a dona libera a marca (requisição antiga não toca na da nova)
+      // "concluída" só se ainda for o contexto atual: resposta de um contexto trocado nunca conclui o novo.
+      // Vale para a busca inicial E para renovações (periódica/erro) do MESMO contexto — nesse caso já era
+      // true e permanece true (nunca volta a false fora de definirContexto).
+      if (minhaGeracao === geracao) deps.aoMudarConcluida(ctx.chave, true);
     }
   }
 
@@ -109,6 +115,7 @@ export function criarControladorArtes(deps: DepsControladorArtes): ControladorAr
       renovacao = { tentativas: 0, ultimaEm: null };
       contexto = novo;
       deps.aoMudarArtes(chaveNova ?? "", MAPA_VAZIO); // nunca sobra arte do contexto anterior
+      deps.aoMudarConcluida(chaveNova ?? "", false); // nova consulta inicial: ainda não concluída
       if (novo) void buscar();
     },
 
@@ -144,16 +151,24 @@ type Parametros = {
   missaoId?: string | null;
 };
 
-export function useArtesQuadrinho({ modo, aulaVersaoId, missaoId = null }: Parametros): { artes: MapaArtes; aoErroArte: () => void } {
+export function useArtesQuadrinho({
+  modo,
+  aulaVersaoId,
+  missaoId = null,
+}: Parametros): { artes: MapaArtes; aoErroArte: () => void; consultaConcluida: boolean } {
   const habilitado = Boolean(aulaVersaoId) && (modo === "admin" || Boolean(missaoId));
   const chave = habilitado ? `${modo}|${aulaVersaoId}|${modo === "aluno" ? missaoId : ""}` : null;
 
   const [estado, setEstado] = useState<{ chave: string; mapa: MapaArtes }>({ chave: "", mapa: MAPA_VAZIO });
+  // Aditivo à Q12.15: só diz se a consulta INICIAL do contexto atual já terminou (sucesso, vazio ou erro) — nunca
+  // um "loading" genérico, e nunca volta a false por renovação periódica/erro de imagem do MESMO contexto.
+  const [concluida, setConcluida] = useState<{ chave: string; concluida: boolean }>({ chave: "", concluida: false });
   const controladorRef = useRef<ControladorArtes | null>(null);
   if (controladorRef.current === null) {
     controladorRef.current = criarControladorArtes({
       buscar: buscarNaEdge,
       aoMudarArtes: (c, m) => setEstado({ chave: c, mapa: m }),
+      aoMudarConcluida: (c, done) => setConcluida({ chave: c, concluida: done }),
       agendar: (fn, ms) => setTimeout(fn, ms),
       cancelar: (id) => clearTimeout(id as ReturnType<typeof setTimeout>),
       agora: () => Date.now(),
@@ -171,5 +186,6 @@ export function useArtesQuadrinho({ modo, aulaVersaoId, missaoId = null }: Param
 
   // Só entrega a arte do contexto ATUAL: durante uma troca de aula, mesmo por um instante, nunca aparece arte da anterior.
   const artes = chave !== null && estado.chave === chave ? estado.mapa : MAPA_VAZIO;
-  return { artes, aoErroArte };
+  const consultaConcluida = chave !== null && concluida.chave === chave ? concluida.concluida : false;
+  return { artes, aoErroArte, consultaConcluida };
 }

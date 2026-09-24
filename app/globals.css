@@ -3751,6 +3751,21 @@ footer > small {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+/* Q12.24: cabeçalho (kicker + título) nunca fica órfão no fim de uma página com a grade inteira na seguinte —
+   fica indivisível junto com a 1ª linha da grade (que o JSX já separa numa segunda <ol>, ver AulaImpressao.tsx).
+   Propositalmente NÃO aplicado a .impressao-secao--quadrinho inteira: isso forçaria os 4 quadros (com imagem)
+   inteiros para a página seguinte e criaria espaços em branco grandes — só o começo precisa ficar junto. */
+.impressao-quadrinho-cabecalho {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+/* Mesmo espaçamento visual entre a 1ª linha e o restante da grade que existe DENTRO de uma grade (gap: 10px) —
+   a 1ª linha vive numa <ol> própria (para poder ficar presa ao cabeçalho), então usa margin em vez de gap. */
+.impressao-quadrinho-quadros--inicio {
+  margin-bottom: 10px;
+}
+
 .impressao-quadrinho-quadro {
   padding: 8px 14px;
   border: 1px solid rgba(0, 0, 0, 0.14);
@@ -3758,6 +3773,25 @@ footer > small {
   border-radius: 4px;
   break-inside: avoid;
   page-break-inside: avoid;
+}
+
+/* Arte do quadro no PDF (Q12.21): imagem aprovada, opcional, acima do texto do mesmo cartão — sem regra de
+   break/float própria (fica dentro de .impressao-quadrinho-quadro, que já não quebra entre páginas: a imagem
+   nunca separa do texto). Proporção fixa 3/2 = 1536x1024, sem deformar. */
+.impressao-quadrinho-arte {
+  width: 100%;
+  margin: 0 0 8px;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 3px;
+}
+
+.impressao-quadrinho-arte img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* Cena = contexto (menor, mais apagada); falas = foco. */

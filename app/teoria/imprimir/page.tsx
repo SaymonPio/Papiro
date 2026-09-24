@@ -1,11 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import AulaImpressao from "@/components/teoria/AulaImpressao";
 import { prepararAulaImpressao, type AulaImpressaoModelo } from "@/components/teoria/prepararAulaImpressao";
+import { useArtesQuadrinho } from "@/components/teoria/useArtesQuadrinho";
+import { chaveArte } from "@/components/teoria/arteQuadrinho";
 import MarcaCarregando from "@/components/ui/MarcaCarregando";
+
+// Q12.21 — as MESMAS artes aprovadas (assinar-quadrinho-assets, reaproveitada sem mudança: mesmo hook, mesmo
+// modo/aulaVersaoId/missaoId já usados pela tela) também aparecem no PDF. window.print() continua manual; o
+// botão só habilita quando PRINT_READY (dados prontos + consulta inicial de arte concluída + imagens atuais
+// resolvidas OU timeout de segurança) — nunca trava a impressão, nunca dispara sozinho.
+const PRINT_IMAGES_TIMEOUT_MS = 8000;
+const FONTS_READY_TIMEOUT_MS = 1500;
 
 // Versão para impressão/PDF de UMA aula publicada — derivada da MESMA
 // aula_versoes.estrutura, nunca um texto paralelo (ver
@@ -76,6 +85,12 @@ export default function ImprimirAula() {
   const [estado, setEstado] = useState<EstadoImpressao>("carregando");
   const [modelo, setModelo] = useState<AulaImpressaoModelo | null>(null);
   const [mensagemErro, setMensagemErro] = useState("");
+  // Contexto de arte, resolvido junto com os dados da aula (mesmos modo/aulaVersaoId/missaoId que a tela já usa).
+  const [contextoArte, setContextoArte] = useState<{ modo: "admin" | "aluno"; aulaVersaoId: string | null; missaoId: string | null }>({
+    modo: "aluno",
+    aulaVersaoId: null,
+    missaoId: null,
+  });
 
   useEffect(() => {
     async function carregar() {
@@ -148,6 +163,8 @@ export default function ImprimirAula() {
             fontes: linha.fontes,
           }),
         );
+        // Mesmo aulaVersaoId já resolvido acima (aulaVersaoIdAdmin); modo admin não usa missaoId.
+        setContextoArte({ modo: "admin", aulaVersaoId: aulaVersaoIdAdmin, missaoId: null });
         setEstado("pronto");
         return;
       }
@@ -220,9 +237,79 @@ export default function ImprimirAula() {
           fontes: linha.fontes,
         }),
       );
+      // Mesmo missaoId já exigido acima; aulaVersaoId é o da própria unidade publicada resolvida (linha.aula_versao_id).
+      setContextoArte({ modo: "aluno", aulaVersaoId: linha.aula_versao_id, missaoId });
       setEstado("pronto");
     }
     carregar();
+  }, []);
+
+  // Mesma Edge/hook do renderer web (assinar-quadrinho-assets), reaproveitados sem nenhuma lógica nova de
+  // autenticação. Hook chamado incondicionalmente (regra dos hooks) — antes de estado==="pronto" o contexto
+  // ainda está vazio (aulaVersaoId null) e o hook simplesmente não busca nada.
+  // aoErroArte (renovação por erro de imagem) não é usado aqui de propósito: no PDF um onError já conta como
+  // resolvido (libera a impressão) e não precisa disparar nova chamada à Edge — isso é um comportamento da
+  // tela interativa (ComponenteAulaView.tsx), não deste fluxo de impressão.
+  const { artes, consultaConcluida } = useArtesQuadrinho(contextoArte);
+
+  // Assinaturas (chave + url) das imagens que EXISTEM agora para os quadros deste modelo — só essas precisam
+  // ser aguardadas antes de liberar a impressão. Quadro sem arte nunca entra aqui (nada a esperar por ele).
+  const assinaturasEsperadas = useMemo(() => {
+    const conjunto = new Set<string>();
+    if (!modelo) return conjunto;
+    for (const componente of modelo.componentes) {
+      if (componente.tipo !== "quadrinho_didatico" || !componente.id) continue;
+      for (const quadro of componente.quadros) {
+        const arte = artes[chaveArte(componente.id, quadro.indiceOriginal)];
+        if (arte) conjunto.add(`${chaveArte(componente.id, quadro.indiceOriginal)}|${arte.url}`);
+      }
+    }
+    return conjunto;
+  }, [modelo, artes]);
+  const assinaturasEsperadasChave = useMemo(() => [...assinaturasEsperadas].sort().join("\n"), [assinaturasEsperadas]);
+
+  const [resolvidas, setResolvidas] = useState<Set<string>>(new Set());
+  // Conjunto de artes mudou (renovação de URL, ou aula trocou): descarta resoluções que não correspondem mais
+  // à URL atual — mas sem zerar à toa quando o conteúdo do conjunto não mudou de fato.
+  useEffect(() => {
+    setResolvidas((atual) => {
+      const filtradas = new Set([...atual].filter((assinatura) => assinaturasEsperadas.has(assinatura)));
+      return filtradas.size === atual.size ? atual : filtradas;
+    });
+  }, [assinaturasEsperadasChave, assinaturasEsperadas]);
+
+  // Callback tardio de uma URL antiga carrega uma assinatura que já não bate com nenhuma entrada esperada
+  // atual (a assinatura embute a própria URL) — inofensivo, nunca "resolve" a URL nova por engano.
+  const aoResolverImagem = useCallback((assinatura: string) => {
+    setResolvidas((atual) => (atual.has(assinatura) ? atual : new Set(atual).add(assinatura)));
+  }, []);
+
+  const todasResolvidas = [...assinaturasEsperadas].every((assinatura) => resolvidas.has(assinatura));
+
+  // Timeout de segurança: só corre enquanto houver imagem pendente. Cancelado (via cleanup) sempre que tudo
+  // resolver, o conjunto de assinaturas mudar, ou a página desmontar — nunca dispara chamada nova à Edge.
+  const [timeoutVencido, setTimeoutVencido] = useState(false);
+  useEffect(() => {
+    if (assinaturasEsperadas.size === 0 || todasResolvidas) {
+      setTimeoutVencido(false);
+      return;
+    }
+    const temporizador = setTimeout(() => setTimeoutVencido(true), PRINT_IMAGES_TIMEOUT_MS);
+    return () => clearTimeout(temporizador);
+  }, [assinaturasEsperadasChave, todasResolvidas, assinaturasEsperadas]);
+
+  // A. dados prontos; B. consulta inicial de arte concluída; C. nada para esperar, ou tudo resolvido, ou timeout.
+  const printReady = estado === "pronto" && consultaConcluida && (assinaturasEsperadas.size === 0 || todasResolvidas || timeoutVencido);
+
+  const aoClicarImprimir = useCallback(async () => {
+    // Espera curta e opcional pelas fontes — nunca bloqueia a impressão se o navegador não suportar isso.
+    if (typeof document !== "undefined" && document.fonts?.ready) {
+      await Promise.race([
+        document.fonts.ready,
+        new Promise((resolve) => setTimeout(resolve, FONTS_READY_TIMEOUT_MS)),
+      ]);
+    }
+    window.print();
   }, []);
 
   if (estado === "carregando") {
@@ -246,8 +333,8 @@ export default function ImprimirAula() {
     <>
       <div className="impressao-barra-acoes no-imprimir">
         <Link href="/teoria">Voltar</Link>
-        <button type="button" className="answer-submit" onClick={() => window.print()}>
-          Imprimir / Salvar como PDF
+        <button type="button" className="answer-submit" onClick={aoClicarImprimir} disabled={!printReady}>
+          {printReady ? "Imprimir / Salvar como PDF" : "Preparando impressão…"}
         </button>
       </div>
       {/* window.print() não consegue desligar "Cabeçalhos e rodapés" do
@@ -257,7 +344,7 @@ export default function ImprimirAula() {
       <p className="impressao-instrucao no-imprimir">
         Para gerar um PDF limpo, desative &quot;Cabeçalhos e rodapés&quot; nas opções de impressão do navegador antes de salvar.
       </p>
-      {modelo && <AulaImpressao modelo={modelo} />}
+      {modelo && <AulaImpressao modelo={modelo} artes={artes} aoResolverImagem={aoResolverImagem} />}
     </>
   );
 }

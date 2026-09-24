@@ -221,3 +221,54 @@ test("nenhuma regressão: conceito/resumo/jurisprudência/questão/bizu/pegadinh
   assert.ok(globalsCss.includes(".impressao-subsecao--bizu {"), "BIZU herda break-inside: avoid de .impressao-subsecao");
   assert.match(globalsCss, /\.impressao-subsecao\s*\{[^}]*break-inside:\s*avoid/s);
 });
+
+// ---------------------------------------------------------------------------
+// Q12.24 — o cabeçalho do quadrinho (EXEMPLO VISUAL + título) não pode ficar
+// órfão no fim de uma página com a grade inteira na seguinte.
+// ---------------------------------------------------------------------------
+
+test("Q12.24-A: o cabeçalho do quadrinho (kicker+título+1ª linha da grade) fica num wrapper indivisível", () => {
+  const casamentoBloco = aulaImpressaoCodigo.match(/case "quadrinho_didatico": \{[\s\S]*?<\/section>\s*\);\s*\}/);
+  assert.ok(casamentoBloco, 'esperava encontrar o bloco JSX completo do case "quadrinho_didatico"');
+  const bloco = casamentoBloco[0];
+  // kicker, título e a 1ª grade (a que carrega a classe --inicio) são filhos diretos do MESMO wrapper.
+  const casamentoWrapper = bloco.match(/<div className="impressao-quadrinho-cabecalho">([\s\S]*?)<\/div>/);
+  assert.ok(casamentoWrapper, "esperava <div className=\"impressao-quadrinho-cabecalho\"> envolvendo o cabeçalho");
+  assert.match(casamentoWrapper[1], /impressao-secao-kicker/);
+  assert.match(casamentoWrapper[1], /impressao-secao-titulo/);
+  assert.match(casamentoWrapper[1], /impressao-quadrinho-quadros--inicio/);
+  assert.match(globalsCss, /\.impressao-quadrinho-cabecalho\s*\{[^}]*break-inside:\s*avoid/s);
+  assert.match(globalsCss, /\.impressao-quadrinho-cabecalho\s*\{[^}]*page-break-inside:\s*avoid/s);
+});
+
+test("Q12.24-B: NENHUMA regra obriga os 4 quadros inteiros a ficarem juntos — só o cabeçalho+1ª linha é indivisível", () => {
+  // A seção inteira (.impressao-secao--quadrinho) não pode ter break-inside/page-break-inside: avoid — senão
+  // voltaríamos a forçar a grade inteira (com as 4 imagens) para a página seguinte inteira.
+  assert.doesNotMatch(globalsCss, /\.impressao-secao--quadrinho\s*\{[^}]*avoid/s);
+  // O restante dos quadros (depois da 1ª linha) vive numa grade IRMÃ do wrapper indivisível, fora dele —
+  // livre para quebrar de página normalmente.
+  const casamentoBloco = aulaImpressaoCodigo.match(/case "quadrinho_didatico": \{[\s\S]*?<\/section>\s*\);\s*\}/);
+  const bloco = casamentoBloco[0];
+  const foraDoCabecalho = bloco.slice(bloco.indexOf("</div>") + "</div>".length);
+  assert.match(foraDoCabecalho, /restante\.length > 0 &&/, "a grade do restante fica DEPOIS do wrapper do cabeçalho, não dentro dele");
+  assert.doesNotMatch(foraDoCabecalho, /impressao-quadrinho-cabecalho/);
+});
+
+test("Q12.24-C: .impressao-quadrinho-quadro (cada quadro individual) continua indivisível", () => {
+  assert.match(globalsCss, /\.impressao-quadrinho-quadro\s*\{[^}]*break-inside:\s*avoid/s);
+  assert.match(globalsCss, /\.impressao-quadrinho-quadro\s*\{[^}]*page-break-inside:\s*avoid/s);
+});
+
+test("Q12.24-D: a grade continua 2 colunas a partir de 4 quadros (regra preservada, mesmo separada em duas <ol>)", () => {
+  assert.match(globalsCss, /\.impressao-quadrinho-quadros\[data-quadros="4"\][\s\S]*?grid-template-columns:\s*repeat\(2,/);
+});
+
+test("Q12.24-E: a imagem do quadro continua 3:2 (regra preservada)", () => {
+  assert.match(globalsCss, /\.impressao-quadrinho-arte\s*\{[^}]*aspect-ratio:\s*3 \/ 2;/s);
+});
+
+test("Q12.24-F: a 1ª linha e o restante usam o MESMO data-quadros (mesma contagem de colunas) — visualmente uma grade contínua, não duas grades diferentes", () => {
+  const casamentoBloco = aulaImpressaoCodigo.match(/case "quadrinho_didatico": \{[\s\S]*?<\/section>\s*\);\s*\}/);
+  const dataQuadros = [...casamentoBloco[0].matchAll(/data-quadros=\{componente\.quadros\.length\}/g)];
+  assert.equal(dataQuadros.length, 2, "as duas <ol> (1ª linha e restante) usam data-quadros={componente.quadros.length}, nunca o tamanho do próprio pedaço");
+});

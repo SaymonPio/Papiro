@@ -472,9 +472,13 @@ test("Q12.12-29: páginas — aluno usa modo aluno com missao.id; preview admin 
   assert.match(preview, /useArtesQuadrinho\(\{ modo: "admin", aulaVersaoId: admin && !ehMissaoFinal \? aulaVersaoIdAtual : null \}\)/);
   assert.ok(preview.indexOf('useArtesQuadrinho({ modo: "admin"') < preview.indexOf("if (verificando) return"), "hook antes dos retornos antecipados");
   assert.match(preview, /artes=\{artesQuadrinho\} aoErroArte=\{aoErroArte\}/);
-  for (const arquivo of ["app/teoria/imprimir/page.tsx", "components/teoria/AulaImpressao.tsx", "components/teoria/prepararAulaImpressao.ts"]) {
-    assert.doesNotMatch(ler(arquivo), /useArtesQuadrinho|arteQuadrinho|assinar-quadrinho-assets|MapaArtes|indiceOriginal/, `${arquivo}: impressão continua textual`);
-  }
+  // Até a Q12.20 o PDF era puramente textual (nenhum destes três arquivos tocava em arte/hook). A Q12.21
+  // reaproveita DELIBERADAMENTE o mesmo hook/Edge no PDF (ver tests/quadrinho-impressao-q1221.test.mjs para a
+  // cobertura completa dessa integração) — aqui só resta confirmar que a página de impressão não abriu um
+  // caminho PARALELO: continua usando o hook existente, nunca chamando a Edge nem o cliente Supabase por conta própria.
+  const paginaImpressao = ler("app/teoria/imprimir/page.tsx");
+  assert.match(paginaImpressao, /useArtesQuadrinho\(contextoArte\)/, "reaproveita o hook existente");
+  assert.doesNotMatch(paginaImpressao.replace(/^\s*\/\/.*$/gm, ""), /functions\.invoke|assinar-quadrinho-assets/, "sem chamada paralela à Edge");
 });
 
 test("Q12.12-30: vazamentos — sem service_role no app/components/lib, sem storage_path/prompt_visual/scene_hash/console de URL no cliente; CSS da arte sem url()", () => {
@@ -553,21 +557,24 @@ function cenario() {
   const pendentes = [];
   const mudancas = [];
   const chamadas = [];
+  const concluidas = []; // Q12.21: aoMudarConcluida — aditivo, testado à parte na seção H
   let relogio = AGORA;
   const deps = {
     buscar: (ctx) => new Promise((resolve, reject) => { chamadas.push(ctx.chave); pendentes.push({ ctx, resolve, reject }); }),
     aoMudarArtes: (chave, mapa) => mudancas.push({ chave, mapa }),
+    aoMudarConcluida: (chave, concluida) => concluidas.push({ chave, concluida }),
     agendar: (fn, ms) => { const t = { fn, ms, ativo: true }; timers.push(t); return t; },
     cancelar: (t) => { t.ativo = false; },
     agora: () => relogio,
   };
   const ctl = hookMod.criarControladorArtes(deps);
   const ultimo = () => mudancas[mudancas.length - 1];
+  const ultimaConcluida = () => concluidas[concluidas.length - 1];
   const timersAtivos = () => timers.filter((t) => t.ativo);
   // dispara o timer ativo mais recente (o que o setTimeout real faria ao vencer)
   const dispararTimer = () => { const t = timersAtivos().pop(); assert.ok(t, "há timer ativo"); t.ativo = false; t.fn(); };
   const tick = () => new Promise((r) => setImmediate(r));
-  return { ctl, timers, timersAtivos, pendentes, mudancas, chamadas, ultimo, dispararTimer, tick, relogio: (v) => { if (v !== undefined) relogio = v; return relogio; } };
+  return { ctl, timers, timersAtivos, pendentes, mudancas, chamadas, concluidas, ultimo, ultimaConcluida, dispararTimer, tick, relogio: (v) => { if (v !== undefined) relogio = v; return relogio; } };
 }
 
 test("Q12.15-1: renovação é RELATIVA ao recebimento e nomeada (SIGNED_URL_REFRESH_MS = 10 min < TTL de 15 min); nada de timer por expira_em", () => {

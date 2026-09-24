@@ -28,6 +28,11 @@ function trecho(codigo, inicio, fim) {
 
 const viewQuadrinho = trecho(view, "function QuadrinhoDidaticoView", "// Fallback genérico");
 const impressaoQuadrinho = trecho(impressao, 'case "quadrinho_didatico":', "// Nenhum tipo desaparece");
+// Q12.24: o <li> de cada quadro (cena/falas/legenda) foi extraído para renderizarQuadroImpressao — reaproveitado
+// pelas duas grades em que o case "quadrinho_didatico" agora divide os quadros (cabeçalho+1ª linha / restante,
+// ver AulaImpressao.tsx) — por isso os testes que checam o conteúdo de UM quadro olham este trecho, não mais
+// dentro de impressaoQuadrinho (que continua sendo só o wrapper/seção em si).
+const impressaoQuadroItem = trecho(impressao, "function renderizarQuadroImpressao", "\nfunction renderizarComponente");
 
 function quadro(extra = {}) {
   return { cena: "Um policial conversa com um morador.", falas: [{ emissor: "Policial", texto: "Ouvi gritos de socorro." }], legenda: "Socorro autoriza o ingresso.", ...extra };
@@ -164,8 +169,8 @@ test("Q3-16/17/18/19: o modelo de PDF preserva quadros em ordem, falas, legenda 
   assert.equal(q.quadros[2].legenda, null);
   assert.equal(q.fechamento, "Flagrante, desastre e socorro: a qualquer hora.");
   assert.match(impressaoQuadrinho, /Regra de prova/);
-  assert.match(impressaoQuadrinho, /quadro\.legenda &&/);
-  assert.match(impressaoQuadrinho, /<dt className="impressao-quadrinho-emissor">/);
+  assert.match(impressaoQuadroItem, /quadro\.legenda &&/);
+  assert.match(impressaoQuadroItem, /<dt className="impressao-quadrinho-emissor">/);
 });
 
 test("Q3-16b: aula sem quadrinho gera o mesmo modelo de PDF de antes (nenhum componente extra)", () => {
@@ -198,15 +203,17 @@ test("Q3-20b: responsivo sem carrossel/JS e sem estouro (grade fluida com min(10
   assert.match(css, /\.impressao-quadrinho-quadro\s*\{[^}]*break-inside:\s*avoid/);
 });
 
-test("Q3-21: o PDF e o CSS do quadrinho continuam sem imagem; o renderer da tela só tem imagem via ArteDoQuadro (Q12.12) e nunca toca em Supabase/Storage", () => {
-  // O PDF continua textual (impressão fora do escopo da Q12.12) e o CSS não referencia asset/url()/storage.
-  // Só regras reais: remove comentários /* … */.
+test("Q3-21: o PDF agora também pode ter imagem (Q12.21 — reaproveita a mesma arte aprovada), mas nem o PDF nem a tela chamam Supabase/Storage diretamente ou usam next/image", () => {
+  // Até a Q12.20 o PDF era puramente textual. A partir da Q12.21 ele renderiza a MESMA arte aprovada, quando
+  // existir, via app/teoria/imprimir/page.tsx + useArtesQuadrinho (cobertura completa em
+  // tests/quadrinho-impressao-q1221.test.mjs). O que continua valendo aqui, em ambos os renderers: nenhum
+  // acesso direto a Supabase/Storage, sem next/image, sem HTML injetado.
   const cssQuadrinho = css.replace(/\/\*[\s\S]*?\*\//g, "").match(/[^{}]*quadrinho[^{}]*\{[^}]*\}/g)?.join("\n");
   assert.ok(cssQuadrinho && cssQuadrinho.length > 0);
-  for (const proibido of [/<img\b/i, /<Image\b/, /\bsrc=/, /\balt=/, /\bimagem\b/i, /asset/i, /\burl\(/, /supabase/i, /storage/i]) {
-    assert.doesNotMatch(impressaoQuadrinho, proibido, `pdf: ${proibido}`);
+  for (const proibido of [/<Image\b/, /supabase/i, /storage/i, /dangerouslySetInnerHTML/]) {
+    assert.doesNotMatch(impressaoQuadrinho.replace(/^\s*\/\/.*$/gm, ""), proibido, `pdf: ${proibido}`); // só código (comentários podem citar Q12.21/chave/assinatura)
   }
-  for (const proibido of [/asset/i, /\burl\(/, /supabase/i, /storage/i]) assert.doesNotMatch(cssQuadrinho, proibido, `css: ${proibido}`);
+  for (const proibido of [/supabase/i, /storage/i]) assert.doesNotMatch(cssQuadrinho, proibido, `css: ${proibido}`);
   // Renderer da tela: sem cliente Supabase, sem storage_path/prompt_visual/scene_hash, sem HTML injetado.
   for (const proibido of [/<Image\b/, /supabase/i, /storage/i, /prompt_visual/, /scene_hash/, /createSignedUrl/, /dangerouslySetInnerHTML/]) {
     assert.doesNotMatch(view.replace(/^\s*\/\/.*$/gm, ""), proibido, `renderer: ${proibido}`); // só código (comentários podem citar Supabase)
@@ -263,8 +270,8 @@ test("Q7-5: falas=[] e legenda opcional continuam condicionais (sem bloco artifi
   assert.match(viewQuadrinho, /quadro\.falas\.length > 0 && \(/);
   assert.match(viewQuadrinho, /quadro\.legenda && <p className="teoria-quadrinho-legenda">/);
   assert.doesNotMatch(viewQuadrinho, /sem falas/i);
-  assert.match(impressaoQuadrinho, /quadro\.falas\.length > 0 && \(/);
-  assert.match(impressaoQuadrinho, /quadro\.legenda && <p className="impressao-quadrinho-legenda">/);
+  assert.match(impressaoQuadroItem, /quadro\.falas\.length > 0 && \(/);
+  assert.match(impressaoQuadroItem, /quadro\.legenda && <p className="impressao-quadrinho-legenda">/);
 });
 
 test("Q7-6: quadros sem alturas rígidas (só min-height) e o quadro se alonga com as falas", () => {
@@ -278,8 +285,13 @@ test("Q7-7: PDF mantém hierarquia (2 colunas só com 4+ quadros, quadro e fala 
   assert.match(cssSemComentarios, /\.impressao-quadrinho-quadros\[data-quadros="4"\][\s\S]*?repeat\(2,/);
   assert.doesNotMatch(cssSemComentarios, /\.impressao-quadrinho-quadros\[data-quadros="3"\]/);
   assert.match(cssSemComentarios, /\.impressao-quadrinho-falas > div\s*\{[^}]*break-inside:\s*avoid/);
-  const ordem = ["Quadro {quadro.numero}", "quadro.cena", "quadro.falas", "quadro.legenda", 'rotulo="Regra de prova"'].map((t) => impressaoQuadrinho.indexOf(t));
-  assert.ok(ordem.every((i) => i > -1) && [...ordem].sort((a, b) => a - b).join() === ordem.join(), "ordem: quadro, cena, falas, legenda, regra de prova");
+  // Ordem DENTRO de um quadro (número, cena, falas, legenda) — vive em renderizarQuadroImpressao desde a Q12.24.
+  const ordemQuadro = ["Quadro {quadro.numero}", "quadro.cena", "quadro.falas", "quadro.legenda"].map((t) => impressaoQuadroItem.indexOf(t));
+  assert.ok(ordemQuadro.every((i) => i > -1) && [...ordemQuadro].sort((a, b) => a - b).join() === ordemQuadro.join(), "ordem dentro do quadro: número, cena, falas, legenda");
+  // Regra de prova continua vindo DEPOIS de toda a grade (cabeçalho+1ª linha e o restante), nunca entre quadros.
+  const posRestante = impressaoQuadrinho.indexOf("restante.length > 0");
+  const posRegraDeProva = impressaoQuadrinho.indexOf('rotulo="Regra de prova"');
+  assert.ok(posRestante > -1 && posRegraDeProva > posRestante, "regra de prova vem depois da grade inteira dos quadros");
 });
 
 test("Q7-8: o refinamento não introduziu cor nova nem imagem no CSS do quadrinho", () => {
