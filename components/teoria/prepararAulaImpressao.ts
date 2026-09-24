@@ -35,7 +35,10 @@ function ehString(valor: unknown): valor is string {
 export type AlternativaImpressao = { letra: string; texto: string; correta: boolean };
 
 export type FalaImpressao = { emissor: string; texto: string };
-export type QuadroImpressao = { numero: number; cena: string | null; falas: FalaImpressao[]; legenda: string | null };
+// `indiceOriginal` = posição do quadro em componente.quadros ANTES de descartar quadro vazio — é a chave da
+// arte (aula_quadrinho_assets.quadro_indice), igual a QuadroQuadrinho.indiceOriginal em tiposComponenteAula.ts.
+// `numero` continua sendo só o rótulo visual (renumerado após o descarte).
+export type QuadroImpressao = { numero: number; indiceOriginal: number; cena: string | null; falas: FalaImpressao[]; legenda: string | null };
 
 export type ComponenteImpressao =
   | { tipo: "diagnostico"; titulo: string | null; introducao: string | null; pergunta: string | null; respostaEsperada: string | null }
@@ -53,7 +56,7 @@ export type ComponenteImpressao =
   | { tipo: "recall"; titulo: string | null; pergunta: string | null; dica: string | null; resposta: string | null }
   | { tipo: "questao_resolvida"; enunciado: string | null; alternativas: AlternativaImpressao[]; gabarito: string | null; raciocinio: string | null; pegadinha: string | null }
   | { tipo: "resumo_visual"; titulo: string | null; pontos: string[] }
-  | { tipo: "quadrinho_didatico"; titulo: string | null; quadros: QuadroImpressao[]; fechamento: string | null }
+  | { tipo: "quadrinho_didatico"; id: string | null; titulo: string | null; quadros: QuadroImpressao[]; fechamento: string | null }
   | { tipo: "desconhecido"; tipoOriginal: string; rotulo: string; campos: { chave: string; valor: string }[] };
 
 export type FonteImpressao = {
@@ -94,9 +97,13 @@ function normalizarAlternativas(bruto: unknown, gabaritoBruto: unknown): Alterna
 
 // Mesma regra defensiva de normalizarQuadrinho (tiposComponenteAula.ts),
 // repetida aqui de propósito: este módulo é autocontido (ver nota no topo).
+// `indiceOriginal` é capturado ANTES do descarte de quadro vazio (mesma técnica de tiposComponenteAula.ts:
+// itera com .entries() sobre o array bruto, não sobre a lista já filtrada) — nunca usar a posição filtrada
+// para buscar arte.
 function normalizarQuadros(bruto: unknown): QuadroImpressao[] {
+  const quadrosBrutos = Array.isArray(bruto) ? bruto : [];
   const quadros: QuadroImpressao[] = [];
-  for (const item of Array.isArray(bruto) ? bruto : []) {
+  for (const [indiceOriginal, item] of quadrosBrutos.entries()) {
     if (typeof item !== "object" || item === null || Array.isArray(item)) continue;
     const q = item as Record<string, unknown>;
     const falas: FalaImpressao[] = [];
@@ -107,7 +114,7 @@ function normalizarQuadros(bruto: unknown): QuadroImpressao[] {
     }
     const cena = valorOuNull(q.cena);
     if (!cena && falas.length === 0) continue;
-    quadros.push({ numero: quadros.length + 1, cena, falas, legenda: valorOuNull(q.legenda) });
+    quadros.push({ numero: quadros.length + 1, indiceOriginal, cena, falas, legenda: valorOuNull(q.legenda) });
   }
   return quadros;
 }
@@ -186,6 +193,9 @@ export function normalizarComponenteImpressao(componente: ComponenteAula): Compo
     case "quadrinho_didatico":
       return {
         tipo: "quadrinho_didatico",
+        // id do componente = chave da arte (chaveArte(id, quadro.indiceOriginal)); null em aula antiga/sem id
+        // (nesse caso simplesmente não há como casar arte, e o PDF segue só com o texto).
+        id: valorOuNull(componente.id),
         titulo: valorOuNull(componente.titulo),
         quadros: normalizarQuadros(componente.quadros),
         fechamento: valorOuNull(componente.fechamento),

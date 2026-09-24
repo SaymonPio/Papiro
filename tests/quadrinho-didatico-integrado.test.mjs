@@ -138,10 +138,14 @@ test("Q5-3: da estrutura gravada saem os MESMOS dados na tela e no PDF (nenhum c
   }
   const { tipo, ...pdfSemTipo } = pdf;
   assert.equal(tipo, "quadrinho_didatico");
-  // Q12.12: a tela agora também guarda `indiceOriginal` (chave da arte); o PDF continua textual e não precisa dele.
+  // Q12.12: a tela guarda `indiceOriginal` por quadro (chave da arte). Q12.21: o PDF passa a preservar o
+  // MESMO indiceOriginal por quadro, além do `id` do componente (que só existe no nível do componente — nunca
+  // em quadro/fala, ver Q5-2) — os dois juntos casam a arte aprovada ao quadro certo também na impressão.
   assert.deepEqual(web.quadros.map((q) => q.indiceOriginal), [0, 1, 2], "a tela preserva o índice original do quadro");
-  const webSemIndice = { ...web, quadros: web.quadros.map(({ indiceOriginal, ...resto }) => resto) };
-  assert.deepEqual(webSemIndice, pdfSemTipo, "tela e PDF derivam exatamente do mesmo conteúdo");
+  assert.deepEqual(pdf.quadros.map((q) => q.indiceOriginal), [0, 1, 2], "o PDF preserva o MESMO índice original do quadro (Q12.21)");
+  assert.equal(pdf.id, estruturaDoBanco.componentes[2].id, "o PDF preserva o id do componente (Q12.21)");
+  const { id: pdfId, ...pdfSemId } = pdfSemTipo;
+  assert.deepEqual(web, pdfSemId, "tela e PDF derivam exatamente do mesmo conteúdo (o PDF só acrescenta o id do componente)");
   assert.equal(web.quadros[0].falas.length, 2, "quadro com 2 falas");
   assert.equal(web.quadros[1].falas.length, 0, "quadro com falas=[]");
 });

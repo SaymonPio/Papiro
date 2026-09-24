@@ -1,7 +1,8 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { renderizarComDestaque } from "./ComponenteAulaView";
+import { chaveArte, textoAltArte, type MapaArtes } from "./arteQuadrinho";
 import type { AulaImpressaoModelo, ComponenteImpressao } from "./prepararAulaImpressao";
 
 // Apresentação EDITORIAL (papel/PDF) da mesma aula_versao.estrutura que
@@ -81,7 +82,82 @@ function SubSecao({ rotulo, valor, destaque }: { rotulo: string; valor: string |
   );
 }
 
-function renderizarComponente(componente: ComponenteImpressao, indice: number): ReactNode {
+// Imagem do quadro no PDF. `loading="eager"`: o gate PRINT_READY (app/teoria/imprimir/page.tsx) já garante
+// que a impressão só é liberada depois das imagens resolverem (ou de um timeout de segurança) — nada a ganhar
+// esperando o navegador decidir sozinho quando carregar, e evita qualquer dúvida sobre "lazy" antes de
+// window.print() entre navegadores. `onLoad` E `onError` contam como RESOLVIDA (erro nunca trava a impressão);
+// em erro a imagem simplesmente some — o texto do quadro (sempre renderizado por fora) é o que garante que o
+// PDF nunca fica incompleto. Nunca loga a URL.
+function ArteDoQuadroImpressao({ url, alt, aoResolver }: { url: string; alt: string; aoResolver?: () => void }) {
+  const [falhou, setFalhou] = useState(false);
+  if (falhou) return null;
+  return (
+    <div className="impressao-quadrinho-arte">
+      <img
+        src={url}
+        alt={alt}
+        width={1536}
+        height={1024}
+        loading="eager"
+        decoding="async"
+        referrerPolicy="no-referrer"
+        onLoad={() => aoResolver?.()}
+        onError={() => {
+          setFalhou(true);
+          aoResolver?.();
+        }}
+      />
+    </div>
+  );
+}
+
+// Um <li> do quadrinho (Quadro N + arte opcional + cena/falas/legenda). Extraído para ser reaproveitado pelas
+// duas grades em que o Q12.24 divide os quadros (cabeçalho+1ª linha / restante — ver comentário no case
+// "quadrinho_didatico"), sem duplicar a lógica de casamento de arte (chave/assinatura).
+function renderizarQuadroImpressao(
+  quadro: Extract<ComponenteImpressao, { tipo: "quadrinho_didatico" }>["quadros"][number],
+  componente: Extract<ComponenteImpressao, { tipo: "quadrinho_didatico" }>,
+  artes: MapaArtes | undefined,
+  aoResolverImagem: ((assinatura: string) => void) | undefined,
+): ReactNode {
+  // Chave da arte = id do componente + índice ORIGINAL (nunca a posição depois de descartar quadro vazio).
+  // Assinatura = chave + url: identifica esta URL específica, para o gate de impressão nunca confundir uma
+  // resposta tardia de URL antiga com a URL atual (Q12.21 §8).
+  const chave = componente.id ? chaveArte(componente.id, quadro.indiceOriginal) : null;
+  const arte = chave && artes ? artes[chave] : undefined;
+  const assinatura = arte && chave ? `${chave}|${arte.url}` : null;
+  return (
+    <li key={quadro.numero} className="impressao-quadrinho-quadro">
+      <p className="impressao-subsecao-rotulo">Quadro {quadro.numero}</p>
+      {arte && assinatura && (
+        <ArteDoQuadroImpressao
+          url={arte.url}
+          alt={textoAltArte(quadro.numero, componente.titulo)}
+          aoResolver={() => aoResolverImagem?.(assinatura)}
+        />
+      )}
+      {quadro.cena && <p className="impressao-texto">{renderizarComDestaque(quadro.cena)}</p>}
+      {quadro.falas.length > 0 && (
+        <dl className="impressao-quadrinho-falas">
+          {quadro.falas.map((fala, i) => (
+            <div key={i}>
+              <dt className="impressao-quadrinho-emissor">{fala.emissor}</dt>
+              <dd className="impressao-texto">{renderizarComDestaque(fala.texto)}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
+      {quadro.legenda && <p className="impressao-quadrinho-legenda">{renderizarComDestaque(quadro.legenda)}</p>}
+    </li>
+  );
+}
+
+function renderizarComponente(
+  componente: ComponenteImpressao,
+  indice: number,
+  artes?: MapaArtes,
+  aoResolverImagem?: (assinatura: string) => void,
+): ReactNode {
   switch (componente.tipo) {
     case "diagnostico":
       return (
@@ -206,35 +282,37 @@ function renderizarComponente(componente: ComponenteImpressao, indice: number): 
 
     // Exemplo visual (quadrinho didático) no papel: sequência simples de
     // blocos numerados (sem estética de HQ), cada quadro sem quebrar no meio.
-    case "quadrinho_didatico":
+    case "quadrinho_didatico": {
+      // Q12.24: o cabeçalho (kicker + título) nunca pode ficar sozinho no fim de uma página, com a grade
+      // inteira indo para a seguinte. Corrige-se agrupando o cabeçalho com a PRIMEIRA LINHA da grade (mesma
+      // quantidade de colunas que o CSS usa para este total de quadros — ver .impressao-quadrinho-quadros[data-
+      // quadros] em app/globals.css) num wrapper .impressao-quadrinho-cabecalho com break-inside: avoid. O
+      // restante dos quadros continua numa segunda grade (mesmas classes/data-quadros, mesmas colunas —
+      // visualmente uma única grade contínua) SEM essa restrição: só o cabeçalho+1ª linha é indivisível, nunca
+      // os 4 quadros inteiros (evitar página em branco grande é mais importante que juntar tudo).
+      const colunasGrade = [4, 5, 6].includes(componente.quadros.length) ? 2 : 1;
+      const primeiraLinha = componente.quadros.slice(0, colunasGrade);
+      const restante = componente.quadros.slice(colunasGrade);
       return (
         <section key={indice} className="impressao-secao impressao-secao--quadrinho">
-          <p className="impressao-secao-kicker">Exemplo visual</p>
-          {componente.titulo && <h2 className="impressao-secao-titulo">{renderizarComDestaque(componente.titulo)}</h2>}
-          {componente.quadros.length > 0 && (
+          <div className="impressao-quadrinho-cabecalho">
+            <p className="impressao-secao-kicker">Exemplo visual</p>
+            {componente.titulo && <h2 className="impressao-secao-titulo">{renderizarComDestaque(componente.titulo)}</h2>}
+            {primeiraLinha.length > 0 && (
+              <ol className="impressao-quadrinho-quadros impressao-quadrinho-quadros--inicio" data-quadros={componente.quadros.length}>
+                {primeiraLinha.map((quadro) => renderizarQuadroImpressao(quadro, componente, artes, aoResolverImagem))}
+              </ol>
+            )}
+          </div>
+          {restante.length > 0 && (
             <ol className="impressao-quadrinho-quadros" data-quadros={componente.quadros.length}>
-              {componente.quadros.map((quadro) => (
-                <li key={quadro.numero} className="impressao-quadrinho-quadro">
-                  <p className="impressao-subsecao-rotulo">Quadro {quadro.numero}</p>
-                  {quadro.cena && <p className="impressao-texto">{renderizarComDestaque(quadro.cena)}</p>}
-                  {quadro.falas.length > 0 && (
-                    <dl className="impressao-quadrinho-falas">
-                      {quadro.falas.map((fala, i) => (
-                        <div key={i}>
-                          <dt className="impressao-quadrinho-emissor">{fala.emissor}</dt>
-                          <dd className="impressao-texto">{renderizarComDestaque(fala.texto)}</dd>
-                        </div>
-                      ))}
-                    </dl>
-                  )}
-                  {quadro.legenda && <p className="impressao-quadrinho-legenda">{renderizarComDestaque(quadro.legenda)}</p>}
-                </li>
-              ))}
+              {restante.map((quadro) => renderizarQuadroImpressao(quadro, componente, artes, aoResolverImagem))}
             </ol>
           )}
           <SubSecao rotulo="Regra de prova" valor={componente.fechamento} destaque="bizu" />
         </section>
       );
+    }
 
     // Nenhum tipo desaparece silenciosamente: componente com tipo não
     // reconhecido pelo contrato atual ainda aparece, rotulado com o nome
@@ -258,7 +336,18 @@ function renderizarComponente(componente: ComponenteImpressao, indice: number): 
   }
 }
 
-export default function AulaImpressao({ modelo }: { modelo: AulaImpressaoModelo }) {
+// `artes`/`aoResolverImagem` são opcionais: sem eles (ou sem entrada correspondente no mapa), o PDF sai
+// exatamente como antes da Q12.21 — só texto. `aoResolverImagem` é chamado uma vez por imagem, em onLoad OU
+// onError (a página de impressão usa isso para saber quando liberar window.print()).
+export default function AulaImpressao({
+  modelo,
+  artes,
+  aoResolverImagem,
+}: {
+  modelo: AulaImpressaoModelo;
+  artes?: MapaArtes;
+  aoResolverImagem?: (assinatura: string) => void;
+}) {
   return (
     <div className="impressao-pagina">
       <Capa modelo={modelo} />
@@ -267,7 +356,7 @@ export default function AulaImpressao({ modelo }: { modelo: AulaImpressaoModelo 
         <CabecalhoInterno materiaNome={modelo.materiaNome} unidadeTitulo={modelo.unidadeTitulo} />
 
         <main className="impressao-conteudo-principal">
-          {modelo.componentes.map(renderizarComponente)}
+          {modelo.componentes.map((componente, indice) => renderizarComponente(componente, indice, artes, aoResolverImagem))}
         </main>
 
         {modelo.fontes.length > 0 && (
