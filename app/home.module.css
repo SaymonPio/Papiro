@@ -322,7 +322,7 @@
   margin: 0;
   font-family: Impact, "Arial Narrow", Arial, sans-serif;
   color: var(--home-ink);
-  font-size: clamp(70px, 6.2vw, 104px);
+  font-size: clamp(78px, 7vw, 118px);
   font-weight: 500;
   letter-spacing: 0.01em;
   line-height: 0.9;
@@ -338,7 +338,7 @@
   max-width: 610px;
   margin: 27px 0 0;
   color: #aebbb5;
-  font-size: 17px;
+  font-size: 18.5px;
   line-height: 1.72;
 }
 
@@ -420,7 +420,7 @@
   }
 
   .heroTitle {
-    font-size: clamp(66px, 6.1vw, 80px);
+    font-size: clamp(75px, 6.9vw, 90px);
   }
 
 

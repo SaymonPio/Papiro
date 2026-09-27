@@ -12,9 +12,12 @@ import { useEffect, useRef } from "react";
  * Camadas:
  *  - fundo: micropartículas que seguem as mesmas faixas de partículas já presentes na arte;
  *  - massas: bandos que entram pela esquerda, respiram, se deformam, dispersam e reconvergem;
- *    parte de cada bando é "capturada" pelo caminho e conduzida ao portal;
+ *    parte de cada bando é "capturada" pelo caminho e conduzida ao portal, soltando um
+ *    resíduo curto no instante da captura;
  *  - caminho: micropartículas em ondas de brilho rumo ao portal;
- *  - portal: espiral de absorção + halo discreto que reage às chegadas;
+ *  - guiadas: nascem à esquerda e, perto do portal, desaceleram e fazem uma curvatura curta
+ *    antes de se dissiparem, em vez de sumir de forma abrupta;
+ *  - portal: espiral de absorção + halo discreto e comedido que reage às chegadas;
  *  - frente: poucas partículas maiores e desfocadas, com parallax leve.
  *
  * O brilho nasce da soma de muitas partículas pequenas (adensamento), não de pontos isolados.
@@ -292,7 +295,7 @@ export function HeroParticlesCanvas() {
     const resetCluster = (c: Cluster, first: boolean, k: number, total: number) => {
       c.curve = Math.random() < 0.68 ? 0 : 1;
       c.s = first ? -0.08 + (k / total) * 1.15 + rand(-0.03, 0.03) : rand(-0.22, -0.1);
-      c.speed = rand(0.05, 0.075);
+      c.speed = rand(0.08, 0.115);
       c.r0 = rand(48, 92);
       c.phase = rand(0, Math.PI * 2);
       c.period = rand(6.5, 11);
@@ -343,16 +346,16 @@ export function HeroParticlesCanvas() {
         }
       }
       trails = [];
-      for (let i = 0; i < Math.round(380 * d); i++) {
+      for (let i = 0; i < Math.round(470 * d); i++) {
         trails.push({
           u: Math.random(),
-          speed: rand(0.06, 0.12),
+          speed: rand(0.11, 0.2),
           off: rand(-10, 10),
           wob: rand(1, 6),
           f: rand(0.6, 1.6),
           ph: rand(0, Math.PI * 2),
-          size: rand(0.7, 1.35),
-          alpha: rand(0.65, 1),
+          size: rand(0.7, 1.5),
+          alpha: rand(0.62, 0.95),
           tone: pickTone(),
         });
       }
@@ -376,18 +379,18 @@ export function HeroParticlesCanvas() {
         guided.push({
           curve: Math.random() < 0.66 ? 0 : 1,
           u: Math.random(),
-          speed: rand(0.055, 0.085),
+          speed: rand(0.095, 0.145),
           off0: gauss() * 85,
           wob: rand(6, 20),
           f: rand(0.5, 1.2),
           ph: rand(0, Math.PI * 2),
-          size: rand(0.95, 1.8),
-          alpha: rand(0.75, 1),
+          size: rand(1.1, 2.1),
+          alpha: rand(0.78, 1),
           tone: pickTone(),
         });
       }
       backs = [];
-      for (let i = 0; i < Math.round(560 * d); i++) {
+      for (let i = 0; i < Math.round(720 * d); i++) {
         // ~70% seguem as faixas de partículas que já existem na arte; o resto deriva livre
         const follow = Math.random() < 0.7;
         backs.push({
@@ -397,7 +400,7 @@ export function HeroParticlesCanvas() {
           lat: gauss() * 80,
           x: Math.random(), y: Math.random(), vx: rand(0.004, 0.012),
           amp: rand(4, 20), f: rand(0.1, 0.4), ph: rand(0, Math.PI * 2),
-          size: rand(0.55, 1.1), alpha: rand(0.3, 0.6), tw: rand(0.4, 1.1), z: Math.random() * 0.4,
+          size: rand(0.42, 0.95), alpha: rand(0.26, 0.52), tw: rand(0.4, 1.1), z: Math.random() * 0.4,
           tone: pickTone(),
         });
       }
@@ -463,7 +466,7 @@ export function HeroParticlesCanvas() {
     const plot = (x: number, y: number, r: number, a: number, tone: number) => {
       if (a < 0.012) return;
       ctx.globalAlpha = a > 0.9 ? 0.9 : a;
-      const s = r * 3;
+      const s = r * 3.6;
       ctx.drawImage(sprites[tone], x - s / 2, y - s / 2, s, s);
     };
 
@@ -595,6 +598,13 @@ export function HeroParticlesCanvas() {
           r *= 1 + 0.25 * qb;
           x = offX + wx * scale;
           y = offY + wy * scale;
+          // resíduo curto se soltando do bando no momento em que é capturado pelo caminho
+          if (qb > 0.06 && qb < 0.94) {
+            const fResidue = 1 - smooth(0, 1, clamp01(qb - 0.06));
+            const rx = offX + (S.x + p.dx0 * fResidue) * scale;
+            const ry = offY + (S.y + p.dy0 * fResidue) * scale;
+            plot(rx, ry, r * 0.5, a * 0.35 * textFactor(rx, ry), p.tone);
+          }
           if (p.q >= 1) {
             p.state = 2;
             energy += 0.05;
@@ -622,7 +632,7 @@ export function HeroParticlesCanvas() {
         const x = offX + (S.x + S.nx * lat) * scale;
         const y = offY + (S.y + S.ny * lat) * scale;
         // ondas de brilho que sobem o caminho
-        const wave = 0.5 + 0.5 * Math.sin((p.u * 2.2 - t * 0.14) * Math.PI * 2);
+        const wave = 0.5 + 0.5 * Math.sin((p.u * 2.2 - t * 0.3) * Math.PI * 2);
         const a = p.alpha * (0.3 + 0.7 * wave) * (1 + 1.0 * near) * smooth(0, 0.12, p.u) * (1 - smooth(0.96, 1, p.u));
         plot(x, y, p.size * sizeK * (1 + 0.35 * near), a * textFactor(x, y), p.tone);
       }
@@ -633,8 +643,9 @@ export function HeroParticlesCanvas() {
         const p = guided[i];
         const cv = curves[p.curve];
         const j = cv.junction;
-        // ritmo: deriva lenta na esquerda, aceleração ao ser puxada e disparada ao se aproximar do portal
-        p.u += dt * p.speed * (1 + 1.5 * smooth(0.28, j, p.u)) * (1 + 2.4 * smooth(0.84, 1, p.u));
+        // ritmo: deriva lenta na esquerda, aceleração ao ser puxada e desaceleração suave perto do
+        // portal — uma chegada orgânica em vez de um disparo até sumir de repente
+        p.u += dt * p.speed * (1 + 1.5 * smooth(0.28, j, p.u)) * (1 - 0.55 * smooth(0.85, 1, p.u));
         if (p.u >= 1) {
           p.u = 0;
           p.off0 = gauss() * 85;
@@ -643,18 +654,22 @@ export function HeroParticlesCanvas() {
         }
         const u = p.u;
         const born = smooth(0, 0.09, u);
-        const absorbed = 1 - smooth(0.95, 1, u);
+        // dissipação num intervalo mais largo (fade), não um corte perto de u=1
+        const absorbed = 1 - smooth(0.86, 1, u);
         // reforço breve ao entrar na trilha e mais brilho perto do portal
         const capture = Math.exp(-(((u - j) / 0.05) ** 2));
         const gain = (1 + 0.55 * capture + 1.0 * smooth(0.8, 0.97, u)) * born * absorbed;
-        const dk = 0.011 * (1 + 1.6 * smooth(0.8, 1, u));
+        // a trilha fantasma se recolhe perto do portal, coerente com a desaceleração
+        const dk = 0.011 * (1 - 0.5 * smooth(0.85, 1, u));
+        // curvatura curta e leve, como um giro breve antes de ser absorvida
+        const spiral = smooth(0.88, 1, u) * 13 * Math.sin(u * 60 + p.ph);
         for (let g = 0; g < 4; g++) {
           const uu = u - g * dk;
           if (uu < 0) break;
           sample(cv, uu);
           // o desvio lateral se fecha até o ponto de captura: as partículas convergem para a trilha
           const pull = smooth(j * 0.45, j, uu);
-          const lat = p.off0 * (1 - pull) + Math.sin(t * p.f + p.ph - g * 0.25) * p.wob * (1 - 0.88 * pull);
+          const lat = p.off0 * (1 - pull) + Math.sin(t * p.f + p.ph - g * 0.25) * p.wob * (1 - 0.88 * pull) + spiral;
           const x = offX + (S.x + S.nx * lat) * scale;
           const y = offY + (S.y + S.ny * lat) * scale;
           const tf = 0.55 + 0.45 * ((textFactor(x, y) - 0.3) / 0.7);
@@ -683,11 +698,12 @@ export function HeroParticlesCanvas() {
         plot(x, y, p.size * sizeK * (0.8 + 0.5 * (1 - k)), a, p.tone);
       }
 
-      // --- portal: pulso suave e pequeno ganho de luminância a cada chegada (sem esconder a chave)
+      // --- portal: pulso sutil e comedido, só um pequeno ganho de luminância a cada chegada
+      // (sem esconder a chave)
       const pulse = 0.5 + 0.5 * Math.sin(t * 1.1);
-      const e = Math.min(1, 0.2 + 0.16 * pulse + energy * 1.4);
-      ctx.globalAlpha = 0.03 + 0.1 * e;
-      const hs = (190 + 70 * e) * scale * 2;
+      const e = Math.min(1, 0.18 + 0.14 * pulse + energy * 1.1);
+      ctx.globalAlpha = 0.028 + 0.085 * e;
+      const hs = (180 + 55 * e) * scale * 2;
       ctx.drawImage(haze, portalX - hs / 2, portalY - hs / 2, hs, hs);
 
       // --- frente: poucas partículas maiores e desfocadas

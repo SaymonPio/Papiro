@@ -76,9 +76,9 @@ export default function Home() {
             COMEÇA <em>AQUI.</em>
           </h1>
           <p className={styles.heroLead}>
-            Transforme seu edital em uma estratégia de aprovação. Um plano
-            inteligente para quem tem como alvo a <strong>Guarda Municipal</strong> e a{" "}
-            <strong>Polícia Militar</strong>.
+            Transforme sua preparação em uma estratégia de aprovação. Um plano inteligente
+            para quem tem como alvo a <strong>Guarda Municipal</strong> e a{" "}
+            <strong>Polícia Militar.</strong>
           </p>
           <div className={styles.heroAction}><SlideTextLink href="/cadastro">COMECE SUA PREPARAÇÃO AGORA</SlideTextLink></div>
         </div>
@@ -90,7 +90,7 @@ export default function Home() {
 
         <div className={styles.careerStrip} aria-label="Principais recursos">
           <div>
-            <span>Edital com IA</span>
+            <span>Plano de estudos inteligente</span>
             <i aria-hidden="true" />
             <span>Cronograma inteligente</span>
             <i aria-hidden="true" />

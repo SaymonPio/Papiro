@@ -15,7 +15,7 @@ const homeHeader = await readFile(
 test("Gate Home A preserva o título original dentro da nova composição", () => {
   assert.match(home, /SUA FARDA/);
   assert.match(home, /COMEÇA <em>AQUI\.<\/em>/);
-  assert.match(home, /Transforme seu edital em uma estratégia de aprovação/);
+  assert.match(home, /Transforme sua preparação em uma estratégia de aprovação/);
   assert.match(home, /FOCO • DISCIPLINA • APROVAÇÃO/);
   assert.match(home, /styles\.heroArtwork/);
   assert.match(home, /styles\.heroLead/);
@@ -37,7 +37,7 @@ test("hero usa uma peça visual limpa em vez de miniatura carregada do painel", 
 
 test("navegação e conteúdo da home correspondem a fluxos existentes", () => {
   for (const content of [
-    "Edital com IA",
+    "Plano de estudos inteligente",
     "Cronograma inteligente",
     "Questões e simulados",
     "Acompanhamento do TAF",
