@@ -364,38 +364,65 @@
   background: linear-gradient(90deg, rgb(3 9 7 / 30%), transparent 70%), linear-gradient(0deg, #06100d, transparent 20%);
 }
 
+/* Faixa em marquee contínuo, mesma arquitetura do FeatureCarousel: dois grupos idênticos
+   de itens (o segundo aria-hidden), translate3d via @keyframes, distância exata até o
+   primeiro item do grupo duplicado (não 50%, por causa do gap do flexbox) para reinício
+   sem salto. O mask-image fica no container externo (largura fixa, overflow:hidden) — não
+   na faixa que rola, cujo width:max-content é bem maior que a viewport — e some
+   suavemente com o texto nas pontas, sem precisar casar cor de overlay.
+   Sobreposta à imagem do hero (position:absolute a partir de .hero, que é o ancestral
+   posicionado) em TODAS as larguras — não vira bloco/seção separada em nenhum breakpoint.
+   Fundo é só um scrim vertical sutil (não uma barra opaca) para legibilidade; a imagem
+   continua visível por trás do texto, com text-shadow ajudando no contraste. Sem
+   border-top/bottom: mesmo em opacidade bem baixa, uma borda sólida de 1px cria uma linha
+   nítida contra o fundo escuro da arte, quebrando a leitura de "composição única". */
 .careerStrip {
   position: absolute;
   right: 0;
   bottom: 0;
   left: 0;
+  z-index: 1;
   min-height: 76px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 30px;
-  padding-inline: var(--home-gutter);
-  border-top: 1px solid rgb(216 173 76 / 24%);
-  border-bottom: 1px solid rgb(216 173 76 / 14%);
-  background: rgb(3 9 7 / 75%);
+  overflow: hidden;
+  background: linear-gradient(0deg, rgb(3 9 7 / 55%), transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 clamp(20px, 5vw, 72px), #000 calc(100% - clamp(20px, 5vw, 72px)), transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 clamp(20px, 5vw, 72px), #000 calc(100% - clamp(20px, 5vw, 72px)), transparent);
 }
 
-.careerStrip > div {
-  width: 100%;
+.careerStripTrack {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: clamp(20px, 3vw, 48px);
+  width: max-content;
+  gap: clamp(28px, 4vw, 56px);
+  padding-inline: var(--home-gutter);
   color: #9baba3;
+  text-shadow: 0 1px 4px rgb(0 0 0 / 65%);
   font-size: 10px;
   font-weight: 670;
   letter-spacing: 0.07em;
   text-transform: uppercase;
+  animation: papiroCareerMarquee var(--strip-duration, 30s) linear infinite;
+  will-change: transform;
+}
+
+@keyframes papiroCareerMarquee {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(var(--strip-distance, -50%), 0, 0); }
+}
+
+.careerStripItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
 }
 
 .careerStrip i {
   width: 4px;
   height: 4px;
+  flex: none;
   background: var(--home-gold);
   transform: rotate(45deg);
 }
@@ -454,16 +481,6 @@
   .heroTitle {
     max-width: 690px;
     font-size: clamp(72px, 10vw, 96px);
-  }
-
-
-
-
-  .careerStrip {
-    position: relative;
-    grid-column: 1;
-    width: calc(100% + (var(--home-gutter) * 2));
-    margin: 50px calc(var(--home-gutter) * -1) 0;
   }
 
 }
@@ -532,24 +549,6 @@
 
 
 
-  .careerStrip {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 14px;
-    padding-block: 22px;
-  }
-
-  .careerStrip > div {
-    width: 100%;
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .careerStrip i {
-    display: none;
-  }
-
 }
 
 @media (max-width: 430px) {
@@ -589,42 +588,77 @@
 .home :global(.step-card) h3 { margin-top: 20px; }
 .home :global(.section-dark) { background: radial-gradient(ellipse at 100% 0, #14291c 0, transparent 55%), #040e0b; }
 .home :global(.section-heading.inverse) > p, .home :global(.feature-card) p { color: #bdc9c2; }
-.carousel { min-width: 0; }
-.carouselTrack {
-  --card-width: calc((100% - 60px) / 3.25);
-  position: relative;
-  display: flex;
-  gap: 20px;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  padding: 8px 0;
+/* Marquee contínuo (translate3d via @keyframes, compositor/GPU — não usa scroll nem JS por
+   quadro). O track contém dois conjuntos idênticos de cards. Por causa do `gap` do flexbox,
+   a largura total do track NÃO é exatamente 2x a largura de um conjunto (o gap na costura
+   entre os dois conjuntos desalinharia um translate3d(-50%) em meio-gap) — por isso o ponto
+   final da animação usa --marquee-distance, medido em JS como a posição exata (em px) do
+   primeiro card do segundo conjunto, garantindo reinício sem salto. --marquee-duration
+   também é recalculado em JS a partir da largura real de um conjunto (ver
+   FeatureCarousel.tsx); ambas as variáveis têm um valor padrão aqui para a animação já
+   funcionar antes do JS medir. */
+.carousel { position: relative; min-width: 0; overflow: hidden; }
+.carousel::before, .carousel::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: clamp(24px, 6vw, 96px);
+  z-index: 1;
+  pointer-events: none;
 }
-.carouselTrack::-webkit-scrollbar { display: none; }
-.carouselTrack::after { content: ""; flex: 0 0 calc(100% - var(--card-width) - 20px); }
+.carousel::before { left: 0; background: linear-gradient(90deg, #040e0b, transparent); }
+.carousel::after { right: 0; background: linear-gradient(270deg, #040e0b, transparent); }
+.carouselTrack {
+  --card-width: calc((100vw - var(--home-gutter) * 2 - 60px) / 3.25);
+  display: flex;
+  width: max-content;
+  gap: 20px;
+  padding: 8px 0;
+  animation: papiroMarquee var(--marquee-duration, 32s) linear infinite;
+  will-change: transform;
+  cursor: grab;
+  /* pan-y: gesto vertical ainda rola a página normalmente; o horizontal é tratado via
+     Pointer Events em JS (drag manual), não pelo comportamento de scroll nativo do touch. */
+  touch-action: pan-y;
+}
+/* Aplicada via JS exatamente enquanto o ponteiro está pressionado e o arraste foi
+   engajado (após o threshold) — evita depender de :active permanecer correto durante
+   pointer capture entre navegadores. */
+.carouselDragging {
+  cursor: grabbing;
+  user-select: none;
+}
+@keyframes papiroMarquee {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(var(--marquee-distance, -50%), 0, 0); }
+}
 .home .carouselCard {
   flex: 0 0 var(--card-width);
   min-width: 0;
   min-height: 335px;
-  scroll-snap-align: start;
   border-radius: 24px;
   border-color: #46523c;
   background: linear-gradient(140deg, #10211b9c, #030d0b);
   padding: 26px;
 }
 .home .carouselCard:hover { transform: none; border-color: var(--home-gold); }
-.home .cardActive { border-color: var(--home-gold); box-shadow: inset 0 0 32px #d8ad4c09; }
 .home .carouselCard h3 { margin-top: 22px; }
 .home .carouselCard :global(.feature-top) small { color: #a9b7ac; }
 .resourceIcon { margin-top: 32px; color: var(--home-gold-soft); }
-.carouselControls { display: flex; align-items: center; justify-content: center; gap: 24px; margin-top: 14px; }
-.carouselControls > button { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #506052; border-radius: 50%; background: #10211b; color: #f2efe6; cursor: pointer; }
-.carouselControls > button:disabled { opacity: .35; cursor: default; }
-.carouselDots { display: flex; }
-.carouselDots button { display: grid; place-items: center; width: 44px; height: 44px; padding: 10px; border: 0; background: transparent; cursor: pointer; }
-.carouselDots span { width: 20px; height: 5px; border-radius: 4px; background: #506052; transition: background 180ms; }
-.carouselDots [aria-current="true"] span { background: var(--home-gold-soft); }
+@media (prefers-reduced-motion: reduce) {
+  .carousel {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .carousel::-webkit-scrollbar { display: none; width: 0; height: 0; }
+  .carousel::before, .carousel::after { display: none; }
+  .carouselTrack { animation: none; width: auto; }
+  .carouselTrack article[aria-hidden="true"] { display: none; }
+}
 .home :global(.taf-section) { min-height: 480px; background: #040e0b; }
 .home :global(.taf-visual) { min-height: 480px; background: #040e0b; }
 .tafBackground { object-fit: cover; object-position: 65% center; opacity: .72; }
@@ -650,13 +684,11 @@
 .slideDuplicate { position: absolute; inset: 0; transform: translateY(120%); }
 .slideButton:hover .slideText, .slideButton:focus-visible .slideText { transform: translateY(-120%); }
 .slideButton:hover .slideDuplicate, .slideButton:focus-visible .slideDuplicate { transform: translateY(0); }
-.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 @media (max-width: 1020px) {
   .hero { min-height: max(720px, 100vh); min-height: max(720px, 100svh); padding-bottom: 0; }
   .heroCopy { max-width: 650px; }
   .heroArtwork::after { background: linear-gradient(90deg, #030907dd, #03090770 60%, transparent), linear-gradient(0deg, #06100d, transparent 30%); }
-  .careerStrip { z-index: 2; align-self: end; }
-  .carouselTrack { --card-width: calc((100% - 40px) / 2.25); }
+  .carouselTrack { --card-width: calc((100vw - var(--home-gutter) * 2 - 40px) / 2.25); }
   .home :global(.pricing) { gap: 32px; grid-template-columns: 1fr 1fr; }
   .home :global(.section-heading) { gap: 32px; }
   .home :global(.taf-copy) { padding-inline: 28px; }
@@ -672,8 +704,9 @@
   .home :global(.plan-title) { gap: 14px; }
   .home :global(.faq-list) summary { gap: 10px; grid-template-columns: 24px 1fr 18px; }
   .home :global(.faq-list) details p { margin-left: 34px; margin-right: 20px; }
-  .carouselTrack { --card-width: calc(100% - 48px); gap: 16px; }
-  .carouselTrack::after { flex-basis: calc(100% - var(--card-width) - 16px); }
+  /* 82vw (não 100%): deixa uma tira do próximo card visível, reforçando o movimento
+     horizontal em vez de mostrar "um card por vez" preenchendo a tela toda. */
+  .carouselTrack { --card-width: 82vw; gap: 16px; }
   .home .carouselCard { min-height: 320px; }
   .slideButton { max-width: 100%; gap: 16px; padding: 16px 20px; }
 }
@@ -682,8 +715,6 @@
   .heroCopy { align-self: start; }
   .heroBackground { object-position: 68% center; }
   .heroArtwork::after { background: linear-gradient(180deg, #030907d9, #030907aa 50%, #03090710 75%, #06100d); }
-  .careerStrip { margin-top: 170px; }
-  .careerStrip > div { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .home *, .home *::before, .home *::after { animation: none; transition: none; scroll-behavior: auto; }

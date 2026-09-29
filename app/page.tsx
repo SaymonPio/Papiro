@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { FeatureCarousel } from "@/components/home/FeatureCarousel";
+import { CareerStrip } from "@/components/home/CareerStrip";
 import { HeroParticlesCanvas } from "@/components/home/HeroParticlesCanvas";
 import { SlideTextLink } from "@/components/home/SlideTextLink";
 import { Target, CalendarDays, ChartNoAxesColumnIncreasing } from "lucide-react";
@@ -40,6 +41,13 @@ const steps = [
 ];
 
 const stepIcons = [Target, CalendarDays, ChartNoAxesColumnIncreasing];
+
+const careerHighlights = [
+  "Plano de estudos inteligente",
+  "Cronograma inteligente",
+  "Questões e simulados",
+  "Acompanhamento do TAF",
+];
 
 const faq = [
   [
@@ -88,17 +96,7 @@ export default function Home() {
           <HeroParticlesCanvas />
         </div>
 
-        <div className={styles.careerStrip} aria-label="Principais recursos">
-          <div>
-            <span>Plano de estudos inteligente</span>
-            <i aria-hidden="true" />
-            <span>Cronograma inteligente</span>
-            <i aria-hidden="true" />
-            <span>Questões e simulados</span>
-            <i aria-hidden="true" />
-            <span>Acompanhamento do TAF</span>
-          </div>
-        </div>
+        <CareerStrip items={careerHighlights} />
       </section>
 
       <section className="section section-light" id="metodo" data-header-theme="light">
