@@ -395,11 +395,11 @@
   display: flex;
   align-items: center;
   width: max-content;
-  gap: clamp(28px, 4vw, 56px);
+  gap: clamp(16px, 2vw, 32px);
   padding-inline: var(--home-gutter);
   color: #9baba3;
   text-shadow: 0 1px 4px rgb(0 0 0 / 65%);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 670;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -415,7 +415,7 @@
 .careerStripItem {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   white-space: nowrap;
 }
 
@@ -598,17 +598,27 @@
    FeatureCarousel.tsx); ambas as variáveis têm um valor padrão aqui para a animação já
    funcionar antes do JS medir. */
 .carousel { position: relative; min-width: 0; overflow: hidden; }
+/* Fade lateral em duas camadas: a FORMA (largura, gradiente em 3 paradas pra transição
+   gradual, sem corte abrupto) fica fixa; a INTENSIDADE é controlada só por opacity, sutil
+   em repouso e mais forte no hover (apenas em dispositivos com hover real via
+   (hover:hover) and (pointer:fine) — touch nunca recebe o estado intensificado). Continua
+   pointer-events:none, então nunca interfere no drag por baixo. */
 .carousel::before, .carousel::after {
   content: "";
   position: absolute;
   top: 0;
   bottom: 0;
-  width: clamp(24px, 6vw, 96px);
+  width: clamp(40px, calc(7.5vw + 33px), 160px);
   z-index: 1;
   pointer-events: none;
+  opacity: 0.32;
+  transition: opacity 300ms ease;
 }
-.carousel::before { left: 0; background: linear-gradient(90deg, #040e0b, transparent); }
-.carousel::after { right: 0; background: linear-gradient(270deg, #040e0b, transparent); }
+.carousel::before { left: 0; background: linear-gradient(90deg, #040e0b 0%, rgb(4 14 11 / 55%) 55%, transparent 100%); }
+.carousel::after { right: 0; background: linear-gradient(270deg, #040e0b 0%, rgb(4 14 11 / 55%) 55%, transparent 100%); }
+@media (hover: hover) and (pointer: fine) {
+  .carousel:hover::before, .carousel:hover::after { opacity: 0.9; }
+}
 .carouselTrack {
   --card-width: calc((100vw - var(--home-gutter) * 2 - 60px) / 3.25);
   display: flex;
@@ -689,6 +699,7 @@
   .heroCopy { max-width: 650px; }
   .heroArtwork::after { background: linear-gradient(90deg, #030907dd, #03090770 60%, transparent), linear-gradient(0deg, #06100d, transparent 30%); }
   .carouselTrack { --card-width: calc((100vw - var(--home-gutter) * 2 - 40px) / 2.25); }
+  .careerStripTrack { font-size: 11px; }
   .home :global(.pricing) { gap: 32px; grid-template-columns: 1fr 1fr; }
   .home :global(.section-heading) { gap: 32px; }
   .home :global(.taf-copy) { padding-inline: 28px; }
@@ -715,6 +726,7 @@
   .heroCopy { align-self: start; }
   .heroBackground { object-position: 68% center; }
   .heroArtwork::after { background: linear-gradient(180deg, #030907d9, #030907aa 50%, #03090710 75%, #06100d); }
+  .careerStripTrack { font-size: 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .home *, .home *::before, .home *::after { animation: none; transition: none; scroll-behavior: auto; }

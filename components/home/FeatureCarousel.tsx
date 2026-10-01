@@ -19,6 +19,7 @@ const DRAG_THRESHOLD_PX = 6;
 
 type DragState = {
   pointerId: number;
+  pointerType: string;
   anim: Animation;
   startX: number;
   baseTime: number;
@@ -42,10 +43,12 @@ function Card({ feature, index, clone }: { feature: Feature; index: number; clon
 }
 
 export function FeatureCarousel({ features }: { features: Feature[] }) {
+  const carousel = useRef<HTMLDivElement>(null);
   const track = useRef<HTMLDivElement>(null);
   const distanceRef = useRef(0);
   const dragRef = useRef<DragState | null>(null);
   const justDraggedRef = useRef(false);
+  const isHoveredRef = useRef(false);
 
   useEffect(() => {
     const element = track.current;
@@ -96,6 +99,7 @@ export function FeatureCarousel({ features }: { features: Feature[] }) {
     element.setPointerCapture(e.pointerId);
     dragRef.current = {
       pointerId: e.pointerId,
+      pointerType: e.pointerType,
       anim,
       startX: e.clientX,
       baseTime: 0,
@@ -136,9 +140,23 @@ export function FeatureCarousel({ features }: { features: Feature[] }) {
     const element = track.current;
     if (element?.hasPointerCapture(e.pointerId)) element.releasePointerCapture(e.pointerId);
     if (drag.dragging) {
-      drag.anim.play();
       element?.classList.remove(styles.carouselDragging);
       justDraggedRef.current = true;
+      if (drag.pointerType === "mouse") {
+        // Com o ponteiro capturado, mover o mouse durante o drag não dispara pointerenter/
+        // pointerleave em .carousel (o navegador só entrega esses eventos ao elemento que
+        // capturou) — então, em vez de depender da ordem desses eventos após soltar o
+        // pointer capture, checamos geometricamente aqui: se o mouse ainda está sobre a
+        // área do carrossel ao soltar, o autoplay continua pausado (só retoma quando o
+        // pointerleave nativo disparar); se já saiu, retoma imediatamente.
+        const rect = carousel.current?.getBoundingClientRect();
+        const stillInside = !!rect && e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
+        isHoveredRef.current = stillInside;
+        if (!stillInside) drag.anim.play();
+      } else {
+        // touch não tem conceito de hover — sempre retoma o autoplay ao soltar.
+        drag.anim.play();
+      }
     }
     dragRef.current = null;
   };
@@ -153,8 +171,33 @@ export function FeatureCarousel({ features }: { features: Feature[] }) {
     }
   };
 
+  // Pausa o autoplay (via WAAPI, não animation-play-state, pra não conflitar com o
+  // pause()/play() imperativo do drag) enquanto o mouse estiver sobre o carrossel. Só para
+  // ponteiros de mouse real — touch nunca tem "hover", então nunca pausa por isso.
+  const onPointerEnter = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse") return;
+    isHoveredRef.current = true;
+    const anim = track.current?.getAnimations()[0];
+    if (anim && anim.playState === "running") anim.pause();
+  };
+
+  const onPointerLeave = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse") return;
+    isHoveredRef.current = false;
+    if (dragRef.current) return; // ainda arrastando (pointer capturado) — o próprio endDrag decide
+    const anim = track.current?.getAnimations()[0];
+    if (anim && anim.playState === "paused") anim.play();
+  };
+
   return (
-    <div className={styles.carousel} role="region" aria-label="Recursos da preparação">
+    <div
+      ref={carousel}
+      className={styles.carousel}
+      role="region"
+      aria-label="Recursos da preparação"
+      onPointerEnter={onPointerEnter}
+      onPointerLeave={onPointerLeave}
+    >
       <div
         ref={track}
         className={styles.carouselTrack}
