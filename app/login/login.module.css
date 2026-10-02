@@ -1,0 +1,386 @@
+/* Tela de login isolada em CSS Module — não reutiliza nem altera as classes globais
+   .auth-page/.auth-card (globals.css), que também estilizam cadastro, recuperar-senha e
+   boa parte do painel autenticado via um bloco :where(...) compartilhado. Manter esta
+   página 100% isolada evita qualquer risco de regressão nessas outras telas. As cores
+   abaixo são as mesmas da identidade já usada na landing (app/home.module.css). */
+.loginPage {
+  --login-canvas: #040e0b;
+  --login-canvas-deep: #030907;
+  --login-ink: #f2efe6;
+  --login-ink-soft: #c8d0cc;
+  --login-muted: #93a39b;
+  --login-gold: #d8ad4c;
+  --login-gold-soft: #f1ca6b;
+  --login-line: rgb(216 173 76 / 16%);
+
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
+  min-height: 100svh;
+  background: var(--login-canvas);
+  color: var(--login-ink);
+}
+
+/* ===== Coluna esquerda — formulário ===== */
+
+.formColumn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px clamp(24px, 5vw, 64px);
+}
+
+.formInner {
+  width: 100%;
+  max-width: 420px;
+}
+
+.brand {
+  display: inline-block;
+  color: var(--login-gold);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+}
+
+.eyebrow {
+  margin: 14px 0 26px;
+  color: var(--login-gold-soft);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.heading {
+  margin: 0 0 10px;
+  color: var(--login-ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(32px, 3.4vw, 40px);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.subtext {
+  margin: 0 0 32px;
+  color: var(--login-muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.field label {
+  color: var(--login-ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.field input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: 10px;
+  background: rgb(255 255 255 / 4%);
+  color: var(--login-ink);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.field input:focus-visible {
+  border-color: var(--login-gold);
+  box-shadow: 0 0 0 3px rgb(216 173 76 / 18%);
+}
+
+.passwordWrap {
+  position: relative;
+}
+
+.passwordWrap input {
+  padding-right: 46px;
+}
+
+.passwordToggle {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--login-muted);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: color 160ms ease;
+}
+
+.passwordToggle:hover,
+.passwordToggle:focus-visible {
+  color: var(--login-gold);
+}
+
+.forgot {
+  justify-self: end;
+  margin-top: -4px;
+  color: var(--login-gold-soft);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.forgot:hover { text-decoration: underline; }
+
+.submit {
+  margin-top: 6px;
+  padding: 15px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--login-gold);
+  color: var(--login-canvas-deep);
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: filter 160ms ease, opacity 160ms ease;
+}
+
+.submit:hover:not(:disabled) { filter: brightness(1.06); }
+
+.submit:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.message {
+  margin: 18px 0 0;
+  color: var(--login-gold-soft);
+  font-size: 14px;
+  text-align: center;
+}
+
+.footer {
+  margin: 28px 0 0;
+  color: var(--login-muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+.footer a {
+  color: var(--login-gold-soft);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.footer a:hover { text-decoration: underline; }
+
+.loginPage :where(a, button, input):focus-visible {
+  outline: 2px solid var(--login-gold);
+  outline-offset: 3px;
+}
+
+/* ===== Coluna direita — showcase de vídeo ===== */
+
+.showcase {
+  position: relative;
+  padding: 20px 20px 20px 0;
+}
+
+.showcasePanel {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  border-radius: 26px;
+  background: var(--login-canvas-deep);
+}
+
+.showcaseVideo,
+.showcaseFallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-position: center;
+  background-size: cover;
+}
+
+/* Vinheta discreta: escurece a base (legibilidade dos controles/headline) e as laterais
+   bem sutilmente — nunca um preto pesado cobrindo o vídeo inteiro. */
+.showcaseScrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(0deg, rgb(3 9 7 / 72%) 0%, rgb(3 9 7 / 18%) 32%, transparent 55%),
+    linear-gradient(90deg, rgb(3 9 7 / 22%) 0%, transparent 14%, transparent 86%, rgb(3 9 7 / 22%) 100%);
+  pointer-events: none;
+}
+
+.showcaseHeadline {
+  position: absolute;
+  left: clamp(20px, 3vw, 40px);
+  bottom: 108px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--login-ink);
+  font-family: Impact, "Arial Narrow", Arial, sans-serif;
+  font-size: clamp(22px, 2.6vw, 32px);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.05;
+  text-transform: uppercase;
+  text-shadow: 0 2px 10px rgb(0 0 0 / 55%);
+  animation: loginHeadlineIn 420ms ease both;
+}
+
+@keyframes loginHeadlineIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.showcaseControls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 18px clamp(16px, 2.4vw, 28px) 20px;
+  opacity: 0.82;
+  transform: translateY(2px);
+  transition: opacity 260ms ease, transform 260ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .showcasePanel:hover .showcaseControls,
+  .showcasePanel:focus-within .showcaseControls {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.showcaseProgress {
+  width: 100%;
+  height: 2px;
+  margin-bottom: 14px;
+  border-radius: 2px;
+  background: rgb(255 255 255 / 16%);
+  overflow: hidden;
+}
+
+.showcaseProgressFill {
+  width: 0%;
+  height: 100%;
+  background: var(--login-gold);
+}
+
+.showcaseBar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.showcaseIconButton {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgb(255 255 255 / 20%);
+  border-radius: 50%;
+  background: rgb(3 9 7 / 45%);
+  color: var(--login-ink);
+  cursor: pointer;
+  transition: border-color 160ms ease, color 160ms ease;
+}
+
+.showcaseIconButton:hover,
+.showcaseIconButton:focus-visible {
+  border-color: var(--login-gold);
+  color: var(--login-gold);
+}
+
+.showcaseChapters {
+  display: flex;
+  flex: 1;
+  gap: clamp(10px, 2vw, 22px);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.showcaseChapters::-webkit-scrollbar { display: none; }
+
+.showcaseChapter {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 2px;
+  border: 0;
+  background: transparent;
+  color: var(--login-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 160ms ease;
+}
+
+.showcaseChapter span {
+  color: var(--login-muted);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.showcaseChapter:hover { color: var(--login-ink-soft); }
+
+.showcaseChapter[aria-current="true"] {
+  color: var(--login-gold);
+}
+
+.showcaseChapter[aria-current="true"] span {
+  color: var(--login-gold);
+}
+
+/* ===== Responsivo ===== */
+
+@media (max-width: 1020px) {
+  .loginPage { grid-template-columns: minmax(0, 1fr); }
+  .showcase { order: 2; padding: 0 20px 20px; }
+  .formColumn { order: 1; padding-bottom: 28px; }
+  .showcasePanel { min-height: 46vh; }
+}
+
+@media (max-width: 760px) {
+  .formColumn { padding: 40px 20px 24px; }
+  .showcase { padding: 0 16px 20px; }
+  .showcasePanel { min-height: 40vh; border-radius: 20px; }
+  .showcaseHeadline { bottom: 92px; font-size: clamp(20px, 6vw, 26px); }
+  .showcaseChapter { font-size: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .showcaseHeadline { animation: none; }
+  .showcaseControls { transition: none; }
+  .field input,
+  .submit,
+  .passwordToggle,
+  .showcaseIconButton,
+  .showcaseChapter { transition: none; }
+}

@@ -1,8 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { createClient } from "@/utils/supabase/client";
+import { LoginForm } from "@/components/auth/LoginForm";
+import { LoginShowcase } from "@/components/auth/LoginShowcase";
+import styles from "./login.module.css";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -31,29 +33,17 @@ export default function Login() {
   }
 
   return (
-    <main className="auth-page">
-      <section className="auth-card">
-        <Link className="auth-brand" href="/">PAPIRO</Link>
-        <p className="auth-label">PREPARAÇÃO PARA CONCURSOS</p>
-        <h1>Entre na sua conta</h1>
-        <p className="auth-description">
-          Acesse seu plano de estudos e acompanhe sua evolução.
-        </p>
-
-        <form onSubmit={entrar}>
-          <label htmlFor="email">E-mail</label>
-          <input id="email" type="email" value={email} onChange={(evento) => setEmail(evento.target.value)} autoComplete="email" required />
-
-          <label htmlFor="senha">Senha</label>
-          <input id="senha" type="password" value={senha} onChange={(evento) => setSenha(evento.target.value)} autoComplete="current-password" required />
-
-          <Link className="auth-forgot" href="/recuperar-senha">Esqueci minha senha</Link>
-          <button type="submit" disabled={carregando}>{carregando ? "Entrando..." : "Entrar"}</button>
-        </form>
-
-        {mensagem && <p className="auth-message" role="alert">{mensagem}</p>}
-        <p className="auth-footer">Ainda não possui conta? <Link href="/cadastro">Cadastre-se</Link></p>
-      </section>
+    <main className={styles.loginPage}>
+      <LoginForm
+        email={email}
+        senha={senha}
+        mensagem={mensagem}
+        carregando={carregando}
+        onEmailChange={setEmail}
+        onSenhaChange={setSenha}
+        onSubmit={entrar}
+      />
+      <LoginShowcase />
     </main>
   );
 }
