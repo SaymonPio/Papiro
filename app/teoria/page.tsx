@@ -8,6 +8,8 @@ import ComponenteAulaView, { type ComponenteAula } from "@/components/teoria/Com
 import { useArtesQuadrinho } from "@/components/teoria/useArtesQuadrinho";
 import ComentariosAula from "@/components/teoria/ComentariosAula";
 import MarcaCarregando from "@/components/ui/MarcaCarregando";
+import { useSessaoTempo } from "@/components/tempo-estudo/useSessaoTempo";
+import CronometroEstudo from "@/components/tempo-estudo/CronometroEstudo";
 
 // Contexto AUXILIAR vindo da URL — nunca a identidade da missão a partir
 // desta etapa. Pode ser null (ex.: URL só com ?missao=<uuid>, sem
@@ -468,6 +470,12 @@ export default function Teoria() {
     // uma única unidade (a maioria) preserva o fluxo antigo abaixo, sem
     // nenhuma mudança de comportamento.
     if (unidadesPublicadas.length > 1) {
+      // Fase 2C: a teoria desta missão termina aqui (vai para as questões
+      // desta unidade) — encerra o cronômetro de teoria ANTES de navegar,
+      // nunca depende só do best-effort de desmontar() (ver comentário de
+      // encerrarEstudo em sessaoTempoControlador.ts: nunca rejeita, erro de
+      // cronômetro nunca pode travar a navegação pedagógica).
+      await sessaoTempo.encerrarEstudo();
       window.location.assign(montarLinkMissao({
         cursoMateriaId: identidade.cursoMateriaId,
         conteudoId: missao.conteudo_id,
@@ -482,10 +490,13 @@ export default function Teoria() {
     }
 
     if (indiceUnidade < unidadesPublicadas.length - 1) {
+      // Só avança para a próxima unidade DENTRO da mesma teoria — a sessão
+      // de tempo continua a mesma de propósito (ver sessaoTempoControlador.ts).
       selecionarUnidade(indiceUnidade + 1);
       return;
     }
 
+    await sessaoTempo.encerrarEstudo();
     window.location.assign(montarLinkMissao({
       cursoMateriaId: identidade.cursoMateriaId,
       conteudoId: missao.conteudo_id,
@@ -502,6 +513,59 @@ export default function Teoria() {
   // quadrinho segue só com o texto. Hook antes dos retornos antecipados (regra dos hooks).
   const aulaVersaoIdArte = estadoAula === "disponivel" ? (unidadesPublicadas[indiceUnidade] ?? unidadesPublicadas[0])?.aula_versao_id ?? null : null;
   const { artes: artesQuadrinho, aoErroArte } = useArtesQuadrinho({ modo: "aluno", aulaVersaoId: aulaVersaoIdArte, missaoId: missao?.id ?? null });
+
+  // Motor de tempo líquido de estudo (Fase 2A) — contexto vem exclusivamente
+  // do que já foi resolvido como identidade CANÔNICA desta missão acima
+  // (nunca dos parâmetros da URL). unidadePedagogicaId muda ao navegar entre
+  // unidades, mas isso nunca reinicia a sessão (ver comentário em
+  // sessaoTempoControlador.ts) — só afeta qual unidade uma NOVA sessão
+  // levaria, se ainda não houver uma em andamento.
+  const unidadeAtual = unidadesPublicadas[indiceUnidade] ?? null;
+  const sessaoTempo = useSessaoTempo({
+    origem: "cronograma",
+    tipoAtividade: "teoria",
+    matriculaId: missao?.matricula_id ?? null,
+    missaoId: missao?.id ?? null,
+    cursoConteudoId: missao?.conteudo_id ?? null,
+    materiaId: identidade?.materiaId ?? null,
+    assuntoId: identidade?.assuntoId ?? null,
+    unidadePedagogicaId: unidadeAtual?.unidade_pedagogica_id ?? null,
+  });
+
+  // Momento escolhido para iniciar a contagem: quando a aula desta missão
+  // está EFETIVAMENTE disponível e sendo exibida (não quando a página só
+  // terminou de carregar/autenticar) — nunca quando a Missão Final já
+  // liberou e nenhuma teoria está sendo mostrada. iniciarEstudo() é
+  // idempotente (só age a partir do estado "ociosa"), então reexecutar este
+  // efeito não duplica nem reinicia nada.
+  useEffect(() => {
+    if (estadoAula === "disponivel" && !missaoFinalLiberada && unidadesPublicadas.length > 0) {
+      sessaoTempo.iniciarEstudo();
+    }
+  }, [estadoAula, missaoFinalLiberada, unidadesPublicadas.length, sessaoTempo.iniciarEstudo]);
+
+  // Decide se há espaço confortável para a coluna lateral do cronômetro SEM
+  // encolher a largura da aula (que continua fixa em 880px, centralizada —
+  // ver .teoria-area). A coluna lateral fica FORA dessa caixa de 880px
+  // (position:absolute; left:100%), então o espaço disponível pra ela é só
+  // a margem lateral que já sobra da centralização — não a largura total
+  // da viewport. Com o padding real do .method-page (clamp 20px–92px por
+  // lado) e a largura do próprio botão do cronômetro (~130px + 16px de
+  // margem), a conta só fecha com segurança a partir de ~1340px — abaixo
+  // disso a coluna lateral entraria no padding da página ou sairia da
+  // viewport, por isso o fallback compacto. 1366px (resolução de desktop
+  // citada nos testes da Fase 2A) fica confortavelmente acima deste
+  // limite. Calculado no cliente (depende de window) — por isso só um
+  // valor inicial fixo até o efeito rodar; a página já mostra um loading
+  // antes de qualquer conteúdo real, então não há flash perceptível.
+  const [colunaLateralDisponivel, setColunaLateralDisponivel] = useState(false);
+  useEffect(() => {
+    const consulta = window.matchMedia("(min-width: 1340px)");
+    const atualizar = () => setColunaLateralDisponivel(consulta.matches);
+    atualizar();
+    consulta.addEventListener("change", atualizar);
+    return () => consulta.removeEventListener("change", atualizar);
+  }, []);
 
   if (carregando) return <main className="dashboard-loading"><MarcaCarregando texto="Preparando a teoria de hoje..." /></main>;
 
@@ -522,11 +586,24 @@ export default function Teoria() {
 
   return (
     <main className="method-page">
+    <div className="teoria-area">
       <header>
         <p className="dashboard-label">MISSÃO DIÁRIA · TEORIA</p>
         <h1>{materiaNome || "Teoria de hoje"}</h1>
         {assuntoNome && <span>{assuntoNome}</span>}
       </header>
+
+      {!colunaLateralDisponivel && (
+        <div className="teoria-area-compacta">
+          <CronometroEstudo sessao={sessaoTempo} contexto={assuntoNome || materiaNome || null} />
+        </div>
+      )}
+
+      {colunaLateralDisponivel && (
+        <div className="teoria-area-lateral">
+          <CronometroEstudo sessao={sessaoTempo} contexto={assuntoNome || materiaNome || null} />
+        </div>
+      )}
 
       {missaoFinalLiberada && (
         <section className="teoria-missao-final-liberada">
@@ -693,6 +770,7 @@ export default function Teoria() {
           Ir para as questões
         </Link>
       )}
+    </div>
     </main>
   );
 }

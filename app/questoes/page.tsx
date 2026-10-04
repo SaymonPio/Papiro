@@ -10,6 +10,8 @@ import {
   podeIniciarMissaoAutomaticamente,
 } from "@/utils/missao-cronograma.mjs";
 import { createClient } from "@/utils/supabase/client";
+import { useSessaoTempo, encerrarTeoriaAbertaDaMissao } from "@/components/tempo-estudo/useSessaoTempo";
+import CronometroEstudo from "@/components/tempo-estudo/CronometroEstudo";
 
 type MetaPreset = "minima" | "normal" | "ideal";
 type NivelMeta = MetaPreset | "personalizada";
@@ -167,6 +169,20 @@ export default function Questoes() {
   const assuntoInicialMissao = useRef<number | null>(null);
   const autoInicioExecutado = useRef(false);
 
+  // Fase 2C (horas líquidas) — contexto só preenchido/usado no fluxo de
+  // questões DA MISSÃO (quando missionId existe). matriculaId é promovido
+  // a estado aqui (antes só existia como variável local dentro de
+  // iniciarSessaoPersonalizada) especificamente para alimentar
+  // useSessaoTempo; cursoConteudoId vem de lerMissaoCronograma, que já
+  // lia esse campo mas a tela nunca o guardava.
+  const [matriculaId, setMatriculaId] = useState<string | null>(null);
+  const [cursoConteudoId, setCursoConteudoId] = useState<number | null>(null);
+  // true quando a checagem de sessão de teoria esquecida (ver
+  // encerrarTeoriaAbertaDaMissao) já terminou — só então o contexto de
+  // useSessaoTempo é habilitado, pra garantir que ela rode ANTES da
+  // própria recuperação automática do hook ver essa sessão de teoria.
+  const [preFlightTempoConcluido, setPreFlightTempoConcluido] = useState(false);
+
   useEffect(() => {
     const agendamento = window.setTimeout(() => {
       const missao = lerMissaoCronograma(window.location.search);
@@ -181,11 +197,80 @@ export default function Questoes() {
       setMissaoFinal(pratica.missaoFinal);
       setModoInicio("personalizada");
       setMateriaSelecionada(missao.materiaId);
+      setCursoConteudoId(missao.conteudoId);
       assuntoInicialMissao.current = missao.assuntoId;
       setQuantidadePersonalizada(Math.max(1, Math.min(100, missao.quantidade)));
     }, 0);
 
     return () => window.clearTimeout(agendamento);
+  }, []);
+
+  // Defesa contra sessão de teoria aberta antiga (Fase 2C, seção 6, regra
+  // A) — roda uma vez por missão, antes de habilitar o contexto de tempo
+  // de questões abaixo. Nunca lança (ver encerrarTeoriaAbertaDaMissao);
+  // "concluído" fica true mesmo se a checagem falhar internamente, para
+  // nunca travar o fluxo de questões por causa disto.
+  useEffect(() => {
+    if (!missionId) return;
+    let ativo = true;
+    encerrarTeoriaAbertaDaMissao(missionId).finally(() => {
+      if (ativo) setPreFlightTempoConcluido(true);
+    });
+    return () => {
+      ativo = false;
+    };
+  }, [missionId]);
+
+  // Motor de tempo líquido de estudo — cobre os dois casos deste arquivo:
+  // questões DA MISSÃO (origem='cronograma', missaoId real; matriculaId só
+  // passa depois do pre-flight de teoria concluir — preFlightTempoConcluido
+  // acima) e questões AVULSAS/PERSONALIZADAS (Fase 2C.1: origem='questoes',
+  // missaoId sempre null, sem pre-flight — não há teoria de nenhuma missão
+  // pra limpar antes). sessaoId é a MESMA sessão pedagógica de questões já
+  // criada pelo fluxo existente (iniciar_pratica_unidade/iniciar_missao_
+  // final/iniciar_questoes_da_missao/INSERT em sessoes_estudo) — nunca uma
+  // sessoes_estudo nova só para o cronômetro. curso_conteudo_id e
+  // unidade_pedagogica_id ficam null nos dois fluxos avulsos (nunca têm um
+  // vínculo real); materia_id/assunto_id só nascem preenchidos na
+  // personalizada avulsa, quando o aluno de fato escolheu um filtro — a
+  // meta diária nunca seta materiaSelecionada/assuntoSelecionado, então
+  // ambos continuam null nesse caso, sem nenhuma inferência.
+  const tempoHabilitado = missionId ? preFlightTempoConcluido : true;
+  const sessaoTempo = useSessaoTempo({
+    origem: missionId ? "cronograma" : "questoes",
+    tipoAtividade: "questoes",
+    matriculaId: tempoHabilitado ? matriculaId : null,
+    missaoId: missionId,
+    sessaoEstudoId: sessaoId,
+    cursoConteudoId,
+    materiaId: materiaSelecionada,
+    assuntoId: assuntoSelecionado,
+    unidadePedagogicaId,
+  });
+
+  // Momento escolhido para iniciar a contagem: quando a sessão de questões
+  // (de missão OU avulsa) já existe de fato (sessaoId real) E a lista já
+  // carregou — nunca por questão individual (iniciarEstudo() é idempotente,
+  // só age a partir de "ociosa").
+  useEffect(() => {
+    if (matriculaId && sessaoId && questoes.length > 0) {
+      sessaoTempo.iniciarEstudo();
+    }
+  }, [matriculaId, sessaoId, questoes.length, sessaoTempo.iniciarEstudo]);
+
+  // Mesmo mecanismo da Fase 2B em app/teoria/page.tsx — aqui a coluna
+  // principal (.question-session, mais larga: 980px na topbar/progresso
+  // contra 880px da teoria) precisa de mais margem lateral sobrando para
+  // a coluna do cronômetro não entrar no padding da página nem sair da
+  // viewport; a conta segura só fecha a partir de ~1450px (ver
+  // .questoes-area-lateral em app/globals.css para o cálculo completo).
+  const [colunaLateralDisponivelQuestoes, setColunaLateralDisponivelQuestoes] = useState(false);
+  useEffect(() => {
+    const consulta = window.matchMedia("(min-width: 1450px)");
+    const atualizar = () => setColunaLateralDisponivelQuestoes(consulta.matches);
+    atualizar();
+    consulta.addEventListener("change", atualizar);
+    return () => consulta.removeEventListener("change", atualizar);
   }, []);
 
   useEffect(() => {
@@ -298,6 +383,10 @@ export default function Questoes() {
       setCarregando(false);
       return;
     }
+
+    // Fase 2C.1: promovido a estado aqui especificamente para useSessaoTempo
+    // (sessão avulsa de meta diária) — nada mudou no resto desta função.
+    setMatriculaId(matricula.id);
 
     const { data: idsQuestoes, error: erroIds } = await supabase.rpc("ids_questoes_para_usuario", {
       p_limite: metas[meta].questoes,
@@ -417,6 +506,10 @@ export default function Questoes() {
       setCarregandoPersonalizada(false);
       return;
     }
+
+    // Fase 2C: promovido a estado aqui especificamente para useSessaoTempo
+    // (fluxo de questões da missão) — nada mudou no resto desta função.
+    setMatriculaId(matricula.id);
 
     let ids: number[] = [];
     let sessaoDaMissao: SessaoMissao | SessaoPratica | null = null;
@@ -732,6 +825,11 @@ export default function Questoes() {
       }
       const resultado = ((data as { missao_final_liberada: boolean }[] | null) ?? [])[0];
       const proximaEtapa = resultado?.missao_final_liberada ? "missaoFinal" : "unidade";
+      // Fase 2C: encerra o cronômetro de questões (uma vez por execução,
+      // nunca por questão) antes de navegar — nunca bloqueia: erro aqui só
+      // deixa o cronômetro em "erro" (ver encerrarEstudo em
+      // sessaoTempoControlador.ts), a navegação pedagógica segue sempre.
+      await sessaoTempo.encerrarEstudo();
       window.location.replace(`/questoes/resultado?sessao=${sessaoId}&proximo=${proximaEtapa}`);
       return;
     }
@@ -745,6 +843,7 @@ export default function Questoes() {
         setMensagem("Não foi possível concluir a Missão Final. Confira se todas as questões foram respondidas e tente novamente.");
         return;
       }
+      await sessaoTempo.encerrarEstudo();
       window.location.replace(`/questoes/resultado?sessao=${sessaoId}`);
       return;
     }
@@ -768,6 +867,11 @@ export default function Questoes() {
         return;
       }
     }
+    // Fase 2C.1: este ramo agora cobre tanto missão (if acima) quanto as
+    // duas sessões avulsas (else acima) — encerrarEstudo() já sabe não
+    // fazer nada se por algum motivo o cronômetro nunca chegou a
+    // "ativa"/"pausada".
+    await sessaoTempo.encerrarEstudo();
     window.location.replace(`/questoes/resultado?sessao=${sessaoId}`);
   }
 
@@ -898,13 +1002,45 @@ export default function Questoes() {
   const tituloSessaoAtual = nivel === "personalizada" ? "Sessão personalizada" : metas[nivel].titulo;
   const origemQuestao = descreverOrigemQuestao(questaoAtual);
 
+  const materiaNomeAtual = materiasCurso.find((materia) => materia.materia_id === materiaSelecionada)?.materia_nome ?? null;
+  const assuntoNomeAtual = assuntosCurso.find((assunto) => assunto.assunto_id === assuntoSelecionado)?.assunto_nome ?? null;
+
   return (
     <main className="method-page question-session">
+    <div className="questoes-area">
       <header className="session-topbar">
-        <Link href="/painel">PAPIRO</Link>
+        <Link
+          href="/painel"
+          onClick={(evento) => {
+            // Fase 2C: saída manual durante a sessão — encerra o cronômetro
+            // ANTES de navegar (mesmo padrão de concluirUnidade em
+            // app/teoria/page.tsx), por isso troca a navegação client-side
+            // do Link por um window.location.assign após o await.
+            evento.preventDefault();
+            void sessaoTempo.encerrarEstudo().then(() => window.location.assign("/painel"));
+          }}
+        >
+          PAPIRO
+        </Link>
         <div><span>{tituloSessaoAtual}</span><strong>{indice + 1} de {questoes.length}</strong></div>
       </header>
       <div className="session-progress" aria-label={`${progresso}% concluído`}><span style={{ width: `${progresso}%` }} /></div>
+
+      {/* Fase 2C.1: não mais restrito a missionId — CronometroEstudo já
+          retorna null em estado "ociosa", então nos poucos fluxos sem
+          cronômetro nenhum (nenhum previsto hoje, já que esta tela só
+          chega aqui com uma sessaoId real) isto simplesmente não renderiza
+          nada. */}
+      {!colunaLateralDisponivelQuestoes && (
+        <div className="questoes-area-compacta">
+          <CronometroEstudo sessao={sessaoTempo} contexto={assuntoNomeAtual || materiaNomeAtual} />
+        </div>
+      )}
+      {colunaLateralDisponivelQuestoes && (
+        <div className="questoes-area-lateral">
+          <CronometroEstudo sessao={sessaoTempo} contexto={assuntoNomeAtual || materiaNomeAtual} />
+        </div>
+      )}
 
       <article className="question-card">
         <div className="question-origin">
@@ -985,6 +1121,7 @@ export default function Questoes() {
       </article>
       <ComentariosQuestao key={questaoAtual.id} questaoId={questaoAtual.id} />
       <aside className="session-score">Acertos nesta sessão: <strong>{acertos}</strong></aside>
+    </div>
     </main>
   );
 }

@@ -2404,6 +2404,45 @@ footer > small {
   padding-top: 0;
 }
 
+/* Área das questões da missão (Fase 2C — horas líquidas). Mesmo padrão de
+   .teoria-area (Fase 2B): position:relative aqui, height:100% na coluna
+   lateral, para o cronômetro acompanhar o scroll por toda a extensão da
+   sessão de questões, não só a topbar. max-width 980px = a largura real
+   de .session-topbar/.session-progress (a mais larga das três, por isso é
+   quem define o alinhamento da coluna lateral) — .question-card (960px)
+   continua se centralizando do mesmo jeito de sempre DENTRO desta caixa,
+   com o mesmo resultado visual final de antes (uma caixa de 960px
+   centrada dentro de uma de 980px já centrada dá o mesmo centro). */
+.questoes-area {
+  position: relative;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+/* Largura real do conteúdo principal aqui é maior que na teoria (980px
+   contra 880px) — por isso a margem lateral que sobra da centralização só
+   fica confortável a partir de uma viewport mais larga (~1450px, não
+   ~1340px). Ver colunaLateralDisponivelQuestoes em app/questoes/page.tsx
+   para a conta completa. */
+.questoes-area-lateral {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  width: max-content;
+  max-width: 160px;
+  height: 100%;
+  margin-left: 16px;
+}
+
+.questoes-area-lateral .cronometro-estudo {
+  position: sticky;
+  top: 20px;
+}
+
+.questoes-area-compacta {
+  margin: -8px 0 20px;
+}
+
 .session-topbar {
   max-width: 980px;
   min-height: 86px;
@@ -2912,6 +2951,193 @@ footer > small {
   color: #f2b8b5;
   font-size: 13px;
   text-align: right;
+}
+
+/* Área da Teoria Interativa (Fase 2B — ajuste de posicionamento). Mesmo
+   max-width/centralização que .teoria-aula já usava — o cabeçalho volta a
+   ser um bloco simples (sem flex row), exatamente como era antes da Fase
+   2B, e esta div é quem passa a dar a .teoria-area-lateral um "pai alto"
+   para ancorar: position:relative aqui, height:100% nela, cobrindo a
+   MESMA altura do cabeçalho+conteúdo da aula (nunca só a altura do
+   cabeçalho) — é isso que permite o cronômetro continuar sticky durante
+   todo o scroll da aula, não só enquanto o cabeçalho está visível. */
+.teoria-area {
+  position: relative;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+/* Coluna lateral: NÃO é uma grid de duas colunas centralizada (isso
+   deslocaria .teoria-area, e portanto a aula inteira, visivelmente para a
+   esquerda). É um filho absolutamente posicionado fora da caixa de
+   .teoria-area, ancorado à borda direita dela — a aula em si nunca muda de
+   largura/posição com a coluna lateral presente ou ausente. width:
+   max-content (não uma largura fixa de "coluna") porque o espaço real
+   disponível aqui é só a margem que sobra da centralização de 880px, não a
+   viewport inteira — ver o cálculo do breakpoint em app/teoria/page.tsx
+   (colunaLateralDisponivel). max-width é só uma salvaguarda contra um
+   conteúdo inesperadamente largo. */
+.teoria-area-lateral {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  width: max-content;
+  max-width: 160px;
+  height: 100%;
+  margin-left: 16px;
+}
+
+.teoria-area-lateral .cronometro-estudo {
+  position: sticky;
+  top: 20px;
+}
+
+/* Versão compacta (telas sem espaço confortável para a coluna lateral —
+   ver colunaLateralDisponivel em app/teoria/page.tsx): o cronômetro volta a
+   ficar no fluxo normal, próximo ao topo, nunca como faixa grande. */
+.teoria-area-compacta {
+  margin: -8px 0 20px;
+}
+
+/* Cronômetro de tempo líquido de estudo (components/tempo-estudo) — gatilho
+   compacto com popover, mesmos tokens de cor do resto da Teoria Interativa,
+   sem glassmorphism e sem a estética azul de um mockup anterior descartado. */
+.cronometro-estudo {
+  position: relative;
+}
+
+.cronometro-estudo-gatilho {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgba(216, 173, 76, 0.28);
+  border-radius: 999px;
+  background: rgba(9, 24, 18, 0.92);
+  color: var(--gold-bright);
+  font: inherit;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.cronometro-estudo-gatilho:hover {
+  border-color: rgba(216, 173, 76, 0.5);
+  background: rgba(9, 24, 18, 1);
+}
+
+.cronometro-estudo-gatilho:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.cronometro-estudo-gatilho span:first-child {
+  font-size: 14px;
+}
+
+.cronometro-estudo-gatilho.cronometro-estudo-conflito,
+.cronometro-estudo-gatilho.cronometro-estudo-erro {
+  border-color: rgba(242, 184, 181, 0.4);
+  color: #f2b8b5;
+}
+
+/* right:0 (cresce para a esquerda a partir do gatilho) é a abertura
+   preferencial pedida: evita sair da viewport pela direita, que é o lado
+   com menos margem quando o cronômetro está na coluna lateral (perto da
+   borda direita da página). width menor que antes (260px, não 280px) para
+   minimizar quanto ele avança sobre a coluna de conteúdo nesse layout — é
+   overlay (não desloca nada), mas ainda assim fecha no mouseleave/clique
+   fora/Escape, então a cobertura é sempre temporária. */
+.cronometro-estudo-popover {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: min(260px, calc(100vw - 32px));
+  padding: 16px 18px;
+  border: 1px solid rgba(216, 173, 76, 0.26);
+  border-radius: 12px;
+  background: rgba(7, 18, 15, 0.98);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+  z-index: 6;
+  animation: cronometro-popover-entrada 140ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cronometro-estudo-popover { animation: none; }
+}
+
+@keyframes cronometro-popover-entrada {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.cronometro-estudo-popover .dashboard-label {
+  margin: 0 0 8px;
+}
+
+.cronometro-estudo-tempo {
+  margin: 0 0 6px;
+  font-family: Georgia, serif;
+  font-size: 26px;
+  font-variant-numeric: tabular-nums;
+  color: var(--cream);
+}
+
+.cronometro-estudo-status {
+  margin: 0 0 4px;
+  color: #b9c2bd;
+  font-size: 13px;
+}
+
+.cronometro-estudo-contexto {
+  margin: 0 0 12px;
+  color: #8fa097;
+  font-size: 12.5px;
+}
+
+.cronometro-estudo-mensagem {
+  margin: 0;
+  color: #b9c2bd;
+  font-size: 13px;
+}
+
+.cronometro-estudo-mensagem[role="alert"] {
+  color: #f2b8b5;
+}
+
+.cronometro-estudo-acoes {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.cronometro-estudo-acoes button {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  border: 1px solid rgba(216, 173, 76, 0.35);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--gold-bright);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.cronometro-estudo-acoes button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.cronometro-estudo-acoes button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 /* Modo Papiro por unidades pedagógicas: aviso de Missão Final liberada,
