@@ -1260,6 +1260,54 @@
   font-size: 10px;
 }
 
+/* Disponibilidade — único acesso rápido de /meu-estudo no painel (ver
+   CronometroEstudo "Ver meu estudo" e app/estatisticas/page.tsx para os
+   outros dois). Só esta linha é clicável, nunca o card inteiro — o
+   "Dias restantes" ao lado não leva a lugar nenhum. */
+.papiro-plan-card__metric--link {
+  position: relative;
+  transition: background-color 160ms ease;
+}
+
+/* O tingimento de hover/focus fica no DIV (atrás do texto no empilhamento
+   normal), nunca no overlay — o overlay é position:absolute e pintaria
+   POR CIMA de dt/dd/span (regra de stacking de elementos posicionados),
+   escondendo "Disponibilidade"/"2h"/"por dia para estudar" se ele
+   próprio tivesse um fundo visível. :hover no DIV já dispara ao passar o
+   mouse sobre o overlay (que cobre a linha inteira); :focus-within
+   cobre o teclado, já que o overlay é o único filho focável. */
+.papiro-plan-card__metric--link {
+  transition: background-color 200ms ease-out, box-shadow 200ms ease-out;
+}
+.papiro-plan-card__metric--link:hover,
+.papiro-plan-card__metric--link:focus-within {
+  background-color: var(--papiro-color-surface-2);
+  /* inset, nunca um border real — não desloca padding/layout da linha */
+  box-shadow: inset 0 0 0 1px rgba(215, 179, 90, 0.35);
+}
+
+.papiro-plan-card__metric-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.papiro-plan-card__metric-overlay:focus-visible {
+  outline: 2px solid var(--papiro-color-focus);
+  outline-offset: -2px;
+}
+
+.papiro-plan-card__metric-arrow {
+  margin-left: auto;
+  color: var(--papiro-color-text-subtle);
+  transition: transform 200ms ease-out, color 200ms ease-out;
+}
+.papiro-plan-card__metric--link:hover .papiro-plan-card__metric-arrow,
+.papiro-plan-card__metric--link:focus-within .papiro-plan-card__metric-arrow {
+  transform: translateX(3px);
+  color: var(--papiro-color-brand-gold);
+}
+
 /* Empty state */
 
 .papiro-empty-focus {

@@ -33,6 +33,18 @@ export type SessaoAbertaEncontrada = {
   matriculaId: string;
   missaoId: string | null;
   segundosLiquidos: number;
+  /**
+   * Campos adicionais (Horas Líquidas 1.0) — não participam da
+   * comparação de "mesmo contexto" em `recuperar` (que já usa só
+   * origem/tipoAtividade/matriculaId/missaoId), só existem para a UI de
+   * conflito conseguir mostrar contexto real e reconstruir um link de
+   * "retomar estudo anterior" sem inventar nada.
+   */
+  sessaoEstudoId: number | null;
+  cursoConteudoId: number | null;
+  materiaId: number | null;
+  assuntoId: number | null;
+  unidadePedagogicaId: string | null;
 };
 
 export type DepsControladorSessaoTempo = {
@@ -61,6 +73,8 @@ export type EstadoPublicoSessaoTempo = {
   /** deps.agora() no instante em que `segundosLiquidos` passou a valer — a UI usa isto só para interpolar o contador visual entre heartbeats, nunca para persistir nada. */
   baseLocalEm: number | null;
   erro: string | null;
+  /** Só preenchido quando estado === "conflito" — a sessão de outro contexto que está bloqueando o início. */
+  conflito: SessaoAbertaEncontrada | null;
 };
 
 const INTERVALO_HEARTBEAT_MS = 20_000;
@@ -105,12 +119,52 @@ export type ControladorSessaoTempo = {
    * ou erro já tratado).
    */
   encerrarEstudo: () => Promise<void>;
+  /**
+   * Horas Líquidas 1.0 — seção "conflito". Encerra a sessão de OUTRO
+   * contexto que está bloqueando o início (nunca a atual — não existe
+   * uma "atual" ainda, é exatamente por isso que há conflito) e, se
+   * tiver sucesso, tenta iniciar a atividade atual imediatamente depois
+   * (mesmo contrato de nunca rejeitar de encerrarEstudo — um erro aqui
+   * só deixa `erro` preenchido, nunca lança).
+   */
+  encerrarConflitoEIniciar: () => Promise<void>;
   /** Chamado pelo hook no visibilitychange: aba ficou oculta. */
   aoFicarOculta: () => void;
   /** Chamado pelo hook no visibilitychange: aba voltou a ficar visível. */
   aoFicarVisivel: () => void;
   desmontar: () => void;
 };
+
+// Decide "mesmo contexto" para sessões SEM missão (toda sessão avulsa —
+// meta diária e personalizada). A identidade real de uma execução avulsa
+// é a sessão pedagógica (sessoes_estudo), nunca origem/tipoAtividade
+// sozinhos (iguais para QUALQUER par de sessões avulsas, já cobertos por
+// baseIgual em recuperar()).
+function identidadeAvulsaCompativel(aberta: SessaoAbertaEncontrada, ctx: ContextoSessaoTempo): boolean {
+  // Caminho principal: os dois lados já sabem a que sessão pedagógica
+  // pertencem — comparação direta e definitiva.
+  if (aberta.sessaoEstudoId !== null && ctx.sessaoEstudoId !== null) {
+    return aberta.sessaoEstudoId === ctx.sessaoEstudoId;
+  }
+
+  // Fallback: ctx.sessaoEstudoId ainda é null porque a recuperação roda
+  // ANTES de iniciar_sessao_questoes_avulsa resolver (é essa RPC que
+  // cria o sessaoEstudoId) — acontece em toda primeira tentativa de uma
+  // sessão avulsa nova, não é caso raro. Só conta como "mesmo contexto"
+  // quando existe um campo realmente identificador E IGUAL dos dois
+  // lados (aberta.materiaId !== null): null-contra-null (ex.: meta
+  // diária, que nunca tem matéria) NUNCA é tratado como prova de
+  // igualdade — isso reintroduziria para meta diária o mesmo bug que
+  // esta correção resolve para personalizada. Preferir conflito a
+  // reancorar silenciosamente a sessão errada.
+  return (
+    aberta.materiaId !== null &&
+    aberta.materiaId === ctx.materiaId &&
+    aberta.assuntoId === ctx.assuntoId &&
+    aberta.cursoConteudoId === ctx.cursoConteudoId &&
+    aberta.unidadePedagogicaId === ctx.unidadePedagogicaId
+  );
+}
 
 export function criarControladorSessaoTempo(
   deps: DepsControladorSessaoTempo,
@@ -124,11 +178,12 @@ export function criarControladorSessaoTempo(
   let segundosLiquidos = 0;
   let baseLocalEm: number | null = null;
   let erro: string | null = null;
+  let conflito: SessaoAbertaEncontrada | null = null;
   let heartbeatTimer: unknown = null;
   let temHeartbeatTimer = false;
 
   function emitir() {
-    aoMudarEstado({ estado, processando, segundosLiquidos, baseLocalEm, erro });
+    aoMudarEstado({ estado, processando, segundosLiquidos, baseLocalEm, erro, conflito });
   }
 
   function cancelarHeartbeat() {
@@ -196,29 +251,41 @@ export function criarControladorSessaoTempo(
         if (!aberta) {
           estado = "ociosa";
           sessaoId = null;
+          conflito = null;
           emitir();
           return;
         }
 
-        // "Mesmo contexto" nesta fase = origem + tipo_atividade + matrícula +
-        // missão — o grão em que esta fase mede tempo (a missão inteira,
-        // não cada unidade pedagógica isoladamente dela). unidade_pedagogica_id
-        // não entra nesta comparação de propósito: navegar entre unidades
-        // dentro da MESMA missão não deve virar conflito nem reiniciar a
-        // sessão — ver comentário de app/teoria/page.tsx na chamada deste hook.
-        const mesmoContexto =
+        // Hotfix (Horas Líquidas 1.0 — conflito de sessão avulsa): origem +
+        // tipo_atividade + matrícula + missão identificam o grão correto
+        // SÓ quando há missão (cronograma) — ali é a missão inteira que
+        // conta, nunca cada unidade pedagógica isoladamente dela (navegar
+        // entre unidades da MESMA missão não deve virar conflito nem
+        // reiniciar a sessão — ver comentário de app/teoria/page.tsx na
+        // chamada deste hook). Sem missão (toda sessão avulsa — meta
+        // diária/personalizada), missaoId é SEMPRE null para os dois
+        // lados, então parar a comparação aqui tornaria QUALQUER par de
+        // sessões avulsas "mesmo contexto" — o bug real de conflito
+        // auditado nesta fase. Por isso a identidade avulsa é decidida
+        // por identidadeAvulsaCompativel() abaixo.
+        const baseIgual =
           aberta.origem === ctx.origem &&
           aberta.tipoAtividade === ctx.tipoAtividade &&
           aberta.matriculaId === ctx.matriculaId &&
           aberta.missaoId === ctx.missaoId;
 
+        const mesmoContexto =
+          baseIgual && (ctx.missaoId !== null || identidadeAvulsaCompativel(aberta, ctx));
+
         if (!mesmoContexto) {
           estado = "conflito";
           sessaoId = null;
+          conflito = aberta;
           emitir();
           return;
         }
 
+        conflito = null;
         sessaoId = aberta.id;
         marcarSegundos(aberta.segundosLiquidos);
         executarRetomada(minhaGeracao, aberta.id);
@@ -286,6 +353,47 @@ export function criarControladorSessaoTempo(
       });
   }
 
+  // Compartilhado por iniciarEstudo() e encerrarConflitoEIniciar() — depois
+  // de encerrar a sessão conflitante, tentar iniciar a atual é exatamente a
+  // mesma operação que o botão normal de iniciar faz a partir de "ociosa".
+  function executarIniciarEstudo(minhaGeracao: number) {
+    if (!contexto || estado !== "ociosa") return;
+    const ctx = contexto;
+    estado = "iniciando";
+    emitir();
+    void deps
+      .iniciarSessao(ctx)
+      .then((r) => {
+        if (minhaGeracao !== geracao) return;
+        sessaoId = r.id;
+        marcarSegundos(r.segundosLiquidos);
+        estado = "ativa";
+        conflito = null;
+        emitir();
+        agendarProximoHeartbeat(minhaGeracao);
+      })
+      .catch((e) => {
+        if (minhaGeracao !== geracao) return;
+        if (!deps.ehErroDeConflito(e)) {
+          estado = "erro";
+          erro = String(e instanceof Error ? e.message : e);
+          emitir();
+          return;
+        }
+        // Conflito explícito (23505): iniciar_sessao_tempo não devolve a
+        // sessão conflitante no próprio erro, então busca ela separado só
+        // para a UI conseguir mostrar contexto real — nunca inventado.
+        estado = "conflito";
+        erro = String(e instanceof Error ? e.message : e);
+        emitir();
+        void deps.obterSessaoAberta().then((aberta) => {
+          if (minhaGeracao !== geracao || estado !== "conflito") return;
+          conflito = aberta;
+          emitir();
+        });
+      });
+  }
+
   return {
     definirContexto(novo) {
       const chaveNova = novo?.chave ?? null;
@@ -299,6 +407,7 @@ export function criarControladorSessaoTempo(
       segundosLiquidos = 0;
       baseLocalEm = null;
       erro = null;
+      conflito = null;
       processando = false;
 
       if (!novo) {
@@ -322,26 +431,7 @@ export function criarControladorSessaoTempo(
 
     iniciarEstudo() {
       if (!contexto || estado !== "ociosa" || processando) return; // só inicia a partir de ociosa — nunca duplica uma sessão existente
-      const ctx = contexto;
-      const minhaGeracao = geracao;
-      estado = "iniciando";
-      emitir();
-      void deps
-        .iniciarSessao(ctx)
-        .then((r) => {
-          if (minhaGeracao !== geracao) return;
-          sessaoId = r.id;
-          marcarSegundos(r.segundosLiquidos);
-          estado = "ativa";
-          emitir();
-          agendarProximoHeartbeat(minhaGeracao);
-        })
-        .catch((e) => {
-          if (minhaGeracao !== geracao) return;
-          estado = deps.ehErroDeConflito(e) ? "conflito" : "erro";
-          erro = String(e instanceof Error ? e.message : e);
-          emitir();
-        });
+      executarIniciarEstudo(geracao);
     },
 
     pausarEstudo() {
@@ -382,6 +472,34 @@ export function criarControladorSessaoTempo(
           // "erro", mas a promise ainda resolve — uma falha de RPC de tempo
           // nunca pode travar a navegação pedagógica de quem chamou isto.
           estado = "erro";
+          erro = String(e instanceof Error ? e.message : e);
+          processando = false;
+          emitir();
+        });
+    },
+
+    encerrarConflitoEIniciar() {
+      if (estado !== "conflito" || !conflito || processando) return Promise.resolve();
+      const idConflitante = conflito.id;
+      const minhaGeracao = geracao;
+      processando = true;
+      emitir();
+      return deps
+        .encerrar(idConflitante)
+        .then(() => {
+          if (minhaGeracao !== geracao) return;
+          processando = false;
+          estado = "ociosa";
+          conflito = null;
+          erro = null;
+          emitir();
+          executarIniciarEstudo(minhaGeracao);
+        })
+        .catch((e) => {
+          if (minhaGeracao !== geracao) return;
+          // Não resolveu o conflito: permanece em "conflito" (não "erro")
+          // para a UI continuar oferecendo as mesmas duas ações, só que
+          // agora também com uma mensagem de erro visível.
           erro = String(e instanceof Error ? e.message : e);
           processando = false;
           emitir();

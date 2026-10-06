@@ -51,6 +51,96 @@ type Questao = {
   alternativas: Alternativa[];
 };
 
+// Retorno de iniciar_sessao_questoes_avulsa (meta diária e personalizada —
+// supabase/migrations/20261004180000_sessao_avulsa_recuperavel.sql).
+type SessaoAvulsaIniciada = {
+  sessao_id: number | string;
+  status: string;
+  questao_ids: Array<number | string>;
+  recuperada: boolean;
+};
+
+// Retorno de obter_sessao_questoes_avulsa — usado só na recuperação após
+// F5/reabertura (?sessaoAvulsa=<id> na URL).
+type SessaoAvulsaRecuperada = {
+  sessao_id: number | string;
+  status: string;
+  nivel_meta: string;
+  materia_id: number | null;
+  assunto_id: number | null;
+  questoes_planejadas: number;
+  questao_ids: Array<number | string>;
+};
+
+type Resposta = { questao_id: number; acertou: boolean };
+
+// Busca os detalhes completos (enunciado/alternativas) das questões já
+// autorizadas por uma RPC (ids_questoes_para_usuario, direto ou via
+// iniciar_sessao_questoes_avulsa/obter_sessao_questoes_avulsa) — nunca um
+// fallback para o banco global. Preserva a ORDEM de `ids` (que é a ordem
+// de prioridade da RPC, ou a ordem persistida em sessao_questoes_planejadas
+// na recuperação). Usado pelos três pontos que hoje montam uma lista de
+// questões em memória: iniciarSessao, iniciarSessaoPersonalizada, e a
+// recuperação por ?sessaoAvulsa=.
+async function buscarDetalhesQuestoes(
+  supabase: ReturnType<typeof createClient>,
+  ids: number[],
+): Promise<Questao[] | null> {
+  if (ids.length === 0) return null;
+  const { data: bancoQuestoes, error } = await supabase
+    .from("questoes")
+    .select("id, enunciado, dificuldade, banca, concurso, ano, materias(nome), assuntos(nome), alternativas(id, texto, ordem)")
+    .in("id", ids);
+  if (error || !bancoQuestoes?.length) return null;
+  const mapa = new Map((bancoQuestoes as unknown as Questao[]).map((questao) => [questao.id, questao]));
+  const preparadas = ids
+    .map((id) => mapa.get(id))
+    .filter((questao): questao is Questao => Boolean(questao))
+    .map((questao) => ({ ...questao, alternativas: [...questao.alternativas].sort((a, b) => a.ordem - b.ordem) }));
+  return preparadas.length > 0 ? preparadas : null;
+}
+
+// Resolve a matrícula ativa do curso ativo do usuário — mesma consulta
+// (perfis.curso_ativo_id -> matriculas) já feita em 3 lugares deste
+// arquivo (iniciarSessao, iniciarSessaoPersonalizada, e a recuperação
+// por ?sessaoAvulsa=); aqui sem distinguir as duas mensagens de erro
+// específicas que iniciarSessao/iniciarSessaoPersonalizada mostram, pois
+// a recuperação não tem onde exibi-las.
+async function buscarMatriculaAtiva(
+  supabase: ReturnType<typeof createClient>,
+  usuarioId: string,
+): Promise<string | null> {
+  const { data: perfil } = await supabase.from("perfis").select("curso_ativo_id").eq("usuario_id", usuarioId).maybeSingle();
+  if (!perfil?.curso_ativo_id) return null;
+  const { data: matricula } = await supabase
+    .from("matriculas")
+    .select("id")
+    .eq("usuario_id", usuarioId)
+    .eq("curso_id", perfil.curso_ativo_id)
+    .eq("status", "ativa")
+    .maybeSingle();
+  return matricula?.id ?? null;
+}
+
+// Grava/atualiza ?sessaoAvulsa=<id> na URL sem recarregar a página — é
+// esse parâmetro que permite reconstruir a mesma execução depois de um
+// F5. Nome escolhido para NUNCA colidir com o ?sessao=<sessoes_estudo.id>
+// já usado por /questoes/resultado (mesmo espaço de ids, propósito
+// diferente — ver auditoria desta fase).
+function atualizarUrlSessaoAvulsa(sessaoId: number) {
+  if (typeof window === "undefined") return;
+  const url = new URL(window.location.href);
+  url.searchParams.set("sessaoAvulsa", String(sessaoId));
+  window.history.replaceState(null, "", url.toString());
+}
+
+function removerUrlSessaoAvulsa() {
+  if (typeof window === "undefined") return;
+  const url = new URL(window.location.href);
+  url.searchParams.delete("sessaoAvulsa");
+  window.history.replaceState(null, "", url.toString());
+}
+
 // Identificação visual da origem: questão real (banca preenchida e não
 // autoral) mostra apenas banca • concurso • ano. Metadados internos da fonte,
 // como número e posição no conjunto importado, nunca são enviados ao aluno.
@@ -205,6 +295,103 @@ export default function Questoes() {
     return () => window.clearTimeout(agendamento);
   }, []);
 
+  // Horas Líquidas 1.0 — recuperação de sessão avulsa/personalizada após
+  // F5/reabertura via ?sessaoAvulsa=<sessoes_estudo.id>. Roda uma vez no
+  // mount; nunca ativa junto com o fluxo de missão (parâmetros
+  // mutuamente exclusivos). obter_sessao_questoes_avulsa já valida
+  // ownership (usuario_id = auth.uid()) dentro da própria RPC — o id da
+  // URL nunca é confiado por si só.
+  //
+  // O estado inicial é SEMPRE false, igual no servidor e no primeiro
+  // render do cliente — nunca um valor calculado a partir de
+  // `typeof window !== "undefined"` dentro do inicializador do
+  // useState. Essa variante (já tentada e revertida) fazia o SSR
+  // sempre renderizar "false" (sem window) enquanto o primeiro render
+  // do cliente, com ?sessaoAvulsa= na URL, calculava "true" — a própria
+  // árvore de JSX divergia (tela de escolha vs. tela de carregamento),
+  // causando o hydration mismatch real reportado nesta auditoria. A
+  // leitura de verdade da URL só acontece aqui dentro, depois do mount.
+  const [recuperandoSessaoAvulsa, setRecuperandoSessaoAvulsa] = useState(false);
+  useEffect(() => {
+    const id = Number(new URLSearchParams(window.location.search).get("sessaoAvulsa"));
+    if (!Number.isInteger(id) || id <= 0) return;
+
+    // Setado aqui (dentro do efeito, depois do mount), não no
+    // inicializador do useState — é exatamente essa diferença que
+    // resolve o mismatch acima sem escondê-lo: o primeiro render fica
+    // idêntico nos dois lados, e só depois de montado é que a tela
+    // troca para o loading de recuperação. Dispara o aviso de lint
+    // react-hooks/set-state-in-effect — aceito deliberadamente aqui,
+    // na mesma categoria de trade-off já documentada para
+    // react-hooks/refs neste arquivo: a alternativa (ler no
+    // inicializador) é o próprio bug de hydration.
+    setRecuperandoSessaoAvulsa(true);
+
+    let ativo = true;
+
+    (async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!ativo) return;
+      if (!user) { window.location.replace("/login"); return; }
+
+      const { data, error } = await supabase.rpc("obter_sessao_questoes_avulsa", { p_sessao_id: id });
+      if (!ativo) return;
+
+      const linha = ((data as SessaoAvulsaRecuperada[] | null) ?? [])[0];
+      if (error || !linha) {
+        // Sessão não encontrada/não pertence a este usuário: remove o
+        // parâmetro inválido e segue para a tela normal de escolha —
+        // nunca trava a navegação por causa de um link velho/alterado.
+        removerUrlSessaoAvulsa();
+        setRecuperandoSessaoAvulsa(false);
+        return;
+      }
+
+      if (linha.status === "concluida") {
+        window.location.replace(`/questoes/resultado?sessao=${linha.sessao_id}`);
+        return;
+      }
+
+      const ids = linha.questao_ids.map(Number).filter(Number.isInteger);
+      const preparadas = await buscarDetalhesQuestoes(supabase, ids);
+      if (!ativo) return;
+      if (!preparadas) {
+        removerUrlSessaoAvulsa();
+        setRecuperandoSessaoAvulsa(false);
+        return;
+      }
+
+      const matriculaAtiva = await buscarMatriculaAtiva(supabase, user.id);
+      if (!ativo) return;
+
+      const { data: respostas } = await supabase
+        .from("respostas_usuarios")
+        .select("questao_id, acertou")
+        .eq("sessao_id", linha.sessao_id);
+      if (!ativo) return;
+
+      const jaRespondidas = new Set((respostas as Resposta[] | null ?? []).map((r) => r.questao_id));
+      const acertosRecuperados = ((respostas as Resposta[] | null) ?? []).filter((r) => r.acertou).length;
+      const indicePendente = ids.findIndex((idQuestao) => !jaRespondidas.has(idQuestao));
+
+      if (matriculaAtiva) setMatriculaId(matriculaAtiva);
+      setModoInicio("personalizada");
+      setMateriaSelecionada(linha.materia_id);
+      setAssuntoSelecionado(linha.assunto_id);
+      setNivel(linha.nivel_meta as NivelMeta);
+      setQuestoes(preparadas);
+      setSessaoId(Number(linha.sessao_id));
+      setAcertos(acertosRecuperados);
+      setIndice(indicePendente === -1 ? Math.max(0, ids.length - 1) : indicePendente);
+      setRecuperandoSessaoAvulsa(false);
+    })();
+
+    return () => {
+      ativo = false;
+    };
+  }, []);
+
   // Defesa contra sessão de teoria aberta antiga (Fase 2C, seção 6, regra
   // A) — roda uma vez por missão, antes de habilitar o contexto de tempo
   // de questões abaixo. Nunca lança (ver encerrarTeoriaAbertaDaMissao);
@@ -257,21 +444,6 @@ export default function Questoes() {
       sessaoTempo.iniciarEstudo();
     }
   }, [matriculaId, sessaoId, questoes.length, sessaoTempo.iniciarEstudo]);
-
-  // Mesmo mecanismo da Fase 2B em app/teoria/page.tsx — aqui a coluna
-  // principal (.question-session, mais larga: 980px na topbar/progresso
-  // contra 880px da teoria) precisa de mais margem lateral sobrando para
-  // a coluna do cronômetro não entrar no padding da página nem sair da
-  // viewport; a conta segura só fecha a partir de ~1450px (ver
-  // .questoes-area-lateral em app/globals.css para o cálculo completo).
-  const [colunaLateralDisponivelQuestoes, setColunaLateralDisponivelQuestoes] = useState(false);
-  useEffect(() => {
-    const consulta = window.matchMedia("(min-width: 1450px)");
-    const atualizar = () => setColunaLateralDisponivelQuestoes(consulta.matches);
-    atualizar();
-    consulta.addEventListener("change", atualizar);
-    return () => consulta.removeEventListener("change", atualizar);
-  }, []);
 
   useEffect(() => {
     async function protegerPagina() {
@@ -384,89 +556,45 @@ export default function Questoes() {
       return;
     }
 
-    // Fase 2C.1: promovido a estado aqui especificamente para useSessaoTempo
-    // (sessão avulsa de meta diária) — nada mudou no resto desta função.
+    // Promovido a estado aqui especificamente para useSessaoTempo (sessão
+    // avulsa de meta diária) — nada mudou no resto desta função.
     setMatriculaId(matricula.id);
 
-    const { data: idsQuestoes, error: erroIds } = await supabase.rpc("ids_questoes_para_usuario", {
-      p_limite: metas[meta].questoes,
+    // Horas Líquidas 1.0: criação/recuperação atômica (idempotente — um
+    // retry/double-click/refresh nunca cria uma segunda sessoes_estudo) e
+    // persistência da lista+ordem das questões, tudo numa única RPC —
+    // substitui o INSERT direto em sessoes_estudo de antes, que nunca
+    // gravava a lista em sessao_questoes_planejadas.
+    const { data, error } = await supabase.rpc("iniciar_sessao_questoes_avulsa", {
+      p_nivel_meta: meta,
+      p_quantidade: metas[meta].questoes,
     });
 
-    if (erroIds) {
-      console.error("ids_questoes_para_usuario falhou:", {
-        message: erroIds.message,
-        code: erroIds.code,
-        details: erroIds.details,
-        hint: erroIds.hint,
+    const linha = ((data as SessaoAvulsaIniciada[] | null) ?? [])[0];
+    if (error || !linha) {
+      console.error("iniciar_sessao_questoes_avulsa (meta) falhou:", {
+        message: error?.message,
+        code: error?.code,
+        details: error?.details,
+        hint: error?.hint,
       });
-      setMensagem("Não foi possível carregar as questões deste curso.");
-      setCarregando(false);
-      return;
-    }
-
-    const ids = ((idsQuestoes as IdQuestao[] | null) ?? []).map((item) => item.questao_id);
-
-    if (ids.length === 0) {
-      setMensagem("Ainda não há questões cadastradas para este curso.");
-      setCarregando(false);
-      return;
-    }
-
-    // Busca só os detalhes das questões já autorizadas pela RPC para o curso ativo —
-    // nunca um fallback para o banco global nem para outro curso.
-    const { data: bancoQuestoes, error: erroQuestoes } = await supabase
-      .from("questoes")
-      .select("id, enunciado, dificuldade, banca, concurso, ano, materias(nome), assuntos(nome), alternativas(id, texto, ordem)")
-      .in("id", ids);
-
-    if (erroQuestoes || !bancoQuestoes?.length) {
-      setMensagem("Ainda não há questões cadastradas para este curso.");
-      setCarregando(false);
-      return;
-    }
-
-    const mapaQuestoes = new Map(
-      (bancoQuestoes as unknown as Questao[]).map((questao) => [questao.id, questao]),
-    );
-
-    // Preserva a ordem de prioridade retornada por ids_questoes_para_usuario.
-    const preparadas = ids
-      .map((id) => mapaQuestoes.get(id))
-      .filter((questao): questao is Questao => Boolean(questao))
-      .map((questao) => ({
-        ...questao,
-        alternativas: [...questao.alternativas].sort((a, b) => a.ordem - b.ordem),
-      }));
-
-    if (preparadas.length === 0) {
-      setMensagem("Ainda não há questões cadastradas para este curso.");
-      setCarregando(false);
-      return;
-    }
-
-    const { data: sessao, error: erroSessao } = await supabase
-      .from("sessoes_estudo")
-      .insert({
-        usuario_id: user.id,
-        matricula_id: matricula.id,
-        nivel_meta: meta,
-        status: "em_andamento",
-        inicio_em: new Date().toISOString(),
-        minutos_revisao: metas[meta].revisao,
-        questoes_planejadas: preparadas.length,
-      })
-      .select("id")
-      .single();
-
-    if (erroSessao || !sessao) {
       setMensagem("Não foi possível iniciar a sessão. Tente novamente.");
+      setCarregando(false);
+      return;
+    }
+
+    const ids = linha.questao_ids.map(Number).filter(Number.isInteger);
+    const preparadas = await buscarDetalhesQuestoes(supabase, ids);
+    if (!preparadas) {
+      setMensagem("Ainda não há questões cadastradas para este curso.");
       setCarregando(false);
       return;
     }
 
     setNivel(meta);
     setQuestoes(preparadas);
-    setSessaoId(sessao.id);
+    setSessaoId(Number(linha.sessao_id));
+    atualizarUrlSessaoAvulsa(Number(linha.sessao_id));
     setCarregando(false);
   }
 
@@ -513,6 +641,7 @@ export default function Questoes() {
 
     let ids: number[] = [];
     let sessaoDaMissao: SessaoMissao | SessaoPratica | null = null;
+    let sessaoAvulsaId: number | null = null;
 
     // Modo Papiro por unidades pedagógicas (Fase 2J-F): quando a URL pede
     // uma unidade específica ou a Missão Final, a seleção é INTEIRA
@@ -569,7 +698,10 @@ export default function Questoes() {
 
       sessaoDaMissao = linha;
       ids = linha.questao_ids.map(Number).filter(Number.isInteger);
-    } else {
+    } else if (missionId) {
+      // Missão sem unidade pedagógica/Missão Final: seleção calculada no
+      // cliente, validada e fechada dentro de iniciar_questoes_da_missao
+      // (fluxo antigo, inalterado).
       const { data: idsQuestoes, error: erroIds } = await supabase.rpc("ids_questoes_para_usuario", {
         p_limite: quantidadePersonalizada,
         p_materia_id: materiaSelecionada,
@@ -596,88 +728,79 @@ export default function Questoes() {
         return;
       }
 
-      if (missionId) {
-        const { data, error } = await supabase.rpc("iniciar_questoes_da_missao", {
-          p_missao_id: missionId,
-          p_questao_ids: ids,
-          p_refazer: refazerMissao,
-        });
-        const linhaMissao = ((data as SessaoMissao[] | null) ?? [])[0] ?? null;
-        sessaoDaMissao = linhaMissao;
+      const { data, error } = await supabase.rpc("iniciar_questoes_da_missao", {
+        p_missao_id: missionId,
+        p_questao_ids: ids,
+        p_refazer: refazerMissao,
+      });
+      const linhaMissao = ((data as SessaoMissao[] | null) ?? [])[0] ?? null;
+      sessaoDaMissao = linhaMissao;
 
-        if (error || !linhaMissao) {
-          setMensagemPersonalizada(
-            error?.message.toLowerCase().includes("teoria")
-              ? "Conclua todas as unidades da teoria antes de iniciar as questões."
-              : "Não foi possível iniciar as questões desta missão.",
-          );
-          setCarregandoPersonalizada(false);
-          return;
-        }
-
-        if (linhaMissao.sessao_status === "concluida") {
-          window.location.replace(`/questoes/resultado?sessao=${linhaMissao.sessao_id}`);
-          return;
-        }
-
-        ids = linhaMissao.questao_ids.map(Number).filter(Number.isInteger);
+      if (error || !linhaMissao) {
+        setMensagemPersonalizada(
+          error?.message.toLowerCase().includes("teoria")
+            ? "Conclua todas as unidades da teoria antes de iniciar as questões."
+            : "Não foi possível iniciar as questões desta missão.",
+        );
+        setCarregandoPersonalizada(false);
+        return;
       }
+
+      if (linhaMissao.sessao_status === "concluida") {
+        window.location.replace(`/questoes/resultado?sessao=${linhaMissao.sessao_id}`);
+        return;
+      }
+
+      ids = linhaMissao.questao_ids.map(Number).filter(Number.isInteger);
+    } else {
+      // Horas Líquidas 1.0 — sessão AVULSA/PERSONALIZADA de verdade (sem
+      // missão): uma única RPC atômica e idempotente faz tudo —
+      // seleciona as questões, cria OU recupera a sessão compatível, e
+      // PERSISTE a lista+ordem em sessao_questoes_planejadas (antes isso
+      // nunca era gravado; é o que agora permite sobreviver a um F5).
+      const { data, error } = await supabase.rpc("iniciar_sessao_questoes_avulsa", {
+        p_nivel_meta: "personalizada",
+        p_quantidade: quantidadePersonalizada,
+        p_materia_id: materiaSelecionada,
+        p_assunto_id: assuntoSelecionado,
+      });
+
+      const linha = ((data as SessaoAvulsaIniciada[] | null) ?? [])[0];
+      if (error || !linha) {
+        console.error("iniciar_sessao_questoes_avulsa (personalizada) falhou:", {
+          message: error?.message,
+          code: error?.code,
+          details: error?.details,
+          hint: error?.hint,
+        });
+        setMensagemPersonalizada("Não foi possível carregar as questões para esse filtro.");
+        setCarregandoPersonalizada(false);
+        return;
+      }
+
+      ids = linha.questao_ids.map(Number).filter(Number.isInteger);
+      sessaoAvulsaId = Number(linha.sessao_id);
     }
 
     // Mesma busca por detalhes só dos IDs já autorizados pela RPC — nunca um
     // fallback para o banco global nem para outro curso (mesmo padrão de
     // iniciarSessao).
-    const { data: bancoQuestoes, error: erroQuestoes } = await supabase
-      .from("questoes")
-      .select("id, enunciado, dificuldade, banca, concurso, ano, materias(nome), assuntos(nome), alternativas(id, texto, ordem)")
-      .in("id", ids);
-
-    if (erroQuestoes || !bancoQuestoes?.length) {
+    const preparadas = await buscarDetalhesQuestoes(supabase, ids);
+    if (!preparadas) {
       setMensagemPersonalizada("Não há questões disponíveis para esse filtro.");
       setCarregandoPersonalizada(false);
       return;
     }
 
-    const mapaQuestoes = new Map(
-      (bancoQuestoes as unknown as Questao[]).map((questao) => [questao.id, questao]),
-    );
-
-    const preparadas = ids
-      .map((id) => mapaQuestoes.get(id))
-      .filter((questao): questao is Questao => Boolean(questao))
-      .map((questao) => ({
-        ...questao,
-        alternativas: [...questao.alternativas].sort((a, b) => a.ordem - b.ordem),
-      }));
-
-    if (preparadas.length === 0) {
-      setMensagemPersonalizada("Não há questões disponíveis para esse filtro.");
-      setCarregandoPersonalizada(false);
-      return;
-    }
-
-    let sessaoIdAtual = sessaoDaMissao ? Number(sessaoDaMissao.sessao_id) : null;
+    // Missão: id já veio de iniciar_pratica_unidade/iniciar_missao_final/
+    // iniciar_questoes_da_missao. Avulsa: id já veio de
+    // iniciar_sessao_questoes_avulsa. Nenhum dos dois caminhos faz mais
+    // nenhum INSERT aqui.
+    const sessaoIdAtual = sessaoDaMissao ? Number(sessaoDaMissao.sessao_id) : sessaoAvulsaId;
     if (!sessaoIdAtual) {
-      const { data: sessao, error: erroSessao } = await supabase
-        .from("sessoes_estudo")
-        .insert({
-          usuario_id: user.id,
-          matricula_id: matricula.id,
-          nivel_meta: "personalizada",
-          status: "em_andamento",
-          inicio_em: new Date().toISOString(),
-          minutos_revisao: 0,
-          questoes_planejadas: preparadas.length,
-        })
-        .select("id")
-        .single();
-
-      if (erroSessao || !sessao) {
-        setMensagemPersonalizada("Não foi possível iniciar a sessão. Tente novamente.");
-        setCarregandoPersonalizada(false);
-        return;
-      }
-      sessaoIdAtual = sessao.id;
+      setMensagemPersonalizada("Não foi possível iniciar a sessão. Tente novamente.");
+      setCarregandoPersonalizada(false);
+      return;
     }
 
     if (preparadas.length < quantidadePersonalizada) {
@@ -689,6 +812,7 @@ export default function Questoes() {
     setNivel("personalizada");
     setQuestoes(preparadas);
     setSessaoId(sessaoIdAtual);
+    if (!sessaoDaMissao) atualizarUrlSessaoAvulsa(sessaoIdAtual);
     setCarregandoPersonalizada(false);
   }, [assuntoSelecionado, materiaSelecionada, missionId, quantidadePersonalizada, refazerMissao, unidadePedagogicaId, missaoFinal]);
 
@@ -880,6 +1004,14 @@ export default function Questoes() {
       materiasCurso.some((materia) => materia.materia_id === materiaSelecionada),
   );
 
+  if (recuperandoSessaoAvulsa) {
+    return (
+      <main className="dashboard-loading">
+        <MarcaCarregando texto="Recuperando sua sessão..." />
+      </main>
+    );
+  }
+
   if (
     origemCronograma &&
     !nivel &&
@@ -1026,21 +1158,10 @@ export default function Questoes() {
       </header>
       <div className="session-progress" aria-label={`${progresso}% concluído`}><span style={{ width: `${progresso}%` }} /></div>
 
-      {/* Fase 2C.1: não mais restrito a missionId — CronometroEstudo já
-          retorna null em estado "ociosa", então nos poucos fluxos sem
-          cronômetro nenhum (nenhum previsto hoje, já que esta tela só
-          chega aqui com uma sessaoId real) isto simplesmente não renderiza
-          nada. */}
-      {!colunaLateralDisponivelQuestoes && (
-        <div className="questoes-area-compacta">
-          <CronometroEstudo sessao={sessaoTempo} contexto={assuntoNomeAtual || materiaNomeAtual} />
-        </div>
-      )}
-      {colunaLateralDisponivelQuestoes && (
-        <div className="questoes-area-lateral">
-          <CronometroEstudo sessao={sessaoTempo} contexto={assuntoNomeAtual || materiaNomeAtual} />
-        </div>
-      )}
+      {/* Horas Líquidas 1.0: widget flutuante (position:fixed) — não
+          depende mais de coluna lateral/compacta; CronometroEstudo já
+          retorna null em estado "ociosa". */}
+      <CronometroEstudo sessao={sessaoTempo} contexto={assuntoNomeAtual || materiaNomeAtual} />
 
       <article className="question-card">
         <div className="question-origin">

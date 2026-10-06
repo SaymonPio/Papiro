@@ -424,10 +424,16 @@ export default function Painel() {
                       : "Data ainda não informada"}
                   </span>
                 </div>
-                <div>
+                <div className="papiro-plan-card__metric--link">
+                  <Link
+                    href="/meu-estudo"
+                    className="papiro-plan-card__metric-overlay"
+                    aria-label={`Disponibilidade: ${objetivoPrincipal.horas_diarias}h por dia para estudar. Ver meu estudo.`}
+                  />
                   <dt>
                     <Clock3 aria-hidden="true" size={17} strokeWidth={1.8} />
                     Disponibilidade
+                    <ArrowRight aria-hidden="true" size={14} strokeWidth={2} className="papiro-plan-card__metric-arrow" />
                   </dt>
                   <dd>{objetivoPrincipal.horas_diarias}h</dd>
                   <span>por dia para estudar</span>

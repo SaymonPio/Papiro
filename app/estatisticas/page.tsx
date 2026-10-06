@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import ResumoTempoEstudoCompacto from "@/components/tempo-estudo/ResumoTempoEstudoCompacto";
+import { useDadosTempoEstudo } from "@/components/tempo-estudo/useDadosTempoEstudo";
 import MarcaCarregando from "@/components/ui/MarcaCarregando";
 import { createClient } from "@/utils/supabase/client";
 
@@ -16,6 +18,14 @@ type Sessao = { data_sessao: string; status: string; questoes_respondidas: numbe
 type Revisao = { status: string; agendada_para: string };
 type Erro = { tipo_erro: string | null; corrigido: boolean; materia_nome: string | null; assunto_nome: string | null };
 type EstatisticasCurso = { respostas: Resposta[]; sessoes: Sessao[]; revisoes: Revisao[]; erros: Erro[] };
+
+// Comportamento/tempo de estudo (Hoje/Semana/Mês/Total/Meta diária/
+// heatmap/distribuição por tipo de atividade) agora vive só em
+// /meu-estudo (app/meu-estudo/page.tsx) — esta página mostra apenas um
+// resumo compacto (ResumoTempoEstudoCompacto, dados via
+// useDadosTempoEstudo, ambos em components/tempo-estudo/) com link para
+// lá. Mantém o resto desta página focado em desempenho acadêmico:
+// questões, aproveitamento, matéria, erros, revisões.
 
 function dataLocal(data: Date) {
   return `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, "0")}-${String(data.getDate()).padStart(2, "0")}`;
@@ -38,6 +48,11 @@ export default function Estatisticas() {
   const [carregando, setCarregando] = useState(true);
   const [mensagem, setMensagem] = useState("");
   const [semContexto, setSemContexto] = useState(false);
+
+  // Resumo compacto de tempo de estudo — independente do resto desta
+  // página (nunca bloqueia nem depende do carregamento de
+  // estatisticas_do_curso_ativo abaixo); detalhe completo em /meu-estudo.
+  const dadosTempo = useDadosTempoEstudo(30);
 
   useEffect(() => {
     async function carregar() {
@@ -162,6 +177,13 @@ export default function Estatisticas() {
               <div className="stats-title"><div><p className="dashboard-label">PADRÕES DE ERRO</p><h2>O que precisa de atenção</h2></div></div>
               {dados.errosPorTipo.length === 0 ? <p className="stats-empty">Os tipos de erro aparecerão após a classificação.</p> : dados.errosPorTipo.map((erro) => <div className="error-stat" key={erro.tipo}><span>{erro.tipo}</span><strong>{erro.total}</strong></div>)}
             </article>
+
+            {/* Resumo compacto de tempo de estudo — deliberadamente
+                separado do desempenho acadêmico acima (mede TEMPO via
+                cronômetro, não conclusão pedagógica). Detalhe completo
+                (Mês/Total/Meta diária/heatmap/distribuição por tipo de
+                atividade) vive só em /meu-estudo — nunca duplicado aqui. */}
+            <ResumoTempoEstudoCompacto dados={dadosTempo} />
           </section>
         </>
       )}

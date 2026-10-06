@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
+import { montarLinkMissao, montarLinkTeoria } from "@/utils/missao-cronograma.mjs";
 import {
   criarControladorSessaoTempo,
   type ContextoSessaoTempo,
@@ -36,16 +37,28 @@ export type ParametrosSessaoTempo = {
   unidadePedagogicaId?: string | null;
 };
 
+/** Contexto da sessão que está bloqueando o início (estado === "conflito"), já com o link pronto para "Retomar estudo anterior" quando reconstruível. */
+export type ConflitoSessaoTempo = {
+  origem: OrigemSessaoTempo;
+  tipoAtividade: TipoAtividadeSessaoTempo;
+  segundosLiquidos: number;
+  /** null quando o contexto disponível não é suficiente para montar um link seguro (ex.: tipoAtividade ainda sem tela própria, como "leitura"/"revisao"). */
+  linkRetomada: string | null;
+};
+
 export type UseSessaoTempoResultado = {
   estado: EstadoPublicoSessaoTempo["estado"];
   processando: boolean;
   segundosLiquidos: number;
   erro: string | null;
+  conflito: ConflitoSessaoTempo | null;
   iniciarEstudo: () => void;
   pausarEstudo: () => void;
   retomarEstudo: () => void;
   /** Awaitable (nunca rejeita) — ver comentário em ControladorSessaoTempo.encerrarEstudo. */
   encerrarEstudo: () => Promise<void>;
+  /** Encerra a sessão conflitante (nunca a atual) e, se der certo, já tenta iniciar a atividade atual — mesmo contrato de nunca rejeitar. */
+  encerrarConflitoEIniciar: () => Promise<void>;
 };
 
 const ESTADO_INICIAL: EstadoPublicoSessaoTempo = {
@@ -54,7 +67,41 @@ const ESTADO_INICIAL: EstadoPublicoSessaoTempo = {
   segundosLiquidos: 0,
   baseLocalEm: null,
   erro: null,
+  conflito: null,
 };
+
+// Reconstrói para onde "Retomar estudo anterior" deve levar, a partir só
+// do contexto já persistido em sessoes_tempo — nunca inventa parâmetro
+// ausente. Reaproveita montarLinkMissao/montarLinkTeoria (utils/missao-
+// cronograma.mjs), as mesmas funções que já montam esses links no fluxo
+// normal, em vez de duplicar a lógica de querystring.
+function construirLinkRetomada(c: SessaoAbertaEncontrada): string | null {
+  if (c.tipoAtividade === "questoes" && !c.missaoId && c.sessaoEstudoId !== null) {
+    return `/questoes?sessaoAvulsa=${c.sessaoEstudoId}`;
+  }
+  if (!c.materiaId || !c.missaoId) return null;
+  if (c.tipoAtividade === "teoria") {
+    return montarLinkTeoria({
+      cursoMateriaId: undefined,
+      materiaId: c.materiaId,
+      assuntoId: c.assuntoId ?? undefined,
+      conteudoId: c.cursoConteudoId ?? undefined,
+      missionId: c.missaoId,
+    });
+  }
+  if (c.tipoAtividade === "questoes") {
+    return montarLinkMissao({
+      cursoMateriaId: undefined,
+      materiaId: c.materiaId,
+      assuntoId: c.assuntoId ?? undefined,
+      conteudoId: c.cursoConteudoId ?? undefined,
+      missionId: c.missaoId,
+      unidadePedagogicaId: c.unidadePedagogicaId ?? undefined,
+    });
+  }
+  // "leitura"/"revisao": ainda não têm tela própria no projeto — sem link seguro possível hoje.
+  return null;
+}
 
 class ErroConflitoSessaoTempo extends Error {}
 
@@ -78,6 +125,11 @@ type RowObterAberta = {
   matricula_id: string;
   missao_id: string | null;
   segundos_liquidos: number;
+  sessao_estudo_id: number | null;
+  curso_conteudo_id: number | null;
+  materia_id: number | null;
+  assunto_id: number | null;
+  unidade_pedagogica_id: string | null;
 };
 
 type RowIniciar = { id: number; segundos_liquidos: number };
@@ -100,6 +152,11 @@ function criarDeps(supabase: ClienteSupabase): Omit<DepsControladorSessaoTempo, 
         matriculaId: linha.matricula_id,
         missaoId: linha.missao_id,
         segundosLiquidos: linha.segundos_liquidos,
+        sessaoEstudoId: linha.sessao_estudo_id,
+        cursoConteudoId: linha.curso_conteudo_id,
+        materiaId: linha.materia_id,
+        assuntoId: linha.assunto_id,
+        unidadePedagogicaId: linha.unidade_pedagogica_id,
       };
     },
 
@@ -332,14 +389,27 @@ export function useSessaoTempo(parametros: ParametrosSessaoTempo): UseSessaoTemp
     return valor;
   }, [estadoPublico.estado, estadoPublico.baseLocalEm, estadoPublico.segundosLiquidos, agoraLocal]);
 
+  const conflito = useMemo<ConflitoSessaoTempo | null>(() => {
+    if (!estadoPublico.conflito) return null;
+    const c = estadoPublico.conflito;
+    return {
+      origem: c.origem,
+      tipoAtividade: c.tipoAtividade,
+      segundosLiquidos: c.segundosLiquidos,
+      linkRetomada: construirLinkRetomada(c),
+    };
+  }, [estadoPublico.conflito]);
+
   return {
     estado: estadoPublico.estado,
     processando: estadoPublico.processando,
     segundosLiquidos: segundosExibidos,
     erro: estadoPublico.erro,
+    conflito,
     iniciarEstudo: controlador.iniciarEstudo,
     pausarEstudo: controlador.pausarEstudo,
     retomarEstudo: controlador.retomarEstudo,
     encerrarEstudo: controlador.encerrarEstudo,
+    encerrarConflitoEIniciar: controlador.encerrarConflitoEIniciar,
   };
 }

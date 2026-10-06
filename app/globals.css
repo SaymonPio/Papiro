@@ -2404,43 +2404,18 @@ footer > small {
   padding-top: 0;
 }
 
-/* Área das questões da missão (Fase 2C — horas líquidas). Mesmo padrão de
-   .teoria-area (Fase 2B): position:relative aqui, height:100% na coluna
-   lateral, para o cronômetro acompanhar o scroll por toda a extensão da
-   sessão de questões, não só a topbar. max-width 980px = a largura real
-   de .session-topbar/.session-progress (a mais larga das três, por isso é
-   quem define o alinhamento da coluna lateral) — .question-card (960px)
-   continua se centralizando do mesmo jeito de sempre DENTRO desta caixa,
-   com o mesmo resultado visual final de antes (uma caixa de 960px
-   centrada dentro de uma de 980px já centrada dá o mesmo centro). */
+/* Área das questões (Fase 2C — horas líquidas). Só centraliza o conteúdo
+   (mesmo max-width de .session-topbar/.session-progress, a mais larga das
+   três — .question-card com 960px continua se centralizando do mesmo
+   jeito DENTRO desta caixa, com o mesmo resultado visual de sempre).
+   Desde Horas Líquidas 1.0 o cronômetro é um widget flutuante
+   (position:fixed, ver .cronometro-estudo) independente deste wrapper —
+   as antigas .questoes-area-lateral/-compacta (coluna lateral
+   sticky/faixa compacta) foram removidas. */
 .questoes-area {
   position: relative;
   max-width: 980px;
   margin: 0 auto;
-}
-
-/* Largura real do conteúdo principal aqui é maior que na teoria (980px
-   contra 880px) — por isso a margem lateral que sobra da centralização só
-   fica confortável a partir de uma viewport mais larga (~1450px, não
-   ~1340px). Ver colunaLateralDisponivelQuestoes em app/questoes/page.tsx
-   para a conta completa. */
-.questoes-area-lateral {
-  position: absolute;
-  top: 0;
-  left: 100%;
-  width: max-content;
-  max-width: 160px;
-  height: 100%;
-  margin-left: 16px;
-}
-
-.questoes-area-lateral .cronometro-estudo {
-  position: sticky;
-  top: 20px;
-}
-
-.questoes-area-compacta {
-  margin: -8px 0 20px;
 }
 
 .session-topbar {
@@ -2953,57 +2928,35 @@ footer > small {
   text-align: right;
 }
 
-/* Área da Teoria Interativa (Fase 2B — ajuste de posicionamento). Mesmo
-   max-width/centralização que .teoria-aula já usava — o cabeçalho volta a
-   ser um bloco simples (sem flex row), exatamente como era antes da Fase
-   2B, e esta div é quem passa a dar a .teoria-area-lateral um "pai alto"
-   para ancorar: position:relative aqui, height:100% nela, cobrindo a
-   MESMA altura do cabeçalho+conteúdo da aula (nunca só a altura do
-   cabeçalho) — é isso que permite o cronômetro continuar sticky durante
-   todo o scroll da aula, não só enquanto o cabeçalho está visível. */
+/* Área da Teoria Interativa (Fase 2B). Mesmo max-width/centralização que
+   .teoria-aula já usava — o cabeçalho é um bloco simples (sem flex row).
+   Desde Horas Líquidas 1.0 o cronômetro é um widget flutuante
+   (position:fixed, ver .cronometro-estudo) independente deste wrapper —
+   as antigas .teoria-area-lateral/-compacta (coluna lateral sticky/faixa
+   compacta) foram removidas. */
 .teoria-area {
   position: relative;
   max-width: 880px;
   margin: 0 auto;
 }
 
-/* Coluna lateral: NÃO é uma grid de duas colunas centralizada (isso
-   deslocaria .teoria-area, e portanto a aula inteira, visivelmente para a
-   esquerda). É um filho absolutamente posicionado fora da caixa de
-   .teoria-area, ancorado à borda direita dela — a aula em si nunca muda de
-   largura/posição com a coluna lateral presente ou ausente. width:
-   max-content (não uma largura fixa de "coluna") porque o espaço real
-   disponível aqui é só a margem que sobra da centralização de 880px, não a
-   viewport inteira — ver o cálculo do breakpoint em app/teoria/page.tsx
-   (colunaLateralDisponivel). max-width é só uma salvaguarda contra um
-   conteúdo inesperadamente largo. */
-.teoria-area-lateral {
-  position: absolute;
-  top: 0;
-  left: 100%;
-  width: max-content;
-  max-width: 160px;
-  height: 100%;
-  margin-left: 16px;
-}
-
-.teoria-area-lateral .cronometro-estudo {
-  position: sticky;
-  top: 20px;
-}
-
-/* Versão compacta (telas sem espaço confortável para a coluna lateral —
-   ver colunaLateralDisponivel em app/teoria/page.tsx): o cronômetro volta a
-   ficar no fluxo normal, próximo ao topo, nunca como faixa grande. */
-.teoria-area-compacta {
-  margin: -8px 0 20px;
-}
-
-/* Cronômetro de tempo líquido de estudo (components/tempo-estudo) — gatilho
-   compacto com popover, mesmos tokens de cor do resto da Teoria Interativa,
-   sem glassmorphism e sem a estética azul de um mockup anterior descartado. */
+/* Cronômetro de tempo líquido de estudo (Horas Líquidas 1.0 —
+   components/tempo-estudo/CronometroEstudo.tsx). Widget FLUTUANTE: posição
+   controlada via style inline (left/top em px, calculados em JS a partir
+   da fração salva em localStorage — ver o componente) com position:fixed,
+   nunca mais dentro do fluxo/sticky de uma coluna lateral específica da
+   página. Mesmos tokens de cor do resto do Papiro, sem glassmorphism, sem
+   a estética azul de um mockup anterior descartado. z-index alto o
+   suficiente para ficar sobre conteúdo normal, mas abaixo de qualquer
+   modal/diálogo do site (nenhum usa z-index tão alto hoje). */
 .cronometro-estudo {
-  position: relative;
+  position: fixed;
+  z-index: 40;
+  touch-action: none;
+}
+
+.cronometro-estudo.cronometro-estudo-arrastando {
+  transition: none !important;
 }
 
 .cronometro-estudo-gatilho {
@@ -3020,8 +2973,15 @@ footer > small {
   font-size: 13px;
   font-variant-numeric: tabular-nums;
   font-weight: 800;
-  cursor: pointer;
+  cursor: grab;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
   transition: border-color 160ms ease, background 160ms ease;
+  touch-action: none;
+  user-select: none;
+}
+
+.cronometro-estudo-gatilho:active {
+  cursor: grabbing;
 }
 
 .cronometro-estudo-gatilho:hover {
@@ -3038,24 +2998,33 @@ footer > small {
   font-size: 14px;
 }
 
+/* Mobile/touch (seção 12 do pedido): drag é arriscado contra o scroll da
+   página em telas de toque — nesta versão o widget fica numa posição seg
+   ura fixa (mesma lógica de "ancorar no canto", só sem o pointer-drag),
+   nunca arrastável. Documentado aqui de propósito: não é um esquecimento. */
+@media (pointer: coarse) {
+  .cronometro-estudo-gatilho {
+    cursor: pointer;
+  }
+}
+
 .cronometro-estudo-gatilho.cronometro-estudo-conflito,
 .cronometro-estudo-gatilho.cronometro-estudo-erro {
   border-color: rgba(242, 184, 181, 0.4);
   color: #f2b8b5;
 }
 
-/* right:0 (cresce para a esquerda a partir do gatilho) é a abertura
-   preferencial pedida: evita sair da viewport pela direita, que é o lado
-   com menos margem quando o cronômetro está na coluna lateral (perto da
-   borda direita da página). width menor que antes (260px, não 280px) para
-   minimizar quanto ele avança sobre a coluna de conteúdo nesse layout — é
-   overlay (não desloca nada), mas ainda assim fecha no mouseleave/clique
-   fora/Escape, então a cobertura é sempre temporária. */
+/* Widget agora pode estar em QUALQUER canto da viewport (arrastável) —
+   por padrão abre para baixo/esquerda (cresce a partir do canto
+   inferior direito do gatilho), e o componente aplica
+   .cronometro-estudo-popover-cima/-esquerda quando o widget está perto
+   demais da borda inferior/direita para esse padrão caber, decidido em
+   JS a partir da posição real (ver CronometroEstudo.tsx). */
 .cronometro-estudo-popover {
   position: absolute;
   top: calc(100% + 10px);
-  right: 0;
-  width: min(260px, calc(100vw - 32px));
+  left: 0;
+  width: min(270px, calc(100vw - 2 * 10px));
   padding: 16px 18px;
   border: 1px solid rgba(216, 173, 76, 0.26);
   border-radius: 12px;
@@ -3063,6 +3032,16 @@ footer > small {
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
   z-index: 6;
   animation: cronometro-popover-entrada 140ms ease;
+}
+
+.cronometro-estudo-popover-cima {
+  top: auto;
+  bottom: calc(100% + 10px);
+}
+
+.cronometro-estudo-popover-esquerda {
+  left: auto;
+  right: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3098,6 +3077,15 @@ footer > small {
   font-size: 12.5px;
 }
 
+.cronometro-estudo-resumo {
+  margin: 0 0 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: #9fb2aa;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
 .cronometro-estudo-mensagem {
   margin: 0;
   color: #b9c2bd;
@@ -3108,13 +3096,23 @@ footer > small {
   color: #f2b8b5;
 }
 
+.cronometro-estudo-conflito-bloco .cronometro-estudo-mensagem[role="alert"] {
+  margin: 0 0 8px;
+  color: var(--gold-bright);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
 .cronometro-estudo-acoes {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 12px;
 }
 
-.cronometro-estudo-acoes button {
+.cronometro-estudo-acoes button,
+.cronometro-estudo-link-retomar {
   display: inline-flex;
   min-height: 38px;
   align-items: center;
@@ -3128,9 +3126,17 @@ footer > small {
   font-size: 13px;
   font-weight: 850;
   cursor: pointer;
+  text-decoration: none;
 }
 
-.cronometro-estudo-acoes button:focus-visible {
+.cronometro-estudo-link-retomar {
+  border-color: var(--gold);
+  background: var(--gold);
+  color: #08140f;
+}
+
+.cronometro-estudo-acoes button:focus-visible,
+.cronometro-estudo-link-retomar:focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 2px;
 }
@@ -3138,6 +3144,34 @@ footer > small {
 .cronometro-estudo-acoes button:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+.cronometro-estudo-rodape {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cronometro-estudo-ver-meu-estudo {
+  color: var(--gold-bright);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.cronometro-estudo-restaurar {
+  border: 0;
+  background: none;
+  color: #8fa097;
+  font: inherit;
+  font-size: 11px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  padding: 0;
 }
 
 /* Modo Papiro por unidades pedagógicas: aviso de Missão Final liberada,
@@ -5261,6 +5295,35 @@ footer > small {
 
 .stats-grid { grid-template-columns: 1.25fr 0.75fr; }
 .stats-panel { padding: 28px; min-height: 230px; }
+
+/* /meu-estudo (app/meu-estudo/page.tsx) — .stats-header é compartilhado
+   com /estatisticas, /editais e a tela de resultado de edital, que
+   reservam min-height:210px/margin-bottom:26px (ver cascata mais abaixo
+   neste arquivo) para caber um subtítulo mais longo. Aqui o conteúdo do
+   cabeçalho é mais curto, então essa reserva fixa sobrava como espaço
+   vazio antes dos cards — corrigido só para esta página, via a classe
+   extra no <main>, sem tocar a regra compartilhada (que continua igual
+   para as outras três páginas) e sem margem negativa: o cabeçalho passa
+   a ocupar só a altura real do seu conteúdo (min-height:0) e o espaço
+   até os cards cai para o mesmo valor já usado abaixo dos cards
+   (.stats-summary margin-bottom:16px), em vez dos 26px herdados. */
+.meu-estudo-page .stats-header {
+  min-height: 0;
+  margin-bottom: 16px;
+}
+
+/* Coluna lateral de /meu-estudo (app/meu-estudo/page.tsx) — Meta diária +
+   Distribuição por tipo de atividade empilhadas ao lado do heatmap
+   (que continua o painel dominante, na coluna 1.25fr de .stats-grid).
+   Em telas estreitas .stats-grid já colapsa para 1 coluna (media query
+   abaixo), então esta coluna some como wrapper e os dois painéis
+   desempilham naturalmente depois do heatmap. */
+.meu-estudo-coluna-lateral {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.meu-estudo-coluna-lateral > .stats-panel { min-height: 0; }
 .stats-title { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 25px; }
 .stats-title h2 { margin: 4px 0 0; font-family: Georgia, "Times New Roman", serif; font-weight: 500; font-size: 1.6rem; }
 .stats-title > strong { color: #78b493; font-size: 0.82rem; }
@@ -5290,13 +5353,484 @@ footer > small {
 .error-stat { display: flex; align-items: center; justify-content: space-between; padding: 13px 0; border-bottom: 1px solid rgba(214, 226, 218, 0.09); text-transform: capitalize; color: #b8c6bf; }
 .error-stat strong { min-width: 34px; text-align: center; color: #061b14; background: #f2c75c; border-radius: 18px; padding: 5px 9px; }
 
+/* Resumo compacto de tempo de estudo (ResumoTempoEstudoCompacto, dentro
+   de .stats-panel em app/estatisticas/page.tsx) — mini-grid de 3
+   métricas + link para /meu-estudo. Cores reaproveitam os mesmos tokens
+   --papiro-gold/--papiro-muted já usados no resto de /estatisticas. */
+.tempo-estudo-compacto-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.tempo-estudo-compacto-metrics span {
+  display: block;
+  color: var(--papiro-muted);
+  font-size: 0.78rem;
+}
+.tempo-estudo-compacto-metrics strong {
+  display: block;
+  margin-top: 6px;
+  color: var(--papiro-gold);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+.tempo-estudo-compacto-link {
+  display: inline-block;
+  color: var(--papiro-gold);
+  text-decoration: none;
+  border-bottom: 1px solid var(--papiro-line-strong);
+  padding-bottom: 4px;
+  transition: border-color 200ms ease-out;
+}
+.tempo-estudo-compacto-link:hover,
+.tempo-estudo-compacto-link:focus-visible {
+  border-bottom-color: var(--papiro-gold);
+}
+.tempo-estudo-compacto-seta {
+  display: inline-block;
+  transition: transform 200ms ease-out;
+}
+.tempo-estudo-compacto-link:hover .tempo-estudo-compacto-seta,
+.tempo-estudo-compacto-link:focus-visible .tempo-estudo-compacto-seta {
+  transform: translateX(3px);
+}
+/* Leve presença no hover/foco do card inteiro — card de leitura não
+   vira botão (sem translateY/sombra forte), só o link interno continua
+   sendo a única coisa clicável de fato. */
+.tempo-estudo-compacto-panel {
+  transition: border-color 200ms ease-out;
+}
+.tempo-estudo-compacto-panel:has(.tempo-estudo-compacto-link:hover),
+.tempo-estudo-compacto-panel:has(.tempo-estudo-compacto-link:focus-visible) {
+  border-color: rgba(242, 199, 92, 0.3);
+}
+
+/* Cards do topo (ResumoTempoEstudo, /meu-estudo) — Hoje/Semana/Mês/
+   Últimos N dias. Sem ação real (nunca tabIndex/cursor:pointer — ver
+   seção 11 da auditoria desta fase), só reação visual discreta no
+   :hover para comunicar "vivo" sem parecer botão. */
+.meu-estudo-card {
+  transition: border-color 200ms ease-out, background-color 200ms ease-out, transform 200ms ease-out;
+}
+.meu-estudo-card:hover {
+  border-color: rgba(242, 199, 92, 0.32);
+  background: rgba(16, 40, 30, 0.86);
+  transform: translateY(-2px);
+}
+.meu-estudo-card:hover strong { color: var(--papiro-gold); }
+
+/* Entrada de /meu-estudo — uma única vez, no mount do conteúdo real
+   (nunca no da tela de carregamento). Animation (não transition), por
+   isso precisa do próprio guard de prefers-reduced-motion abaixo — a
+   regra global de transition:none!important não cobre animation. */
+.meu-estudo-entrada {
+  animation: meu-estudo-entrada-anim 240ms ease-out;
+}
+@keyframes meu-estudo-entrada-anim {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .meu-estudo-entrada { animation: none; }
+}
+
+/* "Onde o tempo foi" (DistribuicaoTempoAtividade, /meu-estudo) — hover
+   por linha, escopado (não o .metric-row compartilhado com "Por
+   matéria" em /estatisticas). Sem ação real: sem cursor:pointer. */
+.tempo-atividade-linha {
+  border-radius: 4px;
+  transition: background-color 200ms ease-out;
+}
+.tempo-atividade-linha:hover {
+  background: rgba(242, 199, 92, 0.06);
+}
+.tempo-atividade-linha:hover strong,
+.tempo-atividade-linha:hover > b {
+  color: var(--papiro-gold);
+}
+.tempo-atividade-linha:hover .metric-track { box-shadow: 0 0 0 1px rgba(242, 199, 92, 0.25); }
+
+/* Cabeçalho do painel de Consistência (ConsistenciaTempo, /meu-estudo):
+   eyebrow + "N dias de sequência" numa linha; título + seletor de
+   período na linha de baixo (o seletor faz parte visualmente do
+   título, não de uma linha solta acima do gráfico); subtexto discreto
+   por último. */
+.consistencia-titulo-linha {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.consistencia-titulo-linha h2 { margin: 0; }
+.consistencia-titulo-linha .heatmap-periodo-seletor { margin-bottom: 0; }
+.consistencia-subtexto {
+  margin: 6px 0 0;
+  color: var(--papiro-muted);
+  font-size: 12px;
+}
+.consistencia-cabecalho { margin-bottom: 20px; }
+
+/* Faixa de insights do período (Dias ativos / Média em dias
+   estudados / Melhor dia) — sempre derivada client-side do mesmo
+   array já recortado (ver calcularInsightsPeriodo em
+   ConsistenciaTempo.tsx), nunca uma chamada nova ao banco. */
+.consistencia-insights {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--papiro-line);
+}
+.consistencia-insights span {
+  display: block;
+  color: var(--papiro-muted);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.consistencia-insights strong {
+  display: block;
+  margin-top: 6px;
+  color: var(--papiro-gold);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+.consistencia-insights small {
+  display: block;
+  margin-top: 2px;
+  color: var(--papiro-muted);
+  font-size: 11px;
+}
+
+/* Transição entre modos (7D barras / 30D-90D linha / 1 ANO heatmap) —
+   a key={periodo} no componente força um elemento novo a cada troca,
+   então esta animation roda de novo a cada troca de período
+   automaticamente (nunca um morph entre os gráficos). */
+.consistencia-grafico-entrada {
+  animation: consistencia-entrada-anim 220ms ease-out;
+}
+@keyframes consistencia-entrada-anim {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .consistencia-grafico-entrada { animation: none; }
+}
+
+/* 7D — barras diárias (GraficoBarras). Trilho (fundo) é o alvo real de
+   hover/foco — cobre a altura toda, então um dia zerado ainda tem área
+   para reagir/mostrar tooltip, não só a barra (que ficaria com 0px). */
+.barras-tempo {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  height: 180px;
+}
+.barras-tempo-coluna {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+.barras-tempo-trilho {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  border-radius: 6px;
+  background: rgba(214, 226, 218, 0.06);
+  cursor: default;
+  transition: background-color 160ms ease-out, box-shadow 160ms ease-out;
+}
+.barras-tempo-trilho:hover,
+.barras-tempo-ativa {
+  background: rgba(214, 226, 218, 0.1);
+  box-shadow: 0 0 0 1px rgba(242, 199, 92, 0.3);
+}
+.barras-tempo-trilho:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--papiro-gold);
+}
+.barras-tempo-valor {
+  display: block;
+  width: 100%;
+  min-height: 3px;
+  border-radius: 6px 6px 2px 2px;
+  background: linear-gradient(180deg, var(--papiro-gold), rgba(242, 199, 92, 0.55));
+  transition: height 480ms ease-out;
+}
+.barras-tempo-coluna small {
+  margin-top: 8px;
+  color: var(--papiro-muted);
+  font-size: 11px;
+}
+
+/* 30D/90D — linha + área em SVG puro (GraficoLinhaArea). viewBox fixo +
+   width:100% = responsivo sem medir window em nenhum momento (nunca
+   durante o render — ver auditoria de hydration desta fase). */
+.linha-tempo {
+  display: flex;
+  gap: 10px;
+}
+.linha-tempo-eixo-y {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 32px;
+  height: 160px;
+  color: var(--papiro-muted);
+  font-size: 10px;
+  text-align: right;
+}
+.linha-tempo-corpo { flex: 1; min-width: 0; }
+.linha-tempo-svg-wrap { position: relative; height: 160px; }
+.linha-tempo-svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.linha-tempo-area { fill: rgba(242, 199, 92, 0.08); stroke: none; }
+.linha-tempo-linha { stroke: var(--papiro-gold); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.linha-tempo-guia { stroke: rgba(242, 199, 92, 0.35); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.linha-tempo-ponto { fill: var(--papiro-cream); stroke: var(--papiro-gold); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.linha-tempo-alvos { position: absolute; inset: 0; }
+.linha-tempo-alvo {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 14px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  outline: none;
+}
+.linha-tempo-alvo:focus-visible {
+  outline: none;
+  background: rgba(242, 199, 92, 0.1);
+  box-shadow: inset 0 0 0 1px var(--papiro-gold);
+}
+.linha-tempo-eixo-x {
+  position: relative;
+  height: 18px;
+  margin-top: 4px;
+}
+.linha-tempo-eixo-x span {
+  position: absolute;
+  transform: translateX(-50%);
+  color: var(--papiro-muted);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+/* Heatmap de tempo (ConsistenciaTempo, /meu-estudo) — calendário de
+   contribuição: semanas no eixo horizontal (uma coluna por semana),
+   dias da semana no vertical (7 linhas), meses rotulados acima. A
+   malha é sempre completa (um quadrado por dia do período, zero dias
+   ausentes — ver gerarGradeCompleta em useDadosTempoEstudo.ts); dias
+   sem estudo ficam no tom neutro (nivel-0). Largura fixa por célula
+   (--heatmap-celula) com scroll horizontal próprio em telas estreitas,
+   para nunca criar overflow da página inteira. */
+/* --heatmap-celula/--heatmap-gap definidos aqui (ancestral comum da
+   coluna fixa de dias da semana E do container que rola) — tamanho
+   responsivo: o padrão já tenta caber as 53 semanas sem scroll num
+   painel de desktop; os breakpoints abaixo encolhem célula/gap mais
+   ainda em telas estreitas antes de recorrer ao scroll. */
+.heatmap-tempo-corpo {
+  --heatmap-celula: 10px;
+  --heatmap-gap: 2px;
+  display: flex;
+  gap: 6px;
+}
+.heatmap-tempo-dias-semana {
+  display: grid;
+  grid-template-rows: repeat(7, var(--heatmap-celula));
+  row-gap: var(--heatmap-gap);
+  margin-top: 18px;
+  flex-shrink: 0;
+}
+.heatmap-tempo-dias-semana span {
+  font-size: 9px;
+  color: var(--papiro-muted);
+}
+.heatmap-legenda {
+  --heatmap-celula: 9px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 12px;
+  color: var(--papiro-muted);
+  font-size: 10px;
+}
+.heatmap-legenda .heatmap-celula { cursor: default; }
+
+.heatmap-periodo-seletor {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 18px;
+}
+.heatmap-periodo-seletor button {
+  padding: 5px 11px;
+  border: 1px solid var(--papiro-line);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--papiro-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: border-color 200ms ease-out, color 200ms ease-out, background-color 200ms ease-out;
+}
+.heatmap-periodo-seletor button:hover {
+  border-color: rgba(242, 199, 92, 0.4);
+  color: var(--papiro-cream);
+}
+.heatmap-periodo-seletor button:focus-visible {
+  outline: 2px solid var(--papiro-gold);
+  outline-offset: 1px;
+}
+.heatmap-periodo-seletor button.ativo {
+  border-color: var(--papiro-gold);
+  background: rgba(242, 199, 92, 0.14);
+  color: var(--papiro-gold);
+}
+
+/* Só esta parte (meses + células) participa do overflow-x — a coluna
+   de dias da semana (acima) é irmã, fora deste container, e por isso
+   nunca é cortada/rolada junto. min-width:0 é necessário para o
+   overflow funcionar corretamente dentro do flex row de
+   .heatmap-tempo-corpo (senão o item flex não encolhe/rola de verdade). */
+.heatmap-tempo-scroll {
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  /* Scrollbar discreta (Firefox) — fallback ::-webkit-scrollbar* abaixo
+     cobre Chrome/Edge/Safari. Só aparece de fato quando o conteúdo
+     ainda não cabe depois do encolhimento responsivo acima. */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(242, 199, 92, 0.4) rgba(214, 226, 218, 0.06);
+}
+.heatmap-tempo-scroll::-webkit-scrollbar { height: 6px; }
+.heatmap-tempo-scroll::-webkit-scrollbar-track {
+  background: rgba(214, 226, 218, 0.06);
+  border-radius: 3px;
+}
+.heatmap-tempo-scroll::-webkit-scrollbar-thumb {
+  background: rgba(242, 199, 92, 0.4);
+  border-radius: 3px;
+}
+.heatmap-tempo-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(242, 199, 92, 0.6);
+}
+.heatmap-tempo-grade {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: max-content;
+}
+.heatmap-tempo-meses {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: var(--heatmap-celula);
+  column-gap: var(--heatmap-gap);
+  height: 14px;
+}
+.heatmap-tempo-meses span {
+  font-size: 10px;
+  color: #9fb2aa;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+.heatmap-tempo {
+  display: grid;
+  grid-template-rows: repeat(7, var(--heatmap-celula));
+  grid-auto-flow: column;
+  grid-auto-columns: var(--heatmap-celula);
+  gap: var(--heatmap-gap);
+}
+.heatmap-celula {
+  width: var(--heatmap-celula);
+  height: var(--heatmap-celula);
+  border-radius: 2px;
+  background: rgba(214, 226, 218, 0.08);
+  cursor: default;
+  transition: transform 160ms ease-out, box-shadow 160ms ease-out;
+}
+.heatmap-celula-vazia { background: transparent; }
+.heatmap-celula.nivel-0 { background: rgba(214, 226, 218, 0.08); }
+.heatmap-celula.nivel-1 { background: rgba(242, 199, 92, 0.25); }
+.heatmap-celula.nivel-2 { background: rgba(242, 199, 92, 0.48); }
+.heatmap-celula.nivel-3 { background: rgba(242, 199, 92, 0.72); }
+.heatmap-celula.nivel-4 { background: #f2c75c; }
+.heatmap-celula:not(.heatmap-celula-vazia):hover,
+.heatmap-celula-ativa {
+  transform: scale(1.35);
+  box-shadow: 0 0 0 1px rgba(246, 240, 223, 0.5);
+}
+.heatmap-celula:focus-visible {
+  outline: none;
+  transform: scale(1.35);
+  box-shadow: 0 0 0 2px var(--papiro-gold);
+}
+
+/* Tooltip real do heatmap — position:fixed (nunca recortado pelo
+   overflow-x:auto do scroll do heatmap), posição calculada a partir do
+   retângulo real da célula (ConsistenciaTempo.tsx), sempre clampada ao
+   viewport. Não ocupa espaço no layout (sem layout shift). */
+.heatmap-tooltip {
+  position: fixed;
+  z-index: 60;
+  transform: translate(-50%, 8px);
+  padding: 8px 12px;
+  border: 1px solid var(--papiro-line-strong);
+  border-radius: 6px;
+  background: #0c241c;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.heatmap-tooltip-cima { transform: translate(-50%, calc(-100% - 8px)); }
+.heatmap-tooltip strong { display: block; color: var(--papiro-cream); }
+.heatmap-tooltip span { color: var(--papiro-muted); }
+
+/* Meta diária — card de progresso (MetaDiariaTempo, /meu-estudo).
+   Reaproveita .metric-track (mesma barra já usada em "Por matéria"/
+   "Por tipo de atividade"), nunca uma barra nova. */
+.meta-diaria-painel .metric-track {
+  margin-top: 16px;
+}
+.meta-diaria-painel small { display: block; margin-top: 6px; color: #9fb2aa; }
+.meta-diaria-track span {
+  transition: width 500ms ease-out;
+}
+.meta-diaria-cumprida .metric-track span {
+  background: var(--papiro-gold);
+}
+.meta-diaria-cumprida .stats-title strong {
+  color: var(--papiro-gold);
+  font-size: 1.1rem;
+}
+.meta-diaria-cumprida small { color: var(--papiro-gold); }
+
 @media (max-width: 900px) {
   .stats-summary { grid-template-columns: repeat(2, 1fr); }
   .stats-grid { grid-template-columns: 1fr; }
+  .consistencia-insights { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 560px) {
   .stats-page { padding: 30px 16px 48px; }
+  .consistencia-insights { grid-template-columns: 1fr; }
+  /* Último recurso antes do scroll: célula/gap um pouco menores em
+     telas de celular — mesmo assim 53 semanas não cabem numa tela de
+     ~375px sem rolar; o scroll (já estilizado acima) continua sendo o
+     fallback esperado aqui, nunca escondendo semanas. */
+  .heatmap-tempo-corpo { --heatmap-celula: 8px; --heatmap-gap: 1px; }
   .stats-header { align-items: flex-start; flex-direction: column; }
   .stats-summary { grid-template-columns: 1fr 1fr; gap: 9px; }
   .stats-summary article { padding: 18px 14px; }
