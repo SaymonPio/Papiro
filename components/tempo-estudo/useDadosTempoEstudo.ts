@@ -39,6 +39,16 @@ export function formatarHorasMinutos(totalSegundos: number): string {
   return m > 0 ? `${h}h${String(m).padStart(2, "0")}` : `${h}h`;
 }
 
+// Única fórmula de "percentual da meta diária" do projeto — usada tanto
+// pelo hook completo (useDadosTempoEstudo, abaixo) quanto pelo resumo
+// leve (useResumoTempoHoje, para o anel de Disponibilidade no painel).
+// Nunca reimplementada em paralelo: limitada a 100 de propósito (a UI
+// decide separadamente se exibe texto além de 100%).
+export function calcularPercentualMeta(resumoTempo: ResumoTempoEstudo | null): number | null {
+  if (!resumoTempo || resumoTempo.meta_diaria_segundos <= 0) return null;
+  return Math.min(100, Math.round((resumoTempo.segundos_hoje / resumoTempo.meta_diaria_segundos) * 100));
+}
+
 function dataLocal(data: Date): string {
   return `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, "0")}-${String(data.getDate()).padStart(2, "0")}`;
 }
@@ -145,10 +155,7 @@ export function useDadosTempoEstudo(diasHistorico: number): DadosTempoEstudo {
   }, [diasHistorico]);
 
   return useMemo(() => {
-    const percentualMeta =
-      resumoTempo && resumoTempo.meta_diaria_segundos > 0
-        ? Math.min(100, Math.round((resumoTempo.segundos_hoje / resumoTempo.meta_diaria_segundos) * 100))
-        : null;
+    const percentualMeta = calcularPercentualMeta(resumoTempo);
     const maximoDia = Math.max(1, ...historicoTempo.map((d) => d.segundos_liquidos));
     const porTipoOrdenado = [...tempoPorTipoAtividade].sort((a, b) => b.segundos_liquidos - a.segundos_liquidos);
     const totalPorTipo = porTipoOrdenado.reduce((soma, item) => soma + item.segundos_liquidos, 0);
@@ -170,4 +177,33 @@ export function useDadosTempoEstudo(diasHistorico: number): DadosTempoEstudo {
       diasHistorico,
     };
   }, [carregando, resumoTempo, historicoTempo, tempoPorTipoAtividade, diasHistorico]);
+}
+
+export type ResumoTempoHoje = { carregando: boolean; resumoTempo: ResumoTempoEstudo | null; percentualMeta: number | null };
+
+// Versão leve de useDadosTempoEstudo para quem só precisa de
+// hoje/meta (ex.: o anel de progresso no card Disponibilidade do
+// painel) — chama só resumo_tempo_estudo (mesma RPC, nenhuma nova),
+// nunca o historico_tempo_estudo de 366 dias nem a leitura de
+// sessoes_tempo que useDadosTempoEstudo também faz. percentualMeta usa
+// a MESMA calcularPercentualMeta acima, nunca uma fórmula paralela.
+export function useResumoTempoHoje(): ResumoTempoHoje {
+  const [carregando, setCarregando] = useState(true);
+  const [resumoTempo, setResumoTempo] = useState<ResumoTempoEstudo | null>(null);
+
+  useEffect(() => {
+    let ativo = true;
+    async function carregar() {
+      const { data, error } = await createClient().rpc("resumo_tempo_estudo");
+      if (!ativo) return;
+      if (!error && data) setResumoTempo(data as ResumoTempoEstudo);
+      setCarregando(false);
+    }
+    carregar();
+    return () => {
+      ativo = false;
+    };
+  }, []);
+
+  return { carregando, resumoTempo, percentualMeta: calcularPercentualMeta(resumoTempo) };
 }

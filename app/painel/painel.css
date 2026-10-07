@@ -1308,6 +1308,98 @@
   color: var(--papiro-color-brand-gold);
 }
 
+/* Disponibilidade (AnelDisponibilidade) — SÓ o anel: "Xh"/"meta diária"
+   dentro dele, percentual discreto abaixo. Sem Hoje/Restante, sem
+   coluna lateral, sem nenhum "Xh" fora do círculo (removidos nesta
+   rodada por poluir o card). Centralizado verticalmente, largura
+   natural do anel — o card volta a ficar próximo da altura dos outros
+   blocos de "Resumo do objetivo". */
+.papiro-disponibilidade-ring {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 0 2px;
+}
+.papiro-disponibilidade-ring--loading {
+  width: 96px;
+  height: 96px;
+  margin: 4px auto 2px;
+  border-radius: 50%;
+  background: rgba(214, 226, 218, 0.05);
+}
+
+.papiro-disponibilidade-ring__grafico {
+  position: relative;
+  width: 96px;
+  height: 96px;
+}
+.papiro-disponibilidade-ring__svg {
+  width: 100%;
+  height: 100%;
+  /* Progresso parte do topo (12h), não da direita (3h) — rotação pura
+     de CSS, igual à usada via SVG transform nos outros anéis do
+     projeto, só que aqui no elemento inteiro por simplicidade. */
+  transform: rotate(-90deg);
+  transition: filter 200ms ease-out;
+}
+.papiro-plan-card__metric--link:hover .papiro-disponibilidade-ring__svg,
+.papiro-plan-card__metric--link:focus-within .papiro-disponibilidade-ring__svg {
+  filter: drop-shadow(0 0 6px rgba(215, 179, 90, 0.45)) brightness(1.08);
+}
+.papiro-disponibilidade-ring__trilho {
+  fill: none;
+  stroke: #2d4a3a;
+  stroke-width: 7;
+}
+.papiro-disponibilidade-ring__progresso {
+  fill: none;
+  stroke: var(--papiro-color-brand-gold);
+  stroke-width: 7;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 420ms ease-out;
+}
+.papiro-disponibilidade-ring__progresso--cumprida { stroke: var(--papiro-color-brand-gold-bright); }
+
+/* Centro em HTML sobreposto ao SVG (tipografia normal, sem as
+   limitações de layout de texto do SVG): "Xh" serifado em creme +
+   "META DIÁRIA"/"META CUMPRIDA" sans pequeno e discreto embaixo. */
+.papiro-disponibilidade-ring__centro {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  text-align: center;
+}
+.papiro-disponibilidade-ring__centro strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--papiro-color-text-primary);
+  line-height: 1;
+}
+.papiro-disponibilidade-ring__centro span {
+  font-size: 7px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--papiro-color-text-subtle);
+}
+
+.papiro-disponibilidade-ring__percentual {
+  margin-top: 6px;
+  color: var(--papiro-color-text-subtle);
+  font-size: 11px;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .papiro-disponibilidade-ring__grafico,
+  .papiro-disponibilidade-ring--loading { width: 84px; height: 84px; }
+  .papiro-disponibilidade-ring__centro strong { font-size: 20px; }
+}
+
 /* Empty state */
 
 .papiro-empty-focus {

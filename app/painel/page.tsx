@@ -17,6 +17,7 @@ import {
 import { useEffect, useState } from "react";
 import { StudentAppShell } from "@/components/layout/StudentAppShell";
 import { WeeklyStatsCard } from "@/components/painel/WeeklyStatsCard";
+import { AnelDisponibilidade } from "@/components/tempo-estudo/AnelDisponibilidade";
 import { ButtonLink } from "@/components/ui/Button";
 import MarcaCarregando from "@/components/ui/MarcaCarregando";
 import { Surface } from "@/components/ui/Surface";
@@ -435,8 +436,16 @@ export default function Painel() {
                     Disponibilidade
                     <ArrowRight aria-hidden="true" size={14} strokeWidth={2} className="papiro-plan-card__metric-arrow" />
                   </dt>
-                  <dd>{objetivoPrincipal.horas_diarias}h</dd>
-                  <span>por dia para estudar</span>
+                  {/* AnelDisponibilidade é o corpo visual completo do
+                      card: só o anel, "Xh"/"meta diária" dentro dele e
+                      a conclusão discreta abaixo ("X% concluído") —
+                      sem Hoje/Restante nem nenhum "Xh" solto fora do
+                      círculo (removidos nesta rodada por poluir o
+                      card). O aria-label do overlay acima continua
+                      descrevendo a disponibilidade configurada para
+                      leitor de tela; o anel em si é aria-hidden
+                      (decorativo). */}
+                  <AnelDisponibilidade />
                 </div>
               </dl>
             </Surface>
