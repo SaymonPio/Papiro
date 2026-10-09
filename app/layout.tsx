@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { SessaoTempoProvider } from "@/components/tempo-estudo/SessaoTempoProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -44,7 +45,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <SessaoTempoProvider>{children}</SessaoTempoProvider>
       </body>
     </html>
   );

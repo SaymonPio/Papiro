@@ -5312,6 +5312,27 @@ footer > small {
   margin-bottom: 16px;
 }
 
+/* Recuo do BLOCO título+subtítulo (wrapper .meu-estudo-titulo-bloco,
+   envolvendo só <h1>+<span> — nunca o eyebrow "COMPORTAMENTO DE
+   ESTUDO", que fica FORA do wrapper, nem .stats-header/.meu-estudo-abas/
+   "Voltar ao painel"). Correção da rodada anterior, que deslocava só o
+   <h1> isoladamente (classe .meu-estudo-titulo, removida) — o
+   subtítulo ficava num eixo X diferente do título, dois alinhamentos
+   dentro do mesmo bloco visual. Agora os dois herdam o MESMO
+   margin-left do wrapper comum, garantindo o mesmo X por construção
+   (não por dois offsets iguais coincidindo). Valor igual ao da versão
+   anterior (já estava aproximadamente correto, só precisava abranger o
+   subtítulo) — reduzido em telas menores, zerado no breakpoint mobile. */
+.meu-estudo-page .meu-estudo-titulo-bloco {
+  margin-left: -60px;
+}
+@media (max-width: 1100px) {
+  .meu-estudo-page .meu-estudo-titulo-bloco { margin-left: -28px; }
+}
+@media (max-width: 640px) {
+  .meu-estudo-page .meu-estudo-titulo-bloco { margin-left: 0; }
+}
+
 /* Coluna lateral de /meu-estudo (app/meu-estudo/page.tsx) — Meta diária +
    Distribuição por tipo de atividade empilhadas ao lado do heatmap
    (que continua o painel dominante, na coluna 1.25fr de .stats-grid).
@@ -5324,6 +5345,385 @@ footer > small {
   gap: 16px;
 }
 .meu-estudo-coluna-lateral > .stats-panel { min-height: 0; }
+
+/* Aba "Cronômetro livre" de /meu-estudo (CronometroLivre.tsx /
+   ClassificarEstudoAvulso.tsx / HistoricoEstudoAvulso.tsx) — estudo
+   avulso, feito fora do Papiro. Identidade: fundo profundo verde/preto
+   já usado no resto do Papiro, creme para texto principal, dourado só
+   para ação/estado ativo — nunca azul, nunca neon, nunca glassmorphism.
+   Reaproveita .custom-session/.custom-session-field/.method-message
+   (globais, usados em /questoes) para o formulário de classificação —
+   só os botões/cabeçalho ganham classes próprias desta rodada. */
+
+.meu-estudo-abas {
+  display: inline-flex;
+  gap: 4px;
+  margin: 0 0 24px;
+  padding: 4px;
+  border: 1px solid rgba(214, 226, 218, 0.12);
+  border-radius: 999px;
+  background: rgba(8, 22, 17, 0.55);
+}
+/* .meu-estudo-abas não tem max-width próprio (sempre colada na borda
+   esquerda de .stats-page), diferente de .stats-header (max-width:
+   1320px + margin:auto, cascata mais abaixo neste arquivo — a mesma
+   causa raiz já identificada para o título). Um deslocamento fixo em
+   px nunca acompanha esse auto-centering em todas as larguras — por
+   isso o contentor abaixo REPLICA o mesmo max-width/margin:auto do
+   header (mesmo referencial, não um número adivinhado), e só então o
+   -60px (idêntico ao de .meu-estudo-titulo-bloco) posiciona as abas
+   exatamente sob "Meu estudo." em qualquer largura. */
+.meu-estudo-page .meu-estudo-abas-contentor {
+  max-width: 1320px;
+  margin-inline: auto;
+}
+.meu-estudo-page .meu-estudo-abas {
+  margin-left: -60px;
+}
+@media (max-width: 1100px) {
+  .meu-estudo-page .meu-estudo-abas { margin-left: -28px; }
+}
+@media (max-width: 640px) {
+  .meu-estudo-page .meu-estudo-abas { margin-left: 0; }
+}
+.meu-estudo-abas button {
+  padding: 6px 13px;
+  border: none;
+  border-radius: 999px;
+  color: #8a9d93;
+  background: transparent;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: color 180ms ease, background-color 180ms ease;
+}
+.meu-estudo-abas button:hover { color: var(--cream); }
+.meu-estudo-abas button.selected {
+  color: #0c1f17;
+  background: var(--gold);
+}
+.meu-estudo-abas button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+.cronometro-livre { display: flex; flex-direction: column; gap: 16px; }
+
+/* Título + selo agrupados na mesma linha (sem vazio horizontal entre
+   os dois) — a tagline fica numa linha própria, abaixo dos dois. */
+.cronometro-livre-cabecalho { margin-bottom: 6px; }
+.cronometro-livre-cabecalho-topo { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+.cronometro-livre-cabecalho h2 {
+  margin: 6px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 500;
+  font-size: 1.3rem;
+  line-height: 1.35;
+  color: var(--cream);
+}
+
+.cronometro-livre-selo {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  border: 1px solid rgba(216, 173, 76, 0.22);
+  border-radius: 999px;
+  color: var(--gold-bright);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.cronometro-livre-selo-ponto {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+/* Conteúdo central do card com largura própria, menor que o card (que
+   continua full-width) — evita o relógio/ações parecerem perdidos em
+   desktops largos sem estreitar a página inteira. */
+.cronometro-livre-corpo { max-width: 760px; margin-inline: auto; }
+
+/* Card central — elemento dominante da aba. Respiro generoso, borda
+   discreta; iluminação dourada só quando ativo (nunca em ociosa/pausada/
+   erro), via transition pura de border-color/box-shadow/background
+   quando o estado muda — nunca JS, nunca remount do card em si. */
+.cronometro-livre-card {
+  padding: 40px 32px;
+  border: 1px solid rgba(214, 226, 218, 0.13);
+  border-radius: 10px;
+  background: rgba(10, 28, 22, 0.78);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.13);
+  text-align: center;
+  transition: border-color 220ms ease, box-shadow 220ms ease, background-color 220ms ease;
+}
+.cronometro-livre-card--ativa {
+  border-color: rgba(216, 173, 76, 0.32);
+  background: rgba(13, 32, 24, 0.82);
+  box-shadow: 0 0 0 1px rgba(216, 173, 76, 0.08), 0 18px 50px rgba(0, 0, 0, 0.16);
+}
+
+.cronometro-livre-status-linha {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 16px;
+  margin-bottom: 18px;
+  animation: cronometro-livre-entrada-estado 220ms ease-out;
+}
+.cronometro-livre-status-texto {
+  color: #9fb2aa;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.cronometro-livre-card--ativa .cronometro-livre-status-texto { color: var(--gold-bright); }
+
+.cronometro-livre-ponto {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #6c8077;
+}
+.cronometro-livre-ponto--ativo {
+  background: var(--gold);
+  animation: cronometro-livre-respirar 2.4s ease-in-out infinite;
+}
+
+/* Anel decorativo atrás do relógio — só presença/vida da sessão, NUNCA
+   representa percentual/progresso (não há "meta" aqui). Dimensionado
+   para caber confortavelmente atrás do texto sem forçar o relógio a
+   encolher; se não houver espaço (telas muito estreitas) ele encolhe
+   junto via a mesma media query do relógio. */
+.cronometro-livre-mostrador {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 132px;
+}
+.cronometro-livre-anel {
+  position: absolute;
+  width: 248px;
+  height: 248px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(214, 226, 218, 0.16);
+  pointer-events: none;
+}
+.cronometro-livre-card--ativa .cronometro-livre-anel {
+  border-color: rgba(216, 173, 76, 0.4);
+  box-shadow: 0 0 40px 4px rgba(216, 173, 76, 0.1);
+  animation: cronometro-livre-anel-pulso 3.2s ease-in-out infinite;
+}
+
+.cronometro-livre-relogio {
+  position: relative;
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 72px;
+  line-height: 1;
+  color: var(--cream);
+}
+
+.cronometro-livre-rotulo-tempo {
+  margin: 10px 0 22px;
+  color: #879c93;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.cronometro-livre-erro { margin: 8px 0 20px; color: #e2b199; font-size: 13px; }
+
+.cronometro-livre-dica { margin: 16px 0 0; color: #879c93; font-size: 13px; }
+
+.cronometro-livre-acoes {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  animation: cronometro-livre-entrada-estado 220ms ease-out;
+}
+
+.cronometro-livre-botao-iniciar,
+.cronometro-livre-botao-principal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0 32px;
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  background: var(--gold);
+  color: #0c1f17;
+  font-size: 14.5px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 180ms ease, border-color 180ms ease, transform 120ms ease;
+}
+.cronometro-livre-botao-iniciar:hover,
+.cronometro-livre-botao-principal:hover { background: var(--gold-bright); border-color: var(--gold-bright); }
+.cronometro-livre-botao-iniciar:active,
+.cronometro-livre-botao-principal:active { transform: translateY(1px); }
+
+.cronometro-livre-botao-secundario,
+.cronometro-livre-botao-concluir {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0 26px;
+  border: 1px solid rgba(214, 226, 218, 0.22);
+  border-radius: 999px;
+  background: transparent;
+  color: #b9c2bd;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 180ms ease, color 180ms ease;
+}
+.cronometro-livre-botao-secundario:hover { border-color: rgba(214, 226, 218, 0.4); color: var(--cream); }
+.cronometro-livre-botao-concluir { border-color: rgba(216, 173, 76, 0.3); color: var(--gold-bright); }
+.cronometro-livre-botao-concluir:hover { border-color: var(--gold); background: rgba(216, 173, 76, 0.06); }
+
+.cronometro-livre-botao-iniciar:disabled,
+.cronometro-livre-botao-principal:disabled,
+.cronometro-livre-botao-secundario:disabled,
+.cronometro-livre-botao-concluir:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.cronometro-livre-conflito { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.cronometro-livre-conflito-titulo { margin: 0; color: var(--gold-bright); font-size: 14px; font-weight: 700; }
+.cronometro-livre-conflito-tempo { margin: 0 0 6px; font-family: Georgia, "Times New Roman", serif; font-size: 2rem; color: var(--cream); font-variant-numeric: tabular-nums; }
+
+/* Classificação — continua .custom-session (chrome já Papiro), só o
+   cabeçalho e os campos próprios desta feature ganham classes extras. */
+.cronometro-livre-classificar { margin: 0 auto; text-align: left; }
+.cronometro-livre-classificar-topo { text-align: center; margin-bottom: 4px; }
+.cronometro-livre-tempo-realizado {
+  margin: 6px 0 2px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.5rem;
+  color: var(--gold-bright);
+}
+.cronometro-livre-pergunta {
+  margin: 10px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 500;
+  font-size: 1.2rem;
+  color: var(--cream);
+}
+
+.cronometro-livre-tipo-opcoes { display: flex; flex-wrap: wrap; gap: 10px; }
+.cronometro-livre-tipo-opcoes button {
+  padding: 11px 20px;
+  border: 1px solid rgba(214, 226, 218, 0.16);
+  border-radius: 999px;
+  color: #b9c2bd;
+  background: rgba(11, 28, 21, 0.7);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  transition: border-color 160ms ease, color 160ms ease, background-color 160ms ease;
+}
+.cronometro-livre-tipo-opcoes button:hover { border-color: rgba(216, 173, 76, 0.3); }
+.cronometro-livre-tipo-opcoes button.selected {
+  border-color: var(--gold);
+  color: #0c1f17;
+  background: var(--gold);
+}
+
+/* .custom-session-field já estiliza select/input com fundo escuro — mas
+   não cobre textarea (nunca usado antes dela existir aqui); sem isto a
+   descrição herdaria fundo branco do navegador. */
+.cronometro-livre-classificar textarea {
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  color: var(--cream);
+  background: rgba(255, 255, 255, 0.03);
+  font: inherit;
+  font-size: 14px;
+  resize: vertical;
+}
+.cronometro-livre-classificar textarea:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+
+.cronometro-livre-classificar-acoes { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
+.cronometro-livre-classificar-aviso { margin: 10px 0 0; color: #879c93; font-size: 12.5px; }
+
+/* .stats-panel (base compartilhada) impõe min-height:230px — apropriado
+   para os cards de /meu-estudo com gráfico, mas deixa este painel com
+   vazio sobrando quando há poucas sessões. Mesmo ajuste já usado em
+   .meu-estudo-coluna-lateral > .stats-panel, por este mesmo motivo. */
+.cronometro-livre-historico-painel { text-align: left; min-height: 0; padding-bottom: 20px; }
+
+.cronometro-livre-historico { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 13px; text-align: left; }
+.cronometro-livre-historico li { transition: opacity 200ms ease; }
+.cronometro-livre-historico li:not(:last-child) { padding-bottom: 13px; border-bottom: 1px solid rgba(214, 226, 218, 0.1); }
+.cronometro-livre-historico-linha { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.cronometro-livre-historico-linha strong { display: block; color: var(--cream); font-size: 14px; font-variant-numeric: tabular-nums; }
+.cronometro-livre-historico-linha small { display: block; margin-top: 2px; color: #93a6a0; font-size: 13px; }
+.cronometro-livre-historico-materia { color: #a8bab2 !important; }
+.cronometro-livre-historico-descricao { margin: 6px 0 0; color: #a8bab2; font-size: 13px; font-style: italic; }
+.cronometro-livre-historico-item--pendente .cronometro-livre-historico-linha strong { color: var(--gold-bright); }
+.cronometro-livre-botao-classificar {
+  flex-shrink: 0;
+  padding: 7px 16px;
+  border: 1px solid rgba(216, 173, 76, 0.35);
+  border-radius: 999px;
+  color: var(--gold-bright);
+  background: transparent;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+.cronometro-livre-botao-classificar:hover { border-color: var(--gold); background: rgba(216, 173, 76, 0.08); }
+.cronometro-livre-historico .cronometro-livre-classificar { margin-top: 14px; }
+
+@keyframes cronometro-livre-respirar {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+@keyframes cronometro-livre-anel-pulso {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+@keyframes cronometro-livre-entrada-estado {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cronometro-livre-ponto--ativo,
+  .cronometro-livre-anel,
+  .cronometro-livre-card--ativa .cronometro-livre-anel,
+  .cronometro-livre-status-linha,
+  .cronometro-livre-acoes {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .cronometro-livre-card { padding: 32px 18px; }
+  .cronometro-livre-relogio { font-size: 46px; }
+  .cronometro-livre-mostrador { min-height: 110px; }
+  .cronometro-livre-anel { width: 170px; height: 170px; }
+  .cronometro-livre-acoes { flex-direction: column; align-items: stretch; }
+  .cronometro-livre-acoes button,
+  .cronometro-livre-acoes a { width: 100%; }
+  .cronometro-livre-cabecalho-topo { flex-direction: column; align-items: flex-start; }
+  .cronometro-livre-historico-linha { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .cronometro-livre-botao-classificar { align-self: flex-start; }
+}
+
 .stats-title { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 25px; }
 .stats-title h2 { margin: 4px 0 0; font-family: Georgia, "Times New Roman", serif; font-weight: 500; font-size: 1.6rem; }
 .stats-title > strong { color: #78b493; font-size: 0.82rem; }

@@ -59,6 +59,10 @@ export type UseSessaoTempoResultado = {
   encerrarEstudo: () => Promise<void>;
   /** Encerra a sessão conflitante (nunca a atual) e, se der certo, já tenta iniciar a atividade atual — mesmo contrato de nunca rejeitar. */
   encerrarConflitoEIniciar: () => Promise<void>;
+  /** id da sessão ativa/pausada/recém-encerrada — null fora desses estados. Ver comentário em EstadoPublicoSessaoTempo.sessaoId. */
+  sessaoId: number | null;
+  /** Cronômetro Livre: reseta de "encerrada" para "ociosa" sem navegar. No-op em qualquer outro estado. */
+  voltarAoInicio: () => void;
 };
 
 const ESTADO_INICIAL: EstadoPublicoSessaoTempo = {
@@ -68,6 +72,7 @@ const ESTADO_INICIAL: EstadoPublicoSessaoTempo = {
   baseLocalEm: null,
   erro: null,
   conflito: null,
+  sessaoId: null,
 };
 
 // Reconstrói para onde "Retomar estudo anterior" deve levar, a partir só
@@ -76,6 +81,14 @@ const ESTADO_INICIAL: EstadoPublicoSessaoTempo = {
 // cronograma.mjs), as mesmas funções que já montam esses links no fluxo
 // normal, em vez de duplicar a lógica de querystring.
 function construirLinkRetomada(c: SessaoAbertaEncontrada): string | null {
+  // Cronômetro Livre não tem tela própria por conteúdo (não tem
+  // materiaId/missaoId para montar um link específico) — mas tem uma
+  // única tela possível, /meu-estudo (aba "Cronômetro livre"), que
+  // nunca precisa de nenhum parâmetro para recuperar a sessão (a
+  // recuperação lê do servidor, não da URL).
+  if (c.origem === "estudo_avulso") {
+    return "/meu-estudo";
+  }
   if (c.tipoAtividade === "questoes" && !c.missaoId && c.sessaoEstudoId !== null) {
     return `/questoes?sessaoAvulsa=${c.sessaoEstudoId}`;
   }
@@ -400,6 +413,19 @@ export function useSessaoTempo(parametros: ParametrosSessaoTempo): UseSessaoTemp
     };
   }, [estadoPublico.conflito]);
 
+  // Único método acrescentado nesta fase (Cronômetro Livre) ao objeto
+  // devolvido pelo hook: em vez de ler `controlador.voltarAoInicio`
+  // diretamente no corpo do return (que leria `controladorRef.current`
+  // durante a renderização — mesmo padrão pré-existente já usado por
+  // iniciarEstudo/pausarEstudo/etc. acima, intocado nesta rodada), esta
+  // função só acessa o ref dentro do próprio corpo, quando efetivamente
+  // CHAMADA por quem a invoca (sempre um clique/efeito, nunca durante o
+  // render) — exatamente o padrão de "handler" que a regra
+  // react-hooks/refs recomenda.
+  function voltarAoInicio() {
+    controladorRef.current?.voltarAoInicio();
+  }
+
   return {
     estado: estadoPublico.estado,
     processando: estadoPublico.processando,
@@ -411,5 +437,7 @@ export function useSessaoTempo(parametros: ParametrosSessaoTempo): UseSessaoTemp
     retomarEstudo: controlador.retomarEstudo,
     encerrarEstudo: controlador.encerrarEstudo,
     encerrarConflitoEIniciar: controlador.encerrarConflitoEIniciar,
+    sessaoId: estadoPublico.sessaoId,
+    voltarAoInicio,
   };
 }

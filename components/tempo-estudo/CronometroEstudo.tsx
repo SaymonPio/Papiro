@@ -24,6 +24,7 @@ function formatarHorasMinutos(totalSegundos: number): string {
 }
 
 function rotuloAtividade(origem: string, tipoAtividade: string): string {
+  if (tipoAtividade === "nao_classificado") return "Estudo avulso";
   if (tipoAtividade === "teoria") return "Teoria";
   if (tipoAtividade === "questoes") return origem === "cronograma" ? "Questões da missão" : "Questões";
   if (tipoAtividade === "leitura") return "Leitura";

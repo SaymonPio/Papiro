@@ -30,6 +30,11 @@ export const ROTULO_TIPO_ATIVIDADE: Record<string, string> = {
   questoes: "Questões",
   leitura: "Leitura",
   revisao: "Revisão",
+  // Estudo avulso (Cronômetro Livre) ainda sem classificação — os
+  // segundos já contam normalmente aqui (esta tela nunca os esconde nem
+  // os remarca como outra atividade), só com este rótulo discreto em vez
+  // do valor técnico "nao_classificado" cru.
+  nao_classificado: "Não classificado",
 };
 
 export function formatarHorasMinutos(totalSegundos: number): string {
@@ -37,6 +42,20 @@ export function formatarHorasMinutos(totalSegundos: number): string {
   const h = Math.floor(segundos / 3600);
   const m = Math.floor((segundos % 3600) / 60);
   return m > 0 ? `${h}h${String(m).padStart(2, "0")}` : `${h}h`;
+}
+
+// "42min" para menos de 1h, "1h"/"1h30" a partir de 1h — usado onde uma
+// duração sub-hora precisa ficar legível sem o "0h" na frente (Cronômetro
+// Livre: tempo realizado de uma sessão avulsa, histórico). Diferente de
+// formatarHorasMinutos (que sempre mostra as horas, mesmo "0h"), que
+// continua a formatação padrão do resto de /meu-estudo.
+export function formatarDuracaoCurta(totalSegundos: number): string {
+  const minutosTotais = Math.floor(Math.max(0, totalSegundos) / 60);
+  const h = Math.floor(minutosTotais / 60);
+  const m = minutosTotais % 60;
+  if (h > 0 && m === 0) return `${h}h`;
+  if (h > 0) return `${h}h${String(m).padStart(2, "0")}`;
+  return `${m}min`;
 }
 
 // Única fórmula de "percentual da meta diária" do projeto — usada tanto

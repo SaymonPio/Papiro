@@ -10,8 +10,8 @@
 // nem envia segundos/timestamps/duração — só chama as RPCs da Fase 1 e
 // guarda o último valor que o servidor devolveu.
 
-export type OrigemSessaoTempo = "cronograma" | "estudo_livre" | "questoes";
-export type TipoAtividadeSessaoTempo = "teoria" | "questoes" | "leitura" | "revisao";
+export type OrigemSessaoTempo = "cronograma" | "estudo_livre" | "questoes" | "estudo_avulso";
+export type TipoAtividadeSessaoTempo = "teoria" | "questoes" | "leitura" | "revisao" | "nao_classificado";
 
 export type ContextoSessaoTempo = {
   chave: string;
@@ -75,6 +75,14 @@ export type EstadoPublicoSessaoTempo = {
   erro: string | null;
   /** Só preenchido quando estado === "conflito" — a sessão de outro contexto que está bloqueando o início. */
   conflito: SessaoAbertaEncontrada | null;
+  /**
+   * id da sessão ativa/pausada/recém-encerrada (null em "ociosa"/"conflito"/
+   * antes da primeira resposta do servidor) — Cronômetro Livre precisa
+   * disto depois de encerrarEstudo() para classificar a sessão que acabou
+   * de terminar (classificar_estudo_avulso exige o id). Nenhum outro fluxo
+   * precisava ler isto antes, por isso não existia no estado público.
+   */
+  sessaoId: number | null;
 };
 
 const INTERVALO_HEARTBEAT_MS = 20_000;
@@ -132,6 +140,16 @@ export type ControladorSessaoTempo = {
   aoFicarOculta: () => void;
   /** Chamado pelo hook no visibilitychange: aba voltou a ficar visível. */
   aoFicarVisivel: () => void;
+  /**
+   * Cronômetro Livre — só a partir de "encerrada": volta para "ociosa"
+   * sem navegar/desmontar, para o aluno poder iniciar um NOVO estudo
+   * avulso na mesma visita à página (classificar ou fechar sem
+   * classificar já persistiu tudo que precisava; esta chamada é só
+   * reset de estado local, nenhuma RPC). Nenhum fluxo existente
+   * (teoria/questões) precisa disto — ali "encerrada" é sempre seguida
+   * de navegação para outra página, nunca de reuso da mesma instância.
+   */
+  voltarAoInicio: () => void;
   desmontar: () => void;
 };
 
@@ -141,6 +159,21 @@ export type ControladorSessaoTempo = {
 // sozinhos (iguais para QUALQUER par de sessões avulsas, já cobertos por
 // baseIgual em recuperar()).
 function identidadeAvulsaCompativel(aberta: SessaoAbertaEncontrada, ctx: ContextoSessaoTempo): boolean {
+  // estudo_avulso (Cronômetro Livre) nunca carrega identidade própria por
+  // desenho — matéria/assunto só são preenchidos pela classificação
+  // posterior, numa sessão já ENCERRADA, nunca enquanto ela está
+  // ativa/pausada. O índice único parcial (sessoes_tempo_usuario_aberta_unq)
+  // já garante no banco que só pode existir UMA sessão aberta por usuário,
+  // então "aberta.origem === 'estudo_avulso'" só é possível aqui se for
+  // exatamente a mesma sessão que este contexto está tentando recuperar
+  // (ex.: F5 em /meu-estudo, ou /painel montando o espelho do widget) —
+  // nunca duas sessões avulsas distintas competindo. Por isso é sempre
+  // compatível, sem cair no fallback de matéria/assunto abaixo (que
+  // sempre daria falso aqui, já que os dois lados têm tudo null).
+  if (aberta.origem === "estudo_avulso" && ctx.origem === "estudo_avulso") {
+    return true;
+  }
+
   // Caminho principal: os dois lados já sabem a que sessão pedagógica
   // pertencem — comparação direta e definitiva.
   if (aberta.sessaoEstudoId !== null && ctx.sessaoEstudoId !== null) {
@@ -183,7 +216,7 @@ export function criarControladorSessaoTempo(
   let temHeartbeatTimer = false;
 
   function emitir() {
-    aoMudarEstado({ estado, processando, segundosLiquidos, baseLocalEm, erro, conflito });
+    aoMudarEstado({ estado, processando, segundosLiquidos, baseLocalEm, erro, conflito, sessaoId });
   }
 
   function cancelarHeartbeat() {
@@ -513,6 +546,19 @@ export function criarControladorSessaoTempo(
       // garante a integridade, nunca este caminho.
       if (sessaoId === null || estado !== "ativa" || processando) return;
       executarPausa(geracao, sessaoId);
+    },
+
+    voltarAoInicio() {
+      if (estado !== "encerrada") return;
+      geracao += 1; // invalida qualquer timer/resposta pendente da sessão que acabou de encerrar
+      sessaoId = null;
+      segundosLiquidos = 0;
+      baseLocalEm = null;
+      erro = null;
+      conflito = null;
+      processando = false;
+      estado = "ociosa";
+      emitir();
     },
 
     aoFicarVisivel() {
