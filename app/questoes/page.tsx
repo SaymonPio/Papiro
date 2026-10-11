@@ -7,6 +7,8 @@ import MarcaCarregando from "@/components/ui/MarcaCarregando";
 import {
   lerMissaoCronograma,
   lerPraticaPapiro,
+  lerRevisaoPersonalizadaSolicitada,
+  lerRevisaoSolicitada,
   podeIniciarMissaoAutomaticamente,
 } from "@/utils/missao-cronograma.mjs";
 import { createClient } from "@/utils/supabase/client";
@@ -14,7 +16,11 @@ import { useSessaoTempo, encerrarTeoriaAbertaDaMissao } from "@/components/tempo
 import CronometroEstudo from "@/components/tempo-estudo/CronometroEstudo";
 
 type MetaPreset = "minima" | "normal" | "ideal";
-type NivelMeta = MetaPreset | "personalizada";
+// PAPIRO Beta 1 — "revisao" é o 5º valor de sessoes_estudo.nivel_meta
+// (migration 20261008120000_revisao_executavel.sql, mesmo padrão que
+// introduziu "personalizada"). Nunca aparece no grid de metas diárias —
+// só é atingido via iniciar_revisao()/recuperação por ?sessaoAvulsa=.
+type NivelMeta = MetaPreset | "personalizada" | "revisao";
 type Alternativa = { id: number; texto: string; ordem: number };
 type IdQuestao = { questao_id: number };
 type CausaErro = "nao_sabia" | "duvida" | "chute" | "atencao" | "interpretacao";
@@ -259,6 +265,27 @@ export default function Questoes() {
   const assuntoInicialMissao = useRef<number | null>(null);
   const autoInicioExecutado = useRef(false);
 
+  // PAPIRO Beta 1 — revisão executável. "revisao=1" é mutuamente exclusivo
+  // com o fluxo de missão (lerMissaoCronograma) e com a recuperação por
+  // ?sessaoAvulsa= (nenhum dos dois é lido pela mesma URL que abre uma
+  // revisão) — mas a PRÓPRIA sessão de revisão, uma vez criada, é
+  // recuperável como qualquer outra sessão avulsa via ?sessaoAvulsa=,
+  // porque iniciar_revisao() grava nivel_meta='revisao' na mesma
+  // sessoes_estudo que o ramo de recuperação abaixo já sabe ler.
+  const [revisaoSolicitada, setRevisaoSolicitada] = useState(false);
+  const [iniciandoRevisao, setIniciandoRevisao] = useState(false);
+  const [erroRevisao, setErroRevisao] = useState("");
+  const revisaoIniciada = useRef(false);
+
+  // PAPIRO Beta 1.1 — Central de Revisões: revisão PERSONALIZADA (filtros
+  // vindos de /caderno-de-erros). Irmã de revisaoSolicitada acima — nunca
+  // os dois juntos (lerRevisaoPersonalizadaSolicitada exige "revisaoP=1",
+  // lerRevisaoSolicitada exige "revisao=1", mutuamente exclusivos por
+  // construção em utils/missao-cronograma.mjs). Reaproveita iniciandoRevisao/
+  // erroRevisao acima — mesmos 2 estados de tela, não duplicados.
+  const [filtrosRevisaoPersonalizada, setFiltrosRevisaoPersonalizada] = useState<ReturnType<typeof lerRevisaoPersonalizadaSolicitada>>(null);
+  const revisaoSolicitadaOuPersonalizada = revisaoSolicitada || filtrosRevisaoPersonalizada !== null;
+
   // Fase 2C (horas líquidas) — contexto só preenchido/usado no fluxo de
   // questões DA MISSÃO (quando missionId existe). matriculaId é promovido
   // a estado aqui (antes só existia como variável local dentro de
@@ -292,6 +319,25 @@ export default function Questoes() {
       setQuantidadePersonalizada(Math.max(1, Math.min(100, missao.quantidade)));
     }, 0);
 
+    return () => window.clearTimeout(agendamento);
+  }, []);
+
+  // PAPIRO Beta 1 — mesma técnica de leitura adiada (window.setTimeout) do
+  // efeito de missão acima, pelo mesmo motivo: só lê a URL depois do mount,
+  // nunca no inicializador de useState (evita o mesmo hydration mismatch já
+  // documentado para ?sessaoAvulsa= nesta auditoria).
+  useEffect(() => {
+    const agendamento = window.setTimeout(() => {
+      if (lerRevisaoSolicitada(window.location.search)) setRevisaoSolicitada(true);
+    }, 0);
+    return () => window.clearTimeout(agendamento);
+  }, []);
+
+  useEffect(() => {
+    const agendamento = window.setTimeout(() => {
+      const filtros = lerRevisaoPersonalizadaSolicitada(window.location.search);
+      if (filtros) setFiltrosRevisaoPersonalizada(filtros);
+    }, 0);
     return () => window.clearTimeout(agendamento);
   }, []);
 
@@ -425,7 +471,10 @@ export default function Questoes() {
   const tempoHabilitado = missionId ? preFlightTempoConcluido : true;
   const sessaoTempo = useSessaoTempo({
     origem: missionId ? "cronograma" : "questoes",
-    tipoAtividade: "questoes",
+    // PAPIRO Beta 1: primeiro uso real de tipoAtividade="revisao" — o motor
+    // de tempo (components/tempo-estudo/) já aceitava este valor desde
+    // antes, sem nenhuma mudança necessária nele.
+    tipoAtividade: nivel === "revisao" ? "revisao" : "questoes",
     matriculaId: tempoHabilitado ? matriculaId : null,
     missaoId: missionId,
     sessaoEstudoId: sessaoId,
@@ -816,6 +865,126 @@ export default function Questoes() {
     setCarregandoPersonalizada(false);
   }, [assuntoSelecionado, materiaSelecionada, missionId, quantidadePersonalizada, refazerMissao, unidadePedagogicaId, missaoFinal]);
 
+  // PAPIRO Beta 1 — revisão executável. Único ponto de entrada: RPC
+  // iniciar_revisao() (supabase/migrations/20261008120000_revisao_
+  // executavel.sql), que resolve TUDO no servidor (curso ativo, matrícula,
+  // quais revisões estão pendentes/vencidas, quais questões praticar) — esta
+  // função nunca calcula nem envia nenhum id de revisão/questão/matéria,
+  // mesmo padrão de iniciar_pratica_unidade/iniciar_missao_final. Reaproveita
+  // buscarDetalhesQuestoes/atualizarUrlSessaoAvulsa exatamente como os outros
+  // fluxos avulsos — nenhum mecanismo paralelo de busca de questão.
+  const iniciarRevisao = useCallback(async () => {
+    setIniciandoRevisao(true);
+    setErroRevisao("");
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) { window.location.replace("/login"); return; }
+
+    const matriculaAtiva = await buscarMatriculaAtiva(supabase, user.id);
+    if (matriculaAtiva) setMatriculaId(matriculaAtiva);
+
+    const { data, error } = await supabase.rpc("iniciar_revisao");
+    const linha = ((data as SessaoAvulsaIniciada[] | null) ?? [])[0];
+
+    if (error || !linha) {
+      console.error("iniciar_revisao falhou:", {
+        message: error?.message,
+        code: error?.code,
+        details: error?.details,
+        hint: error?.hint,
+      });
+      setErroRevisao(
+        error?.message?.toLowerCase().includes("nenhuma revisao pendente")
+          ? "Você não tem nenhuma revisão pendente agora. Volte quando uma nova revisão for agendada."
+          : "Não foi possível iniciar a revisão agora. Tente novamente.",
+      );
+      setIniciandoRevisao(false);
+      return;
+    }
+
+    const ids = linha.questao_ids.map(Number).filter(Number.isInteger);
+    const preparadas = await buscarDetalhesQuestoes(supabase, ids);
+    if (!preparadas) {
+      setErroRevisao("Não foi possível carregar as questões desta revisão.");
+      setIniciandoRevisao(false);
+      return;
+    }
+
+    setNivel("revisao");
+    setQuestoes(preparadas);
+    setSessaoId(Number(linha.sessao_id));
+    atualizarUrlSessaoAvulsa(Number(linha.sessao_id));
+    setIniciandoRevisao(false);
+  }, []);
+
+  useEffect(() => {
+    if (!revisaoSolicitada || revisaoIniciada.current) return;
+    revisaoIniciada.current = true;
+    void iniciarRevisao();
+  }, [revisaoSolicitada, iniciarRevisao]);
+
+  // PAPIRO Beta 1.1 — Central de Revisões: revisão PERSONALIZADA. Espelha
+  // iniciarRevisao() acima ponto a ponto — única diferença é a RPC chamada
+  // (iniciar_revisao_personalizada, que recebe os filtros já validados
+  // server-side em supabase/migrations/20261011090000_central_revisoes_
+  // personalizada.sql) e a mensagem de "nada encontrado", que é específica
+  // dos filtros (não reaproveita a mensagem genérica de revisão automática).
+  const iniciarRevisaoPersonalizada = useCallback(async (filtros: NonNullable<ReturnType<typeof lerRevisaoPersonalizadaSolicitada>>) => {
+    setIniciandoRevisao(true);
+    setErroRevisao("");
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) { window.location.replace("/login"); return; }
+
+    const matriculaAtiva = await buscarMatriculaAtiva(supabase, user.id);
+    if (matriculaAtiva) setMatriculaId(matriculaAtiva);
+
+    const { data, error } = await supabase.rpc("iniciar_revisao_personalizada", {
+      p_materia_id: filtros.materiaId,
+      p_assunto_id: filtros.assuntoId,
+      p_tipo_erro: filtros.tipoErro,
+      p_situacao: filtros.situacao,
+      p_quantidade: filtros.quantidade,
+    });
+    const linha = ((data as SessaoAvulsaIniciada[] | null) ?? [])[0];
+
+    if (error || !linha) {
+      console.error("iniciar_revisao_personalizada falhou:", {
+        message: error?.message,
+        code: error?.code,
+        details: error?.details,
+        hint: error?.hint,
+      });
+      setErroRevisao(
+        error?.message?.toLowerCase().includes("nenhuma revisao encontrada")
+          ? "Nenhuma revisão encontrada para os filtros selecionados. Volte à central e ajuste os filtros."
+          : "Não foi possível iniciar a revisão personalizada agora. Tente novamente.",
+      );
+      setIniciandoRevisao(false);
+      return;
+    }
+
+    const ids = linha.questao_ids.map(Number).filter(Number.isInteger);
+    const preparadas = await buscarDetalhesQuestoes(supabase, ids);
+    if (!preparadas) {
+      setErroRevisao("Não foi possível carregar as questões desta revisão.");
+      setIniciandoRevisao(false);
+      return;
+    }
+
+    setNivel("revisao");
+    setQuestoes(preparadas);
+    setSessaoId(Number(linha.sessao_id));
+    atualizarUrlSessaoAvulsa(Number(linha.sessao_id));
+    setIniciandoRevisao(false);
+  }, []);
+
+  useEffect(() => {
+    if (!filtrosRevisaoPersonalizada || revisaoIniciada.current) return;
+    revisaoIniciada.current = true;
+    void iniciarRevisaoPersonalizada(filtrosRevisaoPersonalizada);
+  }, [filtrosRevisaoPersonalizada, iniciarRevisaoPersonalizada]);
+
   useEffect(() => {
     const podeIniciar = podeIniciarMissaoAutomaticamente({
       origemCronograma,
@@ -972,6 +1141,24 @@ export default function Questoes() {
       return;
     }
 
+    if (nivel === "revisao") {
+      // PAPIRO Beta 1 — concluir_revisao fecha, na mesma transação, a
+      // sessão e TODAS as linhas de public.revisoes que esta sessão
+      // praticou (ver supabase/migrations/20261008120000_revisao_
+      // executavel.sql) — nunca um UPDATE direto do cliente em
+      // sessoes_estudo (que não fecharia as revisões em si).
+      const { error } = await createClient().rpc("concluir_revisao", {
+        p_sessao_id: sessaoId,
+      });
+      if (error) {
+        setMensagem("Não foi possível concluir a revisão. Confira se todas as questões foram respondidas e tente novamente.");
+        return;
+      }
+      await sessaoTempo.encerrarEstudo();
+      window.location.replace(`/questoes/resultado?sessao=${sessaoId}`);
+      return;
+    }
+
     if (missionId) {
       const { error } = await createClient().rpc("concluir_questoes_da_missao", {
         p_missao_id: missionId,
@@ -1008,6 +1195,30 @@ export default function Questoes() {
     return (
       <main className="dashboard-loading">
         <MarcaCarregando texto="Recuperando sua sessão..." />
+      </main>
+    );
+  }
+
+  // PAPIRO Beta 1 — estados dedicados de revisão: nunca cai na tela
+  // genérica "Escolha a missão de hoje" (que não faria sentido para quem
+  // clicou "Iniciar revisão"), nem em sucesso nem em erro.
+  if (revisaoSolicitadaOuPersonalizada && !nivel && iniciandoRevisao) {
+    return (
+      <main className="dashboard-loading">
+        <MarcaCarregando texto="Preparando sua revisão..." />
+      </main>
+    );
+  }
+
+  if (revisaoSolicitadaOuPersonalizada && !nivel && erroRevisao) {
+    return (
+      <main className="method-page">
+        <header className="method-header">
+          <Link href="/caderno-de-erros">← Voltar ao caderno de erros</Link>
+          <p className="dashboard-label">REVISÃO</p>
+          <h1>Não foi possível abrir a revisão</h1>
+        </header>
+        <p className="method-message" role="alert">{erroRevisao}</p>
       </main>
     );
   }
@@ -1131,7 +1342,8 @@ export default function Questoes() {
     );
   }
 
-  const tituloSessaoAtual = nivel === "personalizada" ? "Sessão personalizada" : metas[nivel].titulo;
+  const tituloSessaoAtual =
+    nivel === "personalizada" ? "Sessão personalizada" : nivel === "revisao" ? "Revisão" : metas[nivel].titulo;
   const origemQuestao = descreverOrigemQuestao(questaoAtual);
 
   const materiaNomeAtual = materiasCurso.find((materia) => materia.materia_id === materiaSelecionada)?.materia_nome ?? null;

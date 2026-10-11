@@ -8,6 +8,9 @@ import { createClient } from "@/utils/supabase/client";
 type Resultado = {
   questoes_respondidas: number;
   acertos: number;
+  // PAPIRO Beta 1: nivel_meta='revisao' identifica uma sessão de revisão
+  // executável (migration 20261008120000_revisao_executavel.sql) — já era
+  // lido aqui antes, só não era usado para ramificar a tela.
   nivel_meta: string;
   minutos_revisao: number;
   missao_id: string | null;
@@ -109,6 +112,33 @@ export default function ResultadoQuestoes() {
             ) : (
               <Link href={`/teoria?missao=${resultado.missao_id}`}>Seguir para a próxima unidade</Link>
             )}
+          </div>
+        </section>
+      </main>
+    );
+  }
+
+  // PAPIRO Beta 1 — revisão executável: nivel_meta='revisao' é setado por
+  // iniciar_revisao() (ver migration 20261008120000_revisao_executavel.sql)
+  // e nunca tem missao_id nem "proximo" na URL — ramo próprio, sem
+  // reaproveitar "MISSÃO CONCLUÍDA"/"SESSÃO CONCLUÍDA" (seria impreciso: o
+  // aluno não fez uma missão nem uma sessão livre, revisou erros antigos) e
+  // retornando ao caderno de erros, de onde a revisão foi iniciada.
+  if (resultado.nivel_meta === "revisao") {
+    return (
+      <main className="method-page result-page">
+        <section className="result-card">
+          <p className="dashboard-label">REVISÃO CONCLUÍDA</p>
+          <h1>Mais um erro revisado.</h1>
+          <p>Suas revisões pendentes de hoje foram registradas. O Papiro já agendou os próximos lembretes.</p>
+          <div className="result-stats">
+            <span><strong>{resultado.questoes_respondidas}</strong>Respondidas</span>
+            <span><strong>{resultado.acertos}</strong>Acertos</span>
+            <span><strong>{percentual}%</strong>Aproveitamento</span>
+          </div>
+          <div className="result-actions">
+            <Link href="/caderno-de-erros">Voltar ao caderno de erros</Link>
+            <Link href="/painel">Voltar ao painel</Link>
           </div>
         </section>
       </main>

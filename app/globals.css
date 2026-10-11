@@ -2586,7 +2586,8 @@ footer > small {
 .answer-submit,
 .answer-feedback-next,
 .empty-method-state a,
-.result-actions a {
+.result-actions a,
+.result-actions button {
   min-height: 48px;
   display: inline-flex;
   align-items: center;
@@ -2599,10 +2600,12 @@ footer > small {
   background: var(--gold);
   cursor: pointer;
   font-weight: 900;
+  font: inherit;
 }
 
 .answer-submit:disabled,
-.answer-feedback-next:disabled {
+.answer-feedback-next:disabled,
+.result-actions button:disabled {
   cursor: not-allowed;
   opacity: 0.45;
 }
@@ -4956,6 +4959,12 @@ footer > small {
   --schedule-green: #78b493;
   --schedule-muted: #9fb2aa;
   --schedule-panel: rgba(7, 18, 14, 0.92);
+  /* Mesmo sistema de elevação de app/caderno-de-erros (--papiro-elevar/
+     --papiro-sheen), só com nome próprio porque .schedule-page tem sua
+     própria paleta --schedule-* (nunca entra no :where() de --papiro-*). */
+  --schedule-elevar: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 1px 2px rgba(0, 0, 0, 0.45), 0 18px 38px -10px rgba(0, 0, 0, 0.6);
+  --schedule-elevar-hover: 0 1px 0 rgba(255, 255, 255, 0.09) inset, 0 2px 4px rgba(0, 0, 0, 0.5), 0 28px 54px -10px rgba(0, 0, 0, 0.7);
+  --schedule-sheen: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0) 48%);
   color: var(--schedule-cream);
   background: #020907;
   font-family: var(--font-geist-sans), Arial, sans-serif;
@@ -5087,7 +5096,14 @@ footer > small {
 .schedule-day,
 .schedule-rules {
   border-color: rgba(214, 226, 218, 0.13);
-  background: var(--schedule-panel);
+  background: var(--schedule-sheen), var(--schedule-panel);
+  box-shadow: var(--schedule-elevar);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.schedule-overview article:hover,
+.schedule-day:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--schedule-elevar-hover);
 }
 .schedule-overview article {
   height: 94px;
@@ -6267,6 +6283,16 @@ footer > small {
   --papiro-gold: #f2c75c;
   --papiro-green: #78b493;
   --papiro-muted: #9fb2aa;
+  /* Sistema de "elevação" (de /caderno-de-erros, agora disponível em toda
+     a área interna): realce de 1px no topo + sombra curta de contato +
+     sombra longa de ambiente — dá profundidade real em vez de uma sombra
+     única achatada. --papiro-sheen é o brilho sutil no topo do card;
+     --papiro-chip-sombra é para badges/ícones "flutuando" sobre o card. */
+  --papiro-elevar: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 1px 2px rgba(0, 0, 0, 0.45), 0 18px 38px -10px rgba(0, 0, 0, 0.6);
+  --papiro-elevar-hover: 0 1px 0 rgba(255, 255, 255, 0.09) inset, 0 2px 4px rgba(0, 0, 0, 0.5), 0 28px 54px -10px rgba(0, 0, 0, 0.7);
+  --papiro-sheen: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0) 48%);
+  --papiro-chip-sombra: 0 1px 0 rgba(255, 255, 255, 0.1) inset, 0 6px 14px -4px rgba(0, 0, 0, 0.55);
+  --papiro-inset: inset 0 2px 5px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(0, 0, 0, 0.3);
   color: var(--papiro-cream);
   font-family: var(--font-geist-sans), Arial, sans-serif;
 }
@@ -6564,18 +6590,21 @@ footer > small {
 .error-list article {
   border-radius: 5px;
   border-color: var(--papiro-line);
-  background: var(--papiro-panel);
-  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.22);
+  background: var(--papiro-sheen), var(--papiro-panel);
+  box-shadow: var(--papiro-elevar), 0 26px 70px rgba(0, 0, 0, 0.22);
 }
 
 .goal-grid button {
   min-height: 250px;
   padding: 26px;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .goal-grid button:hover {
   border-color: var(--papiro-gold);
-  background: rgba(11, 30, 22, 0.98);
+  background: var(--papiro-sheen), rgba(11, 30, 22, 0.98);
+  box-shadow: var(--papiro-elevar-hover), 0 26px 70px rgba(0, 0, 0, 0.22);
+  transform: translateY(-2px);
 }
 
 .goal-grid button small,
@@ -6716,7 +6745,8 @@ footer > small {
 .answer-submit,
 .answer-feedback-next,
 .empty-method-state a,
-.result-actions a {
+.result-actions a,
+.result-actions button {
   border-radius: 4px;
   color: var(--papiro-bg);
   background: var(--papiro-gold);
@@ -6728,6 +6758,580 @@ footer > small {
 .result-card { border-color: var(--papiro-line-strong); }
 .result-stats article { border-radius: 4px; border-color: var(--papiro-line); }
 .review-dates span { border-radius: 3px; }
+
+/* PAPIRO Beta 1.1 — Central de Revisões (/caderno-de-erros). Reaproveita
+   as mesmas tokens --papiro-* já escopadas em .method-page, sem redefinir
+   nenhuma. --cr-danger é a única cor nova (vermelho-terracota já usado em
+   .review-summary .warning strong / .error-type neste arquivo). */
+.central-revisoes {
+  --cr-danger: #e58870;
+  --cr-danger-bg: rgba(229, 136, 112, 0.12);
+  /* O sistema de elevação (--papiro-elevar/--papiro-sheen/--papiro-chip-
+     sombra) nasceu aqui mas agora mora no :where() de app/globals.css
+     que escopa toda a área interna (válido em qualquer .method-page,
+     .dashboard-page, .stats-page, .auth-page etc.) — não é redefinido
+     por página, só reaproveitado. --cr-danger continua local porque é
+     cor específica desta tela (vermelho de "vencida"). */
+}
+
+.cr-topo { margin-bottom: 34px; }
+.cr-voltar {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: var(--papiro-gold);
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+}
+.cr-topo-grade {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 24px;
+  align-items: stretch;
+}
+.cr-intro h1 {
+  margin: 10px 0 10px;
+  font-family: Georgia, serif;
+  font-size: clamp(30px, 4vw, 44px);
+  line-height: 1.08;
+  color: var(--papiro-cream);
+}
+.cr-intro > span { color: var(--papiro-muted); font-size: 15px; }
+
+.cr-hero {
+  display: flex;
+  gap: 16px;
+  padding: 22px;
+  border: 1px solid var(--papiro-line-strong);
+  border-radius: 8px;
+  background: var(--papiro-sheen), linear-gradient(135deg, rgba(14, 32, 24, 0.95), rgba(4, 12, 9, 0.98));
+  box-shadow: var(--papiro-elevar), 0 20px 55px rgba(0, 0, 0, 0.3);
+}
+.cr-hero-icone {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  color: var(--papiro-gold);
+  background: rgba(242, 199, 92, 0.1);
+  box-shadow: var(--papiro-chip-sombra);
+}
+.cr-hero-corpo strong { display: block; color: var(--papiro-cream); font-size: 18px; font-weight: 700; }
+.cr-hero-corpo p { margin: 4px 0 14px; color: var(--papiro-muted); font-size: 13px; }
+.cr-hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: 5px;
+  color: var(--papiro-bg);
+  background: var(--papiro-gold);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset, 0 10px 22px -6px rgba(242, 199, 92, 0.45);
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.cr-subtitulo { display: block; margin: 4px 0 0; color: var(--papiro-muted); font-size: 13px; }
+
+.cr-indicadores {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.cr-indicador {
+  padding: 18px 20px;
+  border: 1px solid var(--papiro-line);
+  border-radius: 7px;
+  background: var(--papiro-sheen), var(--papiro-panel);
+  box-shadow: var(--papiro-elevar);
+}
+.cr-indicador--alerta { border-color: rgba(229, 136, 112, 0.35); background: var(--papiro-sheen), linear-gradient(160deg, var(--cr-danger-bg), var(--papiro-panel) 70%); }
+.cr-indicador-icone {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 14px;
+  border-radius: 7px;
+  box-shadow: var(--papiro-chip-sombra);
+}
+.cr-icone-verde { color: var(--papiro-green); background: rgba(120, 180, 147, 0.12); }
+.cr-icone-vermelho { color: var(--cr-danger); background: var(--cr-danger-bg); }
+.cr-icone-dourado { color: var(--papiro-gold); background: rgba(242, 199, 92, 0.12); }
+.cr-indicador small {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 8px;
+  color: var(--papiro-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.cr-indicador strong {
+  display: block;
+  font-family: Georgia, serif;
+  font-size: clamp(22px, 3vw, 28px);
+  color: var(--papiro-cream);
+}
+.cr-indicador--alerta strong { color: var(--cr-danger); }
+.cr-indicador em {
+  display: block;
+  margin-top: 6px;
+  color: var(--papiro-muted);
+  font-size: 11px;
+  font-style: normal;
+}
+
+.cr-duas-colunas {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 16px;
+  margin-bottom: 32px;
+  align-items: start;
+}
+.cr-diagnostico,
+.cr-leitura-rapida {
+  padding: 22px;
+  border: 1px solid var(--papiro-line);
+  border-radius: 7px;
+  background: var(--papiro-sheen), var(--papiro-panel);
+  box-shadow: var(--papiro-elevar);
+}
+.cr-diagnostico .dashboard-label,
+.cr-leitura-rapida .dashboard-label,
+.cr-materias .dashboard-label,
+.cr-personalizar .dashboard-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.central-revisoes-barras {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+.central-revisoes-barra {
+  display: grid;
+  grid-template-columns: 150px 1fr 42px;
+  align-items: center;
+  gap: 12px;
+}
+.central-revisoes-barra > span {
+  color: var(--papiro-cream);
+  font-size: 13px;
+}
+.central-revisoes-barra-trilha {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--papiro-panel-soft);
+  overflow: hidden;
+}
+.central-revisoes-barra-preenchimento {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #ad7c24, var(--papiro-gold));
+}
+.central-revisoes-barra > strong {
+  color: var(--papiro-gold);
+  font-size: 13px;
+  text-align: right;
+}
+
+.cr-leitura-rapida ul { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 4px; }
+.cr-leitura-rapida li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 0;
+}
+.cr-leitura-rapida li + li { border-top: 1px solid var(--papiro-line); }
+.cr-leitura-icone {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  color: var(--papiro-gold);
+  background: rgba(242, 199, 92, 0.1);
+  box-shadow: var(--papiro-chip-sombra);
+}
+/* Escopado a "li > div > span" (só a legenda), de propósito: um seletor
+   genérico "li span" também pegava o <span class="cr-leitura-icone"> — que
+   é filho direto do <li>, não do <div> de texto — e, por especificidade,
+   sobrescrevia display/color do próprio ícone (apagava a cor dourada). */
+.cr-leitura-rapida li > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 4px;
+  min-width: 0;
+}
+.cr-leitura-rapida li > div > p {
+  margin: 0;
+  color: var(--papiro-cream);
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+.cr-leitura-rapida li strong { color: var(--papiro-gold); font-weight: 700; }
+.cr-leitura-rapida li > div > span { color: var(--papiro-muted); font-size: 12px; line-height: 1.4; }
+
+.cr-materias,
+.cr-personalizar {
+  margin-bottom: 32px;
+}
+.cr-materias-grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+.cr-materia-card {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border: 1px solid var(--papiro-line);
+  border-radius: 7px;
+  background: var(--papiro-sheen), var(--papiro-panel);
+  box-shadow: var(--papiro-elevar);
+}
+.cr-materia-card--selecionada { border-color: var(--papiro-gold); box-shadow: var(--papiro-elevar), 0 0 0 1px var(--papiro-gold); }
+.cr-materia-card--mais { align-items: flex-start; justify-content: center; text-align: left; border-style: dashed; box-shadow: none; }
+.cr-materia-icone {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  color: var(--papiro-gold);
+  background: rgba(242, 199, 92, 0.1);
+  box-shadow: var(--papiro-chip-sombra);
+}
+.cr-materia-card h3 {
+  margin: 0 0 4px;
+  font-family: Georgia, serif;
+  font-size: 18px;
+  line-height: 1.2;
+  color: var(--papiro-cream);
+}
+.cr-materia-card > p {
+  margin: 0;
+  color: var(--papiro-muted);
+  font-size: 13px;
+}
+.cr-materia-vencidas { color: var(--cr-danger) !important; font-weight: 700; }
+.cr-materia-tipo { margin-top: 16px; }
+.cr-materia-tipo small,
+.cr-materia-assuntos small {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--papiro-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.cr-materia-tipo-linha { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; }
+.cr-materia-tipo-linha span { color: var(--papiro-cream); }
+.cr-materia-tipo-linha strong { color: var(--papiro-gold); }
+.cr-materia-assuntos { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--papiro-line); }
+.cr-materia-assuntos ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.cr-materia-assuntos li { display: flex; justify-content: space-between; color: var(--papiro-muted); font-size: 13px; }
+.cr-materia-assuntos li strong { color: var(--papiro-cream); font-weight: 600; }
+.cr-materia-acoes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 18px;
+}
+.cr-materia-revisar {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 5px;
+  color: var(--papiro-bg);
+  background: var(--papiro-gold);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset, 0 8px 18px -6px rgba(242, 199, 92, 0.45);
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+.cr-materia-diagnostico {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--papiro-muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.cr-personalizar-cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-top: 18px;
+}
+.cr-personalizar-contagem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  border: 1px solid var(--papiro-line);
+  border-radius: 7px;
+  background: var(--papiro-sheen), var(--papiro-panel);
+  box-shadow: var(--papiro-elevar);
+  color: var(--papiro-gold);
+}
+.cr-personalizar-contagem strong { display: block; color: var(--papiro-cream); font-size: 14px; }
+.cr-personalizar-contagem span { display: block; color: var(--papiro-muted); font-size: 11px; }
+
+.cr-personalizar-filtros {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) auto;
+  gap: 14px;
+  align-items: end;
+  margin-top: 18px;
+  padding: 20px;
+  border: 1px solid var(--papiro-line);
+  border-radius: 7px;
+  background: var(--papiro-sheen), var(--papiro-panel);
+  box-shadow: var(--papiro-elevar);
+}
+.cr-personalizar-filtros label {
+  display: grid;
+  gap: 6px;
+  color: var(--papiro-gold);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.cr-personalizar-filtros select {
+  padding: 11px 12px;
+  border-radius: 5px;
+  border: 1px solid var(--papiro-line);
+  color: var(--papiro-cream);
+  background: rgba(2, 9, 7, 0.72);
+  /* Oposto do "elevar": campo recuado na superfície do card (sombra para
+     DENTRO), a mesma linguagem de profundidade usada pelos cards, só
+     invertida — reforça que isto é um controle "encaixado", não um bloco
+     flutuante. */
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(0, 0, 0, 0.3);
+  font: inherit;
+}
+.cr-personalizar-filtros select:disabled { opacity: 0.5; }
+.cr-personalizar-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 20px;
+  height: 44px;
+  border: 0;
+  border-radius: 5px;
+  color: var(--papiro-bg);
+  background: var(--papiro-gold);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset, 0 10px 22px -6px rgba(242, 199, 92, 0.45);
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.cr-personalizar-cta:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* Interatividade: transitions + hover/focus — sem biblioteca nova, só CSS. */
+.cr-indicador,
+.cr-materia-card,
+.cr-hero,
+.cr-diagnostico,
+.cr-leitura-rapida,
+.cr-personalizar-contagem,
+.cr-personalizar-filtros {
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.cr-indicador:hover,
+.cr-materia-card:hover,
+.cr-hero:hover {
+  transform: translateY(-3px);
+  border-color: var(--papiro-line-strong);
+  box-shadow: var(--papiro-elevar-hover);
+}
+.cr-indicador--alerta:hover { border-color: var(--cr-danger); }
+.cr-materia-card--selecionada:hover { border-color: var(--papiro-gold); box-shadow: var(--papiro-elevar-hover), 0 0 0 1px var(--papiro-gold); }
+.cr-materia-card--mais:hover { box-shadow: none; }
+
+.central-revisoes-barra-preenchimento {
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cr-hero-cta,
+.cr-materia-revisar,
+.cr-personalizar-cta,
+.cr-materia-diagnostico,
+.cr-materia-ir-para-filtros {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease, background 0.15s ease;
+}
+.cr-hero-cta:hover,
+.cr-materia-revisar:hover,
+.cr-personalizar-cta:not(:disabled):hover {
+  box-shadow: 0 8px 20px rgba(242, 199, 92, 0.25);
+  filter: brightness(1.06);
+}
+.cr-hero-cta:active,
+.cr-materia-revisar:active,
+.cr-personalizar-cta:not(:disabled):active {
+  transform: scale(0.97);
+}
+.cr-materia-diagnostico:hover { color: var(--papiro-gold); }
+
+.cr-indicador:focus-visible,
+.cr-materia-card:focus-visible,
+.cr-hero-cta:focus-visible,
+.cr-materia-revisar:focus-visible,
+.cr-materia-diagnostico:focus-visible,
+.cr-personalizar-cta:focus-visible,
+.cr-personalizar-filtros select:focus-visible,
+.cr-busca-erro input:focus-visible,
+.cr-lista-completa-toggle:focus-visible {
+  outline: 2px solid var(--papiro-gold);
+  outline-offset: 2px;
+}
+.cr-personalizar-filtros select:focus,
+.cr-busca-erro input:focus {
+  border-color: var(--papiro-gold);
+}
+
+/* Tooltip CSS-puro para o ⓘ de RECUPERAÇÃO — sem JS, só :hover/:focus. */
+.cr-indicador small { position: relative; }
+.cr-indicador small svg { cursor: help; }
+.cr-indicador small svg:hover + .cr-tooltip,
+.cr-indicador small:focus-within .cr-tooltip { opacity: 1; visibility: visible; transform: translate(-50%, -4px); }
+.cr-tooltip {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  width: 220px;
+  padding: 10px 12px;
+  border: 1px solid var(--papiro-line-strong);
+  border-radius: 6px;
+  background: #050c0a;
+  color: var(--papiro-cream);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-transform: none;
+  letter-spacing: normal;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 0);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  pointer-events: none;
+}
+
+/* Card de matéria expandido — "Ver diagnóstico". */
+.cr-materia-card--expandida { border-color: var(--papiro-gold); }
+.cr-materia-diagnostico { display: inline-flex; align-items: center; gap: 4px; }
+.cr-chevron { transition: transform 0.2s ease; }
+.cr-materia-diagnostico[aria-expanded="true"] .cr-chevron,
+.cr-lista-completa-toggle[aria-expanded="true"] .cr-chevron { transform: rotate(180deg); }
+.cr-materia-assuntos ul { animation: cr-expandir 0.25s ease; }
+.cr-materia-ir-para-filtros {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--papiro-gold);
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* Lista completa de erros — recolhida por padrão, com busca. */
+.cr-lista-completa-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+}
+.cr-lista-completa-toggle .dashboard-label { margin: 0; }
+.cr-lista-completa-toggle svg { color: var(--papiro-gold); }
+.cr-lista-completa-corpo { animation: cr-expandir 0.3s ease; }
+.cr-busca-erro {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0 24px;
+  padding: 12px 16px;
+  border: 1px solid var(--papiro-line);
+  border-radius: 6px;
+  background: var(--papiro-panel-soft);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.4);
+  color: var(--papiro-muted);
+}
+.cr-busca-erro input {
+  flex: 1;
+  border: 0;
+  background: none;
+  color: var(--papiro-cream);
+  font: inherit;
+  font-size: 13px;
+}
+.cr-busca-erro input::placeholder { color: var(--papiro-muted); }
+.cr-busca-erro input:focus { outline: none; }
+
+@keyframes cr-expandir {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cr-indicador, .cr-materia-card, .cr-hero, .central-revisoes-barra-preenchimento,
+  .cr-hero-cta, .cr-materia-revisar, .cr-personalizar-cta, .cr-chevron,
+  .cr-materia-assuntos ul, .cr-lista-completa-corpo {
+    transition: none;
+    animation: none;
+  }
+}
+
+@media (max-width: 1080px) {
+  .cr-topo-grade { grid-template-columns: 1fr; }
+  .cr-duas-colunas { grid-template-columns: 1fr; }
+  .cr-personalizar-filtros { grid-template-columns: repeat(2, 1fr); }
+  .cr-personalizar-filtros > button { grid-column: 1 / -1; }
+}
+
+@media (max-width: 720px) {
+  .cr-indicadores { grid-template-columns: repeat(2, 1fr); }
+  .central-revisoes-barra { grid-template-columns: 1fr; }
+  .central-revisoes-barra > strong { text-align: left; }
+  .cr-personalizar-filtros { grid-template-columns: 1fr; }
+}
 
 /* Configuração de objetivos */
 .course-page {
@@ -6771,13 +7375,16 @@ footer > small {
   border-radius: 5px;
   border-color: var(--papiro-line);
   color: var(--papiro-cream);
-  background: var(--papiro-panel);
+  background: var(--papiro-sheen), var(--papiro-panel);
+  box-shadow: var(--papiro-elevar);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .course-card:hover,
 .course-card-selected {
   border-color: var(--papiro-gold);
-  box-shadow: 0 0 0 1px rgba(242, 199, 92, 0.2), 0 24px 60px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--papiro-elevar-hover), 0 0 0 1px rgba(242, 199, 92, 0.2), 0 24px 60px rgba(0, 0, 0, 0.25);
+  transform: translateY(-2px);
 }
 
 .course-card-check {
@@ -6860,8 +7467,8 @@ footer > small {
 .notice-result-aside {
   border-radius: 5px;
   border-color: var(--papiro-line);
-  background: var(--papiro-panel-soft);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+  background: var(--papiro-sheen), var(--papiro-panel-soft);
+  box-shadow: var(--papiro-elevar), 0 24px 60px rgba(0, 0, 0, 0.2);
 }
 
 .upload-heading > span,
@@ -6979,8 +7586,8 @@ footer > small {
   padding: 44px;
   border-radius: 5px;
   border-color: var(--papiro-line-strong);
-  background: rgba(3, 12, 9, 0.92);
-  box-shadow: 0 36px 100px rgba(0, 0, 0, 0.55);
+  background: var(--papiro-sheen), rgba(3, 12, 9, 0.92);
+  box-shadow: var(--papiro-elevar), 0 36px 100px rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(12px);
 }
 

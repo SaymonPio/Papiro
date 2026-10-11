@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import MarcaCarregando from "@/components/ui/MarcaCarregando";
 import { montarJanelaSemanal } from "@/utils/cronograma.mjs";
-import { montarLinkTeoria } from "@/utils/missao-cronograma.mjs";
+import { montarLinkRevisao, montarLinkTeoria } from "@/utils/missao-cronograma.mjs";
 import { createClient } from "@/utils/supabase/client";
 
 type CursoAtivo = {
@@ -135,6 +135,12 @@ type Bloco = {
   cursoMateriaId?: number;
   materiaId?: number;
   assuntoId?: number;
+  // PAPIRO Beta 1 — revisão executável: true só no bloco "revisao" de HOJE
+  // (indice 0) quando existe ao menos 1 revisão pendente/vencida de fato —
+  // é o único dia em que iniciar_revisao() tem algo pendente para puxar
+  // (ela só considera agendada_para <= hoje no servidor). Blocos de dias
+  // futuros são só planejamento, nunca ganham o CTA.
+  temRevisaoExecutavel?: boolean;
 };
 
 // Bônus por presença de cada tipo de evidência — aprovado explicitamente.
@@ -923,6 +929,7 @@ export default function Cronograma() {
             ? `${revisoesDia.length} revisão(ões) programada(s)`
             : "Revisão rápida do conteúdo anterior",
           minutos: minutosRevisao,
+          temRevisaoExecutavel: indice === 0 && temRevisao,
         },
         {
           tipo: "teoria",
@@ -1199,6 +1206,11 @@ export default function Cronograma() {
                             <b>{formatarDuracao(bloco.minutos)}</b>
                             <span>{bloco.detalhe}</span>
                           </div>
+                          {bloco.temRevisaoExecutavel && (
+                            <Link href={montarLinkRevisao()} className="schedule-mission-status" style={{ marginTop: 10 }}>
+                              Iniciar revisão
+                            </Link>
+                          )}
                         </div>
                       ))}
                     </div>

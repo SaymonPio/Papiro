@@ -148,6 +148,74 @@ export function lerMissionId(busca) {
   return uuidValido(parametros.get("missao"));
 }
 
+// PAPIRO Beta 1 — revisão executável. "revisao=1" é um parâmetro próprio,
+// NUNCA combinado com origem=cronograma/unidade/missaoFinal (a revisão não é
+// uma missão: identidade/seleção de questões são 100% resolvidas no servidor
+// por iniciar_revisao(), sem nenhum id vindo da URL — ver
+// supabase/migrations/20261008120000_revisao_executavel.sql).
+export function montarLinkRevisao() {
+  return "/questoes?revisao=1";
+}
+
+export function lerRevisaoSolicitada(busca) {
+  const parametros = new URLSearchParams(busca);
+  return parametros.get("revisao") === "1";
+}
+
+// PAPIRO Beta 1.1 — Central de Revisões: revisão PERSONALIZADA (filtros),
+// irmã de montarLinkRevisao()/lerRevisaoSolicitada() acima — "revisaoP=1" é
+// um parâmetro próprio, nunca combinado com "revisao=1" nem com os
+// parâmetros de missão. Os filtros em si (materia/assunto/tipoErro/
+// situacao/quantidade) são só CONTEXTO de UI na URL — iniciar_revisao_
+// personalizada() revalida tudo server-side (pertencimento ao curso
+// ativo, valores permitidos); nenhum deles é tratado como identidade.
+const SITUACOES_VALIDAS = new Set(["vencidas", "hoje", "proximas", "todas"]);
+const TIPOS_ERRO_VALIDOS = new Set(["nao_sabia", "duvida", "chute", "atencao", "interpretacao"]);
+
+/**
+ * @param {{
+ *   materiaId?: number | null,
+ *   assuntoId?: number | null,
+ *   tipoErro?: string | null,
+ *   situacao?: string,
+ *   quantidade?: number,
+ * }} [filtros]
+ */
+export function montarLinkRevisaoPersonalizada({
+  materiaId = null,
+  assuntoId = null,
+  tipoErro = null,
+  situacao = "vencidas",
+  quantidade = 20,
+} = {}) {
+  const parametros = new URLSearchParams({ revisaoP: "1" });
+  if (materiaId) parametros.set("materia", String(materiaId));
+  if (assuntoId) parametros.set("assunto", String(assuntoId));
+  if (tipoErro) parametros.set("tipoErro", String(tipoErro));
+  if (situacao) parametros.set("situacao", String(situacao));
+  if (quantidade) parametros.set("quantidade", String(Math.max(1, Math.min(50, quantidade))));
+  return `/questoes?${parametros.toString()}`;
+}
+
+export function lerRevisaoPersonalizadaSolicitada(busca) {
+  const parametros = new URLSearchParams(busca);
+  if (parametros.get("revisaoP") !== "1") return null;
+
+  const materiaId = inteiroPositivo(parametros.get("materia"));
+  const assuntoId = inteiroPositivo(parametros.get("assunto"));
+  const tipoErroBruto = parametros.get("tipoErro");
+  const situacaoBruta = parametros.get("situacao");
+  const quantidadeBruta = inteiroPositivo(parametros.get("quantidade"));
+
+  return {
+    materiaId,
+    assuntoId: materiaId ? assuntoId : null,
+    tipoErro: tipoErroBruto && TIPOS_ERRO_VALIDOS.has(tipoErroBruto) ? tipoErroBruto : null,
+    situacao: situacaoBruta && SITUACOES_VALIDAS.has(situacaoBruta) ? situacaoBruta : "vencidas",
+    quantidade: quantidadeBruta ? Math.max(1, Math.min(50, quantidadeBruta)) : 20,
+  };
+}
+
 export function podeIniciarMissaoAutomaticamente({
   origemCronograma,
   jaIniciada,
