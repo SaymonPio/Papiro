@@ -262,10 +262,13 @@ test("app/teoria/page.tsx oferece a Missão Final direto ao aluno que já pratic
 test("app/teoria/page.tsx só muda de fluxo quando há mais de uma unidade publicada", () => {
   assert.match(teoria, /unidadesPublicadas\.length > 1/);
   assert.match(teoria, /unidadePedagogicaId: aulaAtual\.unidade_pedagogica_id/);
-  // Conteúdo com 1 única unidade preserva o destino antigo (mesmo bloco
-  // final inalterado, sem unidadePedagogicaId).
-  const semUnidade = teoria.slice(teoria.lastIndexOf("window.location.assign(montarLinkMissao({"));
-  assert.doesNotMatch(semUnidade, /unidadePedagogicaId/);
+  // Inspeciona somente os argumentos das navegações: o restante da tela
+  // também usa unidadePedagogicaId no cronômetro, sem mudar o destino.
+  const navegacoes = [...teoria.matchAll(/window\.location\.assign\(montarLinkMissao\(\{([\s\S]*?)\}\)\);/g)];
+  assert.equal(navegacoes.length, 2, "esperava as navegações por unidade e pelo fluxo antigo");
+  assert.match(navegacoes[0][1], /unidadePedagogicaId: aulaAtual\.unidade_pedagogica_id/);
+  assert.doesNotMatch(navegacoes[1][1], /unidadePedagogicaId/);
+  assert.match(navegacoes[1][1], /missionId: missao\.id/);
 });
 
 test("app/questoes/page.tsx nunca envia p_questao_ids para as RPCs do Modo Papiro", () => {
