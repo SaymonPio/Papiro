@@ -50,3 +50,8 @@ next-env.d.ts
 # (node scripts/curadoria-pedagogica/auditar-conteudo.mjs <id>), nao devem
 # ser versionados a cada conteudo
 scripts/curadoria-pedagogica/relatorios/
+
+# config local de agentes/MCP (especifica desta maquina, nunca compartilhada)
+/.agents/
+/.claude/
+/.mcp.json
