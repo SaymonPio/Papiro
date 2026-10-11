@@ -1,47 +1,11 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { cursosDisponiveis } from "@/lib/cursos";
 import { createClient } from "@/utils/supabase/client";
 
 const supabase = createClient();
-
-type Concurso = {
-  id: string;
-  carreira: string;
-  concurso: string;
-  cargo: string;
-  banca: string;
-  dataProva: string;
-  dataExibicao: string;
-  imagem: string;
-  previsao: boolean;
-};
-
-const concursos: Concurso[] = [
-  {
-    id: "86d06052-d21d-4e2e-b7ef-d6cfab169185",
-    carreira: "Guarda Municipal",
-    concurso: "Guarda Municipal de Alvorada",
-    cargo: "Guarda Municipal",
-    banca: "Fundatec",
-    dataProva: "2026-11-15",
-    dataExibicao: "15/11/2026",
-    imagem: "/cursos/gm-alvorada.png",
-    previsao: true,
-  },
-  {
-    id: "7543be16-4c5b-4cb6-8724-8fbdfb96f2d4",
-    carreira: "Polícia Militar",
-    concurso: "Brigada Militar do Rio Grande do Sul",
-    cargo: "Soldado de Primeira Classe",
-    banca: "Fundatec",
-    dataProva: "2027-03-14",
-    dataExibicao: "14/03/2027",
-    imagem: "/cursos/brigada-militar-rs.png",
-    previsao: true,
-  },
-];
 
 export default function Configuracao() {
   const router = useRouter();
@@ -49,6 +13,7 @@ export default function Configuracao() {
   const [horasDiarias, setHorasDiarias] = useState("");
   const [mensagem, setMensagem] = useState("");
   const [carregando, setCarregando] = useState(false);
+  const horasInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     async function verificarUsuario() {
@@ -67,6 +32,24 @@ export default function Configuracao() {
   function selecionarConcurso(id: string) {
     setMensagem("");
     setCursoSelecionado(id);
+
+    window.requestAnimationFrame(() => {
+      const campoHoras = horasInputRef.current;
+
+      if (!campoHoras) {
+        return;
+      }
+
+      const reduzirMovimento = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      campoHoras.scrollIntoView({
+        behavior: reduzirMovimento ? "auto" : "smooth",
+        block: "center",
+      });
+      campoHoras.focus({ preventScroll: true });
+    });
   }
 
   async function salvarObjetivos(evento: FormEvent<HTMLFormElement>) {
@@ -133,7 +116,7 @@ export default function Configuracao() {
           </div>
 
           <div className="course-grid">
-            {concursos.map((concurso) => {
+            {cursosDisponiveis.map((concurso) => {
               const selecionado = concurso.id === cursoSelecionado;
 
               return (
@@ -177,6 +160,7 @@ export default function Configuracao() {
           </label>
 
           <input
+            ref={horasInputRef}
             id="horasDiarias"
             type="number"
             min="0.5"
