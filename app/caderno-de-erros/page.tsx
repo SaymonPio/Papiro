@@ -80,6 +80,20 @@ function rotuloTipoErro(tipo: string | null) {
   return ROTULOS_TIPO_ERRO[tipo] ?? tipo.replaceAll("_", " ");
 }
 
+// Hotfix P2: "Revisar matéria" fixava situacao="vencidas" mesmo quando a
+// matéria não tinha nenhuma revisão vencida (só "hoje"/"próximas"), levando
+// a um "Nenhuma revisão encontrada" evitável. Mesma prioridade temporal já
+// usada pelos indicadores desta tela (vencida > hoje > futura) — nunca cai
+// em situacao="todas" por padrão, pra preservar o recorte temporal que o
+// aluno espera ao clicar no card da matéria. null = matéria sem nenhuma
+// pendência, botão não deve aparecer.
+function obterSituacaoRevisaoMateria(materia: { vencidas: number; hoje: number; proximas: number }): Situacao | null {
+  if (materia.vencidas > 0) return "vencidas";
+  if (materia.hoje > 0) return "hoje";
+  if (materia.proximas > 0) return "proximas";
+  return null;
+}
+
 const OPCOES_SITUACAO: { valor: Situacao; rotulo: string }[] = [
   { valor: "vencidas", rotulo: "Vencidas" },
   { valor: "hoje", rotulo: "Hoje" },
@@ -331,6 +345,13 @@ export default function CadernoDeErros() {
         const todasRevisoes = errosDaMateria.flatMap((e) => e.revisoes);
         const pendentes = todasRevisoes.filter((r) => r.status === "pendente");
         const vencidas = pendentes.filter((r) => r.agendada_para < hojeChave);
+        // Mesma partição de "situacao" usada server-side em contar_revisoes_
+        // personalizadas/iniciar_revisao_personalizada (vencidas: <, hoje: =,
+        // proximas: >) — necessária aqui para o botão "Revisar matéria" poder
+        // escolher a situação coerente com as pendências reais da matéria
+        // (hotfix P2: antes fixava "vencidas" mesmo sem nenhuma vencida).
+        const hoje = pendentes.filter((r) => r.agendada_para === hojeChave);
+        const proximas = pendentes.filter((r) => r.agendada_para > hojeChave);
 
         const contagemTipo = new Map<string, number>();
         for (const erro of errosDaMateria) {
@@ -361,6 +382,8 @@ export default function CadernoDeErros() {
           totalErros: errosDaMateria.length,
           pendentes: pendentes.length,
           vencidas: vencidas.length,
+          hoje: hoje.length,
+          proximas: proximas.length,
           tipoMaisComum,
           // Resumo (card recolhido) vs. diagnóstico completo (card
           // expandido via "Ver diagnóstico") — mesma lista, só o corte
@@ -540,6 +563,7 @@ export default function CadernoDeErros() {
                 <div className="cr-materias-grade">
                   {materiasVisiveis.map((materia) => {
                     const expandida = materiaExpandida === materia.nome;
+                    const situacaoRevisaoMateria = obterSituacaoRevisaoMateria(materia);
                     return (
                       <article
                         key={materia.nome}
@@ -584,10 +608,10 @@ export default function CadernoDeErros() {
                         )}
 
                         <div className="cr-materia-acoes">
-                          {materia.materiaId !== null && materia.pendentes > 0 && (
+                          {materia.materiaId !== null && situacaoRevisaoMateria !== null && (
                             <Link
                               className="cr-materia-revisar"
-                              href={montarLinkRevisaoPersonalizada({ materiaId: materia.materiaId, situacao: "vencidas" })}
+                              href={montarLinkRevisaoPersonalizada({ materiaId: materia.materiaId, situacao: situacaoRevisaoMateria })}
                             >
                               Revisar matéria <ChevronRight size={14} strokeWidth={2.5} />
                             </Link>

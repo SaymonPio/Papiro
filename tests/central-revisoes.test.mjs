@@ -319,6 +319,80 @@ test("diagnóstico de tipos de erro mostra 'Não classificado' honestamente (nã
 });
 
 // ============================================================================
+// Hotfix P2 — "Revisar matéria" usa a situação coerente com as pendências
+// reais da matéria (antes fixava situacao="vencidas" mesmo quando a matéria
+// só tinha pendências "hoje"/"próximas", gerando um "Nenhuma revisão
+// encontrada" evitável). Mirror em JS de obterSituacaoRevisaoMateria, mesma
+// prioridade temporal vencida > hoje > futura já usada pelos indicadores
+// desta tela (ver teste "5." acima).
+// ============================================================================
+
+function obterSituacaoRevisaoMateria(materia) {
+  if (materia.vencidas > 0) return "vencidas";
+  if (materia.hoje > 0) return "hoje";
+  if (materia.proximas > 0) return "proximas";
+  return null;
+}
+
+test("hotfix P2 (1). matéria com vencidas > 0 → botão usa situacao=vencidas", () => {
+  assert.equal(obterSituacaoRevisaoMateria({ vencidas: 3, hoje: 2, proximas: 1 }), "vencidas");
+});
+
+test("hotfix P2 (2). matéria com vencidas=0 e hoje>0 → botão usa situacao=hoje", () => {
+  assert.equal(obterSituacaoRevisaoMateria({ vencidas: 0, hoje: 1, proximas: 4 }), "hoje");
+});
+
+test("hotfix P2 (3). matéria com vencidas=0, hoje=0 e próximas>0 → botão usa situacao=proximas", () => {
+  assert.equal(obterSituacaoRevisaoMateria({ vencidas: 0, hoje: 0, proximas: 5 }), "proximas");
+});
+
+test("hotfix P2 (4). matéria sem nenhuma pendência → botão não aparece (situacao null, nenhum link gerado)", () => {
+  assert.equal(obterSituacaoRevisaoMateria({ vencidas: 0, hoje: 0, proximas: 0 }), null);
+});
+
+test("hotfix P2 (5). vencidas têm prioridade sobre hoje/próximas mesmo quando as três são > 0", () => {
+  assert.equal(obterSituacaoRevisaoMateria({ vencidas: 1, hoje: 10, proximas: 10 }), "vencidas");
+});
+
+test("hotfix P2 (6). hoje tem prioridade sobre próximas quando vencidas=0", () => {
+  assert.equal(obterSituacaoRevisaoMateria({ vencidas: 0, hoje: 1, proximas: 10 }), "hoje");
+});
+
+test("hotfix P2 (7). nenhum dos 4 ramos possíveis devolve 'todas' — o botão da matéria nunca usa esse valor por padrão", () => {
+  for (const materia of [
+    { vencidas: 3, hoje: 0, proximas: 0 },
+    { vencidas: 0, hoje: 3, proximas: 0 },
+    { vencidas: 0, hoje: 0, proximas: 3 },
+    { vencidas: 0, hoje: 0, proximas: 0 },
+  ]) {
+    assert.notEqual(obterSituacaoRevisaoMateria(materia), "todas");
+  }
+  assert.doesNotMatch(cadernoPage, /materiaId: materia\.materiaId, situacao: "todas"/);
+});
+
+test("hotfix P2 (8). código real: o botão 'Revisar matéria' não fixa mais situacao=\"vencidas\" e passa a usar o resultado de obterSituacaoRevisaoMateria", () => {
+  assert.doesNotMatch(
+    cadernoPage,
+    /montarLinkRevisaoPersonalizada\(\{ materiaId: materia\.materiaId, situacao: "vencidas" \}\)/,
+    "o hardcode antigo (sempre vencidas) não pode mais existir",
+  );
+  assert.match(cadernoPage, /function obterSituacaoRevisaoMateria\(materia: \{ vencidas: number; hoje: number; proximas: number \}\): Situacao \| null \{/);
+  assert.match(cadernoPage, /if \(materia\.vencidas > 0\) return "vencidas";\s*\n\s*if \(materia\.hoje > 0\) return "hoje";\s*\n\s*if \(materia\.proximas > 0\) return "proximas";\s*\n\s*return null;/);
+  assert.match(cadernoPage, /const situacaoRevisaoMateria = obterSituacaoRevisaoMateria\(materia\);/);
+  assert.match(cadernoPage, /materia\.materiaId !== null && situacaoRevisaoMateria !== null && \(/);
+  assert.match(cadernoPage, /montarLinkRevisaoPersonalizada\(\{ materiaId: materia\.materiaId, situacao: situacaoRevisaoMateria \}\)/);
+  // agregação por matéria agora guarda hoje/proximas, além de vencidas (mínimo necessário, sem RPC nova):
+  assert.match(cadernoPage, /const hoje = pendentes\.filter\(\(r\) => r\.agendada_para === hojeChave\);/);
+  assert.match(cadernoPage, /const proximas = pendentes\.filter\(\(r\) => r\.agendada_para > hojeChave\);/);
+  assert.match(cadernoPage, /hoje: hoje\.length,\s*\n\s*proximas: proximas\.length,/);
+});
+
+test("hotfix P2 (9). a revisão automática (cr-hero \"Revisar pendências de hoje\") continua usando montarLinkRevisao() sem parâmetros — hotfix não tocou nela", () => {
+  assert.match(cadernoPage, /href=\{montarLinkRevisao\(\)\}/);
+  assert.doesNotMatch(cadernoPage, /montarLinkRevisao\([^)]+\)/, "montarLinkRevisao nunca recebe argumentos");
+});
+
+// ============================================================================
 // [requer banco vivo]
 // ============================================================================
 
