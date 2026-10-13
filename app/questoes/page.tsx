@@ -1343,7 +1343,7 @@ export default function Questoes() {
   }
 
   const tituloSessaoAtual =
-    nivel === "personalizada" ? "Sessão personalizada" : nivel === "revisao" ? "Revisão" : metas[nivel].titulo;
+    nivel === "personalizada" ? "Sessão personalizada" : nivel === "revisao" ? "Revisão" : nivel === "pesquisa" ? "Pesquisa de questões" : metas[nivel].titulo;
   const origemQuestao = descreverOrigemQuestao(questaoAtual);
 
   const materiaNomeAtual = materiasCurso.find((materia) => materia.materia_id === materiaSelecionada)?.materia_nome ?? null;
