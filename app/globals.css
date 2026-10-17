@@ -5851,6 +5851,17 @@ footer > small {
   border-color: rgba(242, 199, 92, 0.3);
 }
 
+/* /estatisticas — "Seu ritmo recente" ocupa a linha inteira do
+   .stats-grid (2 colunas: 1.25fr 0.75fr), em vez de sobrar vazio na
+   coluna da direita. Escopado em .central-estatisticas (já usado pelo
+   hero desta página): ResumoTempoEstudoCompacto também é renderizado em
+   /meu-estudo, que não pode ser afetado. grid-column some sozinho fora de
+   um container grid, então isso nunca quebra nada fora daqui — a
+   especificidade do escopo é só reforço/clareza. */
+.central-estatisticas .tempo-estudo-compacto-panel {
+  grid-column: 1 / -1;
+}
+
 /* Cards do topo (ResumoTempoEstudo, /meu-estudo) — Hoje/Semana/Mês/
    Últimos N dias. Sem ação real (nunca tabIndex/cursor:pointer — ver
    seção 11 da auditoria desta fase), só reação visual discreta no
@@ -7844,6 +7855,26 @@ footer > small {
 .reviews-panel > a {
   color: var(--papiro-gold);
   border-bottom-color: var(--papiro-line-strong);
+}
+
+/* /estatisticas — hero reduzido na MESMA escala aprovada em
+   .central-questoes .method-header (ver acima), só nesta tela: .stats-page/
+   .stats-header também são usados por /meu-estudo (confirmado por
+   auditoria), que continuam com o tamanho padrão — por isso o escopo
+   .central-estatisticas, com especificidade maior que .stats-header
+   sozinho (nunca depende de ordem no arquivo para vencer a cascata).
+   max-width do h1 reduzido junto (880px -> 660px): com a fonte menor, o
+   max-width antigo deixaria o título caber numa linha só, perdendo a
+   quebra em 2 linhas pedida. */
+.central-estatisticas .stats-header {
+  min-height: 180px;
+  margin-bottom: 18px;
+}
+.central-estatisticas .stats-header h1 {
+  max-width: 660px;
+  margin: 6px 0 6px;
+  font-size: clamp(2.5rem, 4.8vw, 4.4rem);
+  line-height: 0.95;
 }
 
 .notices-grid { grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.55fr); gap: 12px; }

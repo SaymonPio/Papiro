@@ -40,6 +40,23 @@ function calcularSequencia(datas: string[]) {
   return sequencia;
 }
 
+// Mapping só de APRESENTAÇÃO — as chaves são exatamente os valores
+// canônicos gravados em erros_revisoes.tipo_erro por classificar_erro()
+// (app/questoes/page.tsx: CausaErro), mais "nao_classificado" (sentinela
+// local, usado só aqui, para erro ainda sem classificação). Nunca altera
+// o valor armazenado/agrupado — só o texto exibido ao aluno.
+const ROTULOS_ERRO_CLASSIFICACAO: Record<string, string> = {
+  nao_sabia: "Não sabia",
+  duvida: "Dúvida",
+  chute: "Chute",
+  atencao: "Atenção",
+  interpretacao: "Interpretação",
+  nao_classificado: "Não classificado",
+};
+function rotuloErroClassificacao(tipo: string) {
+  return ROTULOS_ERRO_CLASSIFICACAO[tipo] ?? tipo;
+}
+
 export default function Estatisticas() {
   const [respostas, setRespostas] = useState<Resposta[]>([]);
   const [sessoes, setSessoes] = useState<Sessao[]>([]);
@@ -127,7 +144,9 @@ export default function Estatisticas() {
     const materias = [...porMateria.entries()].map(([nome, valor]) => ({ nome, ...valor, percentual: Math.round((valor.acertos / valor.total) * 100) })).sort((a, b) => b.total - a.total);
 
     const tipos = new Map<string, number>();
-    erros.forEach((erro) => { const tipo = erro.tipo_erro?.replaceAll("_", " ") ?? "não classificado"; tipos.set(tipo, (tipos.get(tipo) ?? 0) + 1); });
+    // Agrupa pelo valor CANÔNICO (nunca pelo texto já traduzido) — a
+    // tradução acontece só na hora de renderizar, via rotuloErroClassificacao.
+    erros.forEach((erro) => { const tipo = erro.tipo_erro ?? "nao_classificado"; tipos.set(tipo, (tipos.get(tipo) ?? 0) + 1); });
     const errosPorTipo = [...tipos.entries()].map(([tipo, totalTipo]) => ({ tipo, total: totalTipo })).sort((a, b) => b.total - a.total);
 
     const ultimosSete = Array.from({ length: 7 }, (_, indice) => { const data = new Date(); data.setDate(data.getDate() - (6 - indice)); const chave = dataLocal(data); return { chave, dia: data.toLocaleDateString("pt-BR", { weekday: "short" }).replace(".", ""), estudou: diasUnicos.includes(chave) }; });
@@ -137,7 +156,7 @@ export default function Estatisticas() {
   if (carregando) return <main className="dashboard-loading"><MarcaCarregando texto="Calculando sua evolução..." /></main>;
 
   return (
-    <main className="stats-page">
+    <main className="stats-page central-estatisticas">
       <header className="stats-header">
         <div><p className="dashboard-label">EVOLUÇÃO NO MÉTODO PAPIRO</p><h1>Consistência que pode ser medida.</h1><span>Indicadores dos últimos 90 dias.</span></div>
         <Link href="/painel">Voltar ao painel</Link>
@@ -175,7 +194,7 @@ export default function Estatisticas() {
 
             <article className="stats-panel errors-panel">
               <div className="stats-title"><div><p className="dashboard-label">PADRÕES DE ERRO</p><h2>O que precisa de atenção</h2></div></div>
-              {dados.errosPorTipo.length === 0 ? <p className="stats-empty">Os tipos de erro aparecerão após a classificação.</p> : dados.errosPorTipo.map((erro) => <div className="error-stat" key={erro.tipo}><span>{erro.tipo}</span><strong>{erro.total}</strong></div>)}
+              {dados.errosPorTipo.length === 0 ? <p className="stats-empty">Os tipos de erro aparecerão após a classificação.</p> : dados.errosPorTipo.map((erro) => <div className="error-stat" key={erro.tipo}><span>{rotuloErroClassificacao(erro.tipo)}</span><strong>{erro.total}</strong></div>)}
             </article>
 
             {/* Resumo compacto de tempo de estudo — deliberadamente
