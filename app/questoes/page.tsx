@@ -1387,12 +1387,12 @@ export default function Questoes() {
       <CronometroEstudo sessao={sessaoTempo} contexto={assuntoNomeAtual || materiaNomeAtual} />
 
       <article className="question-card">
-        <div className="question-origin">
-          <span className="question-origin-main">{origemQuestao}</span>
-        </div>
         <div className="question-meta">
           <span>{questaoAtual.materias?.nome ?? "Matéria geral"}</span>
           <span>{questaoAtual.assuntos?.nome ?? "Assunto geral"}</span>
+        </div>
+        <div className="question-origin">
+          <span className="question-origin-main">{origemQuestao}</span>
         </div>
         <h1>{questaoAtual.enunciado}</h1>
         <div className="answer-list">

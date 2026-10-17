@@ -34,13 +34,14 @@ test("A) texto corrido da aula (.teoria-texto, .teoria-pergunta, .teoria-dica, .
   }
 });
 
-test("B) enunciado da questão (.question-card h1) recebe justificação, sem afetar títulos de página (.method-header h1/.result-card h1)", () => {
+test("B) enunciado da questão (.question-card h1) usa alinhamento padrão (sem justify/hyphens) — redesign da tela de resolução trocou a justificação por alinhamento à esquerda, para leitura mais confortável em coluna estreita", () => {
   const blocoEnunciado = blocoDoSeletor(globalsCss, ".question-card h1");
   assert.ok(blocoEnunciado, "esperava um bloco .question-card h1 próprio (mais específico que o agrupado com method-header/result-card)");
-  assert.match(blocoEnunciado, /text-align:\s*justify/);
+  assert.doesNotMatch(blocoEnunciado, /text-align:\s*justify/);
+  assert.doesNotMatch(blocoEnunciado, /hyphens:\s*auto/);
   // O seletor AGRUPADO (.method-header h1, .question-card h1, .result-card
-  // h1 { ... }) é compartilhado com títulos de página — não pode ganhar
-  // justify ali, senão título de página também justificaria.
+  // h1 { ... }) é compartilhado com títulos de página — nunca teve justify,
+  // continua sem.
   const casamentoAgrupado = globalsCss.match(/\.method-header h1,\s*\n\.question-card h1,\s*\n\.result-card h1\s*\{([^}]*)\}/);
   assert.ok(casamentoAgrupado, "esperava encontrar o seletor agrupado com method-header/result-card");
   assert.doesNotMatch(casamentoAgrupado[1], /text-align:\s*justify/);

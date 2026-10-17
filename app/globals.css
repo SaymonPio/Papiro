@@ -2475,7 +2475,7 @@ footer > small {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  margin-bottom: 14px;
+  margin: 8px 0 10px;
 }
 
 .question-origin-main {
@@ -2503,17 +2503,15 @@ footer > small {
 }
 
 .question-card h1 {
-  margin: 30px 0 34px;
-  font-size: clamp(25px, 3vw, 38px);
-  line-height: 1.32;
-  text-align: justify;
-  text-justify: inter-word;
-  hyphens: auto;
+  max-width: 860px;
+  margin: 24px 0 28px;
+  font-size: clamp(22px, 2.2vw, 30px);
+  line-height: 1.38;
 }
 
 .answer-list {
   display: grid;
-  gap: 11px;
+  gap: 12px;
 }
 
 .answer-option-row {
@@ -2523,11 +2521,11 @@ footer > small {
 }
 
 .answer-choice {
-  min-height: 62px;
+  min-height: 50px;
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 12px 16px;
+  padding: 10px 14px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 9px;
   color: #e8ede9;
@@ -2545,11 +2543,41 @@ footer > small {
 .answer-choice b {
   width: 32px;
   height: 32px;
+  flex-shrink: 0;
   display: grid;
   place-items: center;
   border: 1px solid rgba(216, 173, 76, 0.35);
   border-radius: 50%;
   color: var(--gold-bright);
+}
+
+/* Telas desktop de pouca altura (ex.: notebooks ~768-900px úteis): reduz um
+   pouco mais a densidade da questão ativa para caber metadados+enunciado+
+   alternativas+CTA sem rolagem. min-width exclui mobile de propósito. */
+@media (min-width: 600px) and (max-height: 900px) {
+  .question-card h1 {
+    margin: 18px 0 20px;
+    font-size: clamp(20px, 2vw, 26px);
+  }
+  .answer-list { gap: 9px; }
+  .answer-choice {
+    min-height: 44px;
+    padding: 9px 12px;
+  }
+
+  /* Área periférica (cabeçalho/barra de progresso/moldura do card) —
+     compactação separada da densidade interna acima, que já está
+     aprovada e não é tocada aqui. Seletor .question-session .question-card
+     (em vez de .question-card sozinho) é proposital: precisa vencer em
+     especificidade a regra .question-card de app/globals.css:6695, que
+     vem depois desta no arquivo e também define padding. */
+  .session-topbar { min-height: 38px; }
+  .session-progress { height: 3px; margin: 0 auto 4px; }
+  .question-session .question-card { padding: 6px clamp(22px, 4vw, 44px); }
+
+  /* Override escopado (não mexe na regra compartilhada com
+     /questoes/resultado e demais telas, que continuam em 24px). */
+  .question-session .answer-submit { margin-top: 6px; }
 }
 
 .answer-option-row.eliminated .answer-choice span {
@@ -6679,7 +6707,7 @@ footer > small {
 .session-progress span { background: linear-gradient(90deg, #ad7c24, var(--papiro-gold)); }
 
 .question-card {
-  padding: clamp(28px, 4.5vw, 54px);
+  padding: clamp(20px, 3.5vw, 36px) clamp(26px, 5vw, 52px);
   border-color: var(--papiro-line-strong);
 }
 
@@ -6714,7 +6742,7 @@ footer > small {
 
 .questao-comentarios {
   width:min(100%,1120px);
-  margin:16px auto 0;
+  margin:24px auto 0;
   border:1px solid var(--papiro-line-strong);
   background:rgba(9,24,18,.95);
 }
