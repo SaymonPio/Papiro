@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import ComentariosQuestao from "@/components/questoes/ComentariosQuestao";
+import SessaoPersonalizadaBusca from "@/components/questoes/SessaoPersonalizadaBusca";
 import MarcaCarregando from "@/components/ui/MarcaCarregando";
 import {
   lerMissaoCronograma,
@@ -20,7 +21,7 @@ type MetaPreset = "minima" | "normal" | "ideal";
 // (migration 20261008120000_revisao_executavel.sql, mesmo padrão que
 // introduziu "personalizada"). Nunca aparece no grid de metas diárias —
 // só é atingido via iniciar_revisao()/recuperação por ?sessaoAvulsa=.
-type NivelMeta = MetaPreset | "personalizada" | "revisao";
+type NivelMeta = MetaPreset | "personalizada" | "revisao" | "pesquisa";
 type Alternativa = { id: number; texto: string; ordem: number };
 type IdQuestao = { questao_id: number };
 type CausaErro = "nao_sabia" | "duvida" | "chute" | "atencao" | "interpretacao";
@@ -329,6 +330,25 @@ export default function Questoes() {
   useEffect(() => {
     const agendamento = window.setTimeout(() => {
       if (lerRevisaoSolicitada(window.location.search)) setRevisaoSolicitada(true);
+    }, 0);
+    return () => window.clearTimeout(agendamento);
+  }, []);
+
+  // Central Única de Questões — ?modo=personalizada abre a tela de
+  // preparação já na aba "Sessão personalizada" (ex.: vindo do redirect de
+  // /questoes/buscar). Mesma técnica de leitura adiada (window.setTimeout)
+  // dos outros efeitos de URL acima, mesmo motivo (hydration). Prioridades
+  // preservadas: nunca roda se ?sessaoAvulsa= está presente (recuperação de
+  // sessão manda) nem interfere em origemCronograma (missão já força
+  // modoInicio="personalizada" por conta própria, valor idêntico, sem
+  // conflito, mas a leitura abaixo é pulada mesmo assim por clareza).
+  useEffect(() => {
+    const agendamento = window.setTimeout(() => {
+      const parametros = new URLSearchParams(window.location.search);
+      if (parametros.get("sessaoAvulsa")) return;
+      if (parametros.get("modo") === "personalizada") {
+        setModoInicio("personalizada");
+      }
     }, 0);
     return () => window.clearTimeout(agendamento);
   }, []);
@@ -1241,7 +1261,7 @@ export default function Questoes() {
 
   if (!nivel) {
     return (
-      <main className="method-page">
+      <main className="method-page central-questoes">
         <header className="method-header">
           <Link href={origemCronograma ? "/cronograma" : "/painel"}>
             {origemCronograma ? "← Voltar ao cronograma" : "← Voltar ao painel"}
@@ -1256,23 +1276,14 @@ export default function Questoes() {
         </header>
 
         {!origemCronograma && (
-          <>
-            <div className="session-mode-tabs" role="tablist" aria-label="Modo de início da sessão">
-              <button type="button" role="tab" aria-selected={modoInicio === "metas"} className={modoInicio === "metas" ? "selected" : ""} onClick={() => setModoInicio("metas")}>
-                Meta diária
-              </button>
-              <button type="button" role="tab" aria-selected={modoInicio === "personalizada"} className={modoInicio === "personalizada" ? "selected" : ""} onClick={() => setModoInicio("personalizada")}>
-                Sessão personalizada
-              </button>
-            </div>
-            {/* Pesquisa livre de questões (/questoes/buscar) — camada de
-                pesquisa/preparação nova, só acessível no modo livre (nunca
-                em contexto de missão/revisão). Link aditivo, não substitui
-                nenhuma aba existente. */}
-            <p className="free-search-link">
-              <Link href="/questoes/buscar">Pesquisar questões por banca, ano e dificuldade →</Link>
-            </p>
-          </>
+          <div className="session-mode-tabs" role="tablist" aria-label="Modo de início da sessão">
+            <button type="button" role="tab" aria-selected={modoInicio === "metas"} className={modoInicio === "metas" ? "selected" : ""} onClick={() => setModoInicio("metas")}>
+              Meta diária
+            </button>
+            <button type="button" role="tab" aria-selected={modoInicio === "personalizada"} className={modoInicio === "personalizada" ? "selected" : ""} onClick={() => setModoInicio("personalizada")}>
+              Sessão personalizada
+            </button>
+          </div>
         )}
 
         {modoInicio === "metas" ? (
@@ -1289,7 +1300,12 @@ export default function Questoes() {
             </section>
             {mensagem && <p className="method-message" role="alert">{mensagem}</p>}
           </>
-        ) : (
+        ) : origemCronograma ? (
+          // Caminho programático de missão/cronograma (origemCronograma):
+          // continua usando o form antigo + iniciarSessaoPersonalizada()
+          // intocados. Só chega aqui no caso de erro de recuperação (ex.:
+          // matéria da missão indisponível no curso) — a fusão com
+          // SessaoPersonalizadaBusca abaixo é exclusiva do fluxo manual.
           <section className="custom-session" aria-label="Sessão personalizada">
             <div className="custom-session-field">
               <label htmlFor="materia-select">Matéria</label>
@@ -1343,11 +1359,18 @@ export default function Questoes() {
             </div>
 
             <button type="button" className="answer-submit" onClick={iniciarSessaoPersonalizada} disabled={!materiaSelecionada || carregandoPersonalizada}>
-              {carregandoPersonalizada ? "Preparando..." : origemCronograma ? "Iniciar missão" : "Iniciar sessão"}
+              {carregandoPersonalizada ? "Preparando..." : "Iniciar missão"}
             </button>
 
             {mensagemPersonalizada && <p className="method-message" role="alert">{mensagemPersonalizada}</p>}
           </section>
+        ) : (
+          // Fluxo manual (Central Única de Questões) — nunca chamado pelos
+          // ramos de missão/unidade/Missão Final, que continuam usando
+          // iniciarSessaoPersonalizada() acima, intocado.
+          <SessaoPersonalizadaBusca
+            onSessaoIniciada={(sessaoId) => window.location.assign(`/questoes?sessaoAvulsa=${sessaoId}`)}
+          />
         )}
       </main>
     );

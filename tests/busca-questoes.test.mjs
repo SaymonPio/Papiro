@@ -2,26 +2,32 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
-// PAPIRO — Pesquisa livre de questões (/questoes/buscar). Mesma técnica do
-// resto do projeto: assert.match/doesNotMatch contra o texto REAL da
-// página/CSS, e mirror em JS da lógica pura (chips, status exclusivo,
-// sequência anti-race-condition) quando o comportamento — não só a
-// presença de texto — é o que importa.
-const pagina = await readFile(new URL("../app/questoes/buscar/page.tsx", import.meta.url), "utf8");
+// PAPIRO — Pesquisa livre de questões. Fase de fusão (Central Única de
+// Questões): a UI/lógica que vivia em app/questoes/buscar/page.tsx foi
+// extraída para components/questoes/SessaoPersonalizadaBusca.tsx, usada
+// dentro da aba "Sessão personalizada" de /questoes; app/questoes/buscar
+// agora é só um redirect (coberto por tests/central-questoes-fusao.test.mjs).
+// Mesma técnica do resto do projeto: assert.match/doesNotMatch contra o
+// texto REAL do componente/CSS, e mirror em JS da lógica pura (chips,
+// status exclusivo, sequência anti-race-condition) quando o comportamento
+// — não só a presença de texto — é o que importa.
+const pagina = await readFile(new URL("../components/questoes/SessaoPersonalizadaBusca.tsx", import.meta.url), "utf8");
 const questoesPage = await readFile(new URL("../app/questoes/page.tsx", import.meta.url), "utf8");
 const globalsCss = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
 // ============================================================================
-// 1. rota existe / 2. render do título
+// 1. componente existe / 2. título e subtítulo próprios não existem mais
+//    (o cabeçalho "Questões" era de página inteira; dentro da aba de
+//    /questoes esse espaço já é o header de .method-header)
 // ============================================================================
 
-test("1. app/questoes/buscar/page.tsx existe e exporta a página default", () => {
-  assert.match(pagina, /export default function BuscarQuestoes/);
+test("1. components/questoes/SessaoPersonalizadaBusca.tsx existe e exporta o componente default", () => {
+  assert.match(pagina, /export default function SessaoPersonalizadaBusca/);
 });
 
-test("2. título e subtítulo renderizados exatamente como especificado", () => {
-  assert.match(pagina, /<h1>Questões<\/h1>/);
-  assert.match(pagina, /<span>Encontre exatamente o que precisa praticar\.<\/span>/);
+test("2. não recria cabeçalho de página próprio (.bq-cabecalho/<h1>Questões</h1>) — esse espaço já é o header de /questoes", () => {
+  assert.doesNotMatch(pagina, /bq-cabecalho/);
+  assert.doesNotMatch(pagina, /<h1>Questões<\/h1>/);
 });
 
 // ============================================================================
@@ -180,8 +186,9 @@ test("16. 'Limpar filtros'/'Limpar tudo' zeram os 6 filtros acadêmicos, mas pre
     assert.ok(corpoLimpar.includes(chamada), `limparFiltros deveria chamar ${chamada}`);
   }
   assert.doesNotMatch(corpoLimpar, /setQuantidade/, "quantidade não deve ser resetada por 'Limpar filtros'");
-  // o mesmo handler é usado tanto no rodapé quanto no 'Limpar tudo' da lateral:
-  assert.equal((pagina.match(/onClick=\{limparFiltros\}/g) ?? []).length, 2);
+  // fusão/refinamento visual: só existe mais UM botão "Limpar filtros" (o
+  // "Limpar tudo" do antigo painel lateral foi removido junto com ele).
+  assert.equal((pagina.match(/onClick=\{limparFiltros\}/g) ?? []).length, 1);
 });
 
 // ============================================================================
@@ -204,10 +211,10 @@ test("18. iniciar sessão envia TODOS os filtros atuais + quantidade — mesma a
 // 19. navegação para sessaoAvulsa — nunca filtros na URL, nunca ids calculados no cliente
 // ============================================================================
 
-test("19. ao obter sessão, navega para /questoes?sessaoAvulsa=<id> — nunca envia filtros pela URL, nunca busca ids no cliente", () => {
-  assert.match(pagina, /router\.push\(`\/questoes\?sessaoAvulsa=\$\{linha\.sessao_id\}`\);/);
-  const corpoIniciar = pagina.slice(pagina.indexOf("async function iniciarSessao()"), pagina.indexOf("async function sair()"));
-  assert.doesNotMatch(corpoIniciar, /materiaId=|assuntoId=|banca=|status=/, "filtros nunca podem ir na querystring da navegação");
+test("19. ao obter sessão, devolve o id via onSessaoIniciada (o pai navega para /questoes?sessaoAvulsa=<id>) — nunca envia filtros pela URL, nunca busca ids no cliente", () => {
+  assert.match(pagina, /onSessaoIniciada\(Number\(linha\.sessao_id\)\);/);
+  const corpoIniciar = pagina.slice(pagina.indexOf("async function iniciarSessao()"), pagina.indexOf("if (carregandoInicial) {"));
+  assert.doesNotMatch(corpoIniciar, /materiaId=|assuntoId=|banca=|status=/, "filtros nunca podem ir na querystring/payload da navegação");
   assert.doesNotMatch(corpoIniciar, /\.from\("questoes"\)|ids_questoes_para_usuario/, "esta tela nunca calcula/busca ids de questão — a sessão do servidor é a fonte de verdade");
 });
 
@@ -215,10 +222,10 @@ test("19. ao obter sessão, navega para /questoes?sessaoAvulsa=<id> — nunca en
 // 20. loading do CTA / duplo clique
 // ============================================================================
 
-test("20. CTA mostra 'Preparando questões...' e fica desabilitado durante a criação — nunca permite duplo submit", () => {
+test("20. CTA mostra 'Preparando sessão...'/'Iniciar sessão' e fica desabilitado durante a criação — nunca permite duplo submit", () => {
   assert.match(pagina, /if \(!podeBuscar \|\| iniciandoSessao\) return;/);
   assert.match(pagina, /setIniciandoSessao\(true\);/);
-  assert.match(pagina, /\{iniciandoSessao \? "Preparando questões\.\.\." : "Buscar questões"\}/);
+  assert.match(pagina, /\{iniciandoSessao \? "Preparando sessão\.\.\." : "Iniciar sessão"\}/);
   // podeBuscar já exige !iniciandoSessao, então o botão fica disabled sozinho durante a criação:
   assert.match(pagina, /!iniciandoSessao && \(contagem \?\? 0\) > 0;/);
 });
@@ -275,14 +282,14 @@ test("22. contagem usa número de sequência para descartar respostas desatualiz
 // 23. fluxos contextuais de /questoes não foram alterados
 // ============================================================================
 
-test("23. o link de pesquisa livre só aparece no modo livre (!origemCronograma) — nunca interfere em missão/revisão/unidade/Missão Final", () => {
+test("23. (atualizado na fusão) o link de pesquisa livre não existe mais — as abas (session-mode-tabs) continuam só aparecendo no modo livre (!origemCronograma), nunca em missão/revisão/unidade/Missão Final", () => {
+  // Link removido nesta fase — ver tests/central-questoes-fusao.test.mjs
+  // teste F para a confirmação de ausência.
+  assert.doesNotMatch(questoesPage, /href="\/questoes\/buscar"/);
   const inicioBloco = questoesPage.indexOf("{!origemCronograma && (");
-  const blocoModoLivre = questoesPage.slice(inicioBloco, inicioBloco + 1200);
-  assert.match(blocoModoLivre, /href="\/questoes\/buscar"/);
-  assert.match(blocoModoLivre, /Pesquisar questões por banca, ano e dificuldade/);
-  // o link vive dentro do MESMO guard condicional que já protegia as abas
-  // (session-mode-tabs) — nunca renderiza quando origemCronograma é true:
-  assert.match(questoesPage, /\{!origemCronograma && \(\s*\n\s*<>/);
+  assert.ok(inicioBloco > -1, "guard condicional de origemCronograma deveria continuar existindo");
+  const blocoModoLivre = questoesPage.slice(inicioBloco, inicioBloco + 400);
+  assert.match(blocoModoLivre, /session-mode-tabs/, "as abas continuam dentro do mesmo guard que protegia o link antigo");
 });
 
 test("fluxos de missão/unidade/Missão Final/revisão automática/revisão personalizada continuam com as mesmas RPCs de antes — nenhuma redefinida por esta tarefa", () => {
@@ -316,7 +323,7 @@ test("acessibilidade: labels reais (não decorativos), botões reais (não div c
   assert.match(pagina, /id="bq-busca-input"/);
   assert.doesNotMatch(pagina, /<div[^>]*onClick=/, "nenhum div clicável substituindo um button real");
   assert.match(pagina, /role="group" aria-label="Quantidade de questões"/);
-  assert.match(pagina, /aria-label="Filtros de pesquisa"/);
+  assert.match(pagina, /aria-label="Sessão personalizada"/);
   assert.match(pagina, /aria-label="Filtros aplicados"/);
   assert.match(pagina, /aria-label=\{`Remover filtro \$\{chip\.rotulo\}`\}/);
 });
@@ -345,14 +352,23 @@ test("reusa tokens existentes (--papiro-gold/--papiro-panel/--papiro-elevar/--pa
   assert.doesNotMatch(blocoCss, /--papiro-color-/, "nunca reaproveitar os tokens --papiro-color-* do sistema V2 do painel (sistemas paralelos, nunca cruzados)");
 });
 
-test("página usa StudentAppShell + reestabelece o escopo .method-page localmente para herdar os tokens V2 (mesma técnica documentada no cabeçalho do CSS)", () => {
-  assert.match(pagina, /<StudentAppShell currentHref="\/questoes\/buscar"/);
-  assert.match(pagina, /className="method-page busca-questoes"/);
+test("componente NÃO usa StudentAppShell (vive dentro de /questoes, que já tem seu próprio shell/header) — só reaproveita a classe .busca-questoes pros tokens V2, dentro do escopo .method-page que já existe no pai", () => {
+  // Sinal real de uso (import/JSX) — o arquivo PODE mencionar
+  // "StudentAppShell" em prosa/comentário explicando a remoção.
+  assert.doesNotMatch(pagina, /from "@\/components\/layout\/StudentAppShell"/);
+  assert.doesNotMatch(pagina, /<StudentAppShell/);
+  assert.match(pagina, /className="busca-questoes"/);
 });
 
-test("layout principal+lateral colapsa em telas menores (painel lateral vai para baixo, não quebra mobile)", () => {
-  assert.match(globalsCss, /@media \(max-width: 1080px\) \{\s*\n\s*\.bq-layout \{ grid-template-columns: 1fr; \}/);
+test("refinamento visual: painel lateral de 2 colunas foi removido (.bq-layout/.bq-principal/.bq-lateral não existem mais) — coluna única empilha naturalmente em telas menores, sem overflow/height fixa", () => {
+  assert.doesNotMatch(globalsCss, /\.bq-layout\b/);
+  assert.doesNotMatch(globalsCss, /\.bq-principal\b/);
+  assert.doesNotMatch(globalsCss, /\.bq-lateral\b/);
+  assert.doesNotMatch(pagina, /bq-layout|bq-principal|bq-lateral/);
   assert.match(globalsCss, /@media \(max-width: 720px\) \{\s*\n\s*\.bq-filtros-grade--2,/);
+  const blocoBuscaQuestoes = globalsCss.slice(globalsCss.indexOf(".busca-questoes {"), globalsCss.indexOf(".busca-questoes {") + 200);
+  // (?<!line-): line-height não conta como "height fixa" de layout.
+  assert.doesNotMatch(blocoBuscaQuestoes, /(?<!line-)height:\s*\d/, "sem height fixa no container principal");
 });
 
 // ============================================================================

@@ -6608,6 +6608,22 @@ footer > small {
 
 .method-header > span { color: var(--papiro-muted); }
 
+/* Central de Questões (/questoes) — cabeçalho "Escolha a missão de
+   hoje"/"Sessão personalizada" reduzido SÓ nesta tela. .method-header é
+   compartilhado com outras páginas (ex. /caderno-de-erros), que continuam
+   com o tamanho padrão acima — por isso o escopo .central-questoes, com
+   especificidade maior que .method-header sozinho (nunca depende de
+   ordem no arquivo para vencer a cascata). */
+.central-questoes .method-header {
+  min-height: 190px;
+  margin-bottom: 18px;
+}
+.central-questoes .method-header h1 {
+  margin: 8px 0 10px;
+  font-size: clamp(2.5rem, 4.8vw, 4.4rem);
+  line-height: 0.95;
+}
+
 .goal-grid { gap: 12px; }
 
 .goal-grid button,
@@ -7386,8 +7402,11 @@ footer > small {
    --papiro-color-* do painel — dois sistemas paralelos, nunca cruzados
    (mesma regra já documentada para painel.css). */
 .busca-questoes {
-  max-width: 1280px;
+  max-width: 1120px;
   margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .bq-cabecalho {
@@ -7405,19 +7424,6 @@ footer > small {
   font-size: 15px;
 }
 
-.bq-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 20px;
-  align-items: start;
-}
-
-.bq-principal {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
 /* Status — seleção única, visual em pílulas (mesmo espírito de
    .session-mode-tabs já existente em /questoes, só com 5 opções). */
 .bq-status {
@@ -7429,7 +7435,7 @@ footer > small {
   border: 0;
 }
 .bq-status button {
-  padding: 10px 18px;
+  padding: 9px 16px;
   border: 1px solid var(--papiro-line);
   border-radius: 999px;
   color: var(--papiro-muted);
@@ -7455,7 +7461,7 @@ footer > small {
 }
 
 .bq-bloco {
-  padding: 20px;
+  padding: 14px 16px;
   border: 1px solid var(--papiro-line);
   border-radius: 7px;
   background: var(--papiro-sheen), var(--papiro-panel);
@@ -7463,7 +7469,7 @@ footer > small {
 }
 .bq-bloco-titulo {
   display: block;
-  margin: 0 0 14px;
+  margin: 0 0 10px;
   color: var(--papiro-muted);
   font-size: 11px;
   font-weight: 800;
@@ -7477,7 +7483,7 @@ footer > small {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 16px;
+  padding: 10px 14px;
   border: 1px solid var(--papiro-line);
   border-radius: 6px;
   background: var(--papiro-panel-soft);
@@ -7543,143 +7549,12 @@ footer > small {
   outline-offset: 2px;
 }
 
-/* Quantidade — preferência da sessão, não filtro acadêmico (nunca vira
-   chip em "Filtros aplicados"), por isso fica junto ao rodapé/CTA. */
-.bq-quantidade {
+/* Filtros aplicados — faixa discreta integrada ao fluxo principal, sem
+   painel lateral/card isolado (removido nesta rodada). */
+.bq-chips-area {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.bq-quantidade-rotulo {
-  color: var(--papiro-muted);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-}
-.bq-quantidade-opcoes {
-  display: flex;
+  flex-direction: column;
   gap: 8px;
-}
-.bq-quantidade-opcoes button {
-  min-width: 46px;
-  padding: 9px 0;
-  border: 1px solid var(--papiro-line);
-  border-radius: 6px;
-  color: var(--papiro-muted);
-  background: rgba(2, 9, 7, 0.5);
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 700;
-  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
-}
-.bq-quantidade-opcoes button:hover {
-  border-color: var(--papiro-line-strong);
-  color: var(--papiro-cream);
-}
-.bq-quantidade-opcoes button:focus-visible {
-  outline: 2px solid var(--papiro-gold);
-  outline-offset: 2px;
-}
-.bq-quantidade-opcoes button[aria-pressed="true"] {
-  border-color: var(--papiro-gold);
-  color: var(--papiro-gold);
-  background: rgba(242, 199, 92, 0.1);
-}
-
-.bq-rodape {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding-top: 4px;
-}
-.bq-limpar {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--papiro-muted);
-  font-size: 13px;
-  font-weight: 700;
-  text-decoration: underline;
-  cursor: pointer;
-}
-.bq-limpar:hover {
-  color: var(--papiro-cream);
-}
-.bq-limpar:focus-visible {
-  outline: 2px solid var(--papiro-gold);
-  outline-offset: 2px;
-}
-.bq-contador {
-  color: var(--papiro-cream);
-  font-size: 14px;
-}
-.bq-contador strong {
-  font-weight: 700;
-}
-.bq-contador-erro {
-  color: var(--cr-danger, #e58870);
-}
-.bq-cta {
-  padding: 0 24px;
-  height: 46px;
-  border: 0;
-  border-radius: 6px;
-  color: var(--papiro-bg);
-  background: var(--papiro-gold);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset, 0 10px 22px -6px rgba(242, 199, 92, 0.45);
-  font-size: 14px;
-  font-weight: 800;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
-}
-.bq-cta:hover:not(:disabled) {
-  transform: translateY(-1px);
-}
-.bq-cta:focus-visible {
-  outline: 2px solid var(--papiro-gold);
-  outline-offset: 3px;
-}
-.bq-cta:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-.bq-lateral {
-  position: sticky;
-  top: 24px;
-  padding: 22px;
-  border: 1px solid var(--papiro-line);
-  border-radius: 7px;
-  background: var(--papiro-sheen), var(--papiro-panel);
-  box-shadow: var(--papiro-elevar);
-}
-.bq-lateral-cabecalho {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-.bq-lateral-cabecalho button {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--papiro-gold);
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.bq-lateral-cabecalho button:hover {
-  text-decoration: underline;
-}
-.bq-lateral-cabecalho button:focus-visible {
-  outline: 2px solid var(--papiro-gold);
-  outline-offset: 2px;
 }
 .bq-sem-filtros {
   margin: 0;
@@ -7717,18 +7592,130 @@ footer > small {
   outline-offset: 2px;
 }
 
+/* Rodapé — composição única: quantidade (esquerda) + contador (centro) +
+   ações (direita). Quantidade é preferência da sessão, não filtro
+   acadêmico (nunca vira chip em "Filtros aplicados"), por isso mora aqui,
+   não junto dos outros filtros. */
+.bq-rodape {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--papiro-line);
+}
+.bq-quantidade {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.bq-quantidade-rotulo {
+  color: var(--papiro-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.bq-quantidade-opcoes {
+  display: flex;
+  gap: 8px;
+}
+.bq-quantidade-opcoes button {
+  min-width: 42px;
+  padding: 8px 0;
+  border: 1px solid var(--papiro-line);
+  border-radius: 6px;
+  color: var(--papiro-muted);
+  background: rgba(2, 9, 7, 0.5);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+.bq-quantidade-opcoes button:hover {
+  border-color: var(--papiro-line-strong);
+  color: var(--papiro-cream);
+}
+.bq-quantidade-opcoes button:focus-visible {
+  outline: 2px solid var(--papiro-gold);
+  outline-offset: 2px;
+}
+.bq-quantidade-opcoes button[aria-pressed="true"] {
+  border-color: var(--papiro-gold);
+  color: var(--papiro-gold);
+  background: rgba(242, 199, 92, 0.1);
+}
+
+.bq-contador {
+  color: var(--papiro-cream);
+  font-size: 14px;
+}
+.bq-contador strong {
+  font-weight: 700;
+}
+.bq-contador-erro {
+  color: var(--cr-danger, #e58870);
+}
+
+.bq-rodape-acoes {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.bq-limpar {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--papiro-muted);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.bq-limpar:hover {
+  color: var(--papiro-cream);
+}
+.bq-limpar:focus-visible {
+  outline: 2px solid var(--papiro-gold);
+  outline-offset: 2px;
+}
+.bq-cta {
+  padding: 0 24px;
+  height: 46px;
+  border: 0;
+  border-radius: 6px;
+  color: var(--papiro-bg);
+  background: var(--papiro-gold);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset, 0 10px 22px -6px rgba(242, 199, 92, 0.45);
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+.bq-cta:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+.bq-cta:focus-visible {
+  outline: 2px solid var(--papiro-gold);
+  outline-offset: 3px;
+}
+.bq-cta:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .bq-zero-resultados {
   margin: 0;
 }
 
-@media (max-width: 1080px) {
-  .bq-layout { grid-template-columns: 1fr; }
-  .bq-lateral { position: static; }
-}
 @media (max-width: 720px) {
   .bq-filtros-grade--2,
   .bq-filtros-grade--3 { grid-template-columns: 1fr; }
   .bq-rodape { flex-direction: column; align-items: stretch; }
+  .bq-rodape-acoes { flex-direction: column-reverse; align-items: stretch; gap: 10px; }
   .bq-cta { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) {
