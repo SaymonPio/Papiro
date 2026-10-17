@@ -6633,6 +6633,21 @@ footer > small {
   background: rgba(242, 199, 92, 0.07);
 }
 
+.free-search-link {
+  max-width: 920px;
+  margin: -14px auto 28px;
+}
+.free-search-link a {
+  color: var(--papiro-gold);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.free-search-link a:hover,
+.free-search-link a:focus-visible {
+  text-decoration: underline;
+}
+
 .custom-session { max-width: 680px; }
 
 .custom-session-field label { color: var(--papiro-gold); }
@@ -7331,6 +7346,367 @@ footer > small {
   .central-revisoes-barra { grid-template-columns: 1fr; }
   .central-revisoes-barra > strong { text-align: left; }
   .cr-personalizar-filtros { grid-template-columns: 1fr; }
+}
+
+/* Pesquisa livre de questões (/questoes/buscar) — reaproveita os MESMOS
+   tokens de cor/elevação do escopo .method-page já usados por Central de
+   Revisões (--papiro-gold/--papiro-panel/--papiro-elevar/--papiro-sheen/
+   --papiro-line), nenhum token novo criado. Esta página é renderizada
+   DENTRO do StudentAppShell (.papiro-next cuida só da navegação lateral);
+   a div com className="method-page busca-questoes" reestabelece
+   localmente o sistema de cor V2 para o conteúdo, sem tocar nos tokens
+   --papiro-color-* do painel — dois sistemas paralelos, nunca cruzados
+   (mesma regra já documentada para painel.css). */
+.busca-questoes {
+  max-width: 1280px;
+  margin-inline: auto;
+}
+
+.bq-cabecalho {
+  margin-bottom: 28px;
+}
+.bq-cabecalho h1 {
+  margin: 10px 0 10px;
+  font-family: Georgia, serif;
+  font-size: clamp(30px, 4vw, 44px);
+  line-height: 1.08;
+  color: var(--papiro-cream);
+}
+.bq-cabecalho > span {
+  color: var(--papiro-muted);
+  font-size: 15px;
+}
+
+.bq-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 20px;
+  align-items: start;
+}
+
+.bq-principal {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Status — seleção única, visual em pílulas (mesmo espírito de
+   .session-mode-tabs já existente em /questoes, só com 5 opções). */
+.bq-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+.bq-status button {
+  padding: 10px 18px;
+  border: 1px solid var(--papiro-line);
+  border-radius: 999px;
+  color: var(--papiro-muted);
+  background: var(--papiro-sheen), var(--papiro-panel);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+.bq-status button:hover {
+  border-color: var(--papiro-line-strong);
+  color: var(--papiro-cream);
+}
+.bq-status button:focus-visible {
+  outline: 2px solid var(--papiro-gold);
+  outline-offset: 2px;
+}
+.bq-status button[aria-selected="true"] {
+  border-color: var(--papiro-gold);
+  color: var(--papiro-bg);
+  background: var(--papiro-gold);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset, 0 8px 18px -6px rgba(242, 199, 92, 0.45);
+}
+
+.bq-bloco {
+  padding: 20px;
+  border: 1px solid var(--papiro-line);
+  border-radius: 7px;
+  background: var(--papiro-sheen), var(--papiro-panel);
+  box-shadow: var(--papiro-elevar);
+}
+.bq-bloco-titulo {
+  display: block;
+  margin: 0 0 14px;
+  color: var(--papiro-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+/* Busca — mesmo padrão visual de .cr-busca-erro (campo "encaixado",
+   ícone + input), só reaproveitado aqui com seu próprio label real acima. */
+.bq-busca {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border: 1px solid var(--papiro-line);
+  border-radius: 6px;
+  background: var(--papiro-panel-soft);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.4);
+  color: var(--papiro-muted);
+}
+.bq-busca:focus-within {
+  border-color: var(--papiro-gold);
+}
+.bq-busca input {
+  flex: 1;
+  border: 0;
+  background: none;
+  color: var(--papiro-cream);
+  font: inherit;
+  font-size: 14px;
+}
+.bq-busca input::placeholder {
+  color: var(--papiro-muted);
+}
+.bq-busca input:focus {
+  outline: none;
+}
+
+.bq-filtros-grade {
+  display: grid;
+  gap: 14px;
+}
+.bq-filtros-grade--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.bq-filtros-grade--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.bq-filtros-grade label {
+  display: grid;
+  gap: 6px;
+  color: var(--papiro-gold);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.bq-filtros-grade select {
+  padding: 11px 12px;
+  border-radius: 5px;
+  border: 1px solid var(--papiro-line);
+  color: var(--papiro-cream);
+  background: rgba(2, 9, 7, 0.72);
+  box-shadow: var(--papiro-inset);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+}
+.bq-filtros-grade select:disabled {
+  opacity: 0.5;
+}
+.bq-filtros-grade select:focus-visible,
+.bq-busca input:focus-visible {
+  outline: 2px solid var(--papiro-gold);
+  outline-offset: 2px;
+}
+
+/* Quantidade — preferência da sessão, não filtro acadêmico (nunca vira
+   chip em "Filtros aplicados"), por isso fica junto ao rodapé/CTA. */
+.bq-quantidade {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.bq-quantidade-rotulo {
+  color: var(--papiro-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.bq-quantidade-opcoes {
+  display: flex;
+  gap: 8px;
+}
+.bq-quantidade-opcoes button {
+  min-width: 46px;
+  padding: 9px 0;
+  border: 1px solid var(--papiro-line);
+  border-radius: 6px;
+  color: var(--papiro-muted);
+  background: rgba(2, 9, 7, 0.5);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+.bq-quantidade-opcoes button:hover {
+  border-color: var(--papiro-line-strong);
+  color: var(--papiro-cream);
+}
+.bq-quantidade-opcoes button:focus-visible {
+  outline: 2px solid var(--papiro-gold);
+  outline-offset: 2px;
+}
+.bq-quantidade-opcoes button[aria-pressed="true"] {
+  border-color: var(--papiro-gold);
+  color: var(--papiro-gold);
+  background: rgba(242, 199, 92, 0.1);
+}
+
+.bq-rodape {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-top: 4px;
+}
+.bq-limpar {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--papiro-muted);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.bq-limpar:hover {
+  color: var(--papiro-cream);
+}
+.bq-limpar:focus-visible {
+  outline: 2px solid var(--papiro-gold);
+  outline-offset: 2px;
+}
+.bq-contador {
+  color: var(--papiro-cream);
+  font-size: 14px;
+}
+.bq-contador strong {
+  font-weight: 700;
+}
+.bq-contador-erro {
+  color: var(--cr-danger, #e58870);
+}
+.bq-cta {
+  padding: 0 24px;
+  height: 46px;
+  border: 0;
+  border-radius: 6px;
+  color: var(--papiro-bg);
+  background: var(--papiro-gold);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset, 0 10px 22px -6px rgba(242, 199, 92, 0.45);
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+.bq-cta:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+.bq-cta:focus-visible {
+  outline: 2px solid var(--papiro-gold);
+  outline-offset: 3px;
+}
+.bq-cta:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.bq-lateral {
+  position: sticky;
+  top: 24px;
+  padding: 22px;
+  border: 1px solid var(--papiro-line);
+  border-radius: 7px;
+  background: var(--papiro-sheen), var(--papiro-panel);
+  box-shadow: var(--papiro-elevar);
+}
+.bq-lateral-cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.bq-lateral-cabecalho button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--papiro-gold);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.bq-lateral-cabecalho button:hover {
+  text-decoration: underline;
+}
+.bq-lateral-cabecalho button:focus-visible {
+  outline: 2px solid var(--papiro-gold);
+  outline-offset: 2px;
+}
+.bq-sem-filtros {
+  margin: 0;
+  color: var(--papiro-muted);
+  font-size: 13px;
+}
+.bq-chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.bq-chips li button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border: 1px solid var(--papiro-line-strong);
+  border-radius: 999px;
+  color: var(--papiro-cream);
+  background: rgba(242, 199, 92, 0.08);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.bq-chips li button:hover {
+  border-color: var(--papiro-gold);
+  background: rgba(242, 199, 92, 0.16);
+}
+.bq-chips li button:focus-visible {
+  outline: 2px solid var(--papiro-gold);
+  outline-offset: 2px;
+}
+
+.bq-zero-resultados {
+  margin: 0;
+}
+
+@media (max-width: 1080px) {
+  .bq-layout { grid-template-columns: 1fr; }
+  .bq-lateral { position: static; }
+}
+@media (max-width: 720px) {
+  .bq-filtros-grade--2,
+  .bq-filtros-grade--3 { grid-template-columns: 1fr; }
+  .bq-rodape { flex-direction: column; align-items: stretch; }
+  .bq-cta { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bq-status button, .bq-quantidade-opcoes button, .bq-cta, .bq-chips li button {
+    transition: none;
+  }
 }
 
 /* Configuração de objetivos */

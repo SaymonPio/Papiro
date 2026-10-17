@@ -1255,14 +1255,25 @@ export default function Questoes() {
           </span>
         </header>
 
-        {!origemCronograma && <div className="session-mode-tabs" role="tablist" aria-label="Modo de início da sessão">
-          <button type="button" role="tab" aria-selected={modoInicio === "metas"} className={modoInicio === "metas" ? "selected" : ""} onClick={() => setModoInicio("metas")}>
-            Meta diária
-          </button>
-          <button type="button" role="tab" aria-selected={modoInicio === "personalizada"} className={modoInicio === "personalizada" ? "selected" : ""} onClick={() => setModoInicio("personalizada")}>
-            Sessão personalizada
-          </button>
-        </div>}
+        {!origemCronograma && (
+          <>
+            <div className="session-mode-tabs" role="tablist" aria-label="Modo de início da sessão">
+              <button type="button" role="tab" aria-selected={modoInicio === "metas"} className={modoInicio === "metas" ? "selected" : ""} onClick={() => setModoInicio("metas")}>
+                Meta diária
+              </button>
+              <button type="button" role="tab" aria-selected={modoInicio === "personalizada"} className={modoInicio === "personalizada" ? "selected" : ""} onClick={() => setModoInicio("personalizada")}>
+                Sessão personalizada
+              </button>
+            </div>
+            {/* Pesquisa livre de questões (/questoes/buscar) — camada de
+                pesquisa/preparação nova, só acessível no modo livre (nunca
+                em contexto de missão/revisão). Link aditivo, não substitui
+                nenhuma aba existente. */}
+            <p className="free-search-link">
+              <Link href="/questoes/buscar">Pesquisar questões por banca, ano e dificuldade →</Link>
+            </p>
+          </>
+        )}
 
         {modoInicio === "metas" ? (
           <>
