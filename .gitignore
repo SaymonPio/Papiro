@@ -51,6 +51,15 @@ next-env.d.ts
 # ser versionados a cada conteudo
 scripts/curadoria-pedagogica/relatorios/
 
+# importador de provas (PoC): saida do dry-run e regeneravel a cada
+# execucao (node scripts/importador-provas/cli.mjs); PDFs reais de prova/
+# gabarito fornecidos por um administrador NUNCA devem ser versionados
+# (conteudo de terceiros, sem direitos de redistribuicao confirmados)
+scripts/importador-provas/output/
+scripts/importador-provas/fixtures-reais/
+scripts/importador-provas/*.pdf
+scripts/importador-provas/staging/
+
 # config local de agentes/MCP (especifica desta maquina, nunca compartilhada)
 /.agents/
 /.claude/

@@ -1,0 +1,42 @@
+[
+  {
+    "slug": "guardabc",
+    "url": "https://guardabc.fepese.org.br/",
+    "orgao": "Prefeitura Municipal de Balneário Camboriú",
+    "ano": 2014,
+    "titulo": "Concurso Público Edital 001/2014 - Guarda Municipal e Armeiro",
+    "cargosConhecidos": ["Guarda Municipal", "Armeiro"],
+    "descobertoVia": "WebSearch, confirmado por fetch direto em 2026-10-17",
+    "verificado": true
+  },
+  {
+    "slug": "fpolisguardamunicipal",
+    "url": "https://fpolisguardamunicipal.fepese.org.br/",
+    "orgao": "Prefeitura Municipal de Florianópolis",
+    "ano": 2015,
+    "titulo": "Concurso Público Edital 010/2015 - Guarda Municipal",
+    "cargosConhecidos": ["Guarda Municipal"],
+    "descobertoVia": "WebSearch em 2026-10-17 — não verificado por fetch ainda",
+    "verificado": false
+  },
+  {
+    "slug": "2025pmchapeco",
+    "url": "https://2025pmchapeco.fepese.org.br/",
+    "orgao": "Prefeitura Municipal de Chapecó",
+    "ano": 2025,
+    "titulo": "Concurso Público Edital 001/2025",
+    "cargosConhecidos": [],
+    "descobertoVia": "WebSearch em 2026-10-17 — não verificado por fetch ainda",
+    "verificado": false
+  },
+  {
+    "slug": "2025pciperito",
+    "url": "https://2025pciperito.fepese.org.br/",
+    "orgao": "Polícia Científica do Estado de Santa Catarina",
+    "ano": 2025,
+    "titulo": "Concurso Público Edital 001/2025 - Perito",
+    "cargosConhecidos": ["Perito"],
+    "descobertoVia": "WebSearch em 2026-10-17 — não verificado por fetch ainda",
+    "verificado": false
+  }
+]

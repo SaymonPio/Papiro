@@ -1,0 +1,66 @@
+// Calcula o status por etapa e o status final de cada questão normalizada
+// (normalizar.mjs) + resultado da deduplicação (deduplicar.mjs). Só
+// classifica/relata — nunca decide inserir nada.
+
+function avaliarExtracao(questao) {
+  if (questao._interno.alternativa_faltante) return { ok: false, motivo: "alternativa faltante ou fora de ordem" };
+  if (questao.alternativas.length < 4) return { ok: false, motivo: "menos de 4 alternativas detectadas" };
+  if (!questao.enunciado || questao.enunciado.trim().length === 0) return { ok: false, motivo: "enunciado vazio" };
+  if (questao._interno.contagem_materia_divergente) {
+    return { ok: false, motivo: `contagem de questões do bloco "${questao._interno.materia_detectada}" não bate com a declarada no cabeçalho` };
+  }
+  return { ok: true, motivo: null };
+}
+
+function avaliarGabarito(questao) {
+  const interno = questao._interno;
+  if (interno.motivos_juncao.includes("questao_sem_gabarito")) return { ok: false, motivo: "gabarito ausente para esta questão" };
+  if (interno.motivos_juncao.includes("alternativa_correta_inexistente")) return { ok: false, motivo: "gabarito aponta para uma alternativa que não existe na questão" };
+  if (interno.gabarito_status === "revisao_manual") return { ok: false, motivo: "linha de gabarito ambígua (ex.: número duplicado no documento)" };
+  return { ok: true, motivo: null };
+}
+
+function avaliarClassificacao(questao) {
+  if (questao.confidence === "alta") return { ok: true, motivo: null };
+  return { ok: false, motivo: `classificação automática não confirmada (confidence="${questao.confidence}")` };
+}
+
+function avaliarDedup(resultadoDedup) {
+  if (resultadoDedup.status === "nova") return { ok: true, motivo: null };
+  if (resultadoDedup.status === "duplicada") return { ok: false, motivo: `duplicada de questoes.id=${resultadoDedup.match_id}` };
+  return { ok: false, motivo: `provável duplicidade com questoes.id=${resultadoDedup.match_id} — requer leitura manual` };
+}
+
+export function calcularStatus(questao, resultadoDedup, bloqueiosGlobais) {
+  const extracao = avaliarExtracao(questao);
+  const gabarito = avaliarGabarito(questao);
+  const classificacao = avaliarClassificacao(questao);
+  const dedup = avaliarDedup(resultadoDedup);
+
+  const bloqueiosDestaQuestao = bloqueiosGlobais.filter(
+    (b) => b.numero === undefined || b.numero === questao.numero_original,
+  );
+
+  const etapas = {
+    EXTRACAO_OK: extracao.ok,
+    GABARITO_OK: gabarito.ok,
+    CLASSIFICACAO_OK: classificacao.ok,
+    DEDUP_OK: dedup.ok,
+  };
+
+  const motivos = [extracao.motivo, gabarito.motivo, classificacao.motivo, dedup.motivo, ...bloqueiosDestaQuestao.map((b) => b.mensagem)].filter(Boolean);
+
+  // CLASSIFICACAO_OK não bloqueia por si só (classificação incerta é
+  // esperada e normal — vai para revisão, mas não torna a questão
+  // "quebrada"). Extração, gabarito, deduplicação e qualquer bloqueio de
+  // junção, sim.
+  const pronta = extracao.ok && gabarito.ok && dedup.ok && bloqueiosDestaQuestao.length === 0;
+
+  return {
+    ...questao,
+    dedup: resultadoDedup,
+    etapas,
+    status: pronta ? "PRONTA_PARA_REVISAO" : "REVISAO_MANUAL",
+    motivos,
+  };
+}
