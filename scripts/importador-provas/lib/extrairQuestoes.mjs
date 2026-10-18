@@ -24,7 +24,18 @@
 // aparição no texto NÃO precisa ser alfabética (ver segmentarAlternativas)
 // — só a presença e a unicidade de cada letra são exigidas.
 
+import { encontrarBlocosDeApoio, reconstruirTextoBase, referenciasAoTexto } from "./textoBase.mjs";
+
 const MARCADOR_QUESTAO = /(?:^|\n)[ \t]*(\d{1,3})[.)][ \t]+/g;
+// Marcador explícito "QUESTÃO 01 –" / "Questão 12:" no início da linha —
+// convenção comum de várias bancas (checado numa prova real: Fundatec/
+// Polícia Penal RS 2026, "QUESTÃO 01 – Considerando..."). Quando o
+// documento numera questões assim, números soltos "1." / "2)" são listas
+// internas (instruções da capa, itens de enunciado) e deixam de ser
+// candidatos: sem isso, a lista de instruções "1. ... 11." da capa da
+// mesma prova emendava na sequência real e ocupava as questões 1 a 11.
+const MARCADOR_QUESTAO_EXPLICITO = /(?:^|\n)[ \t]*(?:QUEST[ÃA]O|Quest[ãa]o)[ \t]+(\d{1,3})[ \t]*[-–—:.)][ \t]*/g;
+const MINIMO_SEQUENCIA_EXPLICITA = 3;
 // 'i' não é usado — a letra sempre é normalizada para maiúscula na
 // captura abaixo, nunca comparada no caso original (provas reais variam
 // entre "a)" minúsculo e "(A)" maiúsculo).
@@ -83,12 +94,94 @@ function paginaDoOffset(mapaPaginas, offset) {
   return mapaPaginas.at(-1)?.numero ?? null;
 }
 
-function encontrarCandidatosQuestao(textoCompleto) {
+// Cabeçalho/rodapé corrido: a MESMA linha entre as primeiras ou últimas
+// linhas de muitas páginas (checado numa prova real: Fundatec/PP-RS 2026,
+// "1092_BASE_CE_24_NS_DM 23/07/2026 13:27:17" / "Execução: Fundatec" /
+// "24 – POLICIAL PENAL" no topo de 20 das 22 páginas). Sem remoção, essas
+// linhas grudavam no fim da última alternativa de toda questão que
+// atravessa página. Só é removida nas bordas da página — a mesma frase no
+// meio do conteúdo nunca é tocada.
+const LINHAS_BORDA_PAGINA = 4;
+const MINIMO_PAGINAS_LINHA_CORRIDA = 3;
+
+function removerLinhasCorridas(paginas) {
+  const bordas = paginas.map((p) => {
+    const linhas = (p.texto ?? "").split("\n");
+    const indices = linhas.map((l, i) => (l.trim() ? i : -1)).filter((i) => i >= 0);
+    return { linhas, borda: new Set([...indices.slice(0, LINHAS_BORDA_PAGINA), ...indices.slice(-LINHAS_BORDA_PAGINA)]) };
+  });
+  const paginasPorLinha = new Map();
+  for (const { linhas, borda } of bordas) {
+    for (const texto of new Set([...borda].map((i) => linhas[i].trim()))) paginasPorLinha.set(texto, (paginasPorLinha.get(texto) ?? 0) + 1);
+  }
+  const corridas = new Set(
+    [...paginasPorLinha].filter(([, n]) => n >= MINIMO_PAGINAS_LINHA_CORRIDA && n >= paginas.length / 2).map(([texto]) => texto),
+  );
+  if (corridas.size === 0) return { paginas, topoRemovido: paginas.map(() => false) };
+
+  const topoRemovido = [];
+  const limpas = paginas.map((pagina, indicePagina) => {
+    const { linhas, borda } = bordas[indicePagina];
+    const primeiraComConteudo = linhas.findIndex((l) => l.trim());
+    const manter = linhas.map((l, i) => !(borda.has(i) && corridas.has(l.trim())));
+    topoRemovido.push(primeiraComConteudo >= 0 && !manter[primeiraComConteudo]);
+    return { ...pagina, texto: linhas.filter((_, i) => manter[i]).join("\n") };
+  });
+  return { paginas: limpas, topoRemovido };
+}
+
+// Título de seção sem contagem ("INFORMÁTICA", "LEGISLAÇÃO APLICADA/
+// DIREITO"): linha inteira em maiúsculas. Só é aceito em duas posições
+// que não deixam dúvida — (i) imediatamente antes de um marcador de
+// questão aceito, ou (ii) antes da primeira questão, como primeira linha
+// de uma página logo abaixo do cabeçalho corrido removido. Uma linha em
+// maiúsculas dentro de um enunciado ("VISTO QUE", entre duas asserções)
+// não está em nenhuma das duas posições e nunca vira seção.
+const TITULO_SECAO = /^[A-ZÀ-ÖØ-Þ][A-ZÀ-ÖØ-Þ0-9 ,/–—-]{3,80}$/;
+
+function ehTituloSecao(linha) {
+  const texto = linha.trim();
+  return TITULO_SECAO.test(texto) && (texto.match(/[A-ZÀ-ÖØ-Þ]/g) ?? []).length >= 6 && !/^[A-E][)]/.test(texto);
+}
+
+function encontrarTitulosDeSecao(textoCompleto, sequencia, mapaPaginas, topoRemovido) {
+  const titulos = [];
+  const inicioDosMarcadores = new Set(sequencia.map((s) => s.offsetMarcador));
+  const primeiroMarcador = sequencia[0]?.offsetMarcador ?? Infinity;
+  const iniciosDePagina = new Map(mapaPaginas.map((p, i) => [p.inicio, topoRemovido[i]]));
+  let offset = 0;
+  const linhas = textoCompleto.split("\n");
+  for (let i = 0; i < linhas.length; i++) {
+    const inicioLinha = offset;
+    offset += linhas[i].length + 1;
+    if (!ehTituloSecao(linhas[i])) continue;
+    let proxima = offset;
+    let j = i + 1;
+    for (; j < linhas.length && !linhas[j].trim(); j++) proxima += linhas[j].length + 1;
+    const recuo = j < linhas.length ? linhas[j].length - linhas[j].trimStart().length : 0;
+    const antesDeQuestao = inicioDosMarcadores.has(proxima + recuo);
+    const topoDePaginaNoPreambulo = inicioLinha < primeiroMarcador && iniciosDePagina.get(inicioLinha) === true;
+    if (antesDeQuestao || topoDePaginaNoPreambulo) titulos.push({ titulo: linhas[i].trim(), inicio: inicioLinha, antesDeQuestao });
+  }
+  return titulos;
+}
+
+// offsetMarcador = início do marcador visível ("12." ou "QUESTÃO 12 –"),
+// não do número: é onde termina o texto da questão anterior — com o
+// marcador explícito, apontar para o número deixava "QUESTÃO" grudado no
+// fim da última alternativa da questão anterior.
+function candidatosDoMarcador(textoCompleto, marcador) {
   const candidatos = [];
-  for (const match of textoCompleto.matchAll(MARCADOR_QUESTAO)) {
-    candidatos.push({ numero: Number(match[1]), offsetMarcador: match.index + match[0].indexOf(match[1]), offsetFimMarcador: match.index + match[0].length });
+  for (const match of textoCompleto.matchAll(marcador)) {
+    candidatos.push({ numero: Number(match[1]), offsetMarcador: match.index + match[0].search(/\S/), offsetFimMarcador: match.index + match[0].length });
   }
   return candidatos;
+}
+
+function encontrarCandidatosQuestao(textoCompleto) {
+  const explicitos = candidatosDoMarcador(textoCompleto, MARCADOR_QUESTAO_EXPLICITO);
+  if (selecionarSequenciaValida(explicitos).length >= MINIMO_SEQUENCIA_EXPLICITA) return explicitos;
+  return candidatosDoMarcador(textoCompleto, MARCADOR_QUESTAO);
 }
 
 // Entre todos os candidatos, acha a maior sequência consecutiva (+1) e
@@ -111,25 +204,6 @@ function selecionarSequenciaValida(candidatos) {
 }
 
 const FAIXA_TEXTO_BASE = /quest(?:[õo]es?)[^\d]{0,15}(\d{1,3})[^\d]{1,6}(?:a|e|até)[^\d]{0,6}(\d{1,3})/i;
-
-function extrairTextoBaseAntes(textoCompleto, inicioBusca, fimBusca) {
-  const trecho = textoCompleto.slice(inicioBusca, fimBusca);
-  const matches = [...trecho.matchAll(MARCADOR_TEXTO_BASE)];
-  if (matches.length === 0) return null;
-  const ultimo = matches.at(-1);
-  const conteudo = trecho.slice(ultimo.index).trim();
-  if (conteudo.length === 0) return null;
-
-  // Se o próprio texto-base declarar o intervalo de questões a que se
-  // aplica ("...questões de 1 a 2"), usamos esse intervalo em vez de
-  // carregar o texto-base indefinidamente para as questões seguintes —
-  // evita associar um texto-base antigo a uma questão que não tem
-  // nenhuma relação com ele.
-  const faixa = conteudo.match(FAIXA_TEXTO_BASE);
-  const faixaNumeros = faixa ? { inicio: Number(faixa[1]), fim: Number(faixa[2]) } : null;
-
-  return { conteudo, faixaNumeros };
-}
 
 const LETRAS_VALIDAS = ["A", "B", "C", "D", "E"];
 
@@ -183,7 +257,152 @@ function segmentarAlternativas(textoQuestao) {
   const faltouAlgumaDasQuatroPrimeiras = !["A", "B", "C", "D"].every((letra) => letrasEncontradas.has(letra));
   const alternativaFaltante = faltouAlgumaDasQuatroPrimeiras || letrasRepetidas.size > 0;
 
-  return { enunciado, alternativas: alternativasExtraidas, alternativaFaltante };
+  return {
+    enunciado,
+    alternativas: alternativasExtraidas,
+    alternativaFaltante,
+    offsetUltimaAlternativa: candidatosOrdenados.at(-1)?.offsetFimMarcador ?? null,
+  };
+}
+
+// Alternativa muito mais longa que as irmãs quase sempre é texto de fora
+// grudado nela (texto-base da questão seguinte, rodapé, "página em
+// branco") — checado em provas reais: ACAFE/PC-SC 2008 (Texto 2 inteiro
+// na alternativa D da questão 6) e FEPESE/PMBC 2014 (rodapé na
+// alternativa E da última questão). Só sinaliza, nunca corta.
+const TAMANHO_MINIMO_ALTERNATIVA_SUSPEITA = 200;
+const FATOR_ALTERNATIVA_SUSPEITA = 3;
+
+function alternativaSuspeita(alternativas) {
+  if (alternativas.length < 2) return null;
+  for (const alternativa of alternativas) {
+    const outras = alternativas.filter((a) => a !== alternativa).map((a) => a.texto.length).sort((a, b) => a - b);
+    const mediana = outras[Math.floor(outras.length / 2)];
+    if (alternativa.texto.length >= TAMANHO_MINIMO_ALTERNATIVA_SUSPEITA && alternativa.texto.length > mediana * FATOR_ALTERNATIVA_SUSPEITA) {
+      return `alternativa ${alternativa.letra} com ${alternativa.texto.length} caracteres (mediana das demais: ${mediana}) — possível texto de fora grudado`;
+    }
+  }
+  return null;
+}
+
+// Questão que depende de algo que o texto extraído não carrega: destaque
+// tipográfico ("destacada em negrito", "vírgula hachurada", "sujeito
+// sublinhado") ou imagem ("a figura 01", "a charge a seguir", "o gráfico
+// a seguir"). Checado em provas reais (PP-RS 2026 q.6 e q.12; ACAFE 2008
+// figuras/charges; FEPESE 2014 q.5). Só sinaliza — revisão manual.
+const REFERENCIA_DESTAQUE = /\b(?:destacad[ao]s?|em destaque|sublinhad[ao]s?|grifad[ao]s?|hachurad[ao]s?|em negrito|em it[áa]lico)\b/i;
+const REFERENCIA_IMAGEM =
+  /\b(?:figuras?|imagens?|ilustra[çc][ãa]o|charge|tirinha|gr[áa]fico|infogr[áa]fico|mapa|quadro|tabela)\b[^.\n]{0,25}?(?:\ba seguir\b|\babaixo\b|\bacima\b|\bao lado\b|\bseguinte\b|\b\d{1,2}\b)|\b(?:seguinte|abaixo)[ \t\n]+(?:figura|imagem|ilustra[çc][ãa]o|charge|tirinha|gr[áa]fico|quadro|tabela)\b/i;
+
+function referenciaVisual(texto) {
+  const match = texto.match(REFERENCIA_DESTAQUE) ?? texto.match(REFERENCIA_IMAGEM);
+  return match ? `cita elemento visual que o texto extraído não preserva ("${match[0].replace(/\s+/g, " ")}")` : null;
+}
+
+// Região de texto de apoio que antecede a questão atual: cabeçalho
+// "Texto N", bloco "Para responder às questões X e Y..." ou texto sem
+// cabeçalho logo abaixo do título de seção no preâmbulo. Só é aceita
+// DEPOIS da última alternativa da questão anterior — é dali que ela é
+// cortada, para nunca ficar grudada na alternativa E da anterior.
+const TAMANHO_MINIMO_TEXTO_IMPLICITO = 300;
+
+function encontrarRegiaoDeTexto(textoCompleto, { inicioBusca, limiteInferior, fimBusca, numeroImpresso, titulos }) {
+  const trecho = textoCompleto.slice(inicioBusca, fimBusca);
+  const absoluto = (offsetRelativo) => inicioBusca + offsetRelativo;
+
+  const apoio = encontrarBlocosDeApoio(trecho)
+    .filter((b) => b.numeros.has(numeroImpresso) && absoluto(b.offset) >= limiteInferior)
+    .at(-1);
+  const cabecalho = [...trecho.matchAll(MARCADOR_TEXTO_BASE)]
+    .map((m) => ({ offset: m.index + m[0].search(/\S/), rotulo: m[1] ? Number(m[1]) : null }))
+    .filter((c) => absoluto(c.offset) >= limiteInferior)
+    .at(-1);
+
+  if (cabecalho || apoio) {
+    const inicio = absoluto(Math.min(cabecalho?.offset ?? Infinity, apoio?.offset ?? Infinity));
+    const conteudo = textoCompleto.slice(inicio, fimBusca);
+    const faixa = conteudo.match(FAIXA_TEXTO_BASE);
+    let faixaNumeros = apoio?.numeros ?? null;
+    if (!faixaNumeros && faixa) {
+      faixaNumeros = new Set();
+      for (let n = Number(faixa[1]); n <= Number(faixa[2]); n++) faixaNumeros.add(n);
+    }
+    return { inicio, fim: fimBusca, tipo: cabecalho ? "cabecalho" : "apoio", rotulo: cabecalho?.rotulo ?? null, faixaNumeros };
+  }
+
+  const titulo = titulos.filter((t) => !t.antesDeQuestao && t.inicio >= Math.max(inicioBusca, limiteInferior) && t.inicio < fimBusca).at(-1);
+  if (titulo) {
+    const inicio = textoCompleto.indexOf("\n", titulo.inicio) + 1;
+    if (inicio > 0 && textoCompleto.slice(inicio, fimBusca).trim().length >= TAMANHO_MINIMO_TEXTO_IMPLICITO) {
+      return { inicio, fim: fimBusca, tipo: "implicito", rotulo: null, faixaNumeros: null };
+    }
+  }
+  return null;
+}
+
+function segmentosDaRegiao(paginas, mapaPaginas, textoCompleto, inicio, fim) {
+  const segmentos = [];
+  for (const [i, entrada] of mapaPaginas.entries()) {
+    const a = Math.max(inicio, entrada.inicio);
+    const b = Math.min(fim, entrada.fim);
+    if (b > a) segmentos.push({ numeroPagina: entrada.numero, texto: textoCompleto.slice(a, b), itens: paginas[i].itens ?? null });
+  }
+  return segmentos;
+}
+
+// Associação texto-base -> questão. Faixa declarada ("questões 07 e 08",
+// "de 1 a 2") associa toda questão da faixa. Sem faixa, o texto só vai
+// para a questão que o cita ("segundo o texto", "texto 2", "l. 34",
+// "trecho"...), dentro do bloco textual (mesma seção, sem mais de
+// LACUNA_MAXIMA_BLOCO_TEXTUAL questões seguidas sem citar texto). Questão
+// dentro do bloco que não cita nada fica com dependência incerta (revisão
+// manual) — nunca recebe um texto por suposição, nem fica sem ele por
+// suposição.
+const LACUNA_MAXIMA_BLOCO_TEXTUAL = 3;
+
+function associarTextosBase(rascunhos) {
+  let ativos = [];
+  let comFaixa = [];
+  let secaoAtual;
+  let ultimaAtividade = -Infinity;
+
+  for (const [i, q] of rascunhos.entries()) {
+    if (q.secao !== secaoAtual) {
+      ativos = [];
+      comFaixa = [];
+      secaoAtual = q.secao;
+      ultimaAtividade = -Infinity;
+    }
+    for (const texto of q.textosQueComecamAqui) {
+      if (texto.faixaNumeros) comFaixa.push(texto);
+      else ativos.push(texto);
+      ultimaAtividade = i;
+    }
+
+    const refs = referenciasAoTexto([q.enunciado, ...q.alternativas.map((a) => a.texto)].join("\n"));
+    const daFaixa = comFaixa.filter((t) => t.faixaNumeros.has(q.numeroImpresso));
+    const coberta = daFaixa.length > 0;
+    const noBloco = ativos.length > 0 && i - ultimaAtividade <= LACUNA_MAXIMA_BLOCO_TEXTUAL;
+    let principais = [];
+    let dependenciaIncerta = null;
+
+    if (noBloco) {
+      if (refs.numeros.size > 0) {
+        principais = ativos.filter((t) => t.rotulo !== null && refs.numeros.has(t.rotulo));
+        if (principais.length < refs.numeros.size) dependenciaIncerta = `cita texto(s) ${[...refs.numeros].join(", ")}, mas nem todos foram localizados na prova`;
+      } else if (refs.texto || refs.linhas || (refs.indireta && !coberta)) {
+        principais = [ativos.at(-1)];
+      } else if (!coberta) {
+        dependenciaIncerta = "questão dentro do bloco de um texto-base sem citá-lo explicitamente — confirmar se depende do texto";
+      }
+    } else if (!coberta && (refs.numeros.size > 0 || refs.linhas)) {
+      dependenciaIncerta = "cita texto/linhas, mas nenhum texto-base foi associado";
+    }
+    if (principais.length > 0 || coberta) ultimaAtividade = i;
+
+    q.textos = [...principais, ...daFaixa.filter((t) => !principais.includes(t))];
+    q.dependenciaTextoIncerta = dependenciaIncerta;
+  }
 }
 
 // Monta a sequência final de questões, já em ordem de documento, a
@@ -248,68 +467,112 @@ function montarSegmentos(textoCompleto, candidatos, cabecalhosBloco) {
   return { itens, numerosIgnorados };
 }
 
-export function extrairQuestoesDoTexto(paginas) {
+export function extrairQuestoesDoTexto(paginasOriginais) {
+  const { paginas, topoRemovido } = removerLinhasCorridas(paginasOriginais);
   const mapaPaginas = construirMapaDePaginas(paginas);
   const textoCompleto = paginas.map((p) => p.texto ?? "").join("\n");
 
   const candidatos = encontrarCandidatosQuestao(textoCompleto);
   const cabecalhosBloco = encontrarCabecalhosDeBloco(textoCompleto);
   const { itens: sequencia, numerosIgnorados } = montarSegmentos(textoCompleto, candidatos, cabecalhosBloco);
+  const titulosSecao = encontrarTitulosDeSecao(textoCompleto, sequencia, mapaPaginas, topoRemovido);
 
-  const questoes = [];
-  let textoBaseAtual = null;
-  let contadorTextoBase = 0;
-
-  for (let i = 0; i < sequencia.length; i++) {
-    const atual = sequencia[i];
-    const inicioSpan = atual.inicioSpan;
-    const fimSpan = atual.fimSpan;
-
-    const inicioBuscaTextoBase = i === 0 ? 0 : sequencia[i - 1].offsetFimMarcador;
-    const novoTextoBase = extrairTextoBaseAntes(textoCompleto, inicioBuscaTextoBase, atual.offsetMarcador);
-    if (novoTextoBase) {
-      contadorTextoBase += 1;
-      // Sem faixa declarada ("...questões de X a Y"), o padrão é
-      // conservador: aplica só à questão onde o cabeçalho foi encontrado,
-      // nunca propaga indefinidamente para a frente. Checado numa prova
-      // real (ACAFE/PC-SC 2008): um cabeçalho de texto-base sem faixa
-      // declarada ("Texto 2 - Um ano sem festa") se propagava, sem este
-      // limite, por 73 questões de disciplinas completamente diferentes
-      // (Informática, Legislação...), até o fim do documento. A faixa
-      // declarada usa o número IMPRESSO (o que o próprio texto-base
-      // cita), nunca a posição global.
-      const faixaNumeros = novoTextoBase.faixaNumeros ?? { inicio: atual.numeroImpresso, fim: atual.numeroImpresso };
-      textoBaseAtual = { id: `TB${contadorTextoBase}`, texto: novoTextoBase.conteudo, faixaNumeros };
-    } else if (
-      textoBaseAtual?.faixaNumeros &&
-      (atual.numeroImpresso < textoBaseAtual.faixaNumeros.inicio || atual.numeroImpresso > textoBaseAtual.faixaNumeros.fim)
-    ) {
-      // A questão atual já saiu do intervalo declarado pelo texto-base
-      // vigente ("...questões de X a Y") — não associa mais, mesmo sem um
-      // novo marcador de texto-base ter aparecido.
-      textoBaseAtual = null;
+  // 1ª passada: limite de cada questão (título de seção logo antes da
+  // próxima não pertence a esta) e a região de texto de apoio que
+  // antecede cada questão — que é cortada do fim da anterior.
+  const fins = sequencia.map((atual) => {
+    const tituloNoFim = titulosSecao.find((t) => t.antesDeQuestao && t.inicio >= atual.inicioSpan && t.inicio < atual.fimSpan);
+    return tituloNoFim ? tituloNoFim.inicio : atual.fimSpan;
+  });
+  const regioes = sequencia.map((atual, i) => {
+    let limiteInferior = 0;
+    if (i > 0) {
+      const anterior = sequencia[i - 1];
+      const { offsetUltimaAlternativa } = segmentarAlternativas(textoCompleto.slice(anterior.inicioSpan, fins[i - 1]));
+      limiteInferior = offsetUltimaAlternativa === null ? Infinity : anterior.inicioSpan + offsetUltimaAlternativa;
     }
+    return encontrarRegiaoDeTexto(textoCompleto, {
+      inicioBusca: i === 0 ? 0 : sequencia[i - 1].offsetFimMarcador,
+      limiteInferior,
+      fimBusca: atual.offsetMarcador,
+      numeroImpresso: atual.numeroImpresso,
+      titulos: titulosSecao,
+    });
+  });
+  for (let i = 1; i < sequencia.length; i++) if (regioes[i]) fins[i - 1] = Math.min(fins[i - 1], regioes[i].inicio);
 
-    const textoQuestao = textoCompleto.slice(inicioSpan, fimSpan);
-    const { enunciado, alternativas, alternativaFaltante } = segmentarAlternativas(textoQuestao);
+  const alertasPorPagina = new Map(paginas.map((p) => [p.numero, p.alertas ?? []]));
+  const expressoesPorPagina = new Map(paginas.map((p) => [p.numero, p.expressoes ?? []]));
+
+  // 2ª passada: rascunho de cada questão + textos-base reconstruídos.
+  let contadorTextoBase = 0;
+  const rascunhos = sequencia.map((atual, i) => {
+    const inicioSpan = atual.inicioSpan;
+    const fimSpan = fins[i];
+    const secao = titulosSecao.filter((t) => t.inicio < atual.offsetMarcador).at(-1)?.titulo ?? null;
+    const { enunciado, alternativas, alternativaFaltante } = segmentarAlternativas(textoCompleto.slice(inicioSpan, fimSpan));
+
+    const textosQueComecamAqui = [];
+    if (regioes[i]) {
+      contadorTextoBase += 1;
+      const regiao = regioes[i];
+      const segmentos = segmentosDaRegiao(paginas, mapaPaginas, textoCompleto, regiao.inicio, regiao.fim);
+      const reconstruido = reconstruirTextoBase(segmentos);
+      const alertas = segmentos.flatMap((s) => alertasPorPagina.get(s.numeroPagina) ?? []);
+      textosQueComecamAqui.push({
+        id: `TB${contadorTextoBase}`,
+        tipo: regiao.tipo,
+        rotulo: regiao.rotulo,
+        faixaNumeros: regiao.faixaNumeros,
+        conteudo: reconstruido.texto,
+        confiavel: reconstruido.confiavel && alertas.length === 0,
+        motivo: reconstruido.motivo ?? (alertas.length > 0 ? "expressão matemática incerta na região do texto" : null),
+        linhasNumeradas: reconstruido.linhasNumeradas ?? false,
+      });
+    }
 
     const paginaInicio = paginaDoOffset(mapaPaginas, atual.offsetMarcador);
     const paginaFim = paginaDoOffset(mapaPaginas, fimSpan > inicioSpan ? fimSpan - 1 : fimSpan);
+    const paginasDaQuestao = [...mapaPaginas.map((p) => p.numero)].filter((n) => n >= paginaInicio && n <= paginaFim);
+    const conteudoDaQuestao = [enunciado, ...alternativas.map((a) => a.texto)].join("\n");
 
-    questoes.push({
-      numero_original: i + 1,
-      numero_impresso: atual.numeroImpresso,
-      materia_detectada: atual.materia,
+    return {
+      numeroImpresso: atual.numeroImpresso,
+      materia: atual.materia ?? secao,
+      secao: atual.materia ?? secao,
       enunciado,
       alternativas,
-      pagina_origem: paginaInicio,
-      atravessa_pagina: paginaFim !== null && paginaInicio !== null && paginaFim !== paginaInicio,
-      texto_base_id: textoBaseAtual?.id ?? null,
-      texto_base: textoBaseAtual?.texto ?? null,
-      alternativa_faltante: alternativaFaltante,
-      contagem_materia_divergente: atual.contagemMateriaDivergente,
-    });
-  }
+      alternativaFaltante,
+      paginaInicio,
+      paginaFim,
+      contagemMateriaDivergente: atual.contagemMateriaDivergente,
+      textosQueComecamAqui,
+      alertasExpressao: paginasDaQuestao.flatMap((n) => alertasPorPagina.get(n) ?? []),
+      expressoes: paginasDaQuestao.flatMap((n) => expressoesPorPagina.get(n) ?? []).filter((e) => conteudoDaQuestao.includes(e.texto)).map((e) => ({ tipo: e.tipo, texto: e.texto })),
+    };
+  });
+
+  associarTextosBase(rascunhos);
+
+  const questoes = rascunhos.map((r, i) => ({
+    numero_original: i + 1,
+    numero_impresso: r.numeroImpresso,
+    materia_detectada: r.materia,
+    enunciado: r.enunciado,
+    alternativas: r.alternativas,
+    pagina_origem: r.paginaInicio,
+    atravessa_pagina: r.paginaFim !== null && r.paginaInicio !== null && r.paginaFim !== r.paginaInicio,
+    texto_base_id: r.textos[0]?.id ?? null,
+    texto_base: r.textos[0]?.conteudo ?? null,
+    textos_base: r.textos.map((t) => ({ id: t.id, tipo: t.tipo, texto: t.conteudo, confiavel: t.confiavel, motivo: t.motivo, linhas_numeradas: t.linhasNumeradas })),
+    dependencia_texto_incerta: r.dependenciaTextoIncerta,
+    alternativa_suspeita: alternativaSuspeita(r.alternativas),
+    referencia_visual: referenciaVisual([r.enunciado, ...r.alternativas.map((a) => a.texto)].join("\n")),
+    alertas_expressao: r.alertasExpressao,
+    expressoes: r.expressoes,
+    alternativa_faltante: r.alternativaFaltante,
+    contagem_materia_divergente: r.contagemMateriaDivergente,
+  }));
 
   return { questoes, numerosIgnorados };
 }

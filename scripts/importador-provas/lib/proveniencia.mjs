@@ -24,7 +24,12 @@ function texto(valor) {
   return typeof valor === "string" && valor.trim() !== "" ? valor.trim() : null;
 }
 
-export function montarProveniencia(metadata, { hashProva, hashGabarito }) {
+// retificacoes (opcional): documentos que alteram o gabarito base, na
+// ordem explícita em que foram aplicados — [{ ordem, documento, url,
+// hash }]. Ficam FORA de `prova` (que espelha as colunas de
+// public.provas): o schema atual não tem onde gravá-las, mas elas entram
+// no manifesto (e no hash dele) e são conferidas de novo pelo executor.
+export function montarProveniencia(metadata, { hashProva, hashGabarito, retificacoes = [] }) {
   const ano = Number.isInteger(metadata?.ano) ? metadata.ano : null;
   const prova = {
     banca: texto(metadata?.banca),
@@ -47,5 +52,14 @@ export function montarProveniencia(metadata, { hashProva, hashGabarito }) {
   if (prova.hash_prova !== null && !REGEX_HASH.test(prova.hash_prova)) invalidos.push("hash_prova");
   if (prova.hash_gabarito !== null && !REGEX_HASH.test(prova.hash_gabarito)) invalidos.push("hash_gabarito");
 
-  return { prova, completa: faltando.length === 0 && invalidos.length === 0, faltando, invalidos };
+  const retificacoesGabarito = retificacoes.map((r) => ({ ordem: r.ordem, documento: texto(r.documento), url: texto(r.url), hash: r.hash ?? null }));
+  for (const r of retificacoesGabarito) {
+    const rotulo = `retificacao[${r.ordem}]`;
+    if (r.url === null) faltando.push(`${rotulo}.url`);
+    else if (!REGEX_URL.test(r.url)) invalidos.push(`${rotulo}.url`);
+    if (r.hash === null) faltando.push(`${rotulo}.hash`);
+    else if (!REGEX_HASH.test(r.hash)) invalidos.push(`${rotulo}.hash`);
+  }
+
+  return { prova, retificacoes: retificacoesGabarito, completa: faltando.length === 0 && invalidos.length === 0, faltando, invalidos };
 }

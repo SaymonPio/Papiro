@@ -353,3 +353,96 @@ test("M) alternativas com marcador de seta ('A ⇒', 'B →') são reconhecidas,
   assert.equal(q1.alternativas[0].texto, "alternativa A de teste");
   assert.equal(q1.alternativa_faltante, false);
 });
+
+test("Z) marcador explícito 'QUESTÃO 01 –' é reconhecido, e a lista numerada de instruções da capa ('1.' ... '3.') deixa de ser questão — caso real Fundatec/PP-RS 2026", () => {
+  const { questoes } = extrairQuestoesDoTexto([
+    {
+      numero: 1,
+      texto: [
+        "1. Aguarde o sinal sonoro para abrir este caderno.",
+        "2. Seus pertences devem ficar no saco plástico.",
+        "3. Confira se o caderno contém 3 questões.",
+      ].join("\n"),
+    },
+    {
+      numero: 2,
+      texto: [
+        "QUESTÃO 01 – Primeira questão sintética com marcador explícito:",
+        "1. item interno do enunciado que nunca vira questão",
+        "A) alternativa A da questão 1",
+        "B) alternativa B da questão 1",
+        "C) alternativa C da questão 1",
+        "D) alternativa D da questão 1",
+        "QUESTÃO 02 – Segunda questão sintética.",
+        "A) alternativa A da questão 2",
+        "B) alternativa B da questão 2",
+        "C) alternativa C da questão 2",
+        "D) alternativa D da questão 2",
+        "Questão 3: Terceira questão sintética.",
+        "A) alternativa A da questão 3",
+        "B) alternativa B da questão 3",
+        "C) alternativa C da questão 3",
+        "D) alternativa D da questão 3",
+      ].join("\n"),
+    },
+  ]);
+  assert.deepEqual(questoes.map((q) => [q.numero_original, q.pagina_origem]), [[1, 2], [2, 2], [3, 2]]);
+  assert.match(questoes[0].enunciado, /^Primeira questão sintética/);
+  assert.match(questoes[0].enunciado, /item interno do enunciado/);
+  assert.deepEqual(questoes[2].alternativas.map((a) => a.letra), ["A", "B", "C", "D"]);
+});
+
+test("Z2) sem sequência de marcadores explícitos (só uma menção solta a 'Questão 5:'), a numeração '1.' / '2.' continua valendo como antes", () => {
+  const { questoes } = extrairQuestoesDoTexto([
+    {
+      numero: 1,
+      texto: [
+        "1. Primeira questão sintética.",
+        "a) alternativa A",
+        "b) alternativa B",
+        "Questão 5: menção solta no meio do texto, sem sequência.",
+        "2. Segunda questão sintética.",
+        "a) alternativa A",
+        "b) alternativa B",
+      ].join("\n"),
+    },
+  ]);
+  assert.deepEqual(questoes.map((q) => q.numero_impresso), [1, 2]);
+});
+
+test("Z3) cabeçalho corrido de página é removido, título de seção não gruda na questão anterior e vira materia_detectada; linha em maiúsculas no meio do enunciado ('VISTO QUE') nunca vira seção — caso real Fundatec/PP-RS 2026", () => {
+  const cabecalho = ["CODIGO_SINTETICO 01/01/2099 10:00:00", "Execução: Banca Sintética"];
+  const pagina = (numero, linhas) => ({ numero, texto: [...cabecalho, ...linhas].join("\n") });
+  const { questoes } = extrairQuestoesDoTexto([
+    pagina(1, ["LÍNGUA PORTUGUESA", "Título de um texto sintético", "Texto sintético sem cabeçalho 'Texto N'."]),
+    pagina(2, [
+      "QUESTÃO 01 – Primeira questão sintética:",
+      "I. Primeira asserção.",
+      "VISTO QUE",
+      "II. Segunda asserção.",
+      "A) alternativa A da questão 1",
+      "B) alternativa B da questão 1",
+      "C) alternativa C da questão 1",
+      "D) alternativa D da questão 1 que continua",
+    ]),
+    pagina(3, [
+      "na página seguinte.",
+      "QUESTÃO 02 – Segunda questão sintética.",
+      "A) alternativa A da questão 2",
+      "B) alternativa B da questão 2",
+      "C) alternativa C da questão 2",
+      "D) alternativa D da questão 2",
+      "INFORMÁTICA",
+      "QUESTÃO 03 – Terceira questão sintética.",
+      "A) alternativa A da questão 3",
+      "B) alternativa B da questão 3",
+      "C) alternativa C da questão 3",
+      "D) alternativa D da questão 3",
+    ]),
+  ]);
+  assert.deepEqual(questoes.map((q) => q.materia_detectada), ["LÍNGUA PORTUGUESA", "LÍNGUA PORTUGUESA", "INFORMÁTICA"]);
+  assert.match(questoes[0].enunciado, /VISTO QUE/);
+  assert.equal(questoes[0].alternativas[3].texto, "alternativa D da questão 1 que continua\nna página seguinte.");
+  assert.equal(questoes[1].alternativas[3].texto, "alternativa D da questão 2");
+  for (const q of questoes) for (const a of q.alternativas) assert.doesNotMatch(a.texto, /CODIGO_SINTETICO|Execução:|INFORMÁTICA|QUESTÃO/);
+});

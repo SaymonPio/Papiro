@@ -9,6 +9,8 @@
 //     [--snapshot-questoes caminho/questoes.json] \
 //     [--snapshot-taxonomia caminho/taxonomia.json] \
 //     [--bloco-gabarito "<texto>"] \
+//     (ou, no lugar de --gabarito/--bloco-gabarito: --gabaritos manifesto.json
+//      com o gabarito base + retificações em ordem explícita — lib/gabaritos.mjs) \
 //     [--estrategia-pdf linear|posicional|auto] \
 //     [--out caminho/saida]
 //
@@ -29,7 +31,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { extrairTextoPdf } from "./lib/extrairTextoPdf.mjs";
 import { extrairQuestoesDoTexto } from "./lib/extrairQuestoes.mjs";
-import { extrairGabaritoDoTexto } from "./lib/extrairGabarito.mjs";
+import { extrairGabaritoDoTexto, extrairMencoesDeAlteracao } from "./lib/extrairGabarito.mjs";
+import { lerManifestoDeGabaritos, selecionarBloco } from "./lib/gabaritos.mjs";
+import { aplicarRetificacoes } from "./lib/retificacoes.mjs";
 import { juntarQuestoesEGabarito } from "./lib/juncao.mjs";
 import { classificarMateriaAssunto } from "./lib/classificar.mjs";
 import { classificarDuplicidade } from "./lib/deduplicar.mjs";
@@ -86,8 +90,28 @@ async function extrairTextoDeGabarito(caminho) {
 async function main() {
   const args = lerArgumentos(process.argv.slice(2));
   const provaPath = args.prova;
-  const gabaritoPath = args.gabarito;
   const metadataPath = args.metadata;
+
+  // --gabaritos <manifesto.json>: gabarito base + retificações ordenadas
+  // (ver lib/gabaritos.mjs). --gabarito/--bloco-gabarito continuam
+  // valendo para o caso de um documento só.
+  if (args.gabaritos && args.gabarito) {
+    console.error("use --gabarito OU --gabaritos, nunca os dois");
+    process.exitCode = 1;
+    return;
+  }
+  let manifestoGabaritos = null;
+  if (args.gabaritos) {
+    try {
+      manifestoGabaritos = lerManifestoDeGabaritos(args.gabaritos);
+    } catch (erro) {
+      console.error(erro.message);
+      process.exitCode = 1;
+      return;
+    }
+  }
+  const gabaritoPath = manifestoGabaritos?.base.arquivo ?? args.gabarito;
+  const blocoBase = manifestoGabaritos ? manifestoGabaritos.base.bloco ?? args["bloco-gabarito"] ?? null : args["bloco-gabarito"] ?? null;
   const diretorioDoScript = path.dirname(fileURLToPath(import.meta.url));
   const outDir = args.out ?? path.join(diretorioDoScript, "output");
 
@@ -123,28 +147,35 @@ async function main() {
   // Um gabarito pode conter mais de um BLOCO (ex.: um cargo por bloco,
   // cada um com sua própria grade posicional 1..N — visto numa prova
   // real: FEPESE/PMBC 2014, gabarito único cobrindo "GM" e "AR"). Nunca
-  // combina blocos diferentes silenciosamente: sem --bloco-gabarito e
-  // com mais de um bloco distinto, para explicitamente em vez de
-  // adivinhar qual bloco corresponde à prova sendo importada.
-  const blocosDistintos = [...new Set(gabaritosBrutos.map((g) => g.bloco).filter(Boolean))];
-  let gabaritos = gabaritosBrutos;
-  if (args["bloco-gabarito"]) {
-    const alvo = String(args["bloco-gabarito"]).toLowerCase();
-    gabaritos = gabaritosBrutos.filter((g) => !g.bloco || g.bloco.toLowerCase().includes(alvo));
-    if (gabaritos.length === 0) {
-      console.error(`Nenhuma entrada de gabarito bate com --bloco-gabarito "${args["bloco-gabarito"]}". Blocos disponíveis: ${blocosDistintos.join(" | ") || "(nenhum bloco rotulado encontrado)"}`);
-      process.exitCode = 1;
-      return;
+  // combina blocos diferentes silenciosamente: sem bloco escolhido e com
+  // mais de um bloco distinto, para explicitamente em vez de adivinhar
+  // qual bloco corresponde à prova sendo importada. Com bloco escolhido,
+  // só entradas DO bloco: um par fora de qualquer bloco rotulado não tem
+  // dono conhecido (num gabarito real de vários cargos — Fundatec/PP-RS
+  // 2026 — eram pares acidentais da prosa das justificativas, ex. "2015)
+  // e") e misturá-lo ao bloco seria combinar documentos silenciosamente.
+  let gabaritosBase;
+  const retificacoesLidas = [];
+  try {
+    gabaritosBase = selecionarBloco(gabaritosBrutos, blocoBase, "o gabarito");
+    for (const retificacao of manifestoGabaritos?.retificacoes ?? []) {
+      const texto = await extrairTextoDeGabarito(retificacao.arquivo);
+      const { gabaritos: entradas } = extrairGabaritoDoTexto(texto, { estrito: true });
+      retificacoesLidas.push({
+        ...retificacao,
+        hash: calcularHashArquivo(retificacao.arquivo),
+        gabaritos: selecionarBloco(entradas, retificacao.bloco, `a retificação "${retificacao.documento}"`),
+        mencoes: extrairMencoesDeAlteracao(texto),
+      });
     }
-  } else if (blocosDistintos.length > 1) {
-    console.error(
-      `O gabarito tem ${blocosDistintos.length} blocos distintos (${blocosDistintos.join(" | ")}) — ` +
-        `informe --bloco-gabarito "<texto>" para escolher um. Nunca combinamos blocos diferentes automaticamente ` +
-        `(números podem se repetir entre blocos de cargos diferentes, e misturá-los corromperia o pareamento).`,
-    );
+  } catch (erro) {
+    console.error(erro.message);
     process.exitCode = 1;
     return;
   }
+
+  // Gabarito final = base -> retificação 1 -> retificação 2 -> ...
+  const { gabaritos, problemas: problemasRetificacao, avisos: avisosRetificacao } = aplicarRetificacoes(gabaritosBase, retificacoesLidas);
 
   const { juntadas, bloqueios } = juntarQuestoesEGabarito(questoes, gabaritos);
 
@@ -152,6 +183,7 @@ async function main() {
   const proveniencia = montarProveniencia(metadata, {
     hashProva: calcularHashArquivo(provaPath),
     hashGabarito: calcularHashArquivo(gabaritoPath),
+    retificacoes: retificacoesLidas.map((r) => ({ ordem: r.ordem, documento: r.documento, url: r.url, hash: r.hash })),
   });
   if (!proveniencia.completa) {
     console.warn(
@@ -179,6 +211,12 @@ async function main() {
     requires_ocr: requerOcr,
     numeros_de_questao_ignorados: numerosIgnorados,
     linhas_de_gabarito_nao_reconhecidas: naoReconhecidas,
+    retificacoes_gabarito: {
+      documentos: retificacoesLidas.map((r) => ({ ordem: r.ordem, documento: r.documento, url: r.url, hash: r.hash, entradas: r.gabaritos.length, mencoes: r.mencoes })),
+      problemas: problemasRetificacao,
+      avisos: avisosRetificacao,
+      questoes_alteradas: gabaritos.filter((g) => g.historico?.alteracoes.length > 0).map((g) => ({ numero: g.numero, ...g.historico })),
+    },
     bloqueios_globais: bloqueios,
     proveniencia,
   });

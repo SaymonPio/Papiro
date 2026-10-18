@@ -35,7 +35,21 @@ function textoAlternativas(alternativas) {
   return (alternativas ?? []).map((a) => a.texto).join(" ");
 }
 
+const GRAVIDADE = { nova: 0, provavel_duplicada: 1, duplicada: 2 };
+
+// Questão com texto-base incorporado é comparada DUAS vezes — com o
+// enunciado persistido (texto + comando) e só com o comando — e vale o
+// resultado mais grave: o texto longo nunca "dilui" a similaridade a ponto
+// de esconder uma duplicata gravada no banco sem o texto (nem o inverso).
 export function classificarDuplicidade(questaoNormalizada, bancoExistente) {
+  const comando = questaoNormalizada._interno?.enunciado_comando;
+  const completo = classificarDuplicidadeDoEnunciado(questaoNormalizada, bancoExistente);
+  if (!comando || comando === questaoNormalizada.enunciado) return completo;
+  const soComando = classificarDuplicidadeDoEnunciado({ ...questaoNormalizada, enunciado: comando }, bancoExistente);
+  return GRAVIDADE[soComando.status] > GRAVIDADE[completo.status] ? { ...soComando, motivo: `${soComando.motivo} (comparando só o comando, sem o texto-base)` } : completo;
+}
+
+function classificarDuplicidadeDoEnunciado(questaoNormalizada, bancoExistente) {
   const enunciadoNovo = normalizarTexto(questaoNormalizada.enunciado);
   const alternativasNovo = textoAlternativas(questaoNormalizada.alternativas);
 

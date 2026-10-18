@@ -419,3 +419,35 @@ test("P) proveniência incompleta ou arquivos divergentes do staging bloqueiam o
   const divergente = planejarAquisicao({ modo: "BASE_GLOBAL", proveniencia: proveniencia(), questoes: [], contexto: { ...contexto, hashesDivergentes: "hash de prova diverge do staging" } });
   assert.ok(divergente.bloqueios.includes("hash de prova diverge do staging"));
 });
+
+test("Q) relatório separa duplicadas exatas de prováveis — nunca soma as duas; provável continua bloqueando a importação", async () => {
+  const repo = criarRepositorioMemoria();
+  const legada = questaoStaging(9);
+  repo.banco.questoes.push({ id: 1, enunciado: legada.enunciado, usuario_id: null, prova_id: null, numero_original: null, ativa: true });
+  for (const [i, a] of legada.alternativas.entries()) repo.banco.alternativas.push({ questao_id: 1, texto: a.texto, ordem: i + 1, correta: a.correta });
+  const parecida = questaoStaging(2, { enunciado: `${legada.enunciado} com um complemento diferente`, alternativas: legada.alternativas.map((a) => ({ ...a, texto: `${a.texto} variada` })) });
+  const distinta = questaoStaging(3, {
+    enunciado: "Quanto vale o dobro de quarenta e dois mais oito?",
+    alternativas: ["90", "92", "84", "100", "76"].map((texto, i) => ({ letra: "ABCDE"[i], texto, correta: i === 1 })),
+  });
+  const { manifesto } = await executarAquisicao({ repo, entrada: entradaBase([parecida, distinta]), modo: "dry-run" });
+  assert.equal(manifesto.resumo.duplicadas_exatas, 0);
+  assert.equal(manifesto.resumo.provaveis_duplicadas, 1);
+  assert.equal(manifesto.resumo.duplicadas, undefined, "campo somado antigo não existe mais");
+  assert.equal(manifesto.questoes.find((q) => q.numero_original === 2).acao, "REVISAR");
+  assert.equal(manifesto.questoes.find((q) => q.numero_original === 3).acao, "IMPORTAR");
+});
+
+test("R) retificações de gabarito entram no manifesto (e no hash); anulada por retificação é IGNORAR", async () => {
+  const repo = criarRepositorioMemoria();
+  const retificacoes = [{ ordem: 1, documento: "Edital ficticio 9/2099", url: "https://exemplo.org/ret.pdf", hash: "f".repeat(64) }];
+  const comRetificacao = await executarAquisicao({
+    repo,
+    entrada: entradaBase([questaoStaging(1), questaoStaging(2, { anulada: true })], { proveniencia: { ...proveniencia(), retificacoes } }),
+    modo: "dry-run",
+  });
+  assert.deepEqual(comRetificacao.manifesto.retificacoes_gabarito, retificacoes);
+  assert.equal(comRetificacao.manifesto.questoes.find((q) => q.numero_original === 2).acao, "IGNORAR");
+  const semRetificacao = await executarAquisicao({ repo, entrada: entradaBase([questaoStaging(1), questaoStaging(2, { anulada: true })]), modo: "dry-run" });
+  assert.notEqual(comRetificacao.hash, semRetificacao.hash);
+});

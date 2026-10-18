@@ -3,8 +3,15 @@
 // NUNCA é um INSERT — é só a estrutura que, depois de revisão humana,
 // poderia alimentar um importador real).
 
+import { comporEnunciado } from "./textoBase.mjs";
+
+// O enunciado normalizado é o que seria PERSISTIDO: questão
+// autossuficiente, com o(s) texto(s)-base de que ela depende incorporados
+// antes do comando (mesma convenção do legado — o schema não tem tabela
+// de textos). O comando puro fica em _interno.enunciado_comando.
 export function normalizarQuestao(juntada, metadata, classificacao) {
   const gabarito = juntada.gabarito;
+  const textosBase = juntada.textos_base ?? (juntada.texto_base ? [{ id: juntada.texto_base_id, tipo: "cabecalho", texto: juntada.texto_base, confiavel: true, motivo: null }] : []);
   const letraCorreta = gabarito && !gabarito.anulada ? gabarito.alternativa_correta : null;
 
   const alternativas = juntada.alternativas.map((alternativa) => ({
@@ -15,7 +22,7 @@ export function normalizarQuestao(juntada, metadata, classificacao) {
 
   return {
     numero_original: juntada.numero_original,
-    enunciado: juntada.enunciado,
+    enunciado: comporEnunciado(textosBase, juntada.enunciado),
     alternativas,
     banca: metadata?.banca ?? null,
     ano: metadata?.ano ?? null,
@@ -35,6 +42,14 @@ export function normalizarQuestao(juntada, metadata, classificacao) {
       atravessa_pagina: juntada.atravessa_pagina,
       texto_base_id: juntada.texto_base_id,
       texto_base: juntada.texto_base,
+      enunciado_comando: juntada.enunciado,
+      textos_base: textosBase.map((t) => ({ id: t.id, tipo: t.tipo, confiavel: t.confiavel, motivo: t.motivo, caracteres: t.texto.length, linhas_numeradas: t.linhas_numeradas ?? false })),
+      dependencia_texto_incerta: juntada.dependencia_texto_incerta ?? null,
+      alternativa_suspeita: juntada.alternativa_suspeita ?? null,
+      referencia_visual: juntada.referencia_visual ?? null,
+      alertas_expressao: juntada.alertas_expressao ?? [],
+      expressoes: juntada.expressoes ?? [],
+      gabarito_historico: gabarito?.historico ?? null,
       alternativa_faltante: juntada.alternativa_faltante,
       numero_impresso: juntada.numero_impresso ?? juntada.numero_original,
       materia_detectada: juntada.materia_detectada ?? null,

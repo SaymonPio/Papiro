@@ -158,3 +158,34 @@ test("Q) rótulo de bloco só é reconhecido quando IMEDIATAMENTE seguido de uma
   // só ela poderia virar rótulo; a primeira linha nunca é usada como tal.
   assert.deepEqual([...new Set(gabaritos.map((g) => g.bloco))], ["Mais texto livre aqui."]);
 });
+
+test("R) grade tabular de VÁRIOS cargos ('24 - Cargo X' + linhas '01 - B 02 - E'): cada cargo vira um bloco rotulado, '*' é anulada e pares acidentais da prosa ficam sem bloco — caso real Fundatec/PP-RS 2026", () => {
+  const texto = [
+    "Justificativa sintética: conforme a Lei 13.146/2015) e demais normas, mantém-se o gabarito.",
+    "ANEXO II Gabaritos Definitivos",
+    "23 - Cargo Sintético Um",
+    "01 - B 02 - E 03 - A",
+    "04 - C 05 - D 06 - A",
+    "Assinatura Eletrônica: 123.45",
+    "24 - Cargo Sintético Dois",
+    "01 - C 02 - * 03 - D",
+    "04 - E 05 - A 06 - *",
+    "(*) Questão(ões) anulada(s) - a pontuação será revertida a todos os candidatos",
+  ].join("\n");
+  const { gabaritos } = extrairGabaritoDoTexto(texto);
+  const dois = gabaritos.filter((g) => g.bloco === "24 - Cargo Sintético Dois");
+  assert.deepEqual(
+    dois.map((g) => [g.numero, g.alternativa_correta, g.anulada]),
+    [[1, "C", false], [2, null, true], [3, "D", false], [4, "E", false], [5, "A", false], [6, null, true]],
+  );
+  assert.equal(gabaritos.filter((g) => g.bloco === "23 - Cargo Sintético Um").length, 6);
+  assert.ok(gabaritos.filter((g) => g.bloco !== null).every((g) => g.status === "ok"), "números repetidos entre cargos diferentes não são duplicados");
+  const soltos = gabaritos.filter((g) => g.bloco === null);
+  assert.deepEqual(soltos.map((g) => g.numero), [15], "o par acidental da prosa ('2015) e') existe, mas sem dono");
+});
+
+test("S) grade tabular de UM cargo só, mesmo partida em duas corridas (quebra de página), continua bloco=null como antes", () => {
+  const texto = ["GABARITO", "01 - B 02 - E", "-- 1 of 2 --", "03 - A 04 - C"].join("\n");
+  const { gabaritos } = extrairGabaritoDoTexto(texto);
+  assert.deepEqual(gabaritos.map((g) => [g.numero, g.bloco, g.status]), [[1, null, "ok"], [2, null, "ok"], [3, null, "ok"], [4, null, "ok"]]);
+});

@@ -281,7 +281,11 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
     importar: conta((q) => q.acao === "IMPORTAR"),
     revisar: conta((q) => q.acao === "REVISAR"),
     ignorar: conta((q) => q.acao === "IGNORAR"),
-    duplicadas: conta((q) => q.status_deduplicacao === "duplicada" || q.status_deduplicacao === "provavel_duplicada"),
+    // Nunca somadas: exata = mesma questão já no banco; provável =
+    // similaridade que exige leitura manual (continua bloqueando a
+    // importação automática até ser aprovada/rejeitada).
+    duplicadas_exatas: conta((q) => q.status_deduplicacao === "duplicada"),
+    provaveis_duplicadas: conta((q) => q.status_deduplicacao === "provavel_duplicada"),
     ja_importadas: conta((q) => q.status_deduplicacao === "ja_importada"),
     anuladas: conta((q) => q.anulada),
     somente_globais: conta((q) => q.acao === "IMPORTAR" && q.curso_ids_aprovados.length === 0),
@@ -292,6 +296,9 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
     versao: VERSAO_MANIFESTO,
     modo,
     prova: { ...prova, prova_id_existente: provaIdExistente, situacao: provaIdExistente !== null ? "EXISTENTE" : "NOVA" },
+    // Documentos que alteraram o gabarito base — fazem parte do hash do
+    // manifesto aprovado (o schema de provas ainda não os grava).
+    retificacoes_gabarito: proveniencia?.retificacoes ?? [],
     bloqueios,
     vinculos,
     questoes: planejadas,

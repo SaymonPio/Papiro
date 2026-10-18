@@ -24,7 +24,19 @@
 // bloco posicional não bater, o bloco inteiro é descartado (nunca
 // pareado por aproximação) e suas linhas voltam a "naoReconhecidas".
 
-const PAR_NUMERO_RESULTADO = /(\d{1,3})[ \t]*[-.):]?[ \t]*(ANULAD[AO]|DESERTA|[A-E])\b/gi;
+// "*" no lugar da letra = anulada (legenda "(*) Questão anulada" — checado
+// num gabarito real: Fundatec/Polícia Penal RS 2026, "17 - *").
+const PAR_NUMERO_RESULTADO = /(\d{1,3})[ \t]*[-.):]?[ \t]*(ANULAD[AO]\b|DESERTA\b|[A-E]\b|\*(?=\s|$))/gi;
+
+// Linha que é SÓ pares número-resultado (>= 2), nada além de espaço entre
+// eles — uma linha de grade tabular ("01 - B 02 - E 03 - A"), nunca prosa
+// que por acaso contém um "2015) e".
+function linhaEhGradeTabular(linha, pares) {
+  if (pares.length < 2) return false;
+  let resto = linha;
+  for (const par of pares) resto = resto.replace(par[0], " ");
+  return resto.trim().length === 0;
+}
 
 function interpretarObservacao(resto) {
   const texto = resto.trim();
@@ -108,7 +120,29 @@ function extrairBlocosPosicionais(linhas) {
   return { entradas, indicesConsumidos };
 }
 
-export function extrairGabaritoDoTexto(texto) {
+// Modo estrito (documentos de RETIFICAÇÃO, que alteram respostas): só
+// vale par em linha de grade ou par que ABRE a linha ("15 * Língua
+// Portuguesa", "QUESTÃO: 15 - ANULADA"), com letra maiúscula — prosa
+// como "...em 2015) e..." nunca vira uma alteração de gabarito.
+const PAR_NO_INICIO_DA_LINHA = /^(?:quest(?:ão|ao)[ \t]*(?:n[º°o.]*)?[ \t]*:?[ \t]*)?\d{1,3}\b/i;
+
+function parAceitoNoModoEstrito(linha, par, ehGrade) {
+  if (ehGrade) return true;
+  if (par.index !== linha.search(/\d/) || !PAR_NO_INICIO_DA_LINHA.test(linha)) return false;
+  return /^(?:[A-E]|\*|ANULAD[AO]|DESERTA)$/.test(par[2]);
+}
+
+// "Anula-se a Questão nº 15", "Altera-se o gabarito da questão 12" —
+// anúncio em prosa que precisa ser confirmado por uma entrada estruturada
+// do mesmo documento (ver retificacoes.mjs).
+const MENCAO_ALTERACAO = /\b(anul|alter|retific)[a-zà-ú-]*\b[^.\n]{0,60}?\bquest(?:ão|ao)[ \t]*(?:n[º°o.]*)?[ \t]*(\d{1,3})\b/gi;
+
+export function extrairMencoesDeAlteracao(texto) {
+  return [...(texto ?? "").matchAll(MENCAO_ALTERACAO)].map((m) => ({ numero: Number(m[2]), acao: m[1].toLowerCase() === "anul" ? "anula" : "altera" }));
+}
+
+export function extrairGabaritoDoTexto(texto, opcoes = {}) {
+  const estrito = opcoes.estrito === true;
   const linhas = (texto ?? "").split(/\r?\n/);
 
   const { entradas: entradasPosicionais, indicesConsumidos } = extrairBlocosPosicionais(linhas);
@@ -116,12 +150,31 @@ export function extrairGabaritoDoTexto(texto) {
   const gabaritos = [...entradasPosicionais];
   const naoReconhecidas = [];
 
+  // Grade tabular com vários cargos (checado num gabarito real: Fundatec/
+  // Polícia Penal RS 2026 — "24 - Policial Penal" seguido de linhas
+  // "01 - B 02 - E ..."): cada sequência de linhas de grade consecutivas
+  // é uma "corrida", rotulada pela linha não-vazia imediatamente anterior
+  // — mesmo papel do rótulo da grade posicional. O rótulo só vira bloco
+  // quando algum número se repete entre corridas diferentes (vários
+  // cargos no mesmo documento); com um cargo só, tudo continua bloco=null
+  // exatamente como antes (uma quebra de página no meio da grade nunca
+  // inventa um bloco novo).
+  const corridas = [];
+  let corridaAtual = null;
+  let linhaAnterior = null;
+
   for (let i = 0; i < linhas.length; i++) {
     if (indicesConsumidos.has(i)) continue;
     const linha = linhas[i].trim();
     if (linha.length === 0) continue;
 
-    const pares = [...linha.matchAll(PAR_NUMERO_RESULTADO)];
+    const todosOsPares = [...linha.matchAll(PAR_NUMERO_RESULTADO)];
+    const ehGrade = linhaEhGradeTabular(linha, todosOsPares);
+    const pares = estrito ? todosOsPares.filter((par) => parAceitoNoModoEstrito(linha, par, ehGrade)) : todosOsPares;
+    if (ehGrade && !linhaAnterior?.ehGrade) corridas.push((corridaAtual = { rotulo: linhaAnterior?.texto ?? null, entradas: [] }));
+    if (!ehGrade) corridaAtual = null;
+    linhaAnterior = { texto: linha, ehGrade };
+
     if (pares.length === 0) {
       naoReconhecidas.push(linha);
       continue;
@@ -130,7 +183,7 @@ export function extrairGabaritoDoTexto(texto) {
     for (const par of pares) {
       const numero = Number(par[1]);
       const resultado = par[2].toUpperCase();
-      const anulada = resultado === "ANULADA" || resultado === "ANULADO" || resultado === "DESERTA";
+      const anulada = resultado === "ANULADA" || resultado === "ANULADO" || resultado === "DESERTA" || resultado === "*";
       const alternativaCorreta = anulada ? null : resultado;
 
       // Observação/"alterada" só têm sentido numa linha com UM único par
@@ -144,7 +197,7 @@ export function extrairGabaritoDoTexto(texto) {
         ({ alterada, observacao } = interpretarObservacao(resto));
       }
 
-      gabaritos.push({
+      const entrada = {
         numero,
         alternativa_correta: alternativaCorreta,
         anulada,
@@ -152,14 +205,30 @@ export function extrairGabaritoDoTexto(texto) {
         observacao,
         bloco: null,
         status: "ok",
-      });
+      };
+      gabaritos.push(entrada);
+      if (ehGrade) corridaAtual.entradas.push(entrada);
+    }
+  }
+
+  const corridaDoNumero = new Map();
+  let numerosRepetemEntreCorridas = false;
+  for (const [indice, corrida] of corridas.entries()) {
+    for (const entrada of corrida.entradas) {
+      if (corridaDoNumero.has(entrada.numero) && corridaDoNumero.get(entrada.numero) !== indice) numerosRepetemEntreCorridas = true;
+      corridaDoNumero.set(entrada.numero, indice);
+    }
+  }
+  if (numerosRepetemEntreCorridas) {
+    for (const [indice, corrida] of corridas.entries()) {
+      for (const entrada of corrida.entradas) entrada.bloco = corrida.rotulo ?? `grade tabular ${indice + 1}`;
     }
   }
 
   // Duplicidade escopada por bloco (chave = bloco + número): dois blocos
   // diferentes (ex.: cargos distintos no mesmo gabarito) podem
   // legitimamente ter ambos uma "questão 1" — isso nunca é um erro. O
-  // formato linear/tabular sempre tem bloco=null, preservando o
+  // formato linear/tabular de um cargo só tem bloco=null, preservando o
   // comportamento de antes (chave vira só o número).
   const vistos = new Set();
   for (const item of gabaritos) {

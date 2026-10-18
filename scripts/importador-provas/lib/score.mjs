@@ -9,6 +9,17 @@ function avaliarExtracao(questao) {
   if (questao._interno.contagem_materia_divergente) {
     return { ok: false, motivo: `contagem de questões do bloco "${questao._interno.materia_detectada}" não bate com a declarada no cabeçalho` };
   }
+  // Conteúdo ausente ou possivelmente corrompido nunca fica pronto: o
+  // aluno precisa conseguir responder só com o que será gravado.
+  const interno = questao._interno;
+  const textoNaoConfiavel = (interno.textos_base ?? []).find((t) => !t.confiavel);
+  if (textoNaoConfiavel) return { ok: false, motivo: `texto-base ${textoNaoConfiavel.id} não reconstruído com fidelidade (${textoNaoConfiavel.motivo})` };
+  if (interno.dependencia_texto_incerta) return { ok: false, motivo: `dependência de texto-base incerta: ${interno.dependencia_texto_incerta}` };
+  if (interno.alternativa_suspeita) return { ok: false, motivo: interno.alternativa_suspeita };
+  if (interno.referencia_visual) return { ok: false, motivo: interno.referencia_visual };
+  if ((interno.alertas_expressao ?? []).length > 0) {
+    return { ok: false, motivo: `expressão matemática não reconstruída com confiança na página (${interno.alertas_expressao.map((a) => a.motivo).join("; ")})` };
+  }
   return { ok: true, motivo: null };
 }
 

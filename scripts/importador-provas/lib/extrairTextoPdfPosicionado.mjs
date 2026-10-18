@@ -12,6 +12,7 @@
 // página, nunca de um número fixo como "FEPESE = 2 colunas".
 
 import { readFileSync } from "node:fs";
+import { alertasDeExpressao, detectarExpressoes } from "./expressoesPdf.mjs";
 
 // URL local dos arquivos de fonte padrão já instalados junto do
 // pdfjs-dist (node_modules/pdfjs-dist/standard_fonts/) — mesmo padrão
@@ -32,7 +33,7 @@ const FATOR_TAB = 2.5; // gap horizontal >= altura*este fator DENTRO de uma linh
 // conter itens de colunas DIFERENTES que coincidem em Y (ex.: o fim de
 // um rótulo da coluna esquerda e o início da primeira linha da coluna
 // direita, vistos numa prova real nessa mesma altura).
-function candidatosPorProximidadeVertical(itens) {
+export function candidatosPorProximidadeVertical(itens) {
   const ordenados = [...itens].sort((a, b) => b.y - a.y);
   const candidatos = [];
   for (const item of ordenados) {
@@ -110,7 +111,7 @@ function dividirCandidatoPorColuna(candidato, clusters, tolerancia) {
   return sublinhas;
 }
 
-function textoDaLinha(itensDaLinha) {
+export function textoDaLinha(itensDaLinha) {
   let texto = "";
   let fimAnterior = null;
   let alturaAnterior = 10;
@@ -277,10 +278,10 @@ export function reconstruirDocumentoPosicionado(paginasDeItens, opcoes = {}) {
   };
 }
 
-// Camada de I/O — abre o PDF real via pdfjs-dist, extrai os itens de
-// texto (com posição) de cada página e delega toda a reconstrução ao
-// núcleo puro acima.
-export async function extrairTextoPdfPosicionado(caminhoArquivoOuBuffer, opcoes = {}) {
+// Camada de I/O — abre o PDF real via pdfjs-dist e extrai os itens de
+// texto (com posição) de cada página. Também usada pela estratégia
+// linear, que precisa da geometria para expressões e textos-base.
+export async function lerItensDoPdf(caminhoArquivoOuBuffer) {
   const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
   const dados = typeof caminhoArquivoOuBuffer === "string" ? readFileSync(caminhoArquivoOuBuffer) : caminhoArquivoOuBuffer;
 
@@ -312,6 +313,24 @@ export async function extrairTextoPdfPosicionado(caminhoArquivoOuBuffer, opcoes 
   }
 
   await doc.destroy();
+  return paginasDeItens;
+}
 
-  return reconstruirDocumentoPosicionado(paginasDeItens, opcoes);
+// Expressões posicionais (fração empilhada, sobrescrito, subscrito) são
+// fundidas num item só ANTES do agrupamento em linhas — sem isso o
+// numerador e o denominador caem em linhas diferentes.
+export async function extrairTextoPdfPosicionado(caminhoArquivoOuBuffer, opcoes = {}) {
+  const paginasDeItens = await lerItensDoPdf(caminhoArquivoOuBuffer);
+  const expressoesPorPagina = paginasDeItens.map((p) => {
+    const { expressoes, incertas, itens } = detectarExpressoes(p.itens);
+    p.itens = itens;
+    return { expressoes, incertas };
+  });
+  const resultado = reconstruirDocumentoPosicionado(paginasDeItens, opcoes);
+  resultado.paginas = resultado.paginas.map((pagina, i) => ({
+    ...pagina,
+    expressoes: expressoesPorPagina[i].expressoes,
+    alertas: alertasDeExpressao(pagina.numero, expressoesPorPagina[i].incertas),
+  }));
+  return resultado;
 }

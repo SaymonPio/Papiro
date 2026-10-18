@@ -93,3 +93,25 @@ test("H) este módulo nunca modifica o snapshot do banco recebido (modo somente 
   classificarDuplicidade({ enunciado: "qualquer coisa", alternativas: [] }, BANCO_EXISTENTE);
   assert.deepEqual(BANCO_EXISTENTE, copiaOriginal);
 });
+
+test("H) questão com texto-base incorporado: comparada também só pelo comando — o texto longo não esconde uma duplicata gravada sem ele", () => {
+  const banco = [
+    {
+      id: 777,
+      enunciado: "No fragmento supracitado, o pronome lhes retoma qual termo da frase?",
+      alternativas: [{ texto: "Protetores." }, { texto: "Objetivos." }, { texto: "Pessoas." }, { texto: "Elas." }],
+    },
+  ];
+  const textoLongo = Array.from({ length: 60 }, (_, i) => `palavra${i} ficticia${i} do texto${i}`).join(" ");
+  const comando = "No fragmento supracitado, o pronome lhes retoma qual termo da frase?";
+  const questao = {
+    enunciado: `${textoLongo}\n\n${comando}`,
+    alternativas: [{ texto: "Protetores." }, { texto: "Objetivos." }, { texto: "Pessoas." }, { texto: "Elas." }],
+    _interno: { enunciado_comando: comando },
+  };
+  assert.equal(classificarDuplicidade({ ...questao, _interno: {} }, banco).status, "nova", "só pelo enunciado completo, o texto diluiria a duplicata");
+  const resultado = classificarDuplicidade(questao, banco);
+  assert.equal(resultado.status, "duplicada");
+  assert.equal(resultado.match_id, 777);
+  assert.match(resultado.motivo, /só o comando/);
+});

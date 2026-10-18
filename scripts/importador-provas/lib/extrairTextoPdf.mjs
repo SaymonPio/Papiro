@@ -15,7 +15,8 @@
 // documento para revisão manual futura.
 
 import { PDFParse } from "pdf-parse";
-import { extrairTextoPdfPosicionado } from "./extrairTextoPdfPosicionado.mjs";
+import { extrairTextoPdfPosicionado, lerItensDoPdf } from "./extrairTextoPdfPosicionado.mjs";
+import { alertasDeExpressao, aplicarExpressoesAoTexto, detectarExpressoes } from "./expressoesPdf.mjs";
 
 const MEDIA_MINIMA_CARACTERES_POR_PAGINA = 20;
 
@@ -28,10 +29,17 @@ async function extrairTextoPdfLinear(caminhoArquivoOuBuffer) {
   const parser = new PDFParse({ data: dados });
   try {
     const resultado = await parser.getText();
-    const paginas = resultado.pages.map((pagina) => ({
-      numero: pagina.num,
-      texto: pagina.text ?? "",
-    }));
+    // A geometria (itens X/Y) acompanha cada página: as expressões
+    // posicionais são aplicadas ao texto linear, e os itens servem à
+    // reconstrução de textos-base (extrairQuestoes.mjs). Uma expressão
+    // detectada que não pôde ser localizada no texto linear vira alerta
+    // da página — nunca texto alterado por aproximação.
+    const paginasDeItens = await lerItensDoPdf(dados);
+    const paginas = resultado.pages.map((pagina, i) => {
+      const { expressoes, incertas, itens } = detectarExpressoes(paginasDeItens[i]?.itens ?? []);
+      const { texto, aplicadas, naoAplicadas } = aplicarExpressoesAoTexto(pagina.text ?? "", expressoes);
+      return { numero: pagina.num, texto, itens, expressoes: aplicadas, alertas: alertasDeExpressao(pagina.num, [...incertas, ...naoAplicadas]) };
+    });
 
     const totalCaracteres = paginas.reduce((soma, p) => soma + p.texto.trim().length, 0);
     const mediaCaracteresPorPagina = paginas.length > 0 ? totalCaracteres / paginas.length : 0;

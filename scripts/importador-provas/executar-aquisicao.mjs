@@ -7,7 +7,7 @@
 //   1) dry-run (padrão — transação READ ONLY, nada é escrito):
 //      node scripts/importador-provas/executar-aquisicao.mjs \
 //        --staging <dir com questoes_extraidas.json + relatorio_importacao.json> \
-//        --prova <prova.pdf> --gabarito <gabarito.pdf|.txt> \
+//        --prova <prova.pdf> --gabarito <gabarito.pdf|.txt> (ou --gabaritos <manifesto.json>) \
 //        --modo BASE_GLOBAL | BASE_GLOBAL_COM_VINCULO \
 //        [--curso <slug> --vincular-materias "<id|nome>,<id|nome>"] \
 //        [--aprovacao aprovacao.json] [--out <dir>]
@@ -33,6 +33,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { carregarEnvCuradoria } from "../curadoria-pedagogica/lib/comum.mjs";
 import { calcularHashArquivo } from "./lib/proveniencia.mjs";
+import { lerManifestoDeGabaritos } from "./lib/gabaritos.mjs";
 import { hashManifesto } from "./lib/aquisicao/planejar.mjs";
 import { ErroAquisicao, executarAquisicao, montarRelatorioAquisicao } from "./lib/aquisicao/executor.mjs";
 import { criarRepositorioPg } from "./lib/aquisicao/repositorioPg.mjs";
@@ -62,14 +63,29 @@ function montarEntrada(args) {
 
   // A proveniência do relatório é conferida contra os arquivos reais:
   // se o PDF/gabarito informado agora não é o que foi extraído, PARAR.
-  if (!args.prova || !args.gabarito || !fs.existsSync(args.prova) || !fs.existsSync(args.gabarito)) {
-    throw new ErroAquisicao("informe --prova e --gabarito (os mesmos arquivos usados no staging) — o hash é conferido de novo aqui");
+  // --gabaritos: o mesmo manifesto (base + retificações) usado no staging;
+  // cada retificação é conferida por hash E ordem contra a proveniência.
+  if (args.gabaritos && args.gabarito) throw new ErroAquisicao("use --gabarito OU --gabaritos, nunca os dois");
+  let manifestoGabaritos = null;
+  if (args.gabaritos) {
+    try {
+      manifestoGabaritos = lerManifestoDeGabaritos(args.gabaritos);
+    } catch (erro) {
+      throw new ErroAquisicao(erro.message);
+    }
+  }
+  const gabaritoPath = manifestoGabaritos?.base.arquivo ?? args.gabarito;
+  if (!args.prova || !gabaritoPath || !fs.existsSync(args.prova) || !fs.existsSync(gabaritoPath)) {
+    throw new ErroAquisicao("informe --prova e --gabarito/--gabaritos (os mesmos arquivos usados no staging) — o hash é conferido de novo aqui");
   }
   const hashProva = calcularHashArquivo(args.prova);
-  const hashGabarito = calcularHashArquivo(args.gabarito);
+  const hashGabarito = calcularHashArquivo(gabaritoPath);
   const divergentes = [];
   if (proveniencia?.prova?.hash_prova !== hashProva) divergentes.push("prova");
   if (proveniencia?.prova?.hash_gabarito !== hashGabarito) divergentes.push("gabarito");
+  const esperadas = (proveniencia?.retificacoes ?? []).map((r) => `${r.ordem}:${r.hash}`).sort().join(",");
+  const informadas = (manifestoGabaritos?.retificacoes ?? []).map((r) => `${r.ordem}:${calcularHashArquivo(r.arquivo)}`).sort().join(",");
+  if (esperadas !== informadas) divergentes.push("retificações de gabarito");
 
   const aprovacao = args.aprovacao ? lerJson(args.aprovacao, "arquivo de aprovação") : {};
   if (args.curso || args["vincular-materias"]) {
@@ -96,7 +112,8 @@ function imprimirResumo(manifesto, hash, cabecalho) {
   console.log(`  hash_prova: ${manifesto.prova.hash_prova ?? "-"}`);
   console.log(`Modo de aquisição: ${manifesto.modo}`);
   console.log(`Total extraído: ${r.total_extraido} | importar: ${r.importar} | revisar: ${r.revisar} | ignorar: ${r.ignorar}`);
-  console.log(`Duplicadas: ${r.duplicadas} | já importadas: ${r.ja_importadas} | anuladas: ${r.anuladas}`);
+  console.log(`Duplicadas exatas: ${r.duplicadas_exatas} | prováveis duplicadas: ${r.provaveis_duplicadas} | já importadas: ${r.ja_importadas} | anuladas: ${r.anuladas}`);
+  for (const ret of manifesto.retificacoes_gabarito ?? []) console.log(`Retificação de gabarito aplicada (ordem ${ret.ordem}): ${ret.documento ?? "-"} [${ret.hash}]`);
   console.log(`Ficariam somente globais: ${r.somente_globais}`);
   for (const v of manifesto.vinculos) {
     console.log(`Vínculos com ${v.curso_slug}: ${r.vinculos_por_curso[v.curso_slug]} (matérias aprovadas: ${v.materia_ids_aprovadas.join(", ") || "nenhuma"})`);
