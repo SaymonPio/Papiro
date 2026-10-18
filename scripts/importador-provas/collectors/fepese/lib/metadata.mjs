@@ -3,7 +3,7 @@
 // confirmado — banca/orgao/cargo/ano ausentes ficam null e a confiança
 // cai para "baixa", nunca um palpite.
 
-export function montarMetadataConcurso({ banca, ano, orgao, cargo, nomeProva, fonteUrl, fonteTipo }) {
+export function montarMetadataConcurso({ banca, ano, orgao, cargo, nomeProva, fonteUrl, gabaritoUrl, fonteTipo }) {
   const camposObrigatorios = { banca, ano, orgao, cargo };
   const faltando = Object.entries(camposObrigatorios)
     .filter(([, valor]) => valor === null || valor === undefined || valor === "")
@@ -17,6 +17,7 @@ export function montarMetadataConcurso({ banca, ano, orgao, cargo, nomeProva, fo
       cargo: cargo ?? null,
       nome_prova: nomeProva ?? null,
       fonte_url: fonteUrl ?? null,
+      gabarito_url: gabaritoUrl ?? null,
       fonte_tipo: fonteTipo ?? "oficial",
     },
     confidence: faltando.length > 0 ? "baixa" : "alta",

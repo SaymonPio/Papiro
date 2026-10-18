@@ -31,11 +31,25 @@ function avaliarDedup(resultadoDedup) {
   return { ok: false, motivo: `provável duplicidade com questoes.id=${resultadoDedup.match_id} — requer leitura manual` };
 }
 
-export function calcularStatus(questao, resultadoDedup, bloqueiosGlobais) {
+// Proveniência é obrigatória: sem o resultado de montarProveniencia()
+// (proveniencia.mjs), ou com ele incompleto, a questão nunca fica pronta —
+// questão nova do pipeline sem prova rastreável não entra no banco.
+function avaliarProveniencia(proveniencia) {
+  if (!proveniencia) return { ok: false, motivo: "proveniência da prova não informada" };
+  if (proveniencia.completa) return { ok: true, motivo: null };
+  const problemas = [
+    ...proveniencia.faltando.map((campo) => `${campo} ausente`),
+    ...proveniencia.invalidos.map((campo) => `${campo} inválido`),
+  ];
+  return { ok: false, motivo: `proveniência da prova incompleta: ${problemas.join(", ")}` };
+}
+
+export function calcularStatus(questao, resultadoDedup, bloqueiosGlobais, proveniencia) {
   const extracao = avaliarExtracao(questao);
   const gabarito = avaliarGabarito(questao);
   const classificacao = avaliarClassificacao(questao);
   const dedup = avaliarDedup(resultadoDedup);
+  const origem = avaliarProveniencia(proveniencia);
 
   const bloqueiosDestaQuestao = bloqueiosGlobais.filter(
     (b) => b.numero === undefined || b.numero === questao.numero_original,
@@ -46,15 +60,16 @@ export function calcularStatus(questao, resultadoDedup, bloqueiosGlobais) {
     GABARITO_OK: gabarito.ok,
     CLASSIFICACAO_OK: classificacao.ok,
     DEDUP_OK: dedup.ok,
+    PROVENIENCIA_OK: origem.ok,
   };
 
-  const motivos = [extracao.motivo, gabarito.motivo, classificacao.motivo, dedup.motivo, ...bloqueiosDestaQuestao.map((b) => b.mensagem)].filter(Boolean);
+  const motivos = [extracao.motivo, gabarito.motivo, classificacao.motivo, dedup.motivo, origem.motivo, ...bloqueiosDestaQuestao.map((b) => b.mensagem)].filter(Boolean);
 
   // CLASSIFICACAO_OK não bloqueia por si só (classificação incerta é
   // esperada e normal — vai para revisão, mas não torna a questão
-  // "quebrada"). Extração, gabarito, deduplicação e qualquer bloqueio de
-  // junção, sim.
-  const pronta = extracao.ok && gabarito.ok && dedup.ok && bloqueiosDestaQuestao.length === 0;
+  // "quebrada"). Extração, gabarito, deduplicação, proveniência e
+  // qualquer bloqueio de junção, sim.
+  const pronta = extracao.ok && gabarito.ok && dedup.ok && origem.ok && bloqueiosDestaQuestao.length === 0;
 
   return {
     ...questao,

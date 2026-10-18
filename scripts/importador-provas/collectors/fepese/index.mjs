@@ -113,6 +113,7 @@ export function montarMetadata(par) {
     cargo: prova.cargo ?? concurso.cargosConhecidos?.[0] ?? null,
     nomeProva: [concurso.orgao, concurso.ano, prova.cargo].filter(Boolean).join(" - ") || null,
     fonteUrl: prova.url,
+    gabaritoUrl: par.gabarito?.url ?? null,
     fonteTipo: "oficial",
   });
 }

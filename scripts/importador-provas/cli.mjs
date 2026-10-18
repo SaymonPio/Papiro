@@ -35,6 +35,7 @@ import { classificarMateriaAssunto } from "./lib/classificar.mjs";
 import { classificarDuplicidade } from "./lib/deduplicar.mjs";
 import { normalizarQuestao } from "./lib/normalizar.mjs";
 import { calcularStatus } from "./lib/score.mjs";
+import { calcularHashArquivo, montarProveniencia } from "./lib/proveniencia.mjs";
 import { gerarRelatorio } from "./lib/relatorio.mjs";
 
 function lerArgumentos(argv) {
@@ -147,12 +148,23 @@ async function main() {
 
   const { juntadas, bloqueios } = juntarQuestoesEGabarito(questoes, gabaritos);
 
+  // Hash dos arquivos efetivamente lidos aqui — nunca do manifest.
+  const proveniencia = montarProveniencia(metadata, {
+    hashProva: calcularHashArquivo(provaPath),
+    hashGabarito: calcularHashArquivo(gabaritoPath),
+  });
+  if (!proveniencia.completa) {
+    console.warn(
+      `ATENÇÃO: proveniência incompleta (faltando: ${proveniencia.faltando.join(", ") || "-"}; inválidos: ${proveniencia.invalidos.join(", ") || "-"}) — nenhuma questão ficará PRONTA_PARA_REVISAO.`,
+    );
+  }
+
   const questoesFinais = juntadas.map((juntada) => {
     const classificacao = classificarMateriaAssunto(juntada, snapshotTaxonomia, juntada.materia_detectada);
     const normalizada = normalizarQuestao(juntada, metadata, classificacao);
     if (requerOcr) normalizada._interno.requires_ocr = true;
     const dedup = classificarDuplicidade(normalizada, snapshotQuestoes);
-    return calcularStatus(normalizada, dedup, bloqueios);
+    return calcularStatus(normalizada, dedup, bloqueios, proveniencia);
   });
 
   const questoesRevisao = questoesFinais.filter((q) => q.status === "REVISAO_MANUAL");
@@ -168,6 +180,7 @@ async function main() {
     numeros_de_questao_ignorados: numerosIgnorados,
     linhas_de_gabarito_nao_reconhecidas: naoReconhecidas,
     bloqueios_globais: bloqueios,
+    proveniencia,
   });
 
   fs.mkdirSync(outDir, { recursive: true });
