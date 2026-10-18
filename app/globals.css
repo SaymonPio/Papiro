@@ -2507,6 +2507,10 @@ footer > small {
   margin: 24px 0 28px;
   font-size: clamp(22px, 2.2vw, 30px);
   line-height: 1.38;
+  /* Enunciado com texto-base incorporado: preserva quebras de linha,
+     parágrafos e a numeração [01], [02]... (espaços repetidos continuam
+     colapsando, como antes). */
+  white-space: pre-line;
 }
 
 .answer-list {

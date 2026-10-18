@@ -114,6 +114,7 @@ function imprimirResumo(manifesto, hash, cabecalho) {
   console.log(`Total extraído: ${r.total_extraido} | importar: ${r.importar} | revisar: ${r.revisar} | ignorar: ${r.ignorar}`);
   console.log(`Duplicadas exatas: ${r.duplicadas_exatas} | prováveis duplicadas: ${r.provaveis_duplicadas} | já importadas: ${r.ja_importadas} | anuladas: ${r.anuladas}`);
   for (const ret of manifesto.retificacoes_gabarito ?? []) console.log(`Retificação de gabarito aplicada (ordem ${ret.ordem}): ${ret.documento ?? "-"} [${ret.hash}]`);
+  for (const doc of manifesto.documentos ?? []) console.log(`Documento ${doc.tipo} ordem ${doc.ordem}: ${doc.hash_sha256} [${doc.situacao}]`);
   console.log(`Ficariam somente globais: ${r.somente_globais}`);
   for (const v of manifesto.vinculos) {
     console.log(`Vínculos com ${v.curso_slug}: ${r.vinculos_por_curso[v.curso_slug]} (matérias aprovadas: ${v.materia_ids_aprovadas.join(", ") || "nenhuma"})`);

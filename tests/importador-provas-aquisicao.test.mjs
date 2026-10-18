@@ -20,6 +20,7 @@ const CURSO_BM = "11111111-1111-1111-1111-111111111111";
 function criarRepositorioMemoria({ falharNaQuestao = null } = {}) {
   const banco = {
     provas: [],
+    prova_documentos: [],
     questoes: [],
     alternativas: [],
     curso_questoes: [],
@@ -71,6 +72,7 @@ function criarRepositorioMemoria({ falharNaQuestao = null } = {}) {
         provaPorHash: porHash,
         provaPorChaveNatural: porChave,
         numerosJaImportados: new Map(banco.questoes.filter((q) => porHash && q.prova_id === porHash.id).map((q) => [q.numero_original, q.id])),
+        documentosDaProva: porHash ? banco.prova_documentos.filter((d) => d.prova_id === porHash.id) : [],
         questoesGlobais: banco.questoes
           .filter((q) => q.usuario_id === null && (!porHash || q.prova_id !== porHash.id))
           .map((q) => ({ id: q.id, enunciado: q.enunciado, alternativas: banco.alternativas.filter((a) => a.questao_id === q.id).map((a) => ({ texto: a.texto })) })),
@@ -95,6 +97,15 @@ function criarRepositorioMemoria({ falharNaQuestao = null } = {}) {
       banco.provas.push({ ...prova, id });
       return id;
     },
+    // Mesmas constraints de prova_documentos: (prova_id, tipo, ordem) e
+    // (prova_id, hash_sha256) UNIQUE, hash obrigatório.
+    async inserirDocumento(provaId, d) {
+      exigirEscrita();
+      if (!/^[0-9a-f]{64}$/.test(d.hash_sha256 ?? "")) throw new Error("check prova_documentos_hash_sha256_check");
+      if (banco.prova_documentos.some((x) => x.prova_id === provaId && x.tipo === d.tipo && x.ordem === d.ordem)) throw new Error("duplicate key prova_documentos_posicao_key");
+      if (banco.prova_documentos.some((x) => x.prova_id === provaId && x.hash_sha256 === d.hash_sha256)) throw new Error("duplicate key prova_documentos_hash_key");
+      banco.prova_documentos.push({ prova_id: provaId, tipo: d.tipo, ordem: d.ordem, url: d.url, hash_sha256: d.hash_sha256 });
+    },
     async inserirQuestao(q) {
       exigirEscrita();
       insercoesDeQuestao++;
@@ -115,6 +126,7 @@ function criarRepositorioMemoria({ falharNaQuestao = null } = {}) {
     async lerEstadoPosCheck({ provaId, questaoIds }) {
       return {
         prova: banco.provas.find((p) => p.id === provaId) ?? null,
+        documentos: banco.prova_documentos.filter((d) => d.prova_id === provaId),
         questoesDaProva: banco.questoes
           .filter((q) => q.prova_id === provaId)
           .map((q) => ({ ...q, alternativas: banco.alternativas.filter((a) => a.questao_id === q.id) })),
@@ -122,7 +134,7 @@ function criarRepositorioMemoria({ falharNaQuestao = null } = {}) {
       };
     },
     async contagensMutaveis() {
-      return { provas: banco.provas.length, questoes: banco.questoes.length, alternativas: banco.alternativas.length, curso_questoes: banco.curso_questoes.length };
+      return { provas: banco.provas.length, prova_documentos: banco.prova_documentos.length, questoes: banco.questoes.length, alternativas: banco.alternativas.length, curso_questoes: banco.curso_questoes.length };
     },
     async contagensEstruturais() {
       return {
@@ -450,4 +462,118 @@ test("R) retificações de gabarito entram no manifesto (e no hash); anulada por
   assert.equal(comRetificacao.manifesto.questoes.find((q) => q.numero_original === 2).acao, "IGNORAR");
   const semRetificacao = await executarAquisicao({ repo, entrada: entradaBase([questaoStaging(1), questaoStaging(2, { anulada: true })]), modo: "dry-run" });
   assert.notEqual(comRetificacao.hash, semRetificacao.hash);
+});
+
+// ---- Documentos do gabarito (public.prova_documentos) ----
+
+const HASH_RET1 = "1".repeat(64);
+const HASH_RET2 = "2".repeat(64);
+function comRetificacoes(retificacoes) {
+  return { proveniencia: { ...proveniencia(), retificacoes } };
+}
+const RET1 = { ordem: 1, documento: "Edital ficticio 1", url: "https://exemplo.org/r1.pdf", hash: HASH_RET1 };
+const RET2 = { ordem: 2, documento: "Edital ficticio 2", url: "https://exemplo.org/r2.pdf", hash: HASH_RET2 };
+const docs = (repo) => repo.banco.prova_documentos.map((d) => [d.tipo, d.ordem, d.hash_sha256]);
+
+test("DOC-A) prova sem retificação: registra só o GABARITO (ordem 0) com o hash de provas.hash_gabarito", async () => {
+  const repo = criarRepositorioMemoria();
+  const resultado = await dryRunEApply(repo, entradaBase([questaoStaging(1)]));
+  assert.deepEqual(docs(repo), [["GABARITO", 0, HASH_GABARITO]]);
+  assert.equal(repo.banco.prova_documentos[0].url, "https://exemplo.org/gabarito.pdf");
+  assert.equal(resultado.manifesto.resumo.documentos_novos, 1);
+});
+
+test("DOC-B) prova com 1 retificação: GABARITO + RETIFICACAO ordem 1", async () => {
+  const repo = criarRepositorioMemoria();
+  await dryRunEApply(repo, entradaBase([questaoStaging(1)], comRetificacoes([RET1])));
+  assert.deepEqual(docs(repo), [["GABARITO", 0, HASH_GABARITO], ["RETIFICACAO", 1, HASH_RET1]]);
+});
+
+test("DOC-C) múltiplas retificações: registradas na ordem explícita (não na ordem da lista); ordem repetida bloqueia", async () => {
+  const repo = criarRepositorioMemoria();
+  await dryRunEApply(repo, entradaBase([questaoStaging(1)], comRetificacoes([RET2, RET1])));
+  assert.deepEqual(
+    docs(repo).sort((a, b) => a[1] - b[1]),
+    [["GABARITO", 0, HASH_GABARITO], ["RETIFICACAO", 1, HASH_RET1], ["RETIFICACAO", 2, HASH_RET2]],
+  );
+  const repetida = await executarAquisicao({ repo: criarRepositorioMemoria(), entrada: entradaBase([questaoStaging(1)], comRetificacoes([RET1, { ...RET2, ordem: 1 }])), modo: "dry-run" });
+  assert.ok(repetida.manifesto.bloqueios.some((b) => /mesma ordem/.test(b)));
+});
+
+test("DOC-D) reexecução idempotente: documentos JA_REGISTRADO, nada duplicado", async () => {
+  const repo = criarRepositorioMemoria();
+  const entrada = entradaBase([questaoStaging(1)], comRetificacoes([RET1]));
+  await dryRunEApply(repo, entrada);
+  const segunda = await dryRunEApply(repo, entrada);
+  assert.ok(segunda.manifesto.documentos.every((d) => d.situacao === "JA_REGISTRADO"));
+  assert.equal(segunda.manifesto.resumo.documentos_novos, 0);
+  assert.equal(repo.banco.prova_documentos.length, 2);
+  assert.equal(segunda.pos_check.ok, true);
+});
+
+test("DOC-E) documento já registrado com hash diferente -> bloqueio, nada gravado", async () => {
+  const repo = criarRepositorioMemoria();
+  await dryRunEApply(repo, entradaBase([questaoStaging(1)], comRetificacoes([RET1])));
+  const outra = entradaBase([questaoStaging(1), questaoStaging(2)], comRetificacoes([{ ...RET1, hash: "9".repeat(64) }]));
+  const plano = await executarAquisicao({ repo, entrada: outra, modo: "dry-run" });
+  assert.ok(plano.manifesto.bloqueios.some((b) => /RETIFICACAO:1 já registrado para a prova com OUTRO hash/.test(b)));
+  await assert.rejects(() => executarAquisicao({ repo, entrada: outra, modo: "apply", hashManifestoAprovado: plano.hash }), /bloqueios/);
+  assert.equal(repo.banco.prova_documentos.length, 2);
+  assert.equal(repo.banco.questoes.length, 1);
+});
+
+test("DOC-F) documento do manifesto aprovado ausente no apply -> recusado; documento registrado ausente do manifesto atual -> bloqueio", async () => {
+  const repo = criarRepositorioMemoria();
+  const aprovado = await executarAquisicao({ repo, entrada: entradaBase([questaoStaging(1)], comRetificacoes([RET1])), modo: "dry-run" });
+  await assert.rejects(
+    () => executarAquisicao({ repo, entrada: entradaBase([questaoStaging(1)]), modo: "apply", hashManifestoAprovado: aprovado.hash }),
+    /difere do manifesto aprovado/,
+  );
+  assert.equal(repo.banco.provas.length, 0);
+
+  await dryRunEApply(repo, entradaBase([questaoStaging(1)], comRetificacoes([RET1])));
+  const semRetificacao = await executarAquisicao({ repo, entrada: entradaBase([questaoStaging(1)]), modo: "dry-run" });
+  assert.ok(semRetificacao.manifesto.bloqueios.some((b) => /RETIFICACAO:1 registrado para a prova não está no manifesto/.test(b)));
+  const novaRetificacao = await executarAquisicao({ repo, entrada: entradaBase([questaoStaging(1)], comRetificacoes([RET1, RET2])), modo: "dry-run" });
+  assert.ok(novaRetificacao.manifesto.bloqueios.some((b) => /outro conjunto de documentos/.test(b)));
+});
+
+test("DOC-G) pós-check: documento persistido com hash diferente do manifesto derruba o apply (ROLLBACK)", async () => {
+  const repo = criarRepositorioMemoria();
+  const original = repo.inserirDocumento;
+  repo.inserirDocumento = (provaId, d) => original(provaId, d.tipo === "RETIFICACAO" ? { ...d, hash_sha256: "8".repeat(64) } : d);
+  await assert.rejects(() => dryRunEApply(repo, entradaBase([questaoStaging(1)], comRetificacoes([RET1]))), /pós-check falhou/);
+  assert.equal(repo.banco.prova_documentos.length, 0);
+  assert.equal(repo.banco.provas.length, 0);
+});
+
+test("DOC-H) prova já cadastrada SEM nenhum documento (registro anterior a prova_documentos): bloqueio — documentos não são reconstruídos por inferência", async () => {
+  const repo = criarRepositorioMemoria();
+  repo.banco.provas.push({ ...proveniencia().prova, id: 50 });
+  const { manifesto } = await executarAquisicao({ repo, entrada: entradaBase([questaoStaging(1)]), modo: "dry-run" });
+  assert.equal(manifesto.prova.situacao, "EXISTENTE");
+  assert.ok(manifesto.bloqueios.some((b) => /outro conjunto de documentos/.test(b)));
+  assert.equal(repo.banco.prova_documentos.length, 0);
+});
+
+test("DOC-I) falha no meio do lote depois dos documentos gravados: ROLLBACK não deixa prova_documentos parciais", async () => {
+  const repo = criarRepositorioMemoria({ falharNaQuestao: 2 });
+  const entrada = entradaBase([questaoStaging(1), questaoStaging(2)], comRetificacoes([RET1, RET2]));
+  const plano = await executarAquisicao({ repo, entrada, modo: "dry-run" });
+  await assert.rejects(() => executarAquisicao({ repo, entrada, modo: "apply", hashManifestoAprovado: plano.hash }), /falha simulada/);
+  assert.equal(repo.banco.prova_documentos.length, 0);
+  assert.equal(repo.banco.provas.length, 0);
+  assert.equal(repo.banco.questoes.length, 0);
+});
+
+test("DOC-J) teste-rollback expõe o que seria gravado (1 prova, 1 GABARITO, N retificações, questões) e não deixa nada", async () => {
+  const repo = criarRepositorioMemoria();
+  const resultado = await dryRunEApply(repo, entradaBase([questaoStaging(1), questaoStaging(2)], comRetificacoes([RET1])), "teste-rollback");
+  const { antes, depois } = resultado.contagens_na_transacao;
+  assert.deepEqual(
+    Object.fromEntries(Object.keys(antes).map((t) => [t, depois[t] - antes[t]])),
+    { provas: 1, prova_documentos: 2, questoes: 2, alternativas: 10, curso_questoes: 0 },
+  );
+  assert.equal(repo.banco.prova_documentos.length, 0);
+  assert.equal(repo.banco.provas.length, 0);
 });

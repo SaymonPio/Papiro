@@ -1,5 +1,6 @@
 // Executor da aquisição — última etapa do pipeline do importador:
-//   staging aprovado -> prova -> questões -> alternativas -> vínculos
+//   staging aprovado -> prova -> documentos do gabarito -> questões ->
+//   alternativas -> vínculos
 //   explicitamente aprovados -> pós-check -> relatório.
 //
 // Opera sobre um REPOSITÓRIO (repositorioPg.mjs em produção; um
@@ -49,14 +50,23 @@ function fonteCompativel(prova, numero) {
 
 // Pós-check DENTRO da transação, antes do COMMIT — qualquer falha aqui
 // derruba a aquisição inteira (ROLLBACK).
-function avaliarPosCheck({ estado, estruturaAntes, estruturaDepois, mutaveisAntes, mutaveisDepois, provaNova, prova, inseridas, vinculosEsperados, totalAntes }) {
+function avaliarPosCheck({ estado, estruturaAntes, estruturaDepois, mutaveisAntes, mutaveisDepois, provaNova, prova, inseridas, vinculosEsperados, totalAntes, documentosEsperados, documentosNovos }) {
   const falhas = [];
   const deltasEsperados = {
     provas: provaNova ? 1 : 0,
+    prova_documentos: documentosNovos,
     questoes: inseridas.length,
     alternativas: inseridas.reduce((soma, i) => soma + i.total_alternativas, 0),
     curso_questoes: vinculosEsperados.length,
   };
+  // Documentos persistidos da prova = exatamente os do manifesto aprovado
+  // (mesma posição, mesmo hash), nem um a mais.
+  const persistidos = new Map((estado.documentos ?? []).map((d) => [`${d.tipo}:${d.ordem}`, d.hash_sha256]));
+  if (persistidos.size !== documentosEsperados.length) falhas.push(`prova_documentos: ${persistidos.size} registrados, esperado ${documentosEsperados.length}`);
+  for (const d of documentosEsperados) {
+    if (persistidos.get(`${d.tipo}:${d.ordem}`) !== d.hash_sha256) falhas.push(`documento ${d.tipo}:${d.ordem} persistido com hash diferente do manifesto`);
+  }
+  if (estado.prova && documentosEsperados.find((d) => d.tipo === "GABARITO")?.hash_sha256 !== estado.prova.hash_gabarito) falhas.push("documento GABARITO não bate com provas.hash_gabarito");
   for (const [tabela, esperado] of Object.entries(deltasEsperados)) {
     const real = mutaveisDepois[tabela] - mutaveisAntes[tabela];
     if (real !== esperado) falhas.push(`${tabela}: cresceu ${real}, esperado ${esperado}`);
@@ -122,6 +132,10 @@ export async function executarAquisicao({ repo, entrada, modo = "dry-run", hashM
     const mutaveisAntes = await repo.contagensMutaveis();
     const prova = manifesto.prova;
     const provaId = prova.prova_id_existente ?? (await repo.inserirProva(entrada.proveniencia.prova));
+    // Documentos que determinaram o gabarito final — só os NOVO; os já
+    // registrados foram conferidos por hash no planejamento.
+    const documentosNovos = manifesto.documentos.filter((d) => d.situacao === "NOVO");
+    for (const documento of documentosNovos) await repo.inserirDocumento(provaId, documento);
     const totalAntes = (await repo.lerEstadoPosCheck({ provaId, questaoIds: [] })).questoesDaProva.length;
 
     const porNumero = new Map(entrada.questoes.map((q) => [q.numero_original, q]));
@@ -165,6 +179,8 @@ export async function executarAquisicao({ repo, entrada, modo = "dry-run", hashM
       inseridas,
       vinculosEsperados,
       totalAntes,
+      documentosEsperados: manifesto.documentos,
+      documentosNovos: documentosNovos.length,
     });
     if (falhas.length > 0) throw new ErroAquisicao("pós-check falhou — ROLLBACK", { falhas });
 
@@ -180,6 +196,10 @@ export async function executarAquisicao({ repo, entrada, modo = "dry-run", hashM
       prova_reutilizada: prova.prova_id_existente !== null,
       inseridas,
       pos_check: { ok: true, falhas: [] },
+      // Contagens DENTRO da transação (antes de gravar / depois de gravar,
+      // antes do COMMIT ou ROLLBACK) — no teste-rollback mostram o que
+      // teria sido gravado.
+      contagens_na_transacao: { antes: mutaveisAntes, depois: mutaveisDepois },
     };
   } catch (erro) {
     await repo.desfazer();
@@ -207,11 +227,13 @@ export function montarRelatorioAquisicao(resultado, geradoEm = new Date().toISOS
       hash_prova: manifesto.prova.hash_prova,
       hash_gabarito: manifesto.prova.hash_gabarito,
     },
+    documentos: manifesto.documentos,
     bloqueios: manifesto.bloqueios,
     previsto: manifesto.resumo,
     efetivado: resultado.inseridas
       ? { questoes_inseridas: inseridas.length, vinculadas_por_curso: porCurso, somente_globais: inseridas.filter((i) => i.curso_ids.length === 0).length }
       : null,
     pos_check: resultado.pos_check ?? null,
+    contagens_na_transacao: resultado.contagens_na_transacao ?? null,
   };
 }

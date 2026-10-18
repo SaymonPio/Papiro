@@ -46,9 +46,11 @@ export function criarRepositorioPg(client) {
         ).rows[0] ?? null;
 
       const numerosJaImportados = new Map();
+      let documentosDaProva = [];
       if (porHash) {
         const { rows } = await client.query("select id, numero_original from public.questoes where prova_id = $1", [porHash.id]);
         for (const r of rows) numerosJaImportados.set(r.numero_original, Number(r.id));
+        documentosDaProva = (await client.query("select tipo, ordem, url, hash_sha256 from public.prova_documentos where prova_id = $1 order by tipo, ordem", [porHash.id])).rows;
       }
 
       // Dedup contra TODA questão global (ativa ou não — uma inativa
@@ -99,6 +101,7 @@ export function criarRepositorioPg(client) {
         provaPorHash: porHash ? { ...porHash, id: Number(porHash.id) } : null,
         provaPorChaveNatural: porChave ? { ...porChave, id: Number(porChave.id) } : null,
         numerosJaImportados,
+        documentosDaProva,
         questoesGlobais: globais.map((g) => ({ id: Number(g.id), enunciado: g.enunciado, alternativas: g.alternativas })),
         materias: new Map(materias.map((m) => [Number(m.id), { id: Number(m.id), nome: m.nome, ativo: m.ativo }])),
         assuntos: new Map(assuntos.map((a) => [Number(a.id), { id: Number(a.id), materia_id: Number(a.materia_id), nome: a.nome }])),
@@ -114,6 +117,16 @@ export function criarRepositorioPg(client) {
         [prova.banca, prova.orgao, prova.cargo, prova.ano, prova.nome, prova.fonte_url, prova.gabarito_url, prova.hash_prova, prova.hash_gabarito],
       );
       return Number(rows[0].id);
+    },
+
+    async inserirDocumento(provaId, documento) {
+      await client.query("insert into public.prova_documentos (prova_id, tipo, ordem, url, hash_sha256) values ($1, $2, $3, $4, $5)", [
+        provaId,
+        documento.tipo,
+        documento.ordem,
+        documento.url,
+        documento.hash_sha256,
+      ]);
     },
 
     // Mesmas colunas que importar_questoes_lote() grava, mais a
@@ -151,8 +164,10 @@ export function criarRepositorioPg(client) {
         [provaId],
       );
       const { rows: vinculos } = await client.query("select curso_id, questao_id from public.curso_questoes where questao_id = any($1::bigint[])", [questaoIds]);
+      const { rows: documentos } = await client.query("select tipo, ordem, hash_sha256 from public.prova_documentos where prova_id = $1", [provaId]);
       return {
         prova,
+        documentos,
         questoesDaProva: questoes.map((q) => ({ ...q, id: Number(q.id) })),
         vinculos: vinculos.map((v) => ({ curso_id: v.curso_id, questao_id: Number(v.questao_id) })),
       };
@@ -164,6 +179,7 @@ export function criarRepositorioPg(client) {
       const { rows } = await client.query(
         `select
            (select count(*) from public.provas)::int as provas,
+           (select count(*) from public.prova_documentos)::int as prova_documentos,
            (select count(*) from public.questoes)::int as questoes,
            (select count(*) from public.alternativas)::int as alternativas,
            (select count(*) from public.curso_questoes)::int as curso_questoes`,

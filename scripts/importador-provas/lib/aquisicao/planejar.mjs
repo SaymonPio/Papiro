@@ -111,6 +111,49 @@ function resolverVinculos(pedidos, cursosNoBanco) {
   return { vinculos, bloqueios };
 }
 
+// Documentos que determinaram o gabarito final (public.prova_documentos):
+// GABARITO na ordem 0 + cada retificação na sua ordem explícita. Prova
+// nova: todos NOVO. Prova já cadastrada: o conjunto registrado precisa ser
+// EXATAMENTE o mesmo (tipo, ordem, hash) — documento com outro hash, a
+// mais ou a menos é bloqueio, nunca correção silenciosa (uma retificação
+// nova para prova já importada mudaria gabaritos já gravados, e isso é
+// saneamento, não aquisição).
+export function chaveDocumento(documento) {
+  return `${documento.tipo}:${documento.ordem}`;
+}
+
+function resolverDocumentos(prova, retificacoes, existentes, provaExiste) {
+  const bloqueios = [];
+  const esperados = [
+    { tipo: "GABARITO", ordem: 0, url: prova.gabarito_url ?? null, hash_sha256: prova.hash_gabarito ?? null },
+    ...retificacoes.map((r) => ({ tipo: "RETIFICACAO", ordem: r.ordem, url: r.url ?? null, hash_sha256: r.hash ?? null })),
+  ];
+  for (const doc of esperados) {
+    if (doc.tipo === "RETIFICACAO" && (!Number.isInteger(doc.ordem) || doc.ordem < 1 || doc.ordem > 99)) bloqueios.push(`retificação com ordem inválida (${doc.ordem}) — ordem explícita 1..99 é obrigatória`);
+    if (!/^[0-9a-f]{64}$/.test(doc.hash_sha256 ?? "")) bloqueios.push(`documento ${chaveDocumento(doc)} sem hash SHA-256 válido`);
+  }
+  const posicoes = esperados.map(chaveDocumento);
+  if (new Set(posicoes).size !== posicoes.length) bloqueios.push("duas retificações com a mesma ordem no manifesto");
+  const hashes = esperados.map((d) => d.hash_sha256);
+  if (new Set(hashes).size !== hashes.length) bloqueios.push("o mesmo documento (hash) aparece mais de uma vez entre gabarito e retificações");
+
+  const registrados = new Map((existentes ?? []).map((d) => [chaveDocumento(d), d]));
+  const documentos = esperados.map((doc) => {
+    const registrado = registrados.get(chaveDocumento(doc));
+    if (registrado && registrado.hash_sha256 !== doc.hash_sha256) {
+      bloqueios.push(`documento ${chaveDocumento(doc)} já registrado para a prova com OUTRO hash (${registrado.hash_sha256.slice(0, 12)}…) — PARAR, nunca sobrescrever`);
+    }
+    return { ...doc, situacao: registrado ? "JA_REGISTRADO" : "NOVO" };
+  });
+  for (const [chave] of registrados) {
+    if (!posicoes.includes(chave)) bloqueios.push(`documento ${chave} registrado para a prova não está no manifesto atual — PARAR`);
+  }
+  if (provaExiste && documentos.some((d) => d.situacao === "NOVO")) {
+    bloqueios.push(`prova já cadastrada com outro conjunto de documentos de gabarito (novos: ${documentos.filter((d) => d.situacao === "NOVO").map(chaveDocumento).join(", ")}) — gabaritos já gravados exigiriam saneamento, não aquisição`);
+  }
+  return { documentos, bloqueios };
+}
+
 function validarAlternativas(questao, sequenciaEmbutida) {
   const alternativas = questao.alternativas ?? [];
   if (alternativas.length < 4) return "menos de 4 alternativas (A-D são obrigatórias)";
@@ -180,6 +223,9 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
       `já existe prova com a mesma banca/órgão/cargo/ano/nome e OUTRO hash (provas.id=${contexto.provaPorChaveNatural.id}) — mesmo exame, documento diferente: PARAR`,
     );
   }
+
+  const { documentos, bloqueios: bloqueiosDocumentos } = resolverDocumentos(prova, proveniencia?.retificacoes ?? [], contexto.documentosDaProva ?? [], provaIdExistente !== null);
+  bloqueios.push(...bloqueiosDocumentos);
 
   // ---- Questões ----
   const overrides = aprovacao.classificacao ?? {};
@@ -289,6 +335,7 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
     ja_importadas: conta((q) => q.status_deduplicacao === "ja_importada"),
     anuladas: conta((q) => q.anulada),
     somente_globais: conta((q) => q.acao === "IMPORTAR" && q.curso_ids_aprovados.length === 0),
+    documentos_novos: documentos.filter((d) => d.situacao === "NOVO").length,
     vinculos_por_curso: Object.fromEntries(vinculos.map((v) => [v.curso_slug, conta((q) => q.curso_ids_aprovados.includes(v.curso_id))])),
   };
 
@@ -299,6 +346,7 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
     // Documentos que alteraram o gabarito base — fazem parte do hash do
     // manifesto aprovado (o schema de provas ainda não os grava).
     retificacoes_gabarito: proveniencia?.retificacoes ?? [],
+    documentos,
     bloqueios,
     vinculos,
     questoes: planejadas,
