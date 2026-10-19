@@ -87,7 +87,7 @@ function confiancaDaDeteccao(clusters, gaps) {
 // própria coluna esquerda) herda a coluna vigente, nunca força uma
 // troca. Isso evita que um gap grande DENTRO de uma coluna seja
 // confundido com a fronteira real entre colunas.
-function dividirCandidatoPorColuna(candidato, clusters, tolerancia) {
+function dividirCandidatoPorColuna(candidato, clusters, tolerancia, porPicos = false) {
   function colunaDoX(x) {
     for (let i = 0; i < clusters.length; i++) {
       if (x >= clusters[i].min - tolerancia && x <= clusters[i].max + tolerancia) return i;
@@ -95,11 +95,27 @@ function dividirCandidatoPorColuna(candidato, clusters, tolerancia) {
     return null;
   }
 
+  // Item que começa claramente DEPOIS da margem esquerda de uma coluna
+  // seguinte pertence a ela, mesmo fora da faixa confirmada (título
+  // centralizado dentro da coluna direita — checado numa prova real:
+  // FGV/PCPR 2026, "Centenário do Vampiro de Curitiba"); antes dessa margem
+  // continua valendo a zona neutra que herda a coluna vigente. Só com
+  // colunas detectadas por picos (layout "ponte") e só depois de uma lacuna
+  // horizontal real — hífen/pontuação colados à palavra nunca trocam de
+  // coluna (checado: FEPESE/PMBC 2014 fica idêntico).
+  function colunaPosterior(x, vigente, anterior = null) {
+    if (!porPicos) return null;
+    if (anterior && x - (anterior.x + anterior.largura) < Math.max(anterior.altura, 1) * FATOR_TAB) return null;
+    let coluna = null;
+    for (let i = vigente + 1; i < clusters.length; i++) if (x >= clusters[i].min - tolerancia) coluna = i;
+    return coluna;
+  }
+
   const sublinhas = [];
-  let colunaVigente = colunaDoX(candidato.itens[0].x) ?? 0;
+  let colunaVigente = colunaDoX(candidato.itens[0].x) ?? colunaPosterior(candidato.itens[0].x, 0) ?? 0;
   let grupoAtual = [candidato.itens[0]];
   for (let i = 1; i < candidato.itens.length; i++) {
-    const colunaDoItem = colunaDoX(candidato.itens[i].x);
+    const colunaDoItem = colunaDoX(candidato.itens[i].x) ?? colunaPosterior(candidato.itens[i].x, colunaVigente, candidato.itens[i - 1]);
     if (colunaDoItem !== null && colunaDoItem !== colunaVigente) {
       sublinhas.push({ itens: grupoAtual, coluna: colunaVigente });
       grupoAtual = [];
@@ -140,12 +156,19 @@ export function textoDaLinha(itensDaLinha) {
 // posição em que aparecem, trechos em coluna emitidos coluna a coluna
 // (esquerda -> direita -> ...), generalizando para qualquer número de
 // divisores full-width no meio da página.
-function reconstruirPagina(itens, larguraPagina, clusters, tolerancia) {
+// Faixa de margem (cabeçalho/rodapé da página): linha ali nunca é dividida
+// por coluna — "POLÍCIA CIVIL DO PARANÁ ... FGV CONHECIMENTO" é UMA linha
+// corrida, não o início das duas colunas (checado numa prova real:
+// FGV/PCPR 2026). Só vale quando a altura da página é conhecida.
+const PROPORCAO_MARGEM_PAGINA = 0.06;
+
+function reconstruirPagina(itens, larguraPagina, clusters, tolerancia, alturaPagina = null, porPicos = false) {
+  const naMargem = (y) => porPicos && alturaPagina !== null && (y >= alturaPagina * (1 - PROPORCAO_MARGEM_PAGINA) || y <= alturaPagina * PROPORCAO_MARGEM_PAGINA);
   const candidatos = candidatosPorProximidadeVertical(itens);
 
   const linhasDivididas = [];
   for (const candidato of candidatos) {
-    const sublinhas = clusters.length > 1 ? dividirCandidatoPorColuna(candidato, clusters, tolerancia) : [{ itens: candidato.itens, coluna: 0 }];
+    const sublinhas = clusters.length > 1 && !naMargem(candidato.y) ? dividirCandidatoPorColuna(candidato, clusters, tolerancia, porPicos) : [{ itens: candidato.itens, coluna: 0 }];
     for (const sub of sublinhas) {
       const xInicio = Math.min(...sub.itens.map((i) => i.x));
       const xFim = Math.max(...sub.itens.map((i) => i.x + i.largura));
@@ -207,12 +230,46 @@ function reconstruirPagina(itens, larguraPagina, clusters, tolerancia) {
 // coincidem perfeitamente em Y em TODA linha da página nunca apareceu
 // nos documentos reais testados; é uma limitação conhecida, não
 // corrigida aqui para não arriscar o caso real que já funciona.
+// Colunas pelos PICOS de densidade dos inícios de linha (margem de cada
+// coluna concentra a maioria das linhas). Usado quando o agrupamento por
+// gap degenera: inícios recuados/centralizados (títulos, autoria, itens)
+// formam uma "ponte" contínua entre as colunas, que viram um cluster só, e
+// um rótulo isolado na borda (cabeçalho da página) vira uma "coluna"
+// espúria — checado numa prova real: FGV/PCPR 2026, colunas em x=42,6 e
+// x=311,7 fundidas e "FGV CONHECIMENTO" (x≈479, 3 linhas) como 2ª coluna.
+const PROPORCAO_MINIMA_PICO = 0.05; // bucket com >= 5% dos inícios de linha
+// "Ponte": um cluster de inícios de linha mais largo que isto da página não
+// é a margem de UMA coluna (ACAFE/FEPESE: 8–20%; FGV/PCPR: 53%).
+const PROPORCAO_CLUSTER_PONTE = 0.4;
+
+function clustersPorPicos(valores, larguraPagina) {
+  const contagem = new Map();
+  for (const x of valores) {
+    const bucket = Math.round(x / 2) * 2;
+    contagem.set(bucket, (contagem.get(bucket) ?? 0) + 1);
+  }
+  const minimo = Math.max(5, valores.length * PROPORCAO_MINIMA_PICO);
+  const picos = [...contagem].filter(([, n]) => n >= minimo).map(([x]) => x);
+  if (picos.length === 0) return null;
+  const { clusters } = clustersPorGap(picos, larguraPagina);
+  return clusters.map((c) => ({ ...c, tamanho: valores.filter((x) => x >= c.min - 1 && x <= c.max + 1).length }));
+}
+
 function detectarColunasDoDocumento(candidatosPorPagina, larguraPagina) {
   const xIniciosGlobais = candidatosPorPagina.flatMap((candidatos) => candidatos.map((c) => c.itens[0].x));
-  const { clusters, gaps } = clustersPorGap(xIniciosGlobais, larguraPagina);
+  let { clusters, gaps } = clustersPorGap(xIniciosGlobais, larguraPagina);
+  let porPicos = false;
+  if (clusters.some((c) => c.max - c.min >= larguraPagina * PROPORCAO_CLUSTER_PONTE)) {
+    const picos = clustersPorPicos(xIniciosGlobais, larguraPagina);
+    if (picos) {
+      clusters = picos;
+      gaps = picos.slice(1).map((c, i) => c.min - picos[i].max);
+      porPicos = true;
+    }
+  }
   const deteccao = confiancaDaDeteccao(clusters, gaps);
   const tolerancia = larguraPagina * 0.03;
-  return { clusters, deteccao, tolerancia };
+  return { clusters, deteccao, tolerancia, porPicos };
 }
 
 // Núcleo puro — nenhum I/O de PDF aqui, só a lógica de reconstrução
@@ -227,20 +284,27 @@ export function reconstruirDocumentoPosicionado(paginasDeItens, opcoes = {}) {
   const dadosPorPagina = paginasDeItens.map((p) => ({
     numero: p.numero,
     larguraPagina: p.larguraPagina,
+    alturaPagina: p.alturaPagina ?? null,
     itens: p.itens,
     candidatos: candidatosPorProximidadeVertical(p.itens),
   }));
   const larguraReferencia = Math.max(...dadosPorPagina.map((p) => p.larguraPagina), 0);
 
-  const { clusters, deteccao, tolerancia } = detectarColunasDoDocumento(
+  const { clusters, deteccao, tolerancia, porPicos } = detectarColunasDoDocumento(
     dadosPorPagina.map((p) => p.candidatos),
     larguraReferencia,
   );
 
   const paginas = [];
   for (const dados of dadosPorPagina) {
-    const linhasFinais = reconstruirPagina(dados.itens, dados.larguraPagina, clusters, tolerancia);
-    const texto = linhasFinais.map((l) => textoDaLinha(l.itens)).join("\n");
+    const linhasFinais = reconstruirPagina(dados.itens, dados.larguraPagina, clusters, tolerancia, dados.alturaPagina, porPicos);
+    // Linha só de espaço (item " " isolado numa altura própria) não é
+    // parágrafo — virava linha em branco no meio da frase (checado numa
+    // prova real: FGV/PCPR 2026, "qualquer lixo\n\njogado pelo homem").
+    const texto = linhasFinais
+      .map((l) => textoDaLinha(l.itens))
+      .filter((t) => t.trim().length > 0)
+      .join("\n");
 
     paginas.push({ numero: dados.numero, texto });
     if (debugPorPagina) {
@@ -309,7 +373,7 @@ export async function lerItensDoPdf(caminhoArquivoOuBuffer) {
         altura: item.height || 10,
       }));
 
-    paginasDeItens.push({ numero, larguraPagina: viewport.width, itens });
+    paginasDeItens.push({ numero, larguraPagina: viewport.width, alturaPagina: viewport.height, itens });
   }
 
   await doc.destroy();

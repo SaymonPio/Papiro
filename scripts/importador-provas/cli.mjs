@@ -140,7 +140,7 @@ async function main() {
     console.warn("ATENÇÃO: o PDF da prova parece ser escaneado (pouco ou nenhum texto extraível). requires_ocr=true — nenhuma tentativa de OCR foi feita nesta PoC.");
   }
 
-  const { questoes, numerosIgnorados } = extrairQuestoesDoTexto(paginas);
+  const { questoes, numerosIgnorados, avisos: avisosExtracao } = extrairQuestoesDoTexto(paginas, { composicao: metadata.composicao });
   const textoGabarito = await extrairTextoDeGabarito(gabaritoPath);
   const { gabaritos: gabaritosBrutos, naoReconhecidas } = extrairGabaritoDoTexto(textoGabarito);
 
@@ -184,6 +184,7 @@ async function main() {
     hashProva: calcularHashArquivo(provaPath),
     hashGabarito: calcularHashArquivo(gabaritoPath),
     retificacoes: retificacoesLidas.map((r) => ({ ordem: r.ordem, documento: r.documento, url: r.url, hash: r.hash })),
+    gabaritoTipo: manifestoGabaritos?.base.tipo ?? "definitivo",
   });
   if (!proveniencia.completa) {
     console.warn(
@@ -210,6 +211,7 @@ async function main() {
     total_paginas: totalPaginas,
     requires_ocr: requerOcr,
     numeros_de_questao_ignorados: numerosIgnorados,
+    avisos_extracao: avisosExtracao,
     linhas_de_gabarito_nao_reconhecidas: naoReconhecidas,
     retificacoes_gabarito: {
       documentos: retificacoesLidas.map((r) => ({ ordem: r.ordem, documento: r.documento, url: r.url, hash: r.hash, entradas: r.gabaritos.length, mencoes: r.mencoes })),

@@ -72,6 +72,11 @@ function extrairBlocosPosicionais(linhas) {
   let blocoAtual = null;
 
   for (let i = 0; i < linhas.length; i++) {
+    // Linha de respostas já pareada nunca é rótulo do bloco seguinte
+    // (grade de várias faixas: "1..20"/letras, "21..40"/letras — checado
+    // num gabarito real: FGV/PCPR 2026; sem isto as faixas 2..5 de cada
+    // cargo ficavam "rotuladas" pela linha de letras anterior).
+    if (indicesConsumidos.has(i)) continue;
     const linha = linhas[i].trim();
     if (linha.length === 0) continue;
 

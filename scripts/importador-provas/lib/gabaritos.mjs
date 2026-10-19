@@ -14,7 +14,9 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const TIPOS_BASE = ["definitivo", "base"];
+// "preliminar" = gabarito publicado antes dos recursos: aceito para medir
+// a extração, mas o planejador bloqueia qualquer apply com ele.
+const TIPOS_BASE = ["definitivo", "base", "preliminar"];
 
 export function lerManifestoDeGabaritos(caminho) {
   const conteudo = JSON.parse(fs.readFileSync(caminho, "utf8"));
@@ -25,7 +27,7 @@ export function lerManifestoDeGabaritos(caminho) {
   const bases = entradas.filter((e) => TIPOS_BASE.includes(e.tipo));
   const retificacoes = entradas.filter((e) => e.tipo === "retificacao");
   const desconhecidas = entradas.filter((e) => !TIPOS_BASE.includes(e.tipo) && e.tipo !== "retificacao");
-  if (bases.length !== 1) throw new Error(`manifesto de gabaritos precisa de exatamente 1 gabarito base (tipo "definitivo"), veio ${bases.length}`);
+  if (bases.length !== 1) throw new Error(`manifesto de gabaritos precisa de exatamente 1 gabarito base (tipo "definitivo" ou "preliminar"), veio ${bases.length}`);
   if (desconhecidas.length > 0) throw new Error(`tipo de gabarito desconhecido: ${desconhecidas.map((e) => JSON.stringify(e.tipo)).join(", ")}`);
 
   const resolver = (arquivo) => {
@@ -36,7 +38,7 @@ export function lerManifestoDeGabaritos(caminho) {
   };
 
   return {
-    base: { arquivo: resolver(bases[0].arquivo), bloco: bases[0].bloco ?? null },
+    base: { arquivo: resolver(bases[0].arquivo), bloco: bases[0].bloco ?? null, tipo: bases[0].tipo === "preliminar" ? "preliminar" : "definitivo" },
     retificacoes: retificacoes.map((r) => ({
       arquivo: resolver(r.arquivo),
       ordem: r.ordem,

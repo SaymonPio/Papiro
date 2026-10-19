@@ -446,3 +446,69 @@ test("Z3) cabeçalho corrido de página é removido, título de seção não gru
   assert.equal(questoes[1].alternativas[3].texto, "alternativa D da questão 2");
   for (const q of questoes) for (const a of q.alternativas) assert.doesNotMatch(a.texto, /CODIGO_SINTETICO|Execução:|INFORMÁTICA|QUESTÃO/);
 });
+
+// ---- FGV-like: número isolado, rodapé com número de página, composição, apoio "próximas" ----
+
+function alternativasFgv(prefixo) {
+  return ["A", "B", "C", "D", "E"].map((l) => `(${l}) ${prefixo} opção ${l}.`);
+}
+
+function provaFgvSintetica(composicao) {
+  return extrairQuestoesDoTexto(
+    [
+      { numero: 1, texto: ["CABECALHO DA PROVA FICTICIA", "Língua Portuguesa", "1", "Leia o texto a seguir:", "Texto curto inventado.", "Segundo o texto, é correto:", ...alternativasFgv("q1"), "PROVA FICTICIA – PÁGINA 1"].join("\n") },
+      { numero: 2, texto: ["CABECALHO DA PROVA FICTICIA", "2", "Questão de português sem texto.", ...alternativasFgv("q2"), "CONHECIMENTOS ESPECÍFICOS", "Direito Penal (incluindo", "Legislação Extravagante)", "Atenção: use os dados a seguir para responder às duas próximas", "questões:", "Dados inventados: 5 8 9 5 4", "PROVA FICTICIA – PÁGINA 2"].join("\n") },
+      { numero: 3, texto: ["CABECALHO DA PROVA FICTICIA", "3", "Com base nos dados, a média é:", ...alternativasFgv("q3"), "4", "Com base nos dados, a moda é:", ...alternativasFgv("q4"), "PROVA FICTICIA – PÁGINA 3"].join("\n") },
+    ],
+    { composicao },
+  );
+}
+
+const COMPOSICAO_FGV = [
+  { materia: "Língua Portuguesa", inicio: 1, fim: 2 },
+  { materia: "Direito Penal (incluindo Legislação Extravagante)", inicio: 3, fim: 4 },
+];
+
+test("FGV-A) número de questão sozinho na linha + alternativas (A)...(E): 4 questões; rodapé com número de página removido", () => {
+  const { questoes } = provaFgvSintetica(COMPOSICAO_FGV);
+  assert.deepEqual(questoes.map((q) => q.numero_impresso), [1, 2, 3, 4]);
+  assert.ok(questoes.every((q) => q.alternativas.length === 5));
+  assert.ok(questoes.every((q) => ![q.enunciado, ...q.alternativas.map((a) => a.texto)].join("\n").includes("PÁGINA")));
+});
+
+test("FGV-B) composição declarada: matéria por faixa; título da disciplina (2 linhas) e título de bloco em maiúsculas cortados da alternativa anterior", () => {
+  const { questoes, avisos } = provaFgvSintetica(COMPOSICAO_FGV);
+  assert.deepEqual(questoes.map((q) => q.materia_detectada), ["Língua Portuguesa", "Língua Portuguesa", "Direito Penal (incluindo Legislação Extravagante)", "Direito Penal (incluindo Legislação Extravagante)"]);
+  assert.equal(questoes[1].alternativas.at(-1).texto, "q2 opção E.");
+  assert.deepEqual(avisos, []);
+});
+
+test("FGV-C) apoio sem número (\"às duas próximas questões\") vai para as 2 questões seguintes", () => {
+  const { questoes } = provaFgvSintetica(COMPOSICAO_FGV);
+  for (const q of [questoes[2], questoes[3]]) {
+    assert.equal(q.textos_base.length, 1);
+    assert.match(q.textos_base[0].texto, /^Atenção: use os dados a seguir[\s\S]*5 8 9 5 4$/);
+  }
+});
+
+test("FGV-D) título declarado que não aparece: nada é cortado e fica aviso; contagem divergente marca a seção", () => {
+  const { questoes, avisos } = provaFgvSintetica([
+    { materia: "Língua Portuguesa", inicio: 1, fim: 2 },
+    { materia: "Matéria Que Não Aparece", inicio: 3, fim: 5 },
+  ]);
+  assert.ok(avisos.some((a) => /não encontrado antes da questão 3/.test(a)));
+  assert.ok(avisos.some((a) => /declara 3 questões e foram encontradas 2/.test(a)));
+  assert.equal(questoes[2].contagem_materia_divergente, true);
+});
+
+test("FGV-E) peça visual: \"Observe o cartum a seguir\" e \"Leia o texto a seguir:\" seguido só da fonte ficam sinalizados", () => {
+  const { questoes } = extrairQuestoesDoTexto([
+    {
+      numero: 1,
+      texto: ["1", "Observe o cartum a seguir:", "Pergunta sobre o humor.", ...alternativasFgv("a"), "2", "Leia o texto a seguir:", "https://exemplo.org/imagem acesso em 1.1.99", "Pergunta sobre o texto.", ...alternativasFgv("b"), "3", "O tema da exposição de cartazes foi debatido.", ...alternativasFgv("c")].join("\n"),
+    },
+  ]);
+  assert.ok(questoes[0].referencia_visual);
+  assert.match(questoes[1].referencia_visual, /só a fonte/);
+  assert.equal(questoes[2].referencia_visual, null, "\"cartazes\" como assunto do texto não é peça visual");
+});

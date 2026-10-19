@@ -577,3 +577,18 @@ test("DOC-J) teste-rollback expõe o que seria gravado (1 prova, 1 GABARITO, N r
   assert.equal(repo.banco.prova_documentos.length, 0);
   assert.equal(repo.banco.provas.length, 0);
 });
+
+test("PRE-A) gabarito PRELIMINAR bloqueia o documento inteiro (nada importável), mas a ação potencial de cada questão fica medida", async () => {
+  const repo = criarRepositorioMemoria();
+  const entrada = entradaBase([questaoStaging(1), questaoStaging(2, { confidence: "baixa" }), questaoStaging(3, { anulada: true })], {
+    proveniencia: { ...proveniencia(), gabarito_tipo: "preliminar" },
+  });
+  const plano = await executarAquisicao({ repo, entrada, modo: "dry-run" });
+  assert.ok(plano.manifesto.bloqueios.some((b) => /gabarito PRELIMINAR/.test(b)));
+  assert.ok(plano.manifesto.questoes.every((q) => q.acao === "REVISAR"));
+  assert.deepEqual(plano.manifesto.questoes.map((q) => q.acao_potencial), ["IMPORTAR", "REVISAR", "IGNORAR"]);
+  assert.equal(plano.manifesto.resumo.importar, 0);
+  assert.equal(plano.manifesto.resumo.importar_potencial, 1);
+  await assert.rejects(() => executarAquisicao({ repo, entrada, modo: "apply", hashManifestoAprovado: plano.hash }), /bloqueios/);
+  assert.equal(repo.banco.provas.length, 0);
+});

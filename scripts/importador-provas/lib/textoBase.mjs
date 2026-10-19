@@ -68,10 +68,21 @@ export function encontrarBlocosDeApoio(trecho) {
         numeros.add(numero);
       }
     }
-    blocos.push({ offset: match.index + match[0].search(/\S/), numeros });
+    blocos.push({ offset: match.index + match[0].search(/\S/), numeros, proximas: null });
   }
-  return blocos;
+  // Sem número: "use os dados a seguir para responder às duas próximas
+  // questões" (checado numa prova real: FGV/PCPR 2026, questões 76 e 77) —
+  // vale para as K questões que vêm logo depois do bloco.
+  for (const match of trecho.matchAll(BLOCO_DE_APOIO_PROXIMAS)) {
+    const quantidade = match[1] ? (QUANTIDADES[match[1].toLowerCase()] ?? Number(match[1])) : 1;
+    if (Number.isInteger(quantidade) && quantidade >= 1 && quantidade <= 20) blocos.push({ offset: match.index + match[0].search(/\S/), numeros: null, proximas: quantidade });
+  }
+  return blocos.sort((a, b) => a.offset - b.offset);
 }
+
+const QUANTIDADES = { duas: 2, dois: 2, três: 3, tres: 3, quatro: 4, cinco: 5, seis: 6, sete: 7, oito: 8, nove: 9, dez: 10 };
+const BLOCO_DE_APOIO_PROXIMAS =
+  /^[ \t]*(?:aten[çc][ãa]o[ \t]*:?[ \t]*)?[^\n]{0,80}?\bresponder\b\s+(?:à|a|às|as)\s+(?:próxima\s+quest(?:ão|ao)|(duas|dois|três|tres|quatro|cinco|seis|sete|oito|nove|dez|\d{1,2})\s+próximas\s+quest(?:ões|oes))/gim;
 
 function multiconjunto(tokens) {
   const mapa = new Map();

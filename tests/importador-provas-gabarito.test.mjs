@@ -189,3 +189,11 @@ test("S) grade tabular de UM cargo só, mesmo partida em duas corridas (quebra d
   const { gabaritos } = extrairGabaritoDoTexto(texto);
   assert.deepEqual(gabaritos.map((g) => [g.numero, g.bloco, g.status]), [[1, null, "ok"], [2, null, "ok"], [3, null, "ok"], [4, null, "ok"]]);
 });
+
+test("T) grade posicional com várias faixas por cargo: a linha de letras nunca vira rótulo da faixa seguinte — cada cargo recebe todas as questões", () => {
+  const texto = ["CARGO X - TIPO 1", "1 2 3", "A B C", "4 5 6", "D E A", "CARGO Y - TIPO 1", "1 2 3", "E D C", "4 5 6", "B A E"].join("\n");
+  const { gabaritos } = extrairGabaritoDoTexto(texto);
+  const doBloco = (b) => gabaritos.filter((g) => g.bloco === b).map((g) => `${g.numero}${g.alternativa_correta}`);
+  assert.deepEqual(doBloco("CARGO X - TIPO 1"), ["1A", "2B", "3C", "4D", "5E", "6A"]);
+  assert.deepEqual(doBloco("CARGO Y - TIPO 1"), ["1E", "2D", "3C", "4B", "5A", "6E"]);
+});

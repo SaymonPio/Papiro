@@ -29,7 +29,9 @@ function texto(valor) {
 // hash }]. Ficam FORA de `prova` (que espelha as colunas de
 // public.provas): o schema atual não tem onde gravá-las, mas elas entram
 // no manifesto (e no hash dele) e são conferidas de novo pelo executor.
-export function montarProveniencia(metadata, { hashProva, hashGabarito, retificacoes = [] }) {
+// gabaritoTipo: "definitivo" (padrão) ou "preliminar" (antes dos recursos —
+// o planejador bloqueia o apply).
+export function montarProveniencia(metadata, { hashProva, hashGabarito, retificacoes = [], gabaritoTipo = "definitivo" }) {
   const ano = Number.isInteger(metadata?.ano) ? metadata.ano : null;
   const prova = {
     banca: texto(metadata?.banca),
@@ -61,5 +63,5 @@ export function montarProveniencia(metadata, { hashProva, hashGabarito, retifica
     else if (!REGEX_HASH.test(r.hash)) invalidos.push(`${rotulo}.hash`);
   }
 
-  return { prova, retificacoes: retificacoesGabarito, completa: faltando.length === 0 && invalidos.length === 0, faltando, invalidos };
+  return { prova, retificacoes: retificacoesGabarito, gabarito_tipo: gabaritoTipo, completa: faltando.length === 0 && invalidos.length === 0, faltando, invalidos };
 }

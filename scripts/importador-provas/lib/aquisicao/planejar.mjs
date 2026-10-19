@@ -209,6 +209,9 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
   bloqueios.push(...bloqueiosVinculo);
 
   // ---- Prova ----
+  // Gabarito preliminar (antes dos recursos) nunca é importável: respostas
+  // ainda podem mudar ou ser anuladas.
+  if (proveniencia?.gabarito_tipo === "preliminar") bloqueios.push("gabarito PRELIMINAR — aguardar o gabarito definitivo (pós-recursos) antes de qualquer apply");
   if (!proveniencia?.completa) {
     bloqueios.push(`proveniência incompleta (faltando: ${(proveniencia?.faltando ?? []).join(", ") || "-"}; inválidos: ${(proveniencia?.invalidos ?? []).join(", ") || "-"})`);
   }
@@ -266,10 +269,6 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
       item.motivos.push(motivo);
     };
 
-    if (bloqueios.length > 0) {
-      revisar("documento bloqueado — nenhuma questão é importada enquanto houver bloqueio da prova");
-      return item;
-    }
     if (!Number.isInteger(numero) || numero < 1 || numero > 999) {
       revisar(`numero_original inválido (${numero})`);
       return item;
@@ -321,6 +320,18 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
     return item;
   });
 
+  // Bloqueio do documento vence qualquer questão: nada é importado. A ação
+  // que a questão teria sem o bloqueio fica em acao_potencial — só para
+  // medir qualidade (ex.: lote com gabarito ainda preliminar).
+  if (bloqueios.length > 0) {
+    for (const item of planejadas) {
+      item.acao_potencial = item.acao;
+      item.acao = "REVISAR";
+      item.curso_ids_aprovados = [];
+      item.motivos.unshift("documento bloqueado — nenhuma questão é importada enquanto houver bloqueio da prova");
+    }
+  }
+
   const conta = (filtro) => planejadas.filter(filtro).length;
   const resumo = {
     total_extraido: planejadas.length,
@@ -336,6 +347,7 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
     anuladas: conta((q) => q.anulada),
     somente_globais: conta((q) => q.acao === "IMPORTAR" && q.curso_ids_aprovados.length === 0),
     documentos_novos: documentos.filter((d) => d.situacao === "NOVO").length,
+    ...(bloqueios.length > 0 ? { importar_potencial: conta((q) => q.acao_potencial === "IMPORTAR"), revisar_potencial: conta((q) => q.acao_potencial === "REVISAR"), ignorar_potencial: conta((q) => q.acao_potencial === "IGNORAR") } : {}),
     vinculos_por_curso: Object.fromEntries(vinculos.map((v) => [v.curso_slug, conta((q) => q.curso_ids_aprovados.includes(v.curso_id))])),
   };
 

@@ -104,6 +104,13 @@ function paginaDoOffset(mapaPaginas, offset) {
 const LINHAS_BORDA_PAGINA = 4;
 const MINIMO_PAGINAS_LINHA_CORRIDA = 3;
 
+// Rodapé com o número da página ("CNS201 - ... – PÁGINA 7", checado numa
+// prova real: FGV/PCPR 2026) muda a cada página: na comparação, todo
+// número vira "#".
+function chaveLinhaCorrida(linha) {
+  return linha.trim().replace(/\d+/g, "#");
+}
+
 function removerLinhasCorridas(paginas) {
   const bordas = paginas.map((p) => {
     const linhas = (p.texto ?? "").split("\n");
@@ -112,10 +119,12 @@ function removerLinhasCorridas(paginas) {
   });
   const paginasPorLinha = new Map();
   for (const { linhas, borda } of bordas) {
-    for (const texto of new Set([...borda].map((i) => linhas[i].trim()))) paginasPorLinha.set(texto, (paginasPorLinha.get(texto) ?? 0) + 1);
+    for (const texto of new Set([...borda].map((i) => chaveLinhaCorrida(linhas[i])))) paginasPorLinha.set(texto, (paginasPorLinha.get(texto) ?? 0) + 1);
   }
+  // Linha só de número (ex.: "1", que pode ser a própria questão no topo
+  // da página) nunca é tratada como corrida.
   const corridas = new Set(
-    [...paginasPorLinha].filter(([, n]) => n >= MINIMO_PAGINAS_LINHA_CORRIDA && n >= paginas.length / 2).map(([texto]) => texto),
+    [...paginasPorLinha].filter(([texto, n]) => texto !== "#" && n >= MINIMO_PAGINAS_LINHA_CORRIDA && n >= paginas.length / 2).map(([texto]) => texto),
   );
   if (corridas.size === 0) return { paginas, topoRemovido: paginas.map(() => false) };
 
@@ -123,7 +132,7 @@ function removerLinhasCorridas(paginas) {
   const limpas = paginas.map((pagina, indicePagina) => {
     const { linhas, borda } = bordas[indicePagina];
     const primeiraComConteudo = linhas.findIndex((l) => l.trim());
-    const manter = linhas.map((l, i) => !(borda.has(i) && corridas.has(l.trim())));
+    const manter = linhas.map((l, i) => !(borda.has(i) && corridas.has(chaveLinhaCorrida(l))));
     topoRemovido.push(primeiraComConteudo >= 0 && !manter[primeiraComConteudo]);
     return { ...pagina, texto: linhas.filter((_, i) => manter[i]).join("\n") };
   });
@@ -178,10 +187,21 @@ function candidatosDoMarcador(textoCompleto, marcador) {
   return candidatos;
 }
 
+// Número sozinho na linha ("1", "26") — convenção de outras bancas
+// (checado numa prova real: FGV/PCPR 2026, 100 questões numeradas assim).
+// Só vale quando forma uma sequência +1 MAIOR que a de "N." / "N)": num
+// documento numerado com ponto, números soltos (página, tabela) nunca
+// formam sequência mais longa que a das questões.
+const MARCADOR_QUESTAO_ISOLADO = /(?:^|\n)[ \t]*(\d{1,3})[ \t]*(?=\n)/g;
+
 function encontrarCandidatosQuestao(textoCompleto) {
   const explicitos = candidatosDoMarcador(textoCompleto, MARCADOR_QUESTAO_EXPLICITO);
   if (selecionarSequenciaValida(explicitos).length >= MINIMO_SEQUENCIA_EXPLICITA) return explicitos;
-  return candidatosDoMarcador(textoCompleto, MARCADOR_QUESTAO);
+  const pontuados = candidatosDoMarcador(textoCompleto, MARCADOR_QUESTAO);
+  const isolados = candidatosDoMarcador(textoCompleto, MARCADOR_QUESTAO_ISOLADO);
+  const sequenciaIsolada = selecionarSequenciaValida(isolados).length;
+  if (sequenciaIsolada >= MINIMO_SEQUENCIA_EXPLICITA && sequenciaIsolada > selecionarSequenciaValida(pontuados).length) return isolados;
+  return pontuados;
 }
 
 // Entre todos os candidatos, acha a maior sequência consecutiva (+1) e
@@ -294,8 +314,20 @@ const REFERENCIA_DESTAQUE = /\b(?:destacad[ao]s?|em destaque|sublinhad[ao]s?|gri
 const REFERENCIA_IMAGEM =
   /\b(?:figuras?|imagens?|ilustra[çc][ãa]o|charge|tirinha|gr[áa]fico|infogr[áa]fico|mapa|quadro|tabela)\b[^.\n]{0,25}?(?:\ba seguir\b|\babaixo\b|\bacima\b|\bao lado\b|\bseguinte\b|\b\d{1,2}\b)|\b(?:seguinte|abaixo)[ \t\n]+(?:figura|imagem|ilustra[çc][ãa]o|charge|tirinha|gr[áa]fico|quadro|tabela)\b/i;
 
+// Peças essencialmente visuais ("Observe o cartum a seguir", "cartaz de
+// campanha") e "Leia o texto a seguir:" seguido direto da fonte — o
+// "texto" era uma imagem e nada dele foi extraído (checado numa prova
+// real: FGV/PCPR 2026, questões 3, 9 e 20).
+const PECA_VISUAL = "(?:cartaz|cartum|cartuns|foto|fotografia|meme|tirinhas?|quadrinhos?|hq|infogr[áa]fico|anúncio publicitário)";
+const REFERENCIA_PECA_VISUAL = new RegExp(
+  `\\b(?:observe|analise|veja)\\b[^.\\n]{0,40}?\\b${PECA_VISUAL}\\b|\\b${PECA_VISUAL}\\b[^.\\n]{0,25}?\\b(?:a seguir|abaixo|acima)\\b`,
+  "i",
+);
+const TEXTO_SEM_CONTEUDO = /\b(?:leia|observe|analise|considere)\b[^\n]{0,60}?\ba seguir\b[^\n]{0,60}:?[ \t]*\n[ \t]*(?:https?:\/\/|dispon[íi]vel em)/i;
+
 function referenciaVisual(texto) {
-  const match = texto.match(REFERENCIA_DESTAQUE) ?? texto.match(REFERENCIA_IMAGEM);
+  if (TEXTO_SEM_CONTEUDO.test(texto)) return "o texto/peça \"a seguir\" não tem conteúdo extraído (só a fonte) — provavelmente é imagem";
+  const match = texto.match(REFERENCIA_DESTAQUE) ?? texto.match(REFERENCIA_IMAGEM) ?? texto.match(REFERENCIA_PECA_VISUAL);
   return match ? `cita elemento visual que o texto extraído não preserva ("${match[0].replace(/\s+/g, " ")}")` : null;
 }
 
@@ -311,6 +343,7 @@ function encontrarRegiaoDeTexto(textoCompleto, { inicioBusca, limiteInferior, fi
   const absoluto = (offsetRelativo) => inicioBusca + offsetRelativo;
 
   const apoio = encontrarBlocosDeApoio(trecho)
+    .map((b) => (b.proximas ? { ...b, numeros: new Set(Array.from({ length: b.proximas }, (_, k) => numeroImpresso + k)) } : b))
     .filter((b) => b.numeros.has(numeroImpresso) && absoluto(b.offset) >= limiteInferior)
     .at(-1);
   const cabecalho = [...trecho.matchAll(MARCADOR_TEXTO_BASE)]
@@ -467,7 +500,42 @@ function montarSegmentos(textoCompleto, candidatos, cabecalhosBloco) {
   return { itens, numerosIgnorados };
 }
 
-export function extrairQuestoesDoTexto(paginasOriginais) {
+// Composição declarada da prova (do edital oficial, no metadata do
+// staging): [{ materia, inicio, fim }] por número IMPRESSO. Quando existe,
+// define a matéria de cada questão e permite cortar o título da
+// disciplina ("Raciocínio Lógico-matemático", "Direito Penal (incluindo
+// Legislação Penal\nExtravagante)") do fim da questão anterior — só quando
+// as últimas linhas do trecho reproduzem EXATAMENTE (normalizado) o nome
+// declarado; senão nada é cortado e fica um aviso.
+function secaoDaComposicao(composicao, numeroImpresso) {
+  return composicao?.find((s) => numeroImpresso >= s.inicio && numeroImpresso <= s.fim) ?? null;
+}
+
+function normalizarTitulo(texto) {
+  return texto.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "");
+}
+
+function cortarTituloDoFim(textoCompleto, inicio, fim, nomeSecao) {
+  const linhas = textoCompleto.slice(inicio, fim).split("\n");
+  let ultima = linhas.length;
+  while (ultima > 0 && !linhas[ultima - 1].trim()) ultima--;
+  const alvo = normalizarTitulo(nomeSecao);
+  let acumulado = "";
+  for (let j = ultima - 1; j >= 0; j--) {
+    acumulado = normalizarTitulo(linhas[j]) + acumulado;
+    if (acumulado === alvo) {
+      // Título de bloco em maiúsculas logo antes ("CONHECIMENTOS ESPECÍFICOS") também sai.
+      let primeira = j;
+      while (primeira > 0 && (!linhas[primeira - 1].trim() || ehTituloSecao(linhas[primeira - 1]))) primeira--;
+      return inicio + linhas.slice(0, primeira).join("\n").length;
+    }
+    if (!alvo.endsWith(acumulado)) return null;
+  }
+  return null;
+}
+
+export function extrairQuestoesDoTexto(paginasOriginais, opcoes = {}) {
+  const composicao = Array.isArray(opcoes.composicao) && opcoes.composicao.length > 0 ? opcoes.composicao : null;
   const { paginas, topoRemovido } = removerLinhasCorridas(paginasOriginais);
   const mapaPaginas = construirMapaDePaginas(paginas);
   const textoCompleto = paginas.map((p) => p.texto ?? "").join("\n");
@@ -500,6 +568,17 @@ export function extrairQuestoesDoTexto(paginasOriginais) {
     });
   });
   for (let i = 1; i < sequencia.length; i++) if (regioes[i]) fins[i - 1] = Math.min(fins[i - 1], regioes[i].inicio);
+
+  const avisos = [];
+  if (composicao) {
+    for (let i = 1; i < sequencia.length; i++) {
+      const secao = secaoDaComposicao(composicao, sequencia[i].numeroImpresso);
+      if (!secao || secao.inicio !== sequencia[i].numeroImpresso) continue;
+      const corte = cortarTituloDoFim(textoCompleto, sequencia[i - 1].inicioSpan, fins[i - 1], secao.materia);
+      if (corte === null) avisos.push(`título da seção "${secao.materia}" não encontrado antes da questão ${secao.inicio} — nada cortado`);
+      else fins[i - 1] = corte;
+    }
+  }
 
   const alertasPorPagina = new Map(paginas.map((p) => [p.numero, p.alertas ?? []]));
   const expressoesPorPagina = new Map(paginas.map((p) => [p.numero, p.expressoes ?? []]));
@@ -538,8 +617,8 @@ export function extrairQuestoesDoTexto(paginasOriginais) {
 
     return {
       numeroImpresso: atual.numeroImpresso,
-      materia: atual.materia ?? secao,
-      secao: atual.materia ?? secao,
+      materia: secaoDaComposicao(composicao, atual.numeroImpresso)?.materia ?? atual.materia ?? secao,
+      secao: secaoDaComposicao(composicao, atual.numeroImpresso)?.materia ?? atual.materia ?? secao,
       enunciado,
       alternativas,
       alternativaFaltante,
@@ -574,5 +653,16 @@ export function extrairQuestoesDoTexto(paginasOriginais) {
     contagem_materia_divergente: r.contagemMateriaDivergente,
   }));
 
-  return { questoes, numerosIgnorados };
+  // Contagem declarada x encontrada por seção da composição.
+  if (composicao) {
+    for (const secao of composicao) {
+      const encontradas = questoes.filter((q) => q.numero_impresso >= secao.inicio && q.numero_impresso <= secao.fim);
+      if (encontradas.length !== secao.fim - secao.inicio + 1) {
+        avisos.push(`seção "${secao.materia}" declara ${secao.fim - secao.inicio + 1} questões e foram encontradas ${encontradas.length}`);
+        for (const q of encontradas) q.contagem_materia_divergente = true;
+      }
+    }
+  }
+
+  return { questoes, numerosIgnorados, avisos };
 }

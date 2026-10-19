@@ -196,3 +196,31 @@ test("L) debug opcional expõe coluna/ordem por linha, sem versionar nenhum cont
   assert.equal(resultado.debug[0].linhas.length, 6);
   assert.ok(resultado.debug[0].linhas.every((l) => typeof l.coluna === "number" && typeof l.ordem === "number"));
 });
+
+test("PB-A) layout \"ponte\" (inícios recuados/centralizados entre as colunas + rótulo isolado na borda): colunas por picos, título centralizado na coluna direita e cabeçalho de margem inteiros", () => {
+  const itens = [item("CABECALHO ESQUERDO", 40, 820), item("LOGO DA BANCA", 470, 820)];
+  for (let i = 0; i < 12; i++) {
+    const y = 760 - i * 12;
+    // Coluna esquerda mais curta: abaixo dela, a direita começa linhas sozinha (como nas provas reais).
+    if (i < 6) itens.push(item(`esquerda linha ${i + 1}`, 40, y));
+    itens.push(item(`direita linha ${i + 1}`, 310, y));
+  }
+  // Inícios intermediários (títulos centralizados/recuos) que formavam a "ponte".
+  [70, 130, 160, 190, 220, 250, 280].forEach((x, i) => itens.push(item(`recuo ${i + 1}`, x, 600 - i * 12)));
+  // Título centralizado na coluna direita, na mesma altura de texto da esquerda.
+  itens.push(item("titulo do texto esquerdo", 100, 780), item("Titulo Centralizado Direita", 360, 780));
+  const paginas = [1, 2, 3].map((n) => ({ numero: n, larguraPagina: LARGURA_PAGINA, alturaPagina: 842, itens: itens.map((i) => ({ ...i, x: i.x + n * 0.0001 })) }));
+  const { paginas: saida, deteccaoColunas } = reconstruirDocumentoPosicionado(paginas);
+  assert.equal(deteccaoColunas.totalColunas, 2);
+  const linhas = saida[0].texto.split("\n");
+  assert.match(linhas[0], /^CABECALHO ESQUERDO\s+LOGO DA BANCA$/, "linha de margem não é dividida por coluna");
+  const posicao = (t) => linhas.findIndex((l) => l.includes(t));
+  assert.ok(posicao("esquerda linha 6") < posicao("Titulo Centralizado Direita"), "título da direita vem depois de toda a coluna esquerda");
+  assert.ok(posicao("Titulo Centralizado Direita") < posicao("direita linha 1"));
+  assert.ok(!linhas.some((l) => /esquerda linha .*direita linha/.test(l)), "nenhuma linha mistura as duas colunas");
+});
+
+test("PB-B) linha só de espaço não vira linha em branco no meio do texto", () => {
+  const { paginas } = reconstruirDocumentoPosicionado([pagina(1, [item("primeira parte da frase", 40, 700), item(" ", 40, 688, 3), item("continua aqui", 40, 676)])]);
+  assert.equal(paginas[0].texto, "primeira parte da frase\ncontinua aqui");
+});
