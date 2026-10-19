@@ -22,6 +22,7 @@
 
 import { createHash } from "node:crypto";
 import { classificarDuplicidade, normalizarTexto } from "../deduplicar.mjs";
+import { causasDeExtracao } from "../score.mjs";
 
 export const MODOS = ["BASE_GLOBAL", "BASE_GLOBAL_COM_VINCULO"];
 const LETRAS = ["A", "B", "C", "D", "E"];
@@ -154,6 +155,56 @@ function resolverDocumentos(prova, retificacoes, existentes, provaExiste) {
   return { documentos, bloqueios };
 }
 
+// Liberação explícita de gate conservador (aprovacao.liberacoes): depois
+// de revisão humana, uma CAUSA heurística de um gate do staging pode ser
+// liberada para UMA questão — nunca o gate inteiro, nunca implicitamente.
+//   { "numero_original": 10, "gate": "EXTRACAO_OK",
+//     "motivo": "dependencia_texto_incerta", "justificativa": "..." }
+// Só causas em que o conteúdo gravado está íntegro e a dúvida se resolve
+// lendo a questão. Conteúdo faltante/corrompido (alternativa faltante,
+// texto-base ou expressão não reconstruídos...) nunca é liberável: exige
+// corrigir o staging.
+export const CAUSAS_LIBERAVEIS = {
+  EXTRACAO_OK: ["dependencia_texto_incerta", "alternativa_suspeita", "referencia_visual"],
+};
+const JUSTIFICATIVA_MINIMA = 20;
+
+function validarLiberacoes(liberacoes, numerosDoLote) {
+  const bloqueios = [];
+  const porNumero = new Map();
+  if (liberacoes === undefined) return { porNumero, bloqueios };
+  if (!Array.isArray(liberacoes)) return { porNumero, bloqueios: ["aprovacao.liberacoes precisa ser uma lista"] };
+  const vistas = new Set();
+  for (const [indice, l] of liberacoes.entries()) {
+    const rotulo = `liberação #${indice + 1}`;
+    const motivosDoGate = CAUSAS_LIBERAVEIS[l?.gate];
+    if (!Number.isInteger(l?.numero_original) || !numerosDoLote.has(l.numero_original)) bloqueios.push(`${rotulo}: numero_original ${l?.numero_original} não existe no lote`);
+    else if (!motivosDoGate) bloqueios.push(`${rotulo}: gate "${l?.gate}" não admite liberação explícita (liberáveis: ${Object.keys(CAUSAS_LIBERAVEIS).join(", ")})`);
+    else if (!motivosDoGate.includes(l.motivo)) bloqueios.push(`${rotulo}: motivo "${l.motivo}" não é liberável em ${l.gate} (liberáveis: ${motivosDoGate.join(", ")})`);
+    else if (typeof l.justificativa !== "string" || l.justificativa.trim().length < JUSTIFICATIVA_MINIMA) bloqueios.push(`${rotulo}: justificativa da revisão humana ausente ou curta demais`);
+    else if (vistas.has(`${l.numero_original}:${l.gate}:${l.motivo}`)) bloqueios.push(`${rotulo}: liberação repetida para nº ${l.numero_original} ${l.gate}/${l.motivo}`);
+    else {
+      vistas.add(`${l.numero_original}:${l.gate}:${l.motivo}`);
+      const lista = porNumero.get(l.numero_original) ?? [];
+      lista.push({ gate: l.gate, motivo: l.motivo, justificativa: l.justificativa.trim() });
+      porNumero.set(l.numero_original, lista);
+    }
+  }
+  return { porNumero, bloqueios };
+}
+
+// Gate falhando é liberado só se TODA causa presente estiver liberada
+// explicitamente; causa desconhecida (gate falso sem causa identificável)
+// nunca é liberada.
+function avaliarLiberacao(questao, gate, liberacoesDaQuestao) {
+  const doGate = liberacoesDaQuestao.filter((l) => l.gate === gate);
+  if (doGate.length === 0) return { liberado: false, aplicadas: [], pendentes: null };
+  const causas = gate === "EXTRACAO_OK" ? causasDeExtracao(questao).map((c) => c.codigo) : [];
+  const pendentes = causas.filter((c) => !doGate.some((l) => l.motivo === c));
+  const aplicadas = doGate.filter((l) => causas.includes(l.motivo));
+  return { liberado: causas.length > 0 && pendentes.length === 0, aplicadas, pendentes: causas.length > 0 ? pendentes : ["causa não identificada"] };
+}
+
 function validarAlternativas(questao, sequenciaEmbutida) {
   const alternativas = questao.alternativas ?? [];
   if (alternativas.length < 4) return "menos de 4 alternativas (A-D são obrigatórias)";
@@ -232,6 +283,8 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
 
   // ---- Questões ----
   const overrides = aprovacao.classificacao ?? {};
+  const { porNumero: liberacoesPorNumero, bloqueios: bloqueiosLiberacao } = validarLiberacoes(aprovacao.liberacoes, new Set(questoes.map((q) => q.numero_original)));
+  bloqueios.push(...bloqueiosLiberacao);
   const contagemNumeros = new Map();
   for (const q of questoes) contagemNumeros.set(q.numero_original, (contagemNumeros.get(q.numero_original) ?? 0) + 1);
   const enunciadosDoLote = new Map();
@@ -289,7 +342,18 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
       return item;
     }
     if (!etapas.PROVENIENCIA_OK) revisar("PROVENIENCIA_OK=false no staging");
-    if (!etapas.EXTRACAO_OK) revisar("EXTRACAO_OK=false no staging");
+    const liberacoesDaQuestao = liberacoesPorNumero.get(numero) ?? [];
+    const aplicadas = [];
+    if (!etapas.EXTRACAO_OK) {
+      const liberacao = avaliarLiberacao(questao, "EXTRACAO_OK", liberacoesDaQuestao);
+      aplicadas.push(...liberacao.aplicadas);
+      if (!liberacao.liberado) revisar(liberacao.pendentes ? `EXTRACAO_OK=false no staging — liberação explícita não cobre: ${liberacao.pendentes.join(", ")}` : "EXTRACAO_OK=false no staging");
+    }
+    // Liberação sem causa pendente correspondente = aprovação desatualizada
+    // (staging mudou depois da revisão humana): nunca é ignorada em silêncio.
+    const semUso = liberacoesDaQuestao.filter((l) => !aplicadas.includes(l));
+    if (semUso.length > 0) revisar(`liberação explícita sem causa pendente correspondente (${semUso.map((l) => `${l.gate}/${l.motivo}`).join(", ")}) — revisar o aprovacao.json`);
+    if (aplicadas.length > 0) item.liberacoes_aplicadas = aplicadas;
     if (!etapas.GABARITO_OK) revisar("GABARITO_OK=false no staging");
     if (!etapas.DEDUP_OK) revisar("DEDUP_OK=false no staging (snapshot)");
     if (!questao.enunciado || questao.enunciado.trim() === "") revisar("enunciado vazio");
@@ -347,6 +411,7 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
     anuladas: conta((q) => q.anulada),
     somente_globais: conta((q) => q.acao === "IMPORTAR" && q.curso_ids_aprovados.length === 0),
     documentos_novos: documentos.filter((d) => d.situacao === "NOVO").length,
+    ...(liberacoesPorNumero.size > 0 ? { liberadas_explicitamente: conta((q) => (q.liberacoes_aplicadas ?? []).length > 0) } : {}),
     ...(bloqueios.length > 0 ? { importar_potencial: conta((q) => q.acao_potencial === "IMPORTAR"), revisar_potencial: conta((q) => q.acao_potencial === "REVISAR"), ignorar_potencial: conta((q) => q.acao_potencial === "IGNORAR") } : {}),
     vinculos_por_curso: Object.fromEntries(vinculos.map((v) => [v.curso_slug, conta((q) => q.curso_ids_aprovados.includes(v.curso_id))])),
   };
@@ -361,6 +426,9 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
     documentos,
     bloqueios,
     vinculos,
+    // Revisão humana que liberou gates — no hash do manifesto aprovado
+    // (ausente quando não há liberação, para não mudar hashes antigos).
+    ...(aprovacao.liberacoes !== undefined ? { liberacoes_aprovadas: aprovacao.liberacoes } : {}),
     questoes: planejadas,
     resumo,
   };

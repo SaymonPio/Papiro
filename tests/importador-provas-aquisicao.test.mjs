@@ -359,6 +359,88 @@ test("K2) override de classificação no arquivo de aprovação libera questão 
   assert.ok(manifesto.questoes[1].motivos.some((m) => /não pertence à matéria/.test(m)));
 });
 
+// ---- Liberação explícita de gate conservador ----
+
+function comInterno(questao, interno) {
+  questao._interno = { ...questao._interno, ...interno };
+  questao.etapas.EXTRACAO_OK = false;
+  return questao;
+}
+const JUSTIFICATIVA = "revisão humana: a frase analisada está citada por inteiro no enunciado";
+const liberar = (numero, motivo, extras = {}) => ({ numero_original: numero, gate: "EXTRACAO_OK", motivo, justificativa: JUSTIFICATIVA, ...extras });
+
+test("LIB-A) dependência de texto incerta: sem liberação é REVISAR; liberada explicitamente vira IMPORTAR, grava e entra no hash", async () => {
+  const lote = () => [comInterno(questaoStaging(1), { dependencia_texto_incerta: "questão dentro do bloco do texto" }), questaoStaging(2)];
+  const sem = await executarAquisicao({ repo: criarRepositorioMemoria(), entrada: entradaBase(lote()), modo: "dry-run" });
+  assert.equal(sem.manifesto.questoes[0].acao, "REVISAR", "nunca libera implicitamente");
+  assert.deepEqual(sem.manifesto.questoes[0].motivos, ["EXTRACAO_OK=false no staging"]);
+
+  const repo = criarRepositorioMemoria();
+  const entrada = entradaBase(lote(), { aprovacao: { liberacoes: [liberar(1, "dependencia_texto_incerta")] } });
+  const resultado = await dryRunEApply(repo, entrada);
+  assert.equal(resultado.manifesto.questoes[0].acao, "IMPORTAR");
+  assert.deepEqual(resultado.manifesto.questoes[0].liberacoes_aplicadas, [{ gate: "EXTRACAO_OK", motivo: "dependencia_texto_incerta", justificativa: JUSTIFICATIVA }]);
+  assert.equal(resultado.manifesto.resumo.liberadas_explicitamente, 1);
+  assert.deepEqual(repo.banco.questoes.map((q) => q.numero_original), [1, 2]);
+  assert.notEqual(resultado.hash, sem.hash);
+
+  const outraJustificativa = entradaBase(lote(), { aprovacao: { liberacoes: [liberar(1, "dependencia_texto_incerta", { justificativa: `${JUSTIFICATIVA} (revisada)` })] } });
+  const { hash } = await executarAquisicao({ repo: criarRepositorioMemoria(), entrada: outraJustificativa, modo: "dry-run" });
+  assert.notEqual(hash, resultado.hash, "a justificativa aprovada faz parte do manifesto");
+});
+
+test("LIB-B) liberar uma causa nunca esconde outra: dependência liberada + referência visual pendente continua REVISAR", async () => {
+  const q = comInterno(questaoStaging(1), { dependencia_texto_incerta: "bloco do texto", referencia_visual: 'cita elemento visual ("Figura 1")' });
+  const { manifesto } = await executarAquisicao({ repo: criarRepositorioMemoria(), entrada: entradaBase([q], { aprovacao: { liberacoes: [liberar(1, "dependencia_texto_incerta")] } }), modo: "dry-run" });
+  assert.equal(manifesto.questoes[0].acao, "REVISAR");
+  assert.ok(manifesto.questoes[0].motivos.some((m) => /não cobre: referencia_visual/.test(m)));
+  assert.equal(manifesto.questoes[0].liberacoes_aplicadas.length, 1, "a liberação usada continua registrada");
+});
+
+test("LIB-C) causa não liberável ou desconhecida nunca é liberada: texto-base não confiável e EXTRACAO_OK=false sem causa identificável", async () => {
+  const corrompida = comInterno(questaoStaging(1), { textos_base: [{ id: "T1", confiavel: false, motivo: "ordem trocada" }], dependencia_texto_incerta: "x" });
+  const semCausa = questaoStaging(2, { etapas: { EXTRACAO_OK: false } });
+  const entrada = entradaBase([corrompida, semCausa], { aprovacao: { liberacoes: [liberar(1, "dependencia_texto_incerta"), liberar(2, "dependencia_texto_incerta")] } });
+  const { manifesto } = await executarAquisicao({ repo: criarRepositorioMemoria(), entrada, modo: "dry-run" });
+  assert.deepEqual(manifesto.questoes.map((q) => q.acao), ["REVISAR", "REVISAR"]);
+  assert.ok(manifesto.questoes[0].motivos.some((m) => /não cobre: texto_base_nao_confiavel/.test(m)));
+  assert.ok(manifesto.questoes[1].motivos.some((m) => /causa não identificada/.test(m)));
+  assert.equal(manifesto.bloqueios.length, 0);
+});
+
+test("LIB-D) aprovação malformada bloqueia o documento: gate não liberável, motivo não liberável, número fora do lote, justificativa curta, repetida", async () => {
+  const q = comInterno(questaoStaging(1), { dependencia_texto_incerta: "x" });
+  const casos = [
+    [{ ...liberar(1, "dependencia_texto_incerta"), gate: "GABARITO_OK" }, /não admite liberação/],
+    [liberar(1, "texto_base_nao_confiavel"), /não é liberável/],
+    [liberar(99, "dependencia_texto_incerta"), /não existe no lote/],
+    [liberar(1, "dependencia_texto_incerta", { justificativa: "ok" }), /justificativa/],
+  ];
+  for (const [liberacao, padrao] of casos) {
+    const { manifesto } = await executarAquisicao({ repo: criarRepositorioMemoria(), entrada: entradaBase([comInterno(questaoStaging(1), { dependencia_texto_incerta: "x" })], { aprovacao: { liberacoes: [liberacao] } }), modo: "dry-run" });
+    assert.ok(manifesto.bloqueios.some((b) => padrao.test(b)), `esperado bloqueio ${padrao}`);
+    assert.equal(manifesto.resumo.importar, 0);
+  }
+  const repetida = await executarAquisicao({ repo: criarRepositorioMemoria(), entrada: entradaBase([q], { aprovacao: { liberacoes: [liberar(1, "dependencia_texto_incerta"), liberar(1, "dependencia_texto_incerta")] } }), modo: "dry-run" });
+  assert.ok(repetida.manifesto.bloqueios.some((b) => /repetida/.test(b)));
+  const naoLista = await executarAquisicao({ repo: criarRepositorioMemoria(), entrada: entradaBase([q], { aprovacao: { liberacoes: { 1: "EXTRACAO_OK" } } }), modo: "dry-run" });
+  assert.ok(naoLista.manifesto.bloqueios.some((b) => /precisa ser uma lista/.test(b)));
+});
+
+test("LIB-E) liberação sem causa pendente é aprovação desatualizada (REVISAR); depois do apply a mesma aprovação não atrapalha a reexecução", async () => {
+  const desatualizada = await executarAquisicao({ repo: criarRepositorioMemoria(), entrada: entradaBase([questaoStaging(1)], { aprovacao: { liberacoes: [liberar(1, "alternativa_suspeita")] } }), modo: "dry-run" });
+  assert.equal(desatualizada.manifesto.questoes[0].acao, "REVISAR");
+  assert.ok(desatualizada.manifesto.questoes[0].motivos.some((m) => /sem causa pendente correspondente/.test(m)));
+
+  const repo = criarRepositorioMemoria();
+  const entrada = () => entradaBase([comInterno(questaoStaging(1), { dependencia_texto_incerta: "x" })], { aprovacao: { liberacoes: [liberar(1, "dependencia_texto_incerta")] } });
+  await dryRunEApply(repo, entrada());
+  const { manifesto } = await executarAquisicao({ repo, entrada: entrada(), modo: "dry-run" });
+  assert.equal(manifesto.bloqueios.length, 0);
+  assert.equal(manifesto.resumo.importar, 0);
+  assert.equal(manifesto.resumo.ja_importadas, 1);
+});
+
 test("L) vínculo implícito pela origem é proibido: COM_VINCULO sem matérias, COM_VINCULO sem vínculos e BASE_GLOBAL com vínculos bloqueiam", async () => {
   const repo = criarRepositorioMemoria();
   const q = [questaoStaging(1)];

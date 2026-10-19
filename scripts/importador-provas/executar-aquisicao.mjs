@@ -23,8 +23,12 @@
 // manual são aprovados):
 //   {
 //     "vinculos": [{ "curso": "brigada-militar-rs", "materias": [6, "Informática"] }],
-//     "classificacao": { "21": { "materia_id": 12, "assunto_id": 345 } }
+//     "classificacao": { "21": { "materia_id": 12, "assunto_id": 345 } },
+//     "liberacoes": [{ "numero_original": 10, "gate": "EXTRACAO_OK",
+//                      "motivo": "dependencia_texto_incerta", "justificativa": "<revisão humana>" }]
 //   }
+// liberacoes: libera UMA causa conservadora de um gate do staging para UMA
+// questão, depois de revisão humana (ver CAUSAS_LIBERAVEIS em planejar.mjs).
 // Matéria sem estrutura no curso nunca vira vínculo; nada é criado em
 // curso_materias/curso_conteudos/materias/editais.
 
@@ -116,6 +120,9 @@ function imprimirResumo(manifesto, hash, cabecalho) {
   for (const ret of manifesto.retificacoes_gabarito ?? []) console.log(`Retificação de gabarito aplicada (ordem ${ret.ordem}): ${ret.documento ?? "-"} [${ret.hash}]`);
   for (const doc of manifesto.documentos ?? []) console.log(`Documento ${doc.tipo} ordem ${doc.ordem}: ${doc.hash_sha256} [${doc.situacao}]`);
   console.log(`Ficariam somente globais: ${r.somente_globais}`);
+  for (const q of manifesto.questoes.filter((x) => x.liberacoes_aplicadas)) {
+    for (const l of q.liberacoes_aplicadas) console.log(`Liberação explícita nº ${q.numero_original}: ${l.gate}/${l.motivo} — ${l.justificativa}`);
+  }
   for (const v of manifesto.vinculos) {
     console.log(`Vínculos com ${v.curso_slug}: ${r.vinculos_por_curso[v.curso_slug]} (matérias aprovadas: ${v.materia_ids_aprovadas.join(", ") || "nenhuma"})`);
     for (const rej of v.materias_rejeitadas) console.log(`  REJEITADA "${rej.valor}": ${rej.motivo}`);

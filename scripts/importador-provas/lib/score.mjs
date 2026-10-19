@@ -2,25 +2,37 @@
 // (normalizar.mjs) + resultado da deduplicação (deduplicar.mjs). Só
 // classifica/relata — nunca decide inserir nada.
 
-function avaliarExtracao(questao) {
-  if (questao._interno.alternativa_faltante) return { ok: false, motivo: "alternativa faltante ou fora de ordem" };
-  if (questao.alternativas.length < 4) return { ok: false, motivo: "menos de 4 alternativas detectadas" };
-  if (!questao.enunciado || questao.enunciado.trim().length === 0) return { ok: false, motivo: "enunciado vazio" };
-  if (questao._interno.contagem_materia_divergente) {
-    return { ok: false, motivo: `contagem de questões do bloco "${questao._interno.materia_detectada}" não bate com a declarada no cabeçalho` };
+// TODAS as causas de falha de extração, na ordem de gravidade — o gate
+// reporta só a primeira, mas a liberação explícita (aquisicao/planejar.mjs)
+// precisa ver todas: liberar uma causa nunca pode esconder outra.
+export function causasDeExtracao(questao) {
+  const interno = questao._interno ?? {};
+  const causas = [];
+  if (interno.alternativa_faltante) causas.push({ codigo: "alternativa_faltante", motivo: "alternativa faltante ou fora de ordem" });
+  if ((questao.alternativas ?? []).length < 4) causas.push({ codigo: "menos_de_4_alternativas", motivo: "menos de 4 alternativas detectadas" });
+  if (!questao.enunciado || questao.enunciado.trim().length === 0) causas.push({ codigo: "enunciado_vazio", motivo: "enunciado vazio" });
+  if (interno.contagem_materia_divergente) {
+    causas.push({ codigo: "contagem_materia_divergente", motivo: `contagem de questões do bloco "${interno.materia_detectada}" não bate com a declarada no cabeçalho` });
   }
   // Conteúdo ausente ou possivelmente corrompido nunca fica pronto: o
   // aluno precisa conseguir responder só com o que será gravado.
-  const interno = questao._interno;
   const textoNaoConfiavel = (interno.textos_base ?? []).find((t) => !t.confiavel);
-  if (textoNaoConfiavel) return { ok: false, motivo: `texto-base ${textoNaoConfiavel.id} não reconstruído com fidelidade (${textoNaoConfiavel.motivo})` };
-  if (interno.dependencia_texto_incerta) return { ok: false, motivo: `dependência de texto-base incerta: ${interno.dependencia_texto_incerta}` };
-  if (interno.alternativa_suspeita) return { ok: false, motivo: interno.alternativa_suspeita };
-  if (interno.referencia_visual) return { ok: false, motivo: interno.referencia_visual };
+  if (textoNaoConfiavel) causas.push({ codigo: "texto_base_nao_confiavel", motivo: `texto-base ${textoNaoConfiavel.id} não reconstruído com fidelidade (${textoNaoConfiavel.motivo})` });
+  if (interno.dependencia_texto_incerta) causas.push({ codigo: "dependencia_texto_incerta", motivo: `dependência de texto-base incerta: ${interno.dependencia_texto_incerta}` });
+  if (interno.alternativa_suspeita) causas.push({ codigo: "alternativa_suspeita", motivo: interno.alternativa_suspeita });
+  if (interno.referencia_visual) causas.push({ codigo: "referencia_visual", motivo: interno.referencia_visual });
   if ((interno.alertas_expressao ?? []).length > 0) {
-    return { ok: false, motivo: `expressão matemática não reconstruída com confiança na página (${interno.alertas_expressao.map((a) => a.motivo).join("; ")})` };
+    causas.push({
+      codigo: "expressao_nao_reconstruida",
+      motivo: `expressão matemática não reconstruída com confiança na página (${interno.alertas_expressao.map((a) => a.motivo).join("; ")})`,
+    });
   }
-  return { ok: true, motivo: null };
+  return causas;
+}
+
+function avaliarExtracao(questao) {
+  const [primeira] = causasDeExtracao(questao);
+  return primeira ? { ok: false, motivo: primeira.motivo } : { ok: true, motivo: null };
 }
 
 function avaliarGabarito(questao) {

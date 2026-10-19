@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { calcularStatus } from "../scripts/importador-provas/lib/score.mjs";
+import { calcularStatus, causasDeExtracao } from "../scripts/importador-provas/lib/score.mjs";
 
 // PAPIRO — PoC do importador de provas: score/status final por questão.
 // Fixture 100% sintética — objetos já no formato normalizado (ver
@@ -104,4 +104,16 @@ test("K) proveniência incompleta -> REVISAO_MANUAL, motivo cita os campos ausen
   assert.equal(resultado.etapas.PROVENIENCIA_OK, false);
   assert.equal(resultado.status, "REVISAO_MANUAL");
   assert.ok(resultado.motivos.some((m) => m.includes("hash_gabarito ausente") && m.includes("fonte_url inválido")));
+});
+
+test("CAUSAS) causasDeExtracao lista TODAS as causas em ordem; o gate reporta só a primeira (mensagem inalterada)", () => {
+  const questao = questaoBase({
+    _interno: { ...questaoBase()._interno, dependencia_texto_incerta: "bloco do texto", referencia_visual: 'cita elemento visual ("Figura 1")' },
+  });
+  assert.deepEqual(causasDeExtracao(questao).map((c) => c.codigo), ["dependencia_texto_incerta", "referencia_visual"]);
+  const resultado = calcularStatus(questao, DEDUP_NOVA, [], PROVENIENCIA_COMPLETA);
+  assert.equal(resultado.etapas.EXTRACAO_OK, false);
+  assert.ok(resultado.motivos.includes("dependência de texto-base incerta: bloco do texto"));
+  assert.ok(!resultado.motivos.some((m) => m.includes("Figura 1")));
+  assert.deepEqual(causasDeExtracao(questaoBase()), []);
 });
