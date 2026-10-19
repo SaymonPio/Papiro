@@ -512,3 +512,20 @@ test("FGV-E) peça visual: \"Observe o cartum a seguir\" e \"Leia o texto a segu
   assert.match(questoes[1].referencia_visual, /só a fonte/);
   assert.equal(questoes[2].referencia_visual, null, "\"cartazes\" como assunto do texto não é peça visual");
 });
+
+test("FGV-F) comprimento da sequência de questões mede qual ordem de leitura recupera mais questões", async () => {
+  const { comprimentoDaSequenciaDeQuestoes } = await import("../scripts/importador-provas/lib/extrairQuestoes.mjs");
+  const bloco = (n) => [`QUESTÃO 0${n} – Enunciado ${n}.`, "A) a", "B) b", "C) c", "D) d"].join("\n");
+  assert.equal(comprimentoDaSequenciaDeQuestoes([{ numero: 1, texto: [1, 2, 3, 4].map(bloco).join("\n") }]), 4);
+  assert.equal(comprimentoDaSequenciaDeQuestoes([{ numero: 1, texto: [1, 3, 2, 4].map(bloco).join("\n") }]) < 4, true);
+});
+
+test("FGV-G) composição: título em maiúsculas já separado pelo detector de seções não gera aviso falso", () => {
+  const { questoes, avisos } = extrairQuestoesDoTexto(
+    [{ numero: 1, texto: ["LÍNGUA PORTUGUESA", "QUESTÃO 01 – Primeira.", "A) a", "B) b", "C) c", "D) d", "LEGISLAÇÃO", "QUESTÃO 02 – Segunda.", "A) a", "B) b", "C) c", "D) d", "QUESTÃO 03 – Terceira.", "A) a", "B) b", "C) c", "D) d"].join("\n") }],
+    { composicao: [{ materia: "Língua Portuguesa", inicio: 1, fim: 1 }, { materia: "Legislação", inicio: 2, fim: 3 }] },
+  );
+  assert.deepEqual(avisos, []);
+  assert.equal(questoes[0].alternativas.at(-1).texto, "d");
+  assert.deepEqual(questoes.map((q) => q.materia_detectada), ["Língua Portuguesa", "Legislação", "Legislação"]);
+});

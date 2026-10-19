@@ -224,3 +224,9 @@ test("PB-B) linha só de espaço não vira linha em branco no meio do texto", ()
   const { paginas } = reconstruirDocumentoPosicionado([pagina(1, [item("primeira parte da frase", 40, 700), item(" ", 40, 688, 3), item("continua aqui", 40, 676)])]);
   assert.equal(paginas[0].texto, "primeira parte da frase\ncontinua aqui");
 });
+
+test("PB-C) leitura forçada em 1 coluna: ordem estritamente de cima para baixo, mesmo com inícios de linha espalhados", () => {
+  const itens = [item("terceira linha", 300, 676), item("primeira linha", 40, 700), item("segunda linha", 200, 688)];
+  const { paginas } = reconstruirDocumentoPosicionado([pagina(1, itens)], { umaColuna: true });
+  assert.equal(paginas[0].texto, "primeira linha\nsegunda linha\nterceira linha");
+});

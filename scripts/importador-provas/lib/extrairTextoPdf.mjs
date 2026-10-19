@@ -17,6 +17,7 @@
 import { PDFParse } from "pdf-parse";
 import { extrairTextoPdfPosicionado, lerItensDoPdf } from "./extrairTextoPdfPosicionado.mjs";
 import { alertasDeExpressao, aplicarExpressoesAoTexto, detectarExpressoes } from "./expressoesPdf.mjs";
+import { comprimentoDaSequenciaDeQuestoes } from "./extrairQuestoes.mjs";
 
 const MEDIA_MINIMA_CARACTERES_POR_PAGINA = 20;
 
@@ -71,7 +72,17 @@ async function extrairTextoPdfAuto(caminhoArquivoOuBuffer) {
   if (totalColunas > 1 && confidence === "alta") {
     return resultadoPosicional;
   }
-  return extrairTextoPdfLinear(caminhoArquivoOuBuffer);
+  // Ordem linear do PDF que não segue a ordem visual (checado numa prova
+  // real: Fundatec/GM Porto Alegre 2025, 1 coluna, questões saindo
+  // 1, 4, 2, 5, 3...): a leitura geométrica de 1 coluna só substitui a
+  // linear quando recupera uma sequência de questões MAIOR — empate fica
+  // com o caminho linear já validado.
+  const linear = await extrairTextoPdfLinear(caminhoArquivoOuBuffer);
+  const umaColuna = await extrairTextoPdfPosicionado(caminhoArquivoOuBuffer, { umaColuna: true });
+  if (comprimentoDaSequenciaDeQuestoes(umaColuna.paginas) > comprimentoDaSequenciaDeQuestoes(linear.paginas)) {
+    return { ...umaColuna, estrategiaEscolhida: "posicional-1-coluna" };
+  }
+  return linear;
 }
 
 export async function extrairTextoPdf(caminhoArquivoOuBuffer, opcoes = {}) {

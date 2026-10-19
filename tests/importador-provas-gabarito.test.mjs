@@ -197,3 +197,8 @@ test("T) grade posicional com várias faixas por cargo: a linha de letras nunca 
   assert.deepEqual(doBloco("CARGO X - TIPO 1"), ["1A", "2B", "3C", "4D", "5E", "6A"]);
   assert.deepEqual(doBloco("CARGO Y - TIPO 1"), ["1E", "2D", "3C", "4B", "5A", "6E"]);
 });
+
+test("U) grade posicional com \"*\" (anulada) na linha de respostas: a faixa é lida inteira e o \"*\" vira anulada", () => {
+  const { gabaritos } = extrairGabaritoDoTexto(["01 02 03", "A C E", "04 05 06", "B * D"].join("\n"));
+  assert.deepEqual(gabaritos.map((g) => `${g.numero}${g.anulada ? "*" : g.alternativa_correta}`), ["1A", "2C", "3E", "4B", "5*", "6D"]);
+});

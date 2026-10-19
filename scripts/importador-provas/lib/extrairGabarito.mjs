@@ -57,7 +57,10 @@ function linhaEhSomenteNumeros(linha) {
 function linhaEhSomenteRespostas(linha, quantidadeEsperada) {
   const tokens = tokensDaLinha(linha);
   if (tokens.length !== quantidadeEsperada) return false;
-  return tokens.every((t) => /^(?:[A-E]|X)$/i.test(t));
+  // "*" = anulada, como na grade tabular (legenda "*Questão anulada" —
+  // checado num gabarito real: Fundatec/GM Porto Alegre 2025, faixas 21–40
+  // e 41–60 com "*" eram descartadas inteiras).
+  return tokens.every((t) => /^(?:[A-E]|X|\*)$/i.test(t));
 }
 
 // Varre linha a linha procurando pares (linha-de-números, linha-de-
@@ -89,7 +92,7 @@ function extrairBlocosPosicionais(linhas) {
         for (let j = 0; j < numeros.length; j++) {
           const numero = numeros[j];
           const letra = respostas[j].toUpperCase();
-          const anulada = letra === "X";
+          const anulada = letra === "X" || letra === "*";
           const duplicadoNoBloco = numerosVistosNoBloco.has(numero);
           numerosVistosNoBloco.add(numero);
           entradas.push({

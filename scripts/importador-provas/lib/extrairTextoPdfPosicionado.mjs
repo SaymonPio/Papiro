@@ -290,10 +290,15 @@ export function reconstruirDocumentoPosicionado(paginasDeItens, opcoes = {}) {
   }));
   const larguraReferencia = Math.max(...dadosPorPagina.map((p) => p.larguraPagina), 0);
 
-  const { clusters, deteccao, tolerancia, porPicos } = detectarColunasDoDocumento(
-    dadosPorPagina.map((p) => p.candidatos),
-    larguraReferencia,
-  );
+  // umaColuna: leitura geométrica de cima para baixo, sem divisão por
+  // colunas — usada pela estratégia "auto" quando a ordem linear do PDF não
+  // segue a ordem visual de um documento de 1 coluna.
+  const { clusters, deteccao, tolerancia, porPicos } = opcoes.umaColuna
+    ? { clusters: [{ min: 0, max: larguraReferencia, tamanho: 0 }], deteccao: { confidence: "alta", motivo: "uma coluna (forçado)" }, tolerancia: larguraReferencia * 0.03, porPicos: false }
+    : detectarColunasDoDocumento(
+        dadosPorPagina.map((p) => p.candidatos),
+        larguraReferencia,
+      );
 
   const paginas = [];
   for (const dados of dadosPorPagina) {
@@ -393,6 +398,9 @@ export async function extrairTextoPdfPosicionado(caminhoArquivoOuBuffer, opcoes 
   const resultado = reconstruirDocumentoPosicionado(paginasDeItens, opcoes);
   resultado.paginas = resultado.paginas.map((pagina, i) => ({
     ...pagina,
+    // Em 1 coluna a geometria é a própria ordem de leitura: os itens servem
+    // à reconstrução de textos-base, como na estratégia linear.
+    ...(opcoes.umaColuna ? { itens: paginasDeItens[i].itens } : {}),
     expressoes: expressoesPorPagina[i].expressoes,
     alertas: alertasDeExpressao(pagina.numero, expressoesPorPagina[i].incertas),
   }));

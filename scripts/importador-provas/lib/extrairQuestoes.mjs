@@ -194,6 +194,13 @@ function candidatosDoMarcador(textoCompleto, marcador) {
 // formam sequência mais longa que a das questões.
 const MARCADOR_QUESTAO_ISOLADO = /(?:^|\n)[ \t]*(\d{1,3})[ \t]*(?=\n)/g;
 
+// Tamanho da maior sequência +1 de marcadores de questão — usado pela
+// estratégia "auto" para comparar duas ordens de leitura do mesmo PDF.
+export function comprimentoDaSequenciaDeQuestoes(paginas) {
+  const { paginas: limpas } = removerLinhasCorridas(paginas);
+  return selecionarSequenciaValida(encontrarCandidatosQuestao(limpas.map((p) => p.texto ?? "").join("\n"))).length;
+}
+
 function encontrarCandidatosQuestao(textoCompleto) {
   const explicitos = candidatosDoMarcador(textoCompleto, MARCADOR_QUESTAO_EXPLICITO);
   if (selecionarSequenciaValida(explicitos).length >= MINIMO_SEQUENCIA_EXPLICITA) return explicitos;
@@ -574,6 +581,9 @@ export function extrairQuestoesDoTexto(paginasOriginais, opcoes = {}) {
     for (let i = 1; i < sequencia.length; i++) {
       const secao = secaoDaComposicao(composicao, sequencia[i].numeroImpresso);
       if (!secao || secao.inicio !== sequencia[i].numeroImpresso) continue;
+      // Título já separado da questão anterior (título de seção em
+      // maiúsculas, tratado acima): nada a cortar.
+      if (normalizarTitulo(textoCompleto.slice(fins[i - 1], sequencia[i].offsetMarcador)).includes(normalizarTitulo(secao.materia))) continue;
       const corte = cortarTituloDoFim(textoCompleto, sequencia[i - 1].inicioSpan, fins[i - 1], secao.materia);
       if (corte === null) avisos.push(`título da seção "${secao.materia}" não encontrado antes da questão ${secao.inicio} — nada cortado`);
       else fins[i - 1] = corte;
