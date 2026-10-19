@@ -20,12 +20,26 @@ export function causasDeExtracao(questao) {
   if (textoNaoConfiavel) causas.push({ codigo: "texto_base_nao_confiavel", motivo: `texto-base ${textoNaoConfiavel.id} não reconstruído com fidelidade (${textoNaoConfiavel.motivo})` });
   if (interno.dependencia_texto_incerta) causas.push({ codigo: "dependencia_texto_incerta", motivo: `dependência de texto-base incerta: ${interno.dependencia_texto_incerta}` });
   if (interno.alternativa_suspeita) causas.push({ codigo: "alternativa_suspeita", motivo: interno.alternativa_suspeita });
-  if (interno.referencia_visual) causas.push({ codigo: "referencia_visual", motivo: interno.referencia_visual });
+  // Referência a peça visual resolvida por mídia extraída (MIDIA_OK) deixa
+  // de ser falha de extração; destaque tipográfico nunca é resolvido assim.
+  if (interno.referencia_visual && !interno.referencia_visual_resolvida) causas.push({ codigo: "referencia_visual", motivo: interno.referencia_visual });
   if ((interno.alertas_expressao ?? []).length > 0) {
     causas.push({
       codigo: "expressao_nao_reconstruida",
       motivo: `expressão matemática não reconstruída com confiança na página (${interno.alertas_expressao.map((a) => a.motivo).join("; ")})`,
     });
+  }
+  return causas;
+}
+
+// Causas de MIDIA_OK=false, gravadas no staging por lib/midias.mjs
+// (resolverMidias -> anexarMidias). Questão sem dependência visual e sem
+// figura não tem causa.
+export function causasDeMidia(questao) {
+  const interno = questao._interno ?? {};
+  const causas = [...(interno.midias_causas ?? [])];
+  if (interno.dependencia_midia && (interno.midias ?? []).length === 0 && causas.length === 0) {
+    causas.push({ codigo: "midia_ausente", motivo: "a questão cita peça visual, mas nenhuma figura foi encontrada no PDF" });
   }
   return causas;
 }
@@ -73,6 +87,7 @@ export function calcularStatus(questao, resultadoDedup, bloqueiosGlobais, proven
   const classificacao = avaliarClassificacao(questao);
   const dedup = avaliarDedup(resultadoDedup);
   const origem = avaliarProveniencia(proveniencia);
+  const [causaMidia] = causasDeMidia(questao);
 
   const bloqueiosDestaQuestao = bloqueiosGlobais.filter(
     (b) => b.numero === undefined || b.numero === questao.numero_original,
@@ -84,15 +99,16 @@ export function calcularStatus(questao, resultadoDedup, bloqueiosGlobais, proven
     CLASSIFICACAO_OK: classificacao.ok,
     DEDUP_OK: dedup.ok,
     PROVENIENCIA_OK: origem.ok,
+    MIDIA_OK: !causaMidia,
   };
 
-  const motivos = [extracao.motivo, gabarito.motivo, classificacao.motivo, dedup.motivo, origem.motivo, ...bloqueiosDestaQuestao.map((b) => b.mensagem)].filter(Boolean);
+  const motivos = [extracao.motivo, gabarito.motivo, classificacao.motivo, dedup.motivo, origem.motivo, causaMidia?.motivo, ...bloqueiosDestaQuestao.map((b) => b.mensagem)].filter(Boolean);
 
   // CLASSIFICACAO_OK não bloqueia por si só (classificação incerta é
   // esperada e normal — vai para revisão, mas não torna a questão
   // "quebrada"). Extração, gabarito, deduplicação, proveniência e
   // qualquer bloqueio de junção, sim.
-  const pronta = extracao.ok && gabarito.ok && dedup.ok && origem.ok && bloqueiosDestaQuestao.length === 0;
+  const pronta = extracao.ok && gabarito.ok && dedup.ok && origem.ok && !causaMidia && bloqueiosDestaQuestao.length === 0;
 
   return {
     ...questao,

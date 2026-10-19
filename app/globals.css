@@ -2513,6 +2513,44 @@ footer > small {
   white-space: pre-line;
 }
 
+/* Mídia da questão (figura/gráfico) dentro do enunciado — EnunciadoComMidias.tsx. A largura/altura
+   intrínsecas vêm como atributos do <img>; aqui só reduz em tela estreita (nunca estica) e mantém a
+   proporção. */
+.question-card .question-media {
+  display: block;
+  margin: 14px 0 16px;
+  white-space: normal;
+}
+
+.question-card .question-media img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.question-card .question-media-credit {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  opacity: 0.72;
+}
+
+.question-card .question-media-unavailable {
+  display: block;
+  max-width: 560px;
+  padding: 12px 14px;
+  border: 1px dashed currentColor;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.45;
+  opacity: 0.85;
+}
+
 .answer-list {
   display: grid;
   gap: 12px;

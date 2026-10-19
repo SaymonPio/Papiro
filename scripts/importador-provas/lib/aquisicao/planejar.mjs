@@ -22,7 +22,7 @@
 
 import { createHash } from "node:crypto";
 import { classificarDuplicidade, normalizarTexto } from "../deduplicar.mjs";
-import { causasDeExtracao } from "../score.mjs";
+import { causasDeExtracao, causasDeMidia } from "../score.mjs";
 
 export const MODOS = ["BASE_GLOBAL", "BASE_GLOBAL_COM_VINCULO"];
 const LETRAS = ["A", "B", "C", "D", "E"];
@@ -166,7 +166,12 @@ function resolverDocumentos(prova, retificacoes, existentes, provaExiste) {
 // corrigir o staging.
 export const CAUSAS_LIBERAVEIS = {
   EXTRACAO_OK: ["dependencia_texto_incerta", "alternativa_suspeita", "referencia_visual"],
+  // Figura achada na região da questão sem o texto citá-la: a revisão
+  // humana confirma que ela pertence à questão. Mídia ausente, posse
+  // ambígua, composição ou posição incertas exigem corrigir o staging.
+  MIDIA_OK: ["midia_sem_referencia"],
 };
+const CAUSAS_POR_GATE = { EXTRACAO_OK: causasDeExtracao, MIDIA_OK: causasDeMidia };
 const JUSTIFICATIVA_MINIMA = 20;
 
 function validarLiberacoes(liberacoes, numerosDoLote) {
@@ -199,10 +204,40 @@ function validarLiberacoes(liberacoes, numerosDoLote) {
 function avaliarLiberacao(questao, gate, liberacoesDaQuestao) {
   const doGate = liberacoesDaQuestao.filter((l) => l.gate === gate);
   if (doGate.length === 0) return { liberado: false, aplicadas: [], pendentes: null };
-  const causas = gate === "EXTRACAO_OK" ? causasDeExtracao(questao).map((c) => c.codigo) : [];
+  const causas = (CAUSAS_POR_GATE[gate]?.(questao) ?? []).map((c) => c.codigo);
   const pendentes = causas.filter((c) => !doGate.some((l) => l.motivo === c));
   const aplicadas = doGate.filter((l) => causas.includes(l.motivo));
   return { liberado: causas.length > 0 && pendentes.length === 0, aplicadas, pendentes: causas.length > 0 ? pendentes : ["causa não identificada"] };
+}
+
+// Direito de uso de mídia (aprovacao.direitos_midia): a extração marca
+// peça de terceiro (charge, foto, cartaz, crédito...) como
+// REVISAO_DIREITOS; só uma decisão humana explícita, por questão E por
+// arquivo (sha256), a libera. Crédito nunca é permissão.
+//   { "numero_original": 2, "sha256": "<64 hex>", "direito_uso": "LICENCIADO",
+//     "justificativa": "..." }
+export const TIPOS_MIDIA = ["FIGURA", "GRAFICO", "TABELA", "MAPA", "CHARGE"];
+const DIREITOS_DECIDIVEIS = ["OFICIAL_PROVA", "LICENCIADO"];
+
+function validarDecisoesDeDireito(decisoes, numerosDoLote) {
+  const bloqueios = [];
+  const porNumero = new Map();
+  if (decisoes === undefined) return { porNumero, bloqueios };
+  if (!Array.isArray(decisoes)) return { porNumero, bloqueios: ["aprovacao.direitos_midia precisa ser uma lista"] };
+  const vistas = new Set();
+  for (const [indice, d] of decisoes.entries()) {
+    const rotulo = `decisão de direito #${indice + 1}`;
+    if (!Number.isInteger(d?.numero_original) || !numerosDoLote.has(d.numero_original)) bloqueios.push(`${rotulo}: numero_original ${d?.numero_original} não existe no lote`);
+    else if (!/^[0-9a-f]{64}$/.test(d.sha256 ?? "")) bloqueios.push(`${rotulo}: sha256 da mídia ausente ou inválido`);
+    else if (!DIREITOS_DECIDIVEIS.includes(d.direito_uso)) bloqueios.push(`${rotulo}: direito_uso "${d.direito_uso}" inválido (use ${DIREITOS_DECIDIVEIS.join(" ou ")})`);
+    else if (typeof d.justificativa !== "string" || d.justificativa.trim().length < JUSTIFICATIVA_MINIMA) bloqueios.push(`${rotulo}: justificativa ausente ou curta demais`);
+    else if (vistas.has(`${d.numero_original}:${d.sha256}`)) bloqueios.push(`${rotulo}: decisão repetida`);
+    else {
+      vistas.add(`${d.numero_original}:${d.sha256}`);
+      porNumero.set(d.numero_original, [...(porNumero.get(d.numero_original) ?? []), { sha256: d.sha256, direito_uso: d.direito_uso, justificativa: d.justificativa.trim() }]);
+    }
+  }
+  return { porNumero, bloqueios };
 }
 
 function validarAlternativas(questao, sequenciaEmbutida) {
@@ -249,7 +284,7 @@ function resolverClassificacao(questao, override, contexto) {
   return { materiaId, assuntoId, status, motivo: null };
 }
 
-export function planejarAquisicao({ modo, proveniencia, questoes, contexto, aprovacao = {} }) {
+export function planejarAquisicao({ modo, proveniencia, questoes, contexto, aprovacao = {}, midiasVerificadas = null }) {
   const bloqueios = [];
   if (!MODOS.includes(modo)) bloqueios.push(`modo inválido "${modo}" (use ${MODOS.join(" ou ")})`);
 
@@ -285,6 +320,8 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
   const overrides = aprovacao.classificacao ?? {};
   const { porNumero: liberacoesPorNumero, bloqueios: bloqueiosLiberacao } = validarLiberacoes(aprovacao.liberacoes, new Set(questoes.map((q) => q.numero_original)));
   bloqueios.push(...bloqueiosLiberacao);
+  const { porNumero: direitosPorNumero, bloqueios: bloqueiosDireitos } = validarDecisoesDeDireito(aprovacao.direitos_midia, new Set(questoes.map((q) => q.numero_original)));
+  bloqueios.push(...bloqueiosDireitos);
   const contagemNumeros = new Map();
   for (const q of questoes) contagemNumeros.set(q.numero_original, (contagemNumeros.get(q.numero_original) ?? 0) + 1);
   const enunciadosDoLote = new Map();
@@ -344,10 +381,13 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
     if (!etapas.PROVENIENCIA_OK) revisar("PROVENIENCIA_OK=false no staging");
     const liberacoesDaQuestao = liberacoesPorNumero.get(numero) ?? [];
     const aplicadas = [];
-    if (!etapas.EXTRACAO_OK) {
-      const liberacao = avaliarLiberacao(questao, "EXTRACAO_OK", liberacoesDaQuestao);
+    // MIDIA_OK ausente (staging anterior ao suporte a mídias) = sem mídia.
+    for (const gate of ["EXTRACAO_OK", "MIDIA_OK"]) {
+      const falhou = gate === "EXTRACAO_OK" ? !etapas.EXTRACAO_OK : etapas.MIDIA_OK === false;
+      if (!falhou) continue;
+      const liberacao = avaliarLiberacao(questao, gate, liberacoesDaQuestao);
       aplicadas.push(...liberacao.aplicadas);
-      if (!liberacao.liberado) revisar(liberacao.pendentes ? `EXTRACAO_OK=false no staging — liberação explícita não cobre: ${liberacao.pendentes.join(", ")}` : "EXTRACAO_OK=false no staging");
+      if (!liberacao.liberado) revisar(liberacao.pendentes ? `${gate}=false no staging — liberação explícita não cobre: ${liberacao.pendentes.join(", ")}` : `${gate}=false no staging${gate === "MIDIA_OK" ? ` (${causasDeMidia(questao).map((c) => c.motivo).join("; ")})` : ""}`);
     }
     // Liberação sem causa pendente correspondente = aprovação desatualizada
     // (staging mudou depois da revisão humana): nunca é ignorada em silêncio.
@@ -360,6 +400,44 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
     const problemaAlternativas = validarAlternativas(questao, contexto.sequenciaEmbutida ?? new Set());
     if (problemaAlternativas) revisar(problemaAlternativas);
     if (classificacao.motivo) revisar(classificacao.motivo);
+
+    // Mídias: o arquivo no staging precisa ter EXATAMENTE o hash
+    // registrado; direito de publicação precisa estar resolvido; o banco
+    // precisa ter a infraestrutura (questao_midias + bucket).
+    const midiasStaging = questao._interno?.midias ?? [];
+    if (midiasStaging.length > 0) {
+      const decisoes = direitosPorNumero.get(numero) ?? [];
+      item.midias = midiasStaging.map((m) => {
+        const decisao = decisoes.find((d) => d.sha256 === m.sha256);
+        return {
+          ordem: m.ordem,
+          tipo: m.tipo,
+          sha256: m.sha256 ?? null,
+          mime_type: m.mime_type,
+          storage_path: m.storage_path ?? null,
+          arquivo: m.arquivo ?? null,
+          largura: m.largura,
+          altura: m.altura,
+          pagina_origem: m.pagina_origem,
+          ancora_texto: m.ancora_texto ?? null,
+          legenda: m.legenda ?? null,
+          alt_text: m.alt_text,
+          credito: m.credito ?? null,
+          direito_uso: decisao?.direito_uso ?? m.direito_uso,
+          origem_descricao: m.origem_descricao ?? null,
+        };
+      });
+      for (const m of item.midias) {
+        if (!m.sha256 || !m.arquivo) revisar(`mídia ${m.ordem}: sem arquivo/hash no staging`);
+        else if (midiasVerificadas?.get(m.arquivo) !== m.sha256) revisar(`mídia ${m.ordem}: arquivo ausente ou hash divergente do registrado no staging`);
+        if (!TIPOS_MIDIA.includes(m.tipo)) revisar(`mídia ${m.ordem}: tipo "${m.tipo}" inválido`);
+        if (m.direito_uso === "REVISAO_DIREITOS") revisar(`mídia ${m.ordem} (${m.tipo}) sem direito de publicação (REVISAO_DIREITOS) — decisão explícita em aprovacao.direitos_midia`);
+      }
+      if (!contexto.infraMidias) revisar("infraestrutura de mídias ausente no banco (questao_midias / bucket questao-midias) — aplicar a migration antes");
+    }
+    for (const d of direitosPorNumero.get(numero) ?? []) {
+      if (!midiasStaging.some((m) => m.sha256 === d.sha256)) revisar(`decisão de direito de uso sem mídia correspondente (${d.sha256.slice(0, 12)}…) — revisar o aprovacao.json`);
+    }
 
     if (dedup.status === "duplicada") {
       if (item.acao === "IMPORTAR") ignorar(`duplicada de questoes.id=${dedup.match_id} já existente no banco`);
@@ -412,6 +490,7 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
     somente_globais: conta((q) => q.acao === "IMPORTAR" && q.curso_ids_aprovados.length === 0),
     documentos_novos: documentos.filter((d) => d.situacao === "NOVO").length,
     ...(liberacoesPorNumero.size > 0 ? { liberadas_explicitamente: conta((q) => (q.liberacoes_aplicadas ?? []).length > 0) } : {}),
+    ...(planejadas.some((q) => q.midias) ? { com_midia: conta((q) => Boolean(q.midias)), midias_importar: planejadas.filter((q) => q.acao === "IMPORTAR").reduce((s, q) => s + (q.midias?.length ?? 0), 0) } : {}),
     ...(bloqueios.length > 0 ? { importar_potencial: conta((q) => q.acao_potencial === "IMPORTAR"), revisar_potencial: conta((q) => q.acao_potencial === "REVISAR"), ignorar_potencial: conta((q) => q.acao_potencial === "IGNORAR") } : {}),
     vinculos_por_curso: Object.fromEntries(vinculos.map((v) => [v.curso_slug, conta((q) => q.curso_ids_aprovados.includes(v.curso_id))])),
   };
@@ -429,6 +508,7 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
     // Revisão humana que liberou gates — no hash do manifesto aprovado
     // (ausente quando não há liberação, para não mudar hashes antigos).
     ...(aprovacao.liberacoes !== undefined ? { liberacoes_aprovadas: aprovacao.liberacoes } : {}),
+    ...(aprovacao.direitos_midia !== undefined ? { direitos_midia_aprovados: aprovacao.direitos_midia } : {}),
     questoes: planejadas,
     resumo,
   };

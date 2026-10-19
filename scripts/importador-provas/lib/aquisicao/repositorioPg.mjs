@@ -8,8 +8,17 @@
 // confirmar/desfazer); o dry-run abre a transação READ ONLY, então nem
 // um bug no planejador conseguiria escrever.
 
+const BUCKET_MIDIAS = "questao-midias";
+
 export function criarRepositorioPg(client) {
   let aberta = false;
+  // questao_midias só existe depois da migration 20261019120000; sem ela o
+  // repositório se comporta exatamente como antes.
+  let temTabelaMidias = null;
+  const tabelaMidias = async () => {
+    temTabelaMidias ??= (await client.query("select to_regclass('public.questao_midias') is not null as existe")).rows[0].existe;
+    return temTabelaMidias;
+  };
 
   return {
     async iniciar({ somenteLeitura, chaveLock = null }) {
@@ -97,7 +106,10 @@ export function criarRepositorioPg(client) {
         }
       }
 
+      const infraMidias = (await tabelaMidias()) && (await client.query("select exists (select 1 from storage.buckets where id = $1) as existe", [BUCKET_MIDIAS])).rows[0].existe;
+
       return {
+        infraMidias,
         provaPorHash: porHash ? { ...porHash, id: Number(porHash.id) } : null,
         provaPorChaveNatural: porChave ? { ...porChave, id: Number(porChave.id) } : null,
         numerosJaImportados,
@@ -148,6 +160,35 @@ export function criarRepositorioPg(client) {
       );
     },
 
+    async inserirMidia(m) {
+      await client.query(
+        `insert into public.questao_midias (questao_id, ordem, tipo, sha256, mime_type, storage_path, largura, altura, prova_id, pagina_origem,
+                                            ancora_texto, legenda, alt_text, credito, direito_uso, origem_descricao)
+         values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`,
+        [m.questao_id, m.ordem, m.tipo, m.sha256, m.mime_type, m.storage_path, m.largura, m.altura, m.prova_id, m.pagina_origem, m.ancora_texto, m.legenda, m.alt_text, m.credito, m.direito_uso, m.origem_descricao],
+      );
+    },
+
+    // Objetos do bucket (lidos de storage.objects — visíveis a esta
+    // transação assim que o Storage confirma o envio): path -> bytes.
+    async objetosMidia(paths) {
+      const { rows } = await client.query("select name, (metadata->>'size')::bigint as tamanho from storage.objects where bucket_id = $1 and name = any($2::text[])", [BUCKET_MIDIAS, paths]);
+      return new Map(rows.map((r) => [r.name, Number(r.tamanho)]));
+    },
+
+    async midiaReferenciada(sha) {
+      if (!(await tabelaMidias())) return false;
+      return (await client.query("select exists (select 1 from public.questao_midias where sha256 = $1) as existe", [sha])).rows[0].existe;
+    },
+
+    // Lock de SESSÃO (não de transação): cobre envio + transação + limpeza.
+    async bloquearMidias() {
+      await client.query("select pg_advisory_lock(hashtextextended('questao-midias', 0))");
+    },
+    async liberarMidias() {
+      await client.query("select pg_advisory_unlock(hashtextextended('questao-midias', 0))");
+    },
+
     async inserirVinculo(cursoId, questaoId) {
       await client.query("insert into public.curso_questoes (curso_id, questao_id) values ($1, $2)", [cursoId, questaoId]);
     },
@@ -165,9 +206,13 @@ export function criarRepositorioPg(client) {
       );
       const { rows: vinculos } = await client.query("select curso_id, questao_id from public.curso_questoes where questao_id = any($1::bigint[])", [questaoIds]);
       const { rows: documentos } = await client.query("select tipo, ordem, hash_sha256 from public.prova_documentos where prova_id = $1", [provaId]);
+      const midias = (await tabelaMidias())
+        ? (await client.query("select questao_id, ordem, sha256, storage_path, direito_uso from public.questao_midias where questao_id = any($1::bigint[])", [questaoIds])).rows.map((m) => ({ ...m, questao_id: Number(m.questao_id) }))
+        : [];
       return {
         prova,
         documentos,
+        midias,
         questoesDaProva: questoes.map((q) => ({ ...q, id: Number(q.id) })),
         vinculos: vinculos.map((v) => ({ curso_id: v.curso_id, questao_id: Number(v.questao_id) })),
       };
@@ -184,6 +229,7 @@ export function criarRepositorioPg(client) {
            (select count(*) from public.alternativas)::int as alternativas,
            (select count(*) from public.curso_questoes)::int as curso_questoes`,
       );
+      if (await tabelaMidias()) rows[0].questao_midias = (await client.query("select count(*)::int as n from public.questao_midias")).rows[0].n;
       return rows[0];
     },
 

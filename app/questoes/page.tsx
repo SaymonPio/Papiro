@@ -13,6 +13,9 @@ import {
   podeIniciarMissaoAutomaticamente,
 } from "@/utils/missao-cronograma.mjs";
 import { createClient } from "@/utils/supabase/client";
+import EnunciadoComMidias from "@/components/questoes/EnunciadoComMidias";
+import { aplicarUrlsAssinadas, interpretarMetadadosMidias, menorExpiracaoMidias, type MidiaQuestao } from "@/components/questoes/midiasQuestao";
+import { ARTE_MARGEM_RENOVACAO_MS, podeRenovar, type EstadoRenovacao } from "@/components/teoria/arteQuadrinho";
 import { useSessaoTempo, encerrarTeoriaAbertaDaMissao } from "@/components/tempo-estudo/useSessaoTempo";
 import CronometroEstudo from "@/components/tempo-estudo/CronometroEstudo";
 
@@ -588,6 +591,51 @@ export default function Questoes() {
     }
     carregarAssuntos();
   }, [materiaSelecionada]);
+
+  // Mídias (figuras/gráficos) das questões da sessão: metadados pela RLS de questao_midias (fonte de verdade
+  // do que existe) + URLs assinadas pela Edge assinar-questao-midias. Erro na leitura = sem mídia (a sessão
+  // nunca quebra); mídia sem URL aparece como "indisponível", nunca some (midiasQuestao.ts).
+  const [midiasPorQuestao, setMidiasPorQuestao] = useState<Map<number, MidiaQuestao[]>>(() => new Map());
+  const [versaoMidias, setVersaoMidias] = useState(0);
+  const renovacaoMidias = useRef<EstadoRenovacao>({ tentativas: 0, ultimaEm: null });
+  useEffect(() => {
+    const ids = questoes.map((q) => q.id);
+    // Sem questões não há o que buscar; o mapa é sempre lido pelo id da questão atual, então entrada antiga
+    // nunca aparece em outra questão.
+    if (ids.length === 0) return;
+    let cancelado = false;
+    void (async () => {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("questao_midias")
+        .select("questao_id, ordem, tipo, largura, altura, alt_text, legenda, credito, ancora_texto")
+        .in("questao_id", ids);
+      if (cancelado) return;
+      const metadados = error ? new Map<number, MidiaQuestao[]>() : interpretarMetadadosMidias(data);
+      if (metadados.size === 0) {
+        setMidiasPorQuestao(metadados);
+        return;
+      }
+      const { data: assinadas } = await supabase.functions.invoke("assinar-questao-midias", { body: { questaoIds: [...metadados.keys()] } });
+      if (!cancelado) setMidiasPorQuestao(aplicarUrlsAssinadas(metadados, assinadas));
+    })();
+    return () => {
+      cancelado = true;
+    };
+  }, [questoes, versaoMidias]);
+  // Renova as URLs antes de vencerem (uma vez por carga, sem timer agressivo).
+  useEffect(() => {
+    const menor = menorExpiracaoMidias(midiasPorQuestao);
+    if (menor === null) return;
+    const timer = window.setTimeout(() => setVersaoMidias((v) => v + 1), Math.max(0, menor - ARTE_MARGEM_RENOVACAO_MS - Date.now()));
+    return () => window.clearTimeout(timer);
+  }, [midiasPorQuestao]);
+  const renovarMidiasAposErro = useCallback(() => {
+    const agora = Date.now();
+    if (!podeRenovar(renovacaoMidias.current, agora)) return;
+    renovacaoMidias.current = { tentativas: renovacaoMidias.current.tentativas + 1, ultimaEm: agora };
+    setVersaoMidias((v) => v + 1);
+  }, []);
 
   const questaoAtual = questoes[indice];
   const progresso = useMemo(() => questoes.length ? Math.round(((indice + (feedback ? 1 : 0)) / questoes.length) * 100) : 0, [indice, feedback, questoes.length]);
@@ -1417,7 +1465,9 @@ export default function Questoes() {
         <div className="question-origin">
           <span className="question-origin-main">{origemQuestao}</span>
         </div>
-        <h1>{questaoAtual.enunciado}</h1>
+        <h1>
+          <EnunciadoComMidias enunciado={questaoAtual.enunciado} midias={midiasPorQuestao.get(questaoAtual.id) ?? []} onErroImagem={renovarMidiasAposErro} />
+        </h1>
         <div className="answer-list">
           {questaoAtual.alternativas.map((alternativa) => {
             const eliminada=alternativasEliminadas.has(alternativa.id);

@@ -39,6 +39,7 @@ import { classificarMateriaAssunto } from "./lib/classificar.mjs";
 import { classificarDuplicidade } from "./lib/deduplicar.mjs";
 import { normalizarQuestao } from "./lib/normalizar.mjs";
 import { calcularStatus } from "./lib/score.mjs";
+import { anexarMidias, lerPaginasVisuais, resolverMidias } from "./lib/midias.mjs";
 import { calcularHashArquivo, montarProveniencia } from "./lib/proveniencia.mjs";
 import { gerarRelatorio } from "./lib/relatorio.mjs";
 
@@ -192,10 +193,28 @@ async function main() {
     );
   }
 
-  const questoesFinais = juntadas.map((juntada) => {
+  const normalizadas = juntadas.map((juntada) => {
     const classificacao = classificarMateriaAssunto(juntada, snapshotTaxonomia, juntada.materia_detectada);
     const normalizada = normalizarQuestao(juntada, metadata, classificacao);
     if (requerOcr) normalizada._interno.requires_ocr = true;
+    return normalizada;
+  });
+
+  // Mídias (figuras/charges): objetos de imagem do PDF associados às
+  // questões pela geometria; PNG em <out>/midias/<sha256>.png. Falha de
+  // leitura visual nunca derruba o lote — quem cita peça visual fica sem
+  // mídia (MIDIA_OK=false) e o aviso vai para o relatório.
+  let paginasVisuais = [];
+  const avisosMidia = [];
+  try {
+    paginasVisuais = await lerPaginasVisuais(provaPath);
+  } catch (erro) {
+    avisosMidia.push(`leitura visual do PDF falhou: ${erro.message}`);
+  }
+  const midias = resolverMidias({ paginas: paginasVisuais, questoes: normalizadas });
+  for (const normalizada of normalizadas) anexarMidias(normalizada, midias.porQuestao.get(normalizada.numero_original));
+
+  const questoesFinais = normalizadas.map((normalizada) => {
     const dedup = classificarDuplicidade(normalizada, snapshotQuestoes);
     return calcularStatus(normalizada, dedup, bloqueios, proveniencia);
   });
@@ -221,9 +240,19 @@ async function main() {
     },
     bloqueios_globais: bloqueios,
     proveniencia,
+    midias: {
+      arquivos: [...midias.arquivos.keys()].map((sha) => `midias/${sha}.png`),
+      questoes: [...midias.porQuestao].map(([numero, r]) => ({ numero, status: r.status, causas: r.causas.map((c) => c.codigo), midias: r.midias.map((m) => m.sha256) })),
+      ignoradas: midias.ignoradas,
+      avisos: avisosMidia,
+    },
   });
 
   fs.mkdirSync(outDir, { recursive: true });
+  if (midias.arquivos.size > 0) {
+    fs.mkdirSync(path.join(outDir, "midias"), { recursive: true });
+    for (const [sha, png] of midias.arquivos) fs.writeFileSync(path.join(outDir, "midias", `${sha}.png`), png);
+  }
   fs.writeFileSync(path.join(outDir, "questoes_extraidas.json"), JSON.stringify(questoesFinais, null, 2));
   fs.writeFileSync(path.join(outDir, "questoes_revisao.json"), JSON.stringify(questoesRevisao, null, 2));
   fs.writeFileSync(path.join(outDir, "duplicadas.json"), JSON.stringify(duplicadas, null, 2));

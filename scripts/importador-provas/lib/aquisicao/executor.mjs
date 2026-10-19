@@ -16,8 +16,24 @@
 //   "teste-rollback" idêntico ao apply, mas termina SEMPRE em ROLLBACK —
 //                    valida o caminho de escrita real sem deixar rastro.
 
+import { createHash } from "node:crypto";
 import { hashManifesto, planejarAquisicao } from "./planejar.mjs";
 import { normalizarTexto } from "../deduplicar.mjs";
+
+// MÍDIAS (Storage x transação SQL — o Storage NÃO participa do BEGIN):
+//   - objeto conteúdo-endereçado (questoes/<sha256>.png): sem identidade
+//     fora do hash, reenvio idempotente, compartilhável entre questões;
+//   - lock consultivo de SESSÃO "questao-midias" do envio até a limpeza:
+//     applies concorrentes (e o GC futuro) nunca se cruzam;
+//   - envio ANTES das linhas, com a transação aberta; cada objeto é
+//     baixado de volta e conferido por hash;
+//   - pós-check DENTRO da transação confere storage.objects (existe, com o
+//     tamanho dos bytes do manifesto) e as linhas de questao_midias;
+//   - falha ou teste-rollback: ROLLBACK e, depois, remoção SÓ dos objetos
+//     criados nesta execução que nenhuma linha referencia. Objeto que já
+//     existia nunca é apagado. Se a própria limpeza falhar, sobra um
+//     objeto privado sem linha (nunca servido) — o relatório lista o path.
+const sha256 = (dados) => createHash("sha256").update(dados).digest("hex");
 
 export class ErroAquisicao extends Error {
   constructor(mensagem, detalhes = {}) {
@@ -50,7 +66,7 @@ function fonteCompativel(prova, numero) {
 
 // Pós-check DENTRO da transação, antes do COMMIT — qualquer falha aqui
 // derruba a aquisição inteira (ROLLBACK).
-function avaliarPosCheck({ estado, estruturaAntes, estruturaDepois, mutaveisAntes, mutaveisDepois, provaNova, prova, inseridas, vinculosEsperados, totalAntes, documentosEsperados, documentosNovos }) {
+function avaliarPosCheck({ estado, estruturaAntes, estruturaDepois, mutaveisAntes, mutaveisDepois, provaNova, prova, inseridas, vinculosEsperados, totalAntes, documentosEsperados, documentosNovos, midiasEsperadas = [], objetosMidia = null }) {
   const falhas = [];
   const deltasEsperados = {
     provas: provaNova ? 1 : 0,
@@ -58,7 +74,19 @@ function avaliarPosCheck({ estado, estruturaAntes, estruturaDepois, mutaveisAnte
     questoes: inseridas.length,
     alternativas: inseridas.reduce((soma, i) => soma + i.total_alternativas, 0),
     curso_questoes: vinculosEsperados.length,
+    ...("questao_midias" in mutaveisAntes ? { questao_midias: midiasEsperadas.length } : {}),
   };
+  // Cada mídia gravada = exatamente a do manifesto (questão, ordem, hash,
+  // path, direito) e com o objeto presente no bucket com o tamanho certo.
+  const chaveMidia = (m) => `${m.questao_id}|${m.ordem}|${m.sha256}|${m.storage_path}|${m.direito_uso}`;
+  const midiasReais = new Set((estado.midias ?? []).map(chaveMidia));
+  for (const m of midiasEsperadas) {
+    if (!midiasReais.has(chaveMidia(m))) falhas.push(`mídia da questão ${m.questao_id} ordem ${m.ordem} ausente ou divergente do manifesto`);
+    const tamanho = objetosMidia?.get(m.storage_path);
+    if (tamanho === undefined) falhas.push(`objeto ${m.storage_path} ausente no bucket`);
+    else if (tamanho !== m.bytes) falhas.push(`objeto ${m.storage_path} com ${tamanho} bytes, esperado ${m.bytes}`);
+  }
+  if ((estado.midias ?? []).length !== midiasEsperadas.length) falhas.push(`questao_midias das questões inseridas: ${(estado.midias ?? []).length}, esperado ${midiasEsperadas.length}`);
   // Documentos persistidos da prova = exatamente os do manifesto aprovado
   // (mesma posição, mesmo hash), nem um a mais.
   const persistidos = new Map((estado.documentos ?? []).map((d) => [`${d.tipo}:${d.ordem}`, d.hash_sha256]));
@@ -106,7 +134,7 @@ function avaliarPosCheck({ estado, estruturaAntes, estruturaDepois, mutaveisAnte
   return falhas;
 }
 
-export async function executarAquisicao({ repo, entrada, modo = "dry-run", hashManifestoAprovado = null }) {
+export async function executarAquisicao({ repo, entrada, modo = "dry-run", hashManifestoAprovado = null, storage = null }) {
   if (!["dry-run", "apply", "teste-rollback"].includes(modo)) throw new ErroAquisicao(`modo de execução inválido "${modo}"`);
 
   if (modo === "dry-run") {
@@ -120,6 +148,26 @@ export async function executarAquisicao({ repo, entrada, modo = "dry-run", hashM
 
   if (!hashManifestoAprovado) throw new ErroAquisicao("apply exige o hash do manifesto aprovado no dry-run");
 
+  // Objetos criados NESTA execução (só eles podem ser limpos) e o lock de
+  // mídias (sessão) — liberado no finally, depois da limpeza.
+  const criados = [];
+  let lockMidias = false;
+  const limparCriados = async () => {
+    const limpeza = { removidos: [], mantidos: [], falhas: [] };
+    for (const objeto of criados) {
+      try {
+        if (await repo.midiaReferenciada(objeto.sha256)) limpeza.mantidos.push(objeto.storage_path);
+        else {
+          await storage.remover(objeto.storage_path);
+          limpeza.removidos.push(objeto.storage_path);
+        }
+      } catch (erro) {
+        limpeza.falhas.push({ storage_path: objeto.storage_path, erro: erro.message });
+      }
+    }
+    return limpeza;
+  };
+
   await repo.iniciar({ somenteLeitura: false, chaveLock: entrada.proveniencia?.prova?.hash_prova ?? "sem-hash" });
   try {
     const { manifesto, hash } = await planejar(repo, entrada);
@@ -127,6 +175,28 @@ export async function executarAquisicao({ repo, entrada, modo = "dry-run", hashM
       throw new ErroAquisicao("o plano atual difere do manifesto aprovado (staging ou banco mudaram desde o dry-run) — rode o dry-run de novo", { hashAtual: hash });
     }
     if (manifesto.bloqueios.length > 0) throw new ErroAquisicao("manifesto com bloqueios — nada gravado", { bloqueios: manifesto.bloqueios });
+
+    const importar = manifesto.questoes.filter((q) => q.acao === "IMPORTAR");
+
+    // ---- mídias: enviar (ou reconferir) os objetos ANTES das linhas ----
+    const objetos = new Map();
+    for (const item of importar) for (const m of item.midias ?? []) objetos.set(m.sha256, m);
+    if (objetos.size > 0) {
+      if (!storage) throw new ErroAquisicao("apply com mídia exige o Storage configurado (SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY) — nada gravado");
+      await repo.bloquearMidias();
+      lockMidias = true;
+      const existentes = await repo.objetosMidia([...objetos.values()].map((m) => m.storage_path));
+      for (const m of objetos.values()) {
+        const bytes = entrada.midiasArquivos?.get(m.sha256);
+        if (!bytes || sha256(bytes) !== m.sha256) throw new ErroAquisicao(`bytes da mídia ${m.sha256.slice(0, 12)}… ausentes ou com hash diferente do manifesto — nada gravado`);
+        if (!existentes.has(m.storage_path)) {
+          await storage.enviar(m.storage_path, bytes, m.mime_type);
+          criados.push({ storage_path: m.storage_path, sha256: m.sha256 });
+        }
+        const devolvido = await storage.baixar(m.storage_path);
+        if (sha256(devolvido) !== m.sha256) throw new ErroAquisicao(`objeto ${m.storage_path} no bucket não confere com o hash da mídia`);
+      }
+    }
 
     const estruturaAntes = await repo.contagensEstruturais();
     const mutaveisAntes = await repo.contagensMutaveis();
@@ -141,7 +211,8 @@ export async function executarAquisicao({ repo, entrada, modo = "dry-run", hashM
     const porNumero = new Map(entrada.questoes.map((q) => [q.numero_original, q]));
     const inseridas = [];
     const vinculosEsperados = [];
-    for (const item of manifesto.questoes.filter((q) => q.acao === "IMPORTAR")) {
+    const midiasEsperadas = [];
+    for (const item of importar) {
       const questao = porNumero.get(item.numero_original);
       const questaoId = await repo.inserirQuestao({
         materia_id: item.materia_id,
@@ -158,11 +229,16 @@ export async function executarAquisicao({ repo, entrada, modo = "dry-run", hashM
         questaoId,
         questao.alternativas.map((a, indice) => ({ texto: a.texto.trim(), ordem: indice + 1, correta: a.correta === true })),
       );
+      for (const m of item.midias ?? []) {
+        const linha = { questao_id: questaoId, prova_id: provaId, ...m };
+        await repo.inserirMidia(linha);
+        midiasEsperadas.push({ ...linha, bytes: entrada.midiasArquivos.get(m.sha256).length });
+      }
       for (const cursoId of item.curso_ids_aprovados) {
         await repo.inserirVinculo(cursoId, questaoId);
         vinculosEsperados.push({ curso_id: cursoId, questao_id: questaoId });
       }
-      inseridas.push({ numero_original: item.numero_original, questao_id: questaoId, total_alternativas: questao.alternativas.length, curso_ids: item.curso_ids_aprovados });
+      inseridas.push({ numero_original: item.numero_original, questao_id: questaoId, total_alternativas: questao.alternativas.length, curso_ids: item.curso_ids_aprovados, midias: (item.midias ?? []).length });
     }
 
     const estado = await repo.lerEstadoPosCheck({ provaId, questaoIds: inseridas.map((i) => i.questao_id) });
@@ -181,11 +257,16 @@ export async function executarAquisicao({ repo, entrada, modo = "dry-run", hashM
       totalAntes,
       documentosEsperados: manifesto.documentos,
       documentosNovos: documentosNovos.length,
+      midiasEsperadas,
+      objetosMidia: midiasEsperadas.length > 0 ? await repo.objetosMidia(midiasEsperadas.map((m) => m.storage_path)) : null,
     });
     if (falhas.length > 0) throw new ErroAquisicao("pós-check falhou — ROLLBACK", { falhas });
 
-    if (modo === "teste-rollback") await repo.desfazer();
-    else await repo.confirmar();
+    let limpeza = null;
+    if (modo === "teste-rollback") {
+      await repo.desfazer();
+      limpeza = await limparCriados();
+    } else await repo.confirmar();
 
     return {
       modo,
@@ -196,6 +277,7 @@ export async function executarAquisicao({ repo, entrada, modo = "dry-run", hashM
       prova_reutilizada: prova.prova_id_existente !== null,
       inseridas,
       pos_check: { ok: true, falhas: [] },
+      midias: { enviadas: criados.map((c) => c.storage_path), reaproveitadas: [...objetos.values()].map((m) => m.storage_path).filter((p) => !criados.some((c) => c.storage_path === p)), limpeza },
       // Contagens DENTRO da transação (antes de gravar / depois de gravar,
       // antes do COMMIT ou ROLLBACK) — no teste-rollback mostram o que
       // teria sido gravado.
@@ -203,7 +285,13 @@ export async function executarAquisicao({ repo, entrada, modo = "dry-run", hashM
     };
   } catch (erro) {
     await repo.desfazer();
+    if (criados.length > 0) {
+      const limpeza = await limparCriados();
+      if (erro instanceof ErroAquisicao) erro.detalhes = { ...erro.detalhes, limpeza_midias: limpeza };
+    }
     throw erro;
+  } finally {
+    if (lockMidias) await repo.liberarMidias();
   }
 }
 

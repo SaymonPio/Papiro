@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { createHash } from "node:crypto";
 import { hashManifesto, planejarAquisicao } from "../scripts/importador-provas/lib/aquisicao/planejar.mjs";
 import { ErroAquisicao, executarAquisicao, montarRelatorioAquisicao } from "../scripts/importador-provas/lib/aquisicao/executor.mjs";
 
@@ -17,8 +18,11 @@ const ASSUNTO_CRASE = 100;
 const ASSUNTO_PORCENTAGEM = 200;
 const CURSO_BM = "11111111-1111-1111-1111-111111111111";
 
-function criarRepositorioMemoria({ falharNaQuestao = null } = {}) {
+// midias: liga questao_midias + bucket. O bucket (Map path -> bytes) fica FORA do snapshot transacional,
+// como o Storage real: ROLLBACK do banco não desfaz objeto enviado.
+function criarRepositorioMemoria({ falharNaQuestao = null, midias = false, bucket = new Map() } = {}) {
   const banco = {
+    ...(midias ? { questao_midias: [] } : {}),
     provas: [],
     prova_documentos: [],
     questoes: [],
@@ -69,6 +73,7 @@ function criarRepositorioMemoria({ falharNaQuestao = null } = {}) {
       const porChave =
         banco.provas.find((p) => ["banca", "orgao", "cargo", "nome"].every((c) => n(p[c]) === n(chaveNatural[c])) && p.ano === chaveNatural.ano) ?? null;
       return {
+        infraMidias: midias,
         provaPorHash: porHash,
         provaPorChaveNatural: porChave,
         numerosJaImportados: new Map(banco.questoes.filter((q) => porHash && q.prova_id === porHash.id).map((q) => [q.numero_original, q.id])),
@@ -123,8 +128,34 @@ function criarRepositorioMemoria({ falharNaQuestao = null } = {}) {
       exigirEscrita();
       banco.curso_questoes.push({ curso_id: cursoId, questao_id: questaoId });
     },
+    ...(midias
+      ? {
+          bucket,
+          locks: 0,
+          // Mesmas constraints de questao_midias: (questao_id, ordem) e (questao_id, sha256) únicos, path = sha.
+          async inserirMidia(m) {
+            exigirEscrita();
+            if (m.storage_path !== `questoes/${m.sha256}.png`) throw new Error("check questao_midias_path_check");
+            if (banco.questao_midias.some((x) => x.questao_id === m.questao_id && (x.ordem === m.ordem || x.sha256 === m.sha256))) throw new Error("duplicate key questao_midias");
+            banco.questao_midias.push({ ...m });
+          },
+          async objetosMidia(paths) {
+            return new Map(paths.filter((p) => bucket.has(p)).map((p) => [p, bucket.get(p).length]));
+          },
+          async midiaReferenciada(sha) {
+            return banco.questao_midias.some((m) => m.sha256 === sha);
+          },
+          async bloquearMidias() {
+            this.locks++;
+          },
+          async liberarMidias() {
+            this.locks--;
+          },
+        }
+      : {}),
     async lerEstadoPosCheck({ provaId, questaoIds }) {
       return {
+        ...(midias ? { midias: banco.questao_midias.filter((m) => questaoIds.includes(m.questao_id)) } : {}),
         prova: banco.provas.find((p) => p.id === provaId) ?? null,
         documentos: banco.prova_documentos.filter((d) => d.prova_id === provaId),
         questoesDaProva: banco.questoes
@@ -134,7 +165,14 @@ function criarRepositorioMemoria({ falharNaQuestao = null } = {}) {
       };
     },
     async contagensMutaveis() {
-      return { provas: banco.provas.length, prova_documentos: banco.prova_documentos.length, questoes: banco.questoes.length, alternativas: banco.alternativas.length, curso_questoes: banco.curso_questoes.length };
+      return {
+        provas: banco.provas.length,
+        prova_documentos: banco.prova_documentos.length,
+        questoes: banco.questoes.length,
+        alternativas: banco.alternativas.length,
+        curso_questoes: banco.curso_questoes.length,
+        ...(midias ? { questao_midias: banco.questao_midias.length } : {}),
+      };
     },
     async contagensEstruturais() {
       return {
@@ -673,4 +711,199 @@ test("PRE-A) gabarito PRELIMINAR bloqueia o documento inteiro (nada importável)
   assert.equal(plano.manifesto.resumo.importar_potencial, 1);
   await assert.rejects(() => executarAquisicao({ repo, entrada, modo: "apply", hashManifestoAprovado: plano.hash }), /bloqueios/);
   assert.equal(repo.banco.provas.length, 0);
+});
+
+// ---- Mídias (questao_midias + bucket questao-midias) ----
+
+const shaDe = (bytes) => createHash("sha256").update(bytes).digest("hex");
+const PNG_A = Buffer.from("png-sintetico-da-figura-A");
+const PNG_B = Buffer.from("png-sintetico-da-figura-B");
+
+function midiaStaging(bytes, { ordem = 1, direito = "OFICIAL_PROVA", tipo = "FIGURA" } = {}) {
+  const sha = shaDe(bytes);
+  return { ordem, tipo, sha256: sha, mime_type: "image/png", arquivo: `midias/${sha}.png`, storage_path: `questoes/${sha}.png`, largura: 120, altura: 60, pagina_origem: 7, ancora_texto: "Figura 1 – Painel", legenda: "Figura 1 – Painel", alt_text: "Figura 1 – Painel", credito: null, direito_uso: direito, origem_descricao: "PDF da prova, página 7: 1 objeto(s) de imagem (img_p6_1)" };
+}
+function questaoComMidia(numero, midias, { etapas = {}, interno = {} } = {}) {
+  const q = questaoStaging(numero, { etapas: { MIDIA_OK: true, ...etapas } });
+  q._interno = { ...q._interno, dependencia_midia: true, midias, ...interno };
+  return q;
+}
+function entradaComMidias(questoes, extras = {}) {
+  const midiasVerificadas = new Map();
+  const midiasArquivos = new Map();
+  for (const bytes of [PNG_A, PNG_B]) {
+    midiasVerificadas.set(`midias/${shaDe(bytes)}.png`, shaDe(bytes));
+    midiasArquivos.set(shaDe(bytes), bytes);
+  }
+  return { ...entradaBase(questoes), midiasVerificadas, midiasArquivos, ...extras };
+}
+function criarStorageMemoria(bucket, { falharEnvio = false } = {}) {
+  return {
+    enviados: [],
+    removidos: [],
+    async enviar(path, bytes) {
+      if (falharEnvio) throw new Error("Storage: envio falhou (HTTP 500)");
+      if (bucket.has(path)) throw new Error("Storage: objeto já existe (x-upsert false)");
+      bucket.set(path, Buffer.from(bytes));
+      this.enviados.push(path);
+    },
+    async baixar(path) {
+      return bucket.get(path);
+    },
+    async remover(path) {
+      bucket.delete(path);
+      this.removidos.push(path);
+    },
+  };
+}
+
+test("MID-A) questão com mídia: objeto enviado ANTES das linhas, questao_midias gravada, pós-check confere bucket e linhas", async () => {
+  const repo = criarRepositorioMemoria({ midias: true });
+  const storage = criarStorageMemoria(repo.bucket);
+  const entrada = entradaComMidias([questaoComMidia(1, [midiaStaging(PNG_A)]), questaoStaging(2)]);
+  const plano = await executarAquisicao({ repo, entrada, modo: "dry-run" });
+  assert.deepEqual(plano.manifesto.questoes.map((q) => q.acao), ["IMPORTAR", "IMPORTAR"]);
+  assert.equal(plano.manifesto.questoes[0].midias[0].sha256, shaDe(PNG_A), "a mídia faz parte do manifesto");
+  assert.equal(plano.manifesto.questoes[1].midias, undefined, "questão sem mídia não ganha campo novo no manifesto");
+  const r = await executarAquisicao({ repo, entrada, modo: "apply", hashManifestoAprovado: plano.hash, storage });
+  assert.equal(r.pos_check.ok, true);
+  assert.deepEqual(storage.enviados, [`questoes/${shaDe(PNG_A)}.png`]);
+  assert.equal(repo.banco.questao_midias.length, 1);
+  assert.deepEqual(
+    (({ questao_id, prova_id, ordem, sha256, storage_path, direito_uso, pagina_origem }) => ({ questao_id, prova_id, ordem, sha256, storage_path, direito_uso, pagina_origem }))(repo.banco.questao_midias[0]),
+    { questao_id: repo.banco.questoes[0].id, prova_id: 1, ordem: 1, sha256: shaDe(PNG_A), storage_path: `questoes/${shaDe(PNG_A)}.png`, direito_uso: "OFICIAL_PROVA", pagina_origem: 7 },
+  );
+  assert.equal(repo.locks, 0, "lock de mídias liberado");
+});
+
+test("MID-HASH) a mídia participa do hash: outro arquivo = outro manifesto; apply com o manifesto antigo é recusado", async () => {
+  const repo = criarRepositorioMemoria({ midias: true });
+  const comA = await executarAquisicao({ repo, entrada: entradaComMidias([questaoComMidia(1, [midiaStaging(PNG_A)])]), modo: "dry-run" });
+  const comB = entradaComMidias([questaoComMidia(1, [midiaStaging(PNG_B)])]);
+  const planoB = await executarAquisicao({ repo, entrada: comB, modo: "dry-run" });
+  assert.notEqual(comA.hash, planoB.hash);
+  await assert.rejects(() => executarAquisicao({ repo, entrada: comB, modo: "apply", hashManifestoAprovado: comA.hash, storage: criarStorageMemoria(repo.bucket) }), /difere do manifesto aprovado/);
+  assert.equal(repo.bucket.size, 0, "nada enviado");
+});
+
+test("MID-F) hash divergente: arquivo do staging diferente do registrado -> REVISAR; bytes adulterados no apply -> recusado antes de gravar", async () => {
+  const repo = criarRepositorioMemoria({ midias: true });
+  const q = questaoComMidia(1, [midiaStaging(PNG_A)]);
+  const adulterado = entradaComMidias([q], { midiasVerificadas: new Map([[`midias/${shaDe(PNG_A)}.png`, "f".repeat(64)]]) });
+  const plano = await executarAquisicao({ repo, entrada: adulterado, modo: "dry-run" });
+  assert.equal(plano.manifesto.questoes[0].acao, "REVISAR");
+  assert.ok(plano.manifesto.questoes[0].motivos.some((m) => /hash divergente/.test(m)));
+
+  const entrada = entradaComMidias([q]);
+  const aprovado = await executarAquisicao({ repo, entrada, modo: "dry-run" });
+  entrada.midiasArquivos.set(shaDe(PNG_A), Buffer.from("bytes trocados depois do dry-run"));
+  await assert.rejects(() => executarAquisicao({ repo, entrada, modo: "apply", hashManifestoAprovado: aprovado.hash, storage: criarStorageMemoria(repo.bucket) }), /hash diferente do manifesto/);
+  assert.equal(repo.banco.questoes.length, 0);
+  assert.equal(repo.bucket.size, 0);
+});
+
+test("MID-I) reexecução idempotente; mesma mídia em outra questão reaproveita o objeto (sem reenvio)", async () => {
+  const repo = criarRepositorioMemoria({ midias: true });
+  const storage = criarStorageMemoria(repo.bucket);
+  const entrada = entradaComMidias([questaoComMidia(1, [midiaStaging(PNG_A)])]);
+  const plano1 = await executarAquisicao({ repo, entrada, modo: "dry-run" });
+  await executarAquisicao({ repo, entrada, modo: "apply", hashManifestoAprovado: plano1.hash, storage });
+  assert.equal(repo.banco.questao_midias.length, 1);
+  const deNovo = await executarAquisicao({ repo, entrada, modo: "dry-run" });
+  assert.equal(deNovo.manifesto.resumo.importar, 0);
+  assert.equal(deNovo.manifesto.resumo.ja_importadas, 1);
+
+  const outra = entradaComMidias([questaoComMidia(1, [midiaStaging(PNG_A)]), questaoComMidia(2, [midiaStaging(PNG_A)])]);
+  const plano2 = await executarAquisicao({ repo, entrada: outra, modo: "dry-run" });
+  const r = await executarAquisicao({ repo, entrada: outra, modo: "apply", hashManifestoAprovado: plano2.hash, storage });
+  assert.deepEqual(r.midias.enviadas, []);
+  assert.deepEqual(r.midias.reaproveitadas, [`questoes/${shaDe(PNG_A)}.png`]);
+  assert.equal(storage.enviados.length, 1, "um único envio no total");
+  assert.equal(repo.banco.questao_midias.length, 2);
+});
+
+test("MID-J) falha no meio do lote depois do envio: ROLLBACK + remove SÓ o objeto criado nesta execução; objeto pré-existente fica", async () => {
+  const bucket = new Map([[`questoes/${shaDe(PNG_B)}.png`, PNG_B]]); // B já estava no bucket (outra questão/lote)
+  const repo = criarRepositorioMemoria({ midias: true, bucket, falharNaQuestao: 2 });
+  const storage = criarStorageMemoria(bucket);
+  const entrada = entradaComMidias([questaoComMidia(1, [midiaStaging(PNG_A)]), questaoComMidia(2, [midiaStaging(PNG_B)])]);
+  const plano = await executarAquisicao({ repo, entrada, modo: "dry-run" });
+  const erro = await executarAquisicao({ repo, entrada, modo: "apply", hashManifestoAprovado: plano.hash, storage }).catch((e) => e);
+  assert.ok(erro instanceof Error && /falha simulada/.test(erro.message));
+  assert.equal(repo.banco.questoes.length, 0);
+  assert.equal(repo.banco.questao_midias.length, 0);
+  assert.deepEqual(storage.removidos, [`questoes/${shaDe(PNG_A)}.png`], "só o objeto criado agora");
+  assert.ok(bucket.has(`questoes/${shaDe(PNG_B)}.png`), "pré-existente nunca é apagado");
+  assert.equal(repo.locks, 0);
+});
+
+test("MID-J2) teste-rollback percorre envio + linhas + pós-check e depois limpa o que criou; envio que falha não grava nada", async () => {
+  const repo = criarRepositorioMemoria({ midias: true });
+  const storage = criarStorageMemoria(repo.bucket);
+  const entrada = entradaComMidias([questaoComMidia(1, [midiaStaging(PNG_A)])]);
+  const plano = await executarAquisicao({ repo, entrada, modo: "dry-run" });
+  const r = await executarAquisicao({ repo, entrada, modo: "teste-rollback", hashManifestoAprovado: plano.hash, storage });
+  assert.equal(r.contagens_na_transacao.depois.questao_midias - r.contagens_na_transacao.antes.questao_midias, 1);
+  assert.deepEqual(r.midias.limpeza.removidos, [`questoes/${shaDe(PNG_A)}.png`]);
+  assert.equal(repo.bucket.size, 0);
+  assert.equal(repo.banco.questoes.length, 0);
+
+  const falhando = criarStorageMemoria(repo.bucket, { falharEnvio: true });
+  await assert.rejects(() => executarAquisicao({ repo, entrada, modo: "apply", hashManifestoAprovado: plano.hash, storage: falhando }), /envio falhou/);
+  assert.equal(repo.banco.questoes.length, 0);
+  assert.equal(repo.locks, 0);
+});
+
+test("MID-STORAGE) apply com mídia sem Storage configurado é recusado antes de gravar qualquer coisa", async () => {
+  const repo = criarRepositorioMemoria({ midias: true });
+  const entrada = entradaComMidias([questaoComMidia(1, [midiaStaging(PNG_A)])]);
+  const plano = await executarAquisicao({ repo, entrada, modo: "dry-run" });
+  await assert.rejects(() => executarAquisicao({ repo, entrada, modo: "apply", hashManifestoAprovado: plano.hash }), /exige o Storage configurado/);
+  assert.equal(repo.banco.provas.length, 0);
+});
+
+test("MID-INFRA) banco sem questao_midias/bucket: questão com mídia fica em REVISAR; as sem mídia seguem normalmente", async () => {
+  const repo = criarRepositorioMemoria();
+  const plano = await executarAquisicao({ repo, entrada: entradaComMidias([questaoComMidia(1, [midiaStaging(PNG_A)]), questaoStaging(2)]), modo: "dry-run" });
+  assert.deepEqual(plano.manifesto.questoes.map((q) => q.acao), ["REVISAR", "IMPORTAR"]);
+  assert.ok(plano.manifesto.questoes[0].motivos.some((m) => /infraestrutura de mídias ausente/.test(m)));
+});
+
+test("MID-M) mídia REVISAO_DIREITOS nunca importa; só decisão explícita (questão + sha + justificativa) libera; decisão malformada bloqueia", async () => {
+  const repo = criarRepositorioMemoria({ midias: true });
+  const q = () => questaoComMidia(1, [midiaStaging(PNG_A, { direito: "REVISAO_DIREITOS", tipo: "CHARGE" })]);
+  const pendente = await executarAquisicao({ repo, entrada: entradaComMidias([q()]), modo: "dry-run" });
+  assert.equal(pendente.manifesto.questoes[0].acao, "REVISAR");
+  assert.ok(pendente.manifesto.questoes[0].motivos.some((m) => /REVISAO_DIREITOS/.test(m)));
+
+  const decisao = { numero_original: 1, sha256: shaDe(PNG_A), direito_uso: "LICENCIADO", justificativa: "licença de reprodução obtida do autor em contrato" };
+  const liberada = await executarAquisicao({ repo, entrada: entradaComMidias([q()], { aprovacao: { direitos_midia: [decisao] } }), modo: "dry-run" });
+  assert.equal(liberada.manifesto.questoes[0].acao, "IMPORTAR");
+  assert.equal(liberada.manifesto.questoes[0].midias[0].direito_uso, "LICENCIADO");
+  assert.notEqual(liberada.hash, pendente.hash, "a decisão entra no hash");
+
+  for (const [ruim, padrao] of [
+    [{ ...decisao, direito_uso: "REVISAO_DIREITOS" }, /direito_uso/],
+    [{ ...decisao, justificativa: "ok" }, /justificativa/],
+    [{ ...decisao, sha256: "x" }, /sha256/],
+  ]) {
+    const r = await executarAquisicao({ repo, entrada: entradaComMidias([q()], { aprovacao: { direitos_midia: [ruim] } }), modo: "dry-run" });
+    assert.ok(r.manifesto.bloqueios.some((b) => padrao.test(b)), String(padrao));
+  }
+  const semMidia = await executarAquisicao({ repo, entrada: entradaComMidias([q()], { aprovacao: { direitos_midia: [{ ...decisao, sha256: shaDe(PNG_B) }] } }), modo: "dry-run" });
+  assert.ok(semMidia.manifesto.questoes[0].motivos.some((m) => /sem mídia correspondente/.test(m)));
+});
+
+test("MID-LIB) MIDIA_OK=false: 'mídia sem referência' só passa com liberação explícita; 'mídia ausente' nunca é liberável", async () => {
+  const repo = criarRepositorioMemoria({ midias: true });
+  const semReferencia = () => questaoComMidia(1, [midiaStaging(PNG_A)], { etapas: { MIDIA_OK: false }, interno: { dependencia_midia: undefined, midias_causas: [{ codigo: "midia_sem_referencia", motivo: "figura sem referência" }] } });
+  const bloqueada = await executarAquisicao({ repo, entrada: entradaComMidias([semReferencia()]), modo: "dry-run" });
+  assert.equal(bloqueada.manifesto.questoes[0].acao, "REVISAR");
+  assert.ok(bloqueada.manifesto.questoes[0].motivos.some((m) => /^MIDIA_OK=false/.test(m)));
+  const liberar = { numero_original: 1, gate: "MIDIA_OK", motivo: "midia_sem_referencia", justificativa: "revisão humana: a figura é o diagrama citado pela questão" };
+  const liberada = await executarAquisicao({ repo, entrada: entradaComMidias([semReferencia()], { aprovacao: { liberacoes: [liberar] } }), modo: "dry-run" });
+  assert.equal(liberada.manifesto.questoes[0].acao, "IMPORTAR");
+
+  const ausente = await executarAquisicao({ repo, entrada: entradaComMidias([questaoStaging(1)], { aprovacao: { liberacoes: [{ ...liberar, motivo: "midia_ausente" }] } }), modo: "dry-run" });
+  assert.ok(ausente.manifesto.bloqueios.some((b) => /não é liberável/.test(b)));
 });

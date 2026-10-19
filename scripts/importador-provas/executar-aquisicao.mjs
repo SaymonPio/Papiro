@@ -41,6 +41,7 @@ import { lerManifestoDeGabaritos } from "./lib/gabaritos.mjs";
 import { hashManifesto } from "./lib/aquisicao/planejar.mjs";
 import { ErroAquisicao, executarAquisicao, montarRelatorioAquisicao } from "./lib/aquisicao/executor.mjs";
 import { criarRepositorioPg } from "./lib/aquisicao/repositorioPg.mjs";
+import { criarStorageSupabase } from "./lib/aquisicao/storageSupabase.mjs";
 
 function lerArgumentos(argv) {
   const args = {};
@@ -100,11 +101,33 @@ function montarEntrada(args) {
     ];
   }
 
+  // Mídias do staging: o arquivo é relido e o hash recalculado AQUI — o
+  // planejador compara com o sha256 registrado (divergência = REVISAR) e só
+  // bytes conferidos seguem para o apply.
+  const midiasVerificadas = new Map();
+  const midiasArquivos = new Map();
+  for (const q of questoes) {
+    for (const m of q._interno?.midias ?? []) {
+      if (typeof m.arquivo !== "string" || !/^midias\/[0-9a-f]{64}\.png$/.test(m.arquivo)) continue;
+      const arquivo = path.join(args.staging, m.arquivo);
+      if (!fs.existsSync(arquivo)) {
+        midiasVerificadas.set(m.arquivo, null);
+        continue;
+      }
+      const bytes = fs.readFileSync(arquivo);
+      const hash = calcularHashArquivo(arquivo);
+      midiasVerificadas.set(m.arquivo, hash);
+      if (hash === m.sha256) midiasArquivos.set(hash, bytes);
+    }
+  }
+
   return {
     modo: args.modo,
     proveniencia,
     questoes,
     aprovacao,
+    midiasVerificadas,
+    midiasArquivos,
     hashesDivergentes: divergentes.length > 0 ? `hash de ${divergentes.join(" e ")} diverge do staging — os arquivos informados não são os extraídos` : null,
   };
 }
@@ -120,6 +143,9 @@ function imprimirResumo(manifesto, hash, cabecalho) {
   for (const ret of manifesto.retificacoes_gabarito ?? []) console.log(`Retificação de gabarito aplicada (ordem ${ret.ordem}): ${ret.documento ?? "-"} [${ret.hash}]`);
   for (const doc of manifesto.documentos ?? []) console.log(`Documento ${doc.tipo} ordem ${doc.ordem}: ${doc.hash_sha256} [${doc.situacao}]`);
   console.log(`Ficariam somente globais: ${r.somente_globais}`);
+  for (const q of manifesto.questoes.filter((x) => x.midias)) {
+    for (const m of q.midias) console.log(`Mídia nº ${q.numero_original} #${m.ordem}: ${m.tipo} ${m.largura}x${m.altura} p.${m.pagina_origem} ${m.sha256?.slice(0, 12) ?? "-"}… [${m.direito_uso}] -> ${q.acao}`);
+  }
   for (const q of manifesto.questoes.filter((x) => x.liberacoes_aplicadas)) {
     for (const l of q.liberacoes_aplicadas) console.log(`Liberação explícita nº ${q.numero_original}: ${l.gate}/${l.motivo} — ${l.justificativa}`);
   }
@@ -155,7 +181,11 @@ async function main() {
   await client.connect();
 
   try {
-    const resultado = await executarAquisicao({ repo: criarRepositorioPg(client), entrada, modo: modoExecucao, hashManifestoAprovado: hashAprovado });
+    // Storage só quando há credencial (apply com mídia sem ela é recusado
+    // pelo executor, antes de gravar qualquer coisa).
+    const storage =
+      process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY ? criarStorageSupabase({ url: process.env.SUPABASE_URL, chaveServico: process.env.SUPABASE_SERVICE_ROLE_KEY }) : null;
+    const resultado = await executarAquisicao({ repo: criarRepositorioPg(client), entrada, modo: modoExecucao, hashManifestoAprovado: hashAprovado, storage });
     const diretorioDoScript = path.dirname(fileURLToPath(import.meta.url));
     const outDir = args.out ?? path.join(diretorioDoScript, "output", "aquisicao", (resultado.manifesto.prova.hash_prova ?? "sem-hash").slice(0, 12));
     fs.mkdirSync(outDir, { recursive: true });

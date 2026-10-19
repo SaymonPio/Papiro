@@ -338,6 +338,22 @@ function referenciaVisual(texto) {
   return match ? `cita elemento visual que o texto extraído não preserva ("${match[0].replace(/\s+/g, " ")}")` : null;
 }
 
+export function temReferenciaDeDestaque(texto) {
+  return REFERENCIA_DESTAQUE.test(texto);
+}
+
+// Só a parte de referenciaVisual que uma MÍDIA pode resolver (figura,
+// gráfico, charge, "texto a seguir" que era imagem...). Destaque
+// tipográfico (sublinhado, negrito...) fica de fora: nenhuma imagem o
+// resolve. rotulos = "figura 1", "grafico 2"... citados no texto.
+const ROTULO_MIDIA = /\b(figura|gr[áa]fico|tabela|imagem|quadro|mapa)\s*(?:n[ºo°.]?\s*)?(\d{1,2})\b/gi;
+export function referenciaDeMidia(texto) {
+  const sinal = TEXTO_SEM_CONTEUDO.test(texto) ? "texto a seguir sem conteúdo extraído" : (texto.match(REFERENCIA_IMAGEM) ?? texto.match(REFERENCIA_PECA_VISUAL))?.[0];
+  if (!sinal) return null;
+  const rotulos = [...texto.matchAll(ROTULO_MIDIA)].map((m) => `${m[1].normalize("NFD").replace(/\p{M}/gu, "").toLowerCase()} ${Number(m[2])}`);
+  return { sinal: sinal.replace(/\s+/g, " "), rotulos: [...new Set(rotulos)] };
+}
+
 // Região de texto de apoio que antecede a questão atual: cabeçalho
 // "Texto N", bloco "Para responder às questões X e Y..." ou texto sem
 // cabeçalho logo abaixo do título de seção no preâmbulo. Só é aceita

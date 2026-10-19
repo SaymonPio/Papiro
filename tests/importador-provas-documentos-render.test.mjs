@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import test from "node:test";
 import { comporEnunciado } from "../scripts/importador-provas/lib/textoBase.mjs";
+import { segmentarEnunciado } from "../components/questoes/midiasQuestao.ts";
 
 // PAPIRO — schema de prova_documentos (permissões) e renderização do
 // enunciado com texto-base. Leitura estática dos arquivos do repositório;
@@ -35,7 +36,14 @@ test("DOC-G) aluno/anon sem permissão: RLS ligado, nada para anon, authenticate
 test("H) texto-base mantém quebra visual: o enunciado vai cru para o h1 do card, que preserva quebras e parágrafos", () => {
   const enunciado = comporEnunciado([{ texto: "Titulo\n\n[01] primeira linha\n[02] segunda linha" }], "Segundo o texto:");
   assert.equal(enunciado, "Titulo\n\n[01] primeira linha\n[02] segunda linha\n\nSegundo o texto:");
-  assert.match(PAGINA, /<article className="question-card">[\s\S]*?<h1>\{questaoAtual\.enunciado\}<\/h1>/, "enunciado renderizado sem transformação");
+  // O h1 passa o enunciado ao EnunciadoComMidias: sem mídia ele devolve o texto cru; com mídia só intercala
+  // figuras entre as linhas — o texto (e suas quebras) continua sem transformação.
+  assert.match(PAGINA, /<article className="question-card">[\s\S]*?<h1>\s*<EnunciadoComMidias enunciado=\{questaoAtual\.enunciado\}/, "enunciado renderizado sem transformação");
+  const COMPONENTE = fs.readFileSync(new URL("../components/questoes/EnunciadoComMidias.tsx", import.meta.url), "utf8");
+  assert.match(COMPONENTE, /if \(midias\.length === 0\) return <>\{enunciado\}<\/>;/);
+  const midia = { questaoId: 1, ordem: 1, tipo: "FIGURA", largura: 10, altura: 10, altText: "Figura 1", legenda: null, credito: null, ancoraTexto: "[02] segunda linha", url: null, expiraEm: null };
+  const textos = segmentarEnunciado(enunciado, [midia]).filter((s) => s.tipo === "texto").map((s) => s.texto);
+  assert.equal(textos.join("\n"), enunciado, "com mídia, os trechos de texto somados são o enunciado exato");
   const regra = CSS.match(/\n\.question-card h1 \{[^}]*\}/g).find((r) => /white-space/.test(r));
   assert.ok(regra, "regra .question-card h1 com white-space");
   assert.match(regra, /white-space: pre-line;/, "quebras de linha e linhas em branco preservadas; espaços repetidos do legado continuam colapsando");
