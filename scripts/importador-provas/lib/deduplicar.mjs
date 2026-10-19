@@ -35,21 +35,86 @@ function textoAlternativas(alternativas) {
   return (alternativas ?? []).map((a) => a.texto).join(" ");
 }
 
-const GRAVIDADE = { nova: 0, provavel_duplicada: 1, duplicada: 2 };
-
-// Questão com texto-base incorporado é comparada DUAS vezes — com o
-// enunciado persistido (texto + comando) e só com o comando — e vale o
-// resultado mais grave: o texto longo nunca "dilui" a similaridade a ponto
-// de esconder uma duplicata gravada no banco sem o texto (nem o inverso).
-export function classificarDuplicidade(questaoNormalizada, bancoExistente) {
-  const comando = questaoNormalizada._interno?.enunciado_comando;
-  const completo = classificarDuplicidadeDoEnunciado(questaoNormalizada, bancoExistente);
-  if (!comando || comando === questaoNormalizada.enunciado) return completo;
-  const soComando = classificarDuplicidadeDoEnunciado({ ...questaoNormalizada, enunciado: comando }, bancoExistente);
-  return GRAVIDADE[soComando.status] > GRAVIDADE[completo.status] ? { ...soComando, motivo: `${soComando.motivo} (comparando só o comando, sem o texto-base)` } : completo;
+function tokensDe(texto) {
+  return normalizarTexto(texto).split(" ").filter(Boolean);
 }
 
-function classificarDuplicidadeDoEnunciado(questaoNormalizada, bancoExistente) {
+function multiconjunto(tokens) {
+  const mapa = new Map();
+  for (const t of tokens) mapa.set(t, (mapa.get(t) ?? 0) + 1);
+  return mapa;
+}
+
+// Proporção do texto-base que uma questão existente embute (legado
+// autossuficiente guarda texto + comando no mesmo enunciado).
+const PROPORCAO_TEXTO_EMBUTIDO = 0.6;
+
+// Enunciado existente SEM o texto-base da questão nova, quando ele o
+// embute: o que sobra é o comando da questão existente.
+function semTextoBase(enunciadoExistente, tokensTexto) {
+  const existente = tokensDe(enunciadoExistente);
+  const restante = multiconjunto(tokensTexto);
+  let comuns = 0;
+  const sobra = [];
+  for (const t of existente) {
+    if ((restante.get(t) ?? 0) > 0) {
+      restante.set(t, restante.get(t) - 1);
+      comuns++;
+    } else {
+      sobra.push(t);
+    }
+  }
+  return tokensTexto.length > 0 && comuns / tokensTexto.length >= PROPORCAO_TEXTO_EMBUTIDO ? sobra.join(" ") : enunciadoExistente;
+}
+
+// Questão com texto-base incorporado: o texto é COMPARTILHADO por várias
+// questões da mesma prova (e pode estar embutido no legado), então ele
+// não pode, sozinho, fazer duas questões parecerem a mesma (checado numa
+// prova real: Fundatec/GM Porto Alegre 2025 — 9 questões de Português
+// "prováveis duplicatas" de uma única questão antiga que embute o texto).
+//   - duplicada (exata): enunciado COMPLETO idêntico + alternativas
+//     compatíveis — mesma regra de sempre;
+//   - provável: só pelo COMANDO + alternativas, comparados com cada
+//     questão existente já descontado o texto-base que ela embute.
+// Questão sem texto-base segue exatamente o algoritmo de antes.
+export function classificarDuplicidade(questaoNormalizada, bancoExistente) {
+  const comando = questaoNormalizada._interno?.enunciado_comando;
+  if (!comando || normalizarTexto(comando) === normalizarTexto(questaoNormalizada.enunciado)) {
+    return classificarDuplicidadeDoEnunciado(questaoNormalizada, bancoExistente);
+  }
+
+  const exata = classificarDuplicidadeDoEnunciado(questaoNormalizada, bancoExistente, { soExata: true });
+  if (exata.status === "duplicada") return exata;
+
+  const restante = multiconjunto(tokensDe(questaoNormalizada.enunciado));
+  for (const t of tokensDe(comando)) if ((restante.get(t) ?? 0) > 0) restante.set(t, restante.get(t) - 1);
+  const tokensTexto = [...restante].flatMap(([t, n]) => Array(n).fill(t));
+
+  // Cada existente entra com os candidatos a "comando dele": sem o texto
+  // compartilhado, o último bloco (depois da última linha em branco) e a
+  // cauda do enunciado — legado com OUTRO texto embutido não dilui a
+  // comparação (só aumenta o que é detectado, nunca o contrário).
+  const tamanhoComando = tokensDe(comando).length;
+  const bancoSemTexto = bancoExistente.flatMap((existente) => {
+    const enunciado = existente.enunciado ?? "";
+    const candidatos = new Set([
+      semTextoBase(enunciado, tokensTexto),
+      enunciado.split(/\n[ \t]*\n/).at(-1),
+      tokensDe(enunciado).slice(-Math.ceil(tamanhoComando * 1.5)).join(" "),
+    ]);
+    return [...candidatos].map((candidato) => ({ ...existente, enunciado: candidato }));
+  });
+  const resultado = classificarDuplicidadeDoEnunciado({ ...questaoNormalizada, enunciado: comando }, bancoSemTexto);
+  if (resultado.status === "nova") return resultado;
+  // Comando igual mas texto-base diferente nunca é duplicata EXATA.
+  return {
+    status: "provavel_duplicada",
+    motivo: `${resultado.motivo.replace(/^enunciado identico e alternativas compativeis/, "comando idêntico (texto-base diferente) e alternativas compatíveis — requer leitura manual")} (comparando o comando, sem o texto-base compartilhado)`,
+    match_id: resultado.match_id,
+  };
+}
+
+function classificarDuplicidadeDoEnunciado(questaoNormalizada, bancoExistente, { soExata = false } = {}) {
   const enunciadoNovo = normalizarTexto(questaoNormalizada.enunciado);
   const alternativasNovo = textoAlternativas(questaoNormalizada.alternativas);
 
@@ -64,6 +129,8 @@ function classificarDuplicidadeDoEnunciado(questaoNormalizada, bancoExistente) {
       // combinada abaixo em vez de decidir aqui.
     }
   }
+
+  if (soExata) return { status: "nova", motivo: "nenhuma correspondencia exata", match_id: null };
 
   let melhor = null;
   for (const existente of bancoExistente) {

@@ -94,7 +94,7 @@ test("H) este módulo nunca modifica o snapshot do banco recebido (modo somente 
   assert.deepEqual(BANCO_EXISTENTE, copiaOriginal);
 });
 
-test("H) questão com texto-base incorporado: comparada também só pelo comando — o texto longo não esconde uma duplicata gravada sem ele", () => {
+test("H) questão com texto-base incorporado: comparada pelo comando — o texto longo não esconde a mesma questão gravada sem ele (provável, nunca exata)", () => {
   const banco = [
     {
       id: 777,
@@ -111,7 +111,53 @@ test("H) questão com texto-base incorporado: comparada também só pelo comando
   };
   assert.equal(classificarDuplicidade({ ...questao, _interno: {} }, banco).status, "nova", "só pelo enunciado completo, o texto diluiria a duplicata");
   const resultado = classificarDuplicidade(questao, banco);
-  assert.equal(resultado.status, "duplicada");
+  assert.equal(resultado.status, "provavel_duplicada");
   assert.equal(resultado.match_id, 777);
-  assert.match(resultado.motivo, /só o comando/);
+  assert.match(resultado.motivo, /sem o texto-base compartilhado/);
+});
+
+// ---- Texto-base compartilhado x comando ----
+
+const TEXTO_BASE = Array.from({ length: 80 }, (_, i) => `termo${i} narrativa${i % 7} ficticia`).join(" ");
+function comTexto(comando, alternativas, texto = TEXTO_BASE) {
+  return { enunciado: `${texto}
+
+${comando}`, alternativas: alternativas.map((texto) => ({ texto })), _interno: { enunciado_comando: comando } };
+}
+const ALTS_1 = ["Primeira opção sobre pontuação.", "Segunda opção sobre pontuação.", "Terceira opção sobre pontuação.", "Quarta opção sobre pontuação."];
+const ALTS_2 = ["Sentido de causa.", "Sentido de concessão.", "Sentido de tempo.", "Sentido de condição."];
+
+test("TB-DEDUP-A) mesmo texto-base + comandos diferentes -> NÃO é duplicata (nem provável)", () => {
+  const existente = comTexto("Sobre a pontuação empregada no texto, assinale a correta.", ALTS_1);
+  const nova = comTexto("A conjunção destacada no segundo parágrafo expressa ideia de:", ALTS_2);
+  assert.equal(classificarDuplicidade(nova, [{ id: 1, enunciado: existente.enunciado, alternativas: existente.alternativas }]).status, "nova");
+});
+
+test("TB-DEDUP-B) mesmo texto-base + mesmo comando -> duplicata exata", () => {
+  const existente = comTexto("Sobre a pontuação empregada no texto, assinale a correta.", ALTS_1);
+  const r = classificarDuplicidade(comTexto("Sobre a pontuação empregada no texto, assinale a correta.", ALTS_1), [{ id: 2, enunciado: existente.enunciado, alternativas: existente.alternativas }]);
+  assert.equal(r.status, "duplicada");
+  assert.equal(r.match_id, 2);
+});
+
+test("TB-DEDUP-C) textos diferentes + comando igual -> provável, nunca exata", () => {
+  const outroTexto = Array.from({ length: 80 }, (_, i) => `palavra${i} cronica${i % 5} inventada`).join(" ");
+  const existente = comTexto("Sobre a pontuação empregada no texto, assinale a correta.", ALTS_1, outroTexto);
+  const r = classificarDuplicidade(comTexto("Sobre a pontuação empregada no texto, assinale a correta.", ALTS_1), [{ id: 3, enunciado: existente.enunciado, alternativas: existente.alternativas }]);
+  assert.equal(r.status, "provavel_duplicada");
+  assert.equal(r.match_id, 3);
+});
+
+test("TB-DEDUP-D) questão sem texto-base: algoritmo de sempre (enunciado idêntico + alternativas compatíveis = exata)", () => {
+  const q = { enunciado: "Qual é o prazo legal ficticio para o recurso?", alternativas: ALTS_2.map((texto) => ({ texto })), _interno: { enunciado_comando: "Qual é o prazo legal ficticio para o recurso?" } };
+  assert.equal(classificarDuplicidade(q, [{ id: 4, enunciado: q.enunciado, alternativas: q.alternativas }]).status, "duplicada");
+  assert.equal(classificarDuplicidade(q, [{ id: 5, enunciado: "Outra pergunta completamente diferente e sem relação alguma.", alternativas: [{ texto: "x" }] }]).status, "nova");
+});
+
+test("TB-DEDUP-E) legado autossuficiente (texto embutido no enunciado, formatação diferente): a mesma questão vira provável; outra questão do mesmo texto não", () => {
+  const legado = { id: 6, enunciado: `${TEXTO_BASE.replace(/ /g, "  ")} Sobre a pontuação empregada no texto assinale a correta`, alternativas: ALTS_1.map((texto) => ({ texto })) };
+  assert.equal(classificarDuplicidade(comTexto("Sobre a pontuação empregada no texto, assinale a correta.", ALTS_1), [legado]).status, "duplicada", "mesmo texto e comando, só espaços/pontuação diferentes = exata (normalização)");
+  const legadoReescrito = { ...legado, enunciado: `${TEXTO_BASE} Quanto à pontuação usada pelo autor no texto, marque a alternativa correta` };
+  assert.equal(classificarDuplicidade(comTexto("Sobre a pontuação empregada no texto, assinale a correta.", ALTS_1), [legadoReescrito]).status, "provavel_duplicada");
+  assert.equal(classificarDuplicidade(comTexto("A conjunção destacada no segundo parágrafo expressa ideia de:", ALTS_2), [legadoReescrito]).status, "nova");
 });
