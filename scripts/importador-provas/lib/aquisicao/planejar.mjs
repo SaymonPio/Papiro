@@ -170,6 +170,10 @@ export const CAUSAS_LIBERAVEIS = {
   // humana confirma que ela pertence à questão. Mídia ausente, posse
   // ambígua, composição ou posição incertas exigem corrigir o staging.
   MIDIA_OK: ["midia_sem_referencia"],
+  // Similaridade que a revisão humana comparou e descartou: a liberação
+  // nomeia a questão do banco comparada (questao_id) e só vale para ela.
+  // Duplicada exata nunca é liberável.
+  DEDUP_OK: ["provavel_duplicada"],
 };
 const CAUSAS_POR_GATE = { EXTRACAO_OK: causasDeExtracao, MIDIA_OK: causasDeMidia };
 const JUSTIFICATIVA_MINIMA = 20;
@@ -186,12 +190,14 @@ function validarLiberacoes(liberacoes, numerosDoLote) {
     if (!Number.isInteger(l?.numero_original) || !numerosDoLote.has(l.numero_original)) bloqueios.push(`${rotulo}: numero_original ${l?.numero_original} não existe no lote`);
     else if (!motivosDoGate) bloqueios.push(`${rotulo}: gate "${l?.gate}" não admite liberação explícita (liberáveis: ${Object.keys(CAUSAS_LIBERAVEIS).join(", ")})`);
     else if (!motivosDoGate.includes(l.motivo)) bloqueios.push(`${rotulo}: motivo "${l.motivo}" não é liberável em ${l.gate} (liberáveis: ${motivosDoGate.join(", ")})`);
+    else if (l.gate === "DEDUP_OK" && !(Number.isInteger(l.questao_id) && l.questao_id > 0)) bloqueios.push(`${rotulo}: DEDUP_OK exige questao_id da questão do banco comparada`);
+    else if (l.gate !== "DEDUP_OK" && l.questao_id !== undefined) bloqueios.push(`${rotulo}: questao_id só se aplica a DEDUP_OK`);
     else if (typeof l.justificativa !== "string" || l.justificativa.trim().length < JUSTIFICATIVA_MINIMA) bloqueios.push(`${rotulo}: justificativa da revisão humana ausente ou curta demais`);
-    else if (vistas.has(`${l.numero_original}:${l.gate}:${l.motivo}`)) bloqueios.push(`${rotulo}: liberação repetida para nº ${l.numero_original} ${l.gate}/${l.motivo}`);
+    else if (vistas.has(`${l.numero_original}:${l.gate}:${l.motivo}:${l.questao_id ?? ""}`)) bloqueios.push(`${rotulo}: liberação repetida para nº ${l.numero_original} ${l.gate}/${l.motivo}`);
     else {
-      vistas.add(`${l.numero_original}:${l.gate}:${l.motivo}`);
+      vistas.add(`${l.numero_original}:${l.gate}:${l.motivo}:${l.questao_id ?? ""}`);
       const lista = porNumero.get(l.numero_original) ?? [];
-      lista.push({ gate: l.gate, motivo: l.motivo, justificativa: l.justificativa.trim() });
+      lista.push({ gate: l.gate, motivo: l.motivo, ...(l.gate === "DEDUP_OK" ? { questao_id: l.questao_id } : {}), justificativa: l.justificativa.trim() });
       porNumero.set(l.numero_original, lista);
     }
   }
@@ -208,6 +214,18 @@ function avaliarLiberacao(questao, gate, liberacoesDaQuestao) {
   const pendentes = causas.filter((c) => !doGate.some((l) => l.motivo === c));
   const aplicadas = doGate.filter((l) => causas.includes(l.motivo));
   return { liberado: causas.length > 0 && pendentes.length === 0, aplicadas, pendentes: causas.length > 0 ? pendentes : ["causa não identificada"] };
+}
+
+// DEDUP_OK: cada suspeita (staging e banco vivo) é uma questao_id; só
+// libera se TODAS forem prováveis duplicadas com liberação para aquele
+// id. Suspeita sem id (duplicada exata, staging sem match) nunca libera.
+function avaliarLiberacaoDedup(questao, dedup, liberacoesDaQuestao) {
+  const suspeitas = new Set();
+  if (questao.etapas?.DEDUP_OK === false) suspeitas.add(questao.dedup?.status === "provavel_duplicada" ? (questao.dedup.match_id ?? null) : null);
+  if (dedup.status === "provavel_duplicada") suspeitas.add(dedup.match_id ?? null);
+  const aplicadas = liberacoesDaQuestao.filter((l) => l.gate === "DEDUP_OK" && suspeitas.has(l.questao_id));
+  const liberado = suspeitas.size > 0 && [...suspeitas].every((id) => id !== null && aplicadas.some((l) => l.questao_id === id));
+  return { liberado, aplicadas };
 }
 
 // Direito de uso de mídia (aprovacao.direitos_midia): a extração marca
@@ -389,13 +407,15 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
       aplicadas.push(...liberacao.aplicadas);
       if (!liberacao.liberado) revisar(liberacao.pendentes ? `${gate}=false no staging — liberação explícita não cobre: ${liberacao.pendentes.join(", ")}` : `${gate}=false no staging${gate === "MIDIA_OK" ? ` (${causasDeMidia(questao).map((c) => c.motivo).join("; ")})` : ""}`);
     }
+    const liberacaoDedup = avaliarLiberacaoDedup(questao, dedup, liberacoesDaQuestao);
+    aplicadas.push(...liberacaoDedup.aplicadas);
     // Liberação sem causa pendente correspondente = aprovação desatualizada
     // (staging mudou depois da revisão humana): nunca é ignorada em silêncio.
     const semUso = liberacoesDaQuestao.filter((l) => !aplicadas.includes(l));
     if (semUso.length > 0) revisar(`liberação explícita sem causa pendente correspondente (${semUso.map((l) => `${l.gate}/${l.motivo}`).join(", ")}) — revisar o aprovacao.json`);
     if (aplicadas.length > 0) item.liberacoes_aplicadas = aplicadas;
     if (!etapas.GABARITO_OK) revisar("GABARITO_OK=false no staging");
-    if (!etapas.DEDUP_OK) revisar("DEDUP_OK=false no staging (snapshot)");
+    if (!etapas.DEDUP_OK && !liberacaoDedup.liberado) revisar("DEDUP_OK=false no staging (snapshot)");
     if (!questao.enunciado || questao.enunciado.trim() === "") revisar("enunciado vazio");
     const problemaAlternativas = validarAlternativas(questao, contexto.sequenciaEmbutida ?? new Set());
     if (problemaAlternativas) revisar(problemaAlternativas);
@@ -442,7 +462,7 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
     if (dedup.status === "duplicada") {
       if (item.acao === "IMPORTAR") ignorar(`duplicada de questoes.id=${dedup.match_id} já existente no banco`);
       else item.motivos.push(`duplicada de questoes.id=${dedup.match_id}`);
-    } else if (dedup.status === "provavel_duplicada") {
+    } else if (dedup.status === "provavel_duplicada" && !liberacaoDedup.liberado) {
       revisar(dedup.motivo);
     }
 

@@ -479,6 +479,65 @@ test("LIB-E) liberação sem causa pendente é aprovação desatualizada (REVISA
   assert.equal(manifesto.resumo.ja_importadas, 1);
 });
 
+// Banco com a legada 1 e uma questão parecida (provável duplicada, nunca exata) no lote.
+function cenarioProvavelDuplicada() {
+  const repo = criarRepositorioMemoria();
+  const legada = questaoStaging(9);
+  repo.banco.questoes.push({ id: 1, enunciado: legada.enunciado, usuario_id: null, prova_id: null, numero_original: null, ativa: true });
+  for (const [i, a] of legada.alternativas.entries()) repo.banco.alternativas.push({ questao_id: 1, texto: a.texto, ordem: i + 1, correta: a.correta });
+  const parecida = () =>
+    questaoStaging(2, {
+      enunciado: `${legada.enunciado} com um complemento diferente`,
+      alternativas: legada.alternativas.map((a) => ({ ...a, texto: `${a.texto} variada` })),
+      etapas: { DEDUP_OK: false },
+    });
+  return { repo, parecida };
+}
+const JUSTIFICATIVA_DEDUP = "revisão humana: comparada com a legada, outro comando e outras alternativas";
+const liberarDedup = (numero, questaoId, extras = {}) => ({ numero_original: numero, gate: "DEDUP_OK", motivo: "provavel_duplicada", questao_id: questaoId, justificativa: JUSTIFICATIVA_DEDUP, ...extras });
+const comMatchStaging = (questao, matchId) => ({ ...questao, dedup: { status: "provavel_duplicada", match_id: matchId } });
+
+test("LIB-DEDUP-A) provável duplicada descartada na revisão: liberada para a questao_id comparada vira IMPORTAR e entra no hash", async () => {
+  const { repo, parecida } = cenarioProvavelDuplicada();
+  const sem = await executarAquisicao({ repo, entrada: entradaBase([comMatchStaging(parecida(), 1)]), modo: "dry-run" });
+  assert.equal(sem.manifesto.questoes[0].acao, "REVISAR");
+
+  const entrada = entradaBase([comMatchStaging(parecida(), 1)], { aprovacao: { liberacoes: [liberarDedup(2, 1)] } });
+  const resultado = await dryRunEApply(repo, entrada);
+  const item = resultado.manifesto.questoes[0];
+  assert.equal(item.acao, "IMPORTAR");
+  assert.equal(item.status_deduplicacao, "provavel_duplicada", "o status de dedup continua registrado");
+  assert.deepEqual(item.liberacoes_aplicadas, [{ gate: "DEDUP_OK", motivo: "provavel_duplicada", questao_id: 1, justificativa: JUSTIFICATIVA_DEDUP }]);
+  assert.notEqual(resultado.hash, sem.hash);
+  assert.equal(repo.banco.questoes.length, 2, "legada preservada + nova inserida");
+});
+
+test("LIB-DEDUP-B) candidato de dedup mudou (liberação aponta OUTRA questao_id): volta a REVISAR; duplicada exata nunca é liberada", async () => {
+  const { repo, parecida } = cenarioProvavelDuplicada();
+  const outra = await executarAquisicao({ repo, entrada: entradaBase([comMatchStaging(parecida(), 1)], { aprovacao: { liberacoes: [liberarDedup(2, 77)] } }), modo: "dry-run" });
+  assert.equal(outra.manifesto.questoes[0].acao, "REVISAR");
+  assert.ok(outra.manifesto.questoes[0].motivos.some((m) => /sem causa pendente correspondente/.test(m)));
+
+  const legada = questaoStaging(9);
+  const exata = { ...questaoStaging(3, { enunciado: legada.enunciado, alternativas: legada.alternativas, etapas: { DEDUP_OK: false } }), dedup: { status: "duplicada", match_id: 1 } };
+  const { manifesto } = await executarAquisicao({ repo, entrada: entradaBase([exata], { aprovacao: { liberacoes: [liberarDedup(3, 1)] } }), modo: "dry-run" });
+  assert.notEqual(manifesto.questoes[0].acao, "IMPORTAR");
+  assert.equal(manifesto.questoes[0].status_deduplicacao, "duplicada");
+});
+
+test("LIB-DEDUP-C) DEDUP_OK sem questao_id bloqueia o documento; questao_id em outro gate também", async () => {
+  const { repo, parecida } = cenarioProvavelDuplicada();
+  const casos = [
+    [{ ...liberarDedup(2, 1), questao_id: undefined }, /exige questao_id/],
+    [liberar(2, "dependencia_texto_incerta", { questao_id: 1 }), /só se aplica a DEDUP_OK/],
+  ];
+  for (const [liberacao, padrao] of casos) {
+    const { manifesto } = await executarAquisicao({ repo, entrada: entradaBase([comMatchStaging(parecida(), 1)], { aprovacao: { liberacoes: [liberacao] } }), modo: "dry-run" });
+    assert.ok(manifesto.bloqueios.some((b) => padrao.test(b)), `esperado bloqueio ${padrao}`);
+    assert.equal(manifesto.resumo.importar, 0);
+  }
+});
+
 test("L) vínculo implícito pela origem é proibido: COM_VINCULO sem matérias, COM_VINCULO sem vínculos e BASE_GLOBAL com vínculos bloqueiam", async () => {
   const repo = criarRepositorioMemoria();
   const q = [questaoStaging(1)];

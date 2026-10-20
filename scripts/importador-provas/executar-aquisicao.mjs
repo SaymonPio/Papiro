@@ -25,7 +25,9 @@
 //     "vinculos": [{ "curso": "brigada-militar-rs", "materias": [6, "Informática"] }],
 //     "classificacao": { "21": { "materia_id": 12, "assunto_id": 345 } },
 //     "liberacoes": [{ "numero_original": 10, "gate": "EXTRACAO_OK",
-//                      "motivo": "dependencia_texto_incerta", "justificativa": "<revisão humana>" }]
+//                      "motivo": "dependencia_texto_incerta", "justificativa": "<revisão humana>" },
+//                    { "numero_original": 18, "gate": "DEDUP_OK", "motivo": "provavel_duplicada",
+//                      "questao_id": 1911, "justificativa": "<revisão humana>" }]
 //   }
 // liberacoes: libera UMA causa conservadora de um gate do staging para UMA
 // questão, depois de revisão humana (ver CAUSAS_LIBERAVEIS em planejar.mjs).
@@ -147,7 +149,7 @@ function imprimirResumo(manifesto, hash, cabecalho) {
     for (const m of q.midias) console.log(`Mídia nº ${q.numero_original} #${m.ordem}: ${m.tipo} ${m.largura}x${m.altura} p.${m.pagina_origem} ${m.sha256?.slice(0, 12) ?? "-"}… [${m.direito_uso}] -> ${q.acao}`);
   }
   for (const q of manifesto.questoes.filter((x) => x.liberacoes_aplicadas)) {
-    for (const l of q.liberacoes_aplicadas) console.log(`Liberação explícita nº ${q.numero_original}: ${l.gate}/${l.motivo} — ${l.justificativa}`);
+    for (const l of q.liberacoes_aplicadas) console.log(`Liberação explícita nº ${q.numero_original}: ${l.gate}/${l.motivo}${l.questao_id ? ` (questoes.id=${l.questao_id})` : ""} — ${l.justificativa}`);
   }
   for (const v of manifesto.vinculos) {
     console.log(`Vínculos com ${v.curso_slug}: ${r.vinculos_por_curso[v.curso_slug]} (matérias aprovadas: ${v.materia_ids_aprovadas.join(", ") || "nenhuma"})`);
