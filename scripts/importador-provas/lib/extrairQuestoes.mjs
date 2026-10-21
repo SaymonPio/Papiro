@@ -111,6 +111,31 @@ function chaveLinhaCorrida(linha) {
   return linha.trim().replace(/\d+/g, "#");
 }
 
+// Carimbo de um SUB-caderno: um caderno pode juntar partes impressas em
+// separado, cada uma com o próprio carimbo no topo (checado numa prova
+// real: Fundatec/IGP-RS 2025 — parte comum, parte específica e redação,
+// com carimbos diferentes). O carimbo da parte comum fica em menos da
+// metade das páginas do documento, mas é a PRIMEIRA (ou a ÚLTIMA) linha
+// de várias páginas CONSECUTIVAS — posição que conteúdo de questão não
+// repete. Marcador de questão/alternativa nunca conta ("QUESTÃO # –
+// Assinale..." ou "E) Apenas I." podem abrir/fechar páginas seguidas).
+const MARCADOR_DE_CONTEUDO = /^(?:\(?[A-Ea-e][ \t]*(?:\)|⇒|→|\.)|(?:QUEST[ÃA]O|Quest[ãa]o)[ \t]+#|#[.)])/;
+
+function chavesEmExtremoDePaginasConsecutivas(paginasDeLinhas) {
+  const chaves = new Set();
+  for (const extremo of [(l) => l[0], (l) => l.at(-1)]) {
+    let anterior = null;
+    let sequencia = 0;
+    for (const linhas of paginasDeLinhas) {
+      const chave = linhas.length > 0 ? chaveLinhaCorrida(extremo(linhas)) : null;
+      sequencia = chave !== null && chave === anterior ? sequencia + 1 : 1;
+      anterior = chave;
+      if (chave !== null && sequencia >= MINIMO_PAGINAS_LINHA_CORRIDA && chave !== "#" && !MARCADOR_DE_CONTEUDO.test(chave)) chaves.add(chave);
+    }
+  }
+  return chaves;
+}
+
 function removerLinhasCorridas(paginas) {
   const bordas = paginas.map((p) => {
     const linhas = (p.texto ?? "").split("\n");
@@ -126,6 +151,10 @@ function removerLinhasCorridas(paginas) {
   const corridas = new Set(
     [...paginasPorLinha].filter(([texto, n]) => texto !== "#" && n >= MINIMO_PAGINAS_LINHA_CORRIDA && n >= paginas.length / 2).map(([texto]) => texto),
   );
+  // O extremo é medido sem as linhas corridas já confirmadas (o carimbo
+  // pode vir logo abaixo de um "Execução: ..." comum a todas as páginas).
+  const semCorridas = bordas.map(({ linhas }) => linhas.filter((l) => l.trim() && !corridas.has(chaveLinhaCorrida(l))));
+  for (const chave of chavesEmExtremoDePaginasConsecutivas(semCorridas)) corridas.add(chave);
   if (corridas.size === 0) return { paginas, topoRemovido: paginas.map(() => false) };
 
   const topoRemovido = [];
@@ -557,6 +586,46 @@ function cortarTituloDoFim(textoCompleto, inicio, fim, nomeSecao) {
   return null;
 }
 
+// Título de nova seção DEPOIS da última alternativa: tudo dali em diante
+// não pertence à questão (checado numa prova real: Fundatec/IGP-RS 2025 —
+// "LÍNGUA INGLESA" + texto em inglês entre a última alternativa da questão
+// 15 e a questão 16; "PROVA DE REDAÇÃO" + instruções depois da última
+// alternativa da última questão). Só corta título inequívoco: linha em
+// maiúsculas, com palavra de 4+ letras (não "I, II, III, IV"), que é o
+// nome declarado da próxima seção na composição OU abre um bloco de
+// TAMANHO_MINIMO_TEXTO_IMPLICITO+ caracteres antes da próxima questão (ou
+// do fim do documento). Se o título está no topo de uma página seguinte,
+// o corte vai para o início dessa página — o carimbo/cabeçalho da página
+// nova também não é da questão —, desde que nada antes dele na página
+// pareça continuação da alternativa (linha começando em minúscula).
+const PALAVRA_DE_TITULO = /[A-ZÀ-ÖØ-Þ]{4,}/;
+
+function corteDeSecaoAposUltimaAlternativa(textoCompleto, mapaPaginas, inicioSpan, fimSpan, proximaSecao) {
+  const { offsetUltimaAlternativa } = segmentarAlternativas(textoCompleto.slice(inicioSpan, fimSpan));
+  if (offsetUltimaAlternativa === null) return null;
+  const inicioUltima = inicioSpan + offsetUltimaAlternativa;
+  const quebra = textoCompleto.indexOf("\n", inicioUltima);
+  if (quebra === -1 || quebra >= fimSpan) return null;
+  let inicioLinha = quebra + 1;
+  for (const linha of textoCompleto.slice(inicioLinha, fimSpan).split("\n")) {
+    const fimLinha = inicioLinha + linha.length;
+    const inequivoco =
+      ehTituloSecao(linha) &&
+      PALAVRA_DE_TITULO.test(linha) &&
+      ((proximaSecao && normalizarTitulo(linha) === normalizarTitulo(proximaSecao)) || textoCompleto.slice(fimLinha, fimSpan).trim().length >= TAMANHO_MINIMO_TEXTO_IMPLICITO);
+    if (inequivoco) {
+      const pagina = mapaPaginas.find((p) => inicioLinha >= p.inicio && inicioLinha <= p.fim);
+      if (pagina && pagina.inicio > inicioUltima) {
+        const antes = textoCompleto.slice(pagina.inicio, inicioLinha).split("\n").filter((l) => l.trim());
+        if (antes.length < LINHAS_BORDA_PAGINA && !antes.some((l) => /^[a-zà-öø-ÿ]/.test(l.trim()))) return pagina.inicio;
+      }
+      return inicioLinha;
+    }
+    inicioLinha = fimLinha + 1;
+  }
+  return null;
+}
+
 export function extrairQuestoesDoTexto(paginasOriginais, opcoes = {}) {
   const composicao = Array.isArray(opcoes.composicao) && opcoes.composicao.length > 0 ? opcoes.composicao : null;
   const { paginas, topoRemovido } = removerLinhasCorridas(paginasOriginais);
@@ -591,6 +660,13 @@ export function extrairQuestoesDoTexto(paginasOriginais, opcoes = {}) {
     });
   });
   for (let i = 1; i < sequencia.length; i++) if (regioes[i]) fins[i - 1] = Math.min(fins[i - 1], regioes[i].inicio);
+  for (let i = 0; i < sequencia.length; i++) {
+    const proxima = sequencia[i + 1];
+    const proximaSecao = proxima ? secaoDaComposicao(composicao, proxima.numeroImpresso) : null;
+    const nomeProximaSecao = proximaSecao && proximaSecao.inicio === proxima.numeroImpresso ? proximaSecao.materia : null;
+    const corte = corteDeSecaoAposUltimaAlternativa(textoCompleto, mapaPaginas, sequencia[i].inicioSpan, fins[i], nomeProximaSecao);
+    if (corte !== null) fins[i] = Math.min(fins[i], corte);
+  }
 
   const avisos = [];
   if (composicao) {

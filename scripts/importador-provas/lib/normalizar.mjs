@@ -6,6 +6,19 @@
 import { juntarQuebrasArtificiais } from "./quebrasDeLinha.mjs";
 import { comporEnunciado } from "./textoBase.mjs";
 
+// Marcador de lista desenhado com fonte Symbol/Wingdings: o PDF entrega o
+// código de uso privado da fonte (U+F0B7 = "•" do Symbol), que fora dela
+// aparece como quadrado (checado em provas reais: Fundatec/PP-RS 2026 e
+// IGP-RS 2025). Só no início da linha — no meio do texto o mesmo intervalo
+// codifica letras e operadores (U+F061 = "α", U+F0D8 = "¬" no Symbol) e
+// nunca é tocado. Só U+F0B7, o único que é marcador sem ambiguidade. Vira
+// "• ", marcador que quebrasDeLinha.mjs já trata como item de lista.
+const MARCADOR_SIMBOLO_NO_INICIO = /^([ \t]*)[ \t]*/gm;
+
+export function normalizarMarcadoresDeLista(texto) {
+  return typeof texto === "string" ? texto.replace(MARCADOR_SIMBOLO_NO_INICIO, "$1• ") : texto;
+}
+
 // O enunciado normalizado é o que seria PERSISTIDO: questão
 // autossuficiente, com o(s) texto(s)-base de que ela depende incorporados
 // antes do comando (mesma convenção do legado — o schema não tem tabela
@@ -19,13 +32,13 @@ export function normalizarQuestao(juntada, metadata, classificacao) {
 
   const alternativas = juntada.alternativas.map((alternativa) => ({
     letra: alternativa.letra,
-    texto: alternativa.texto,
+    texto: normalizarMarcadoresDeLista(alternativa.texto),
     correta: letraCorreta !== null && alternativa.letra === letraCorreta,
   }));
 
   return {
     numero_original: juntada.numero_original,
-    enunciado: juntarQuebrasArtificiais(comporEnunciado(textosBase, juntada.enunciado)),
+    enunciado: juntarQuebrasArtificiais(normalizarMarcadoresDeLista(comporEnunciado(textosBase, juntada.enunciado))),
     alternativas,
     banca: metadata?.banca ?? null,
     ano: metadata?.ano ?? null,
@@ -45,7 +58,7 @@ export function normalizarQuestao(juntada, metadata, classificacao) {
       atravessa_pagina: juntada.atravessa_pagina,
       texto_base_id: juntada.texto_base_id,
       texto_base: juntada.texto_base,
-      enunciado_comando: juntarQuebrasArtificiais(juntada.enunciado),
+      enunciado_comando: juntarQuebrasArtificiais(normalizarMarcadoresDeLista(juntada.enunciado)),
       textos_base: textosBase.map((t) => ({ id: t.id, tipo: t.tipo, confiavel: t.confiavel, motivo: t.motivo, caracteres: t.texto.length, linhas_numeradas: t.linhas_numeradas ?? false })),
       dependencia_texto_incerta: juntada.dependencia_texto_incerta ?? null,
       alternativa_suspeita: juntada.alternativa_suspeita ?? null,

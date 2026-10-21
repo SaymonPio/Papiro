@@ -529,3 +529,70 @@ test("FGV-G) composição: título em maiúsculas já separado pelo detector de 
   assert.equal(questoes[0].alternativas.at(-1).texto, "d");
   assert.deepEqual(questoes.map((q) => q.materia_detectada), ["Língua Portuguesa", "Legislação", "Legislação"]);
 });
+
+// ---- Caderno composto de partes (comum + específica + redação), cada uma com seu carimbo ----
+
+const LONGO = "Bloco sintético de apoio que ocupa espaço suficiente para formar um bloco próprio de leitura. ".repeat(5);
+
+// Enunciados e alternativas distintos por questão: linha igual (com os
+// números trocados por "#") na borda de muitas páginas é cabeçalho corrido.
+const NOMES = ["um", "dois", "três", "quatro", "cinco", "seis", "sete"];
+
+function questaoComposta(n, extra = []) {
+  const nome = NOMES[n - 1];
+  return [`QUESTÃO ${String(n).padStart(2, "0")} – Enunciado sintético ${nome}.`, `A) a${nome}`, `B) b${nome}`, `C) c${nome}`, `D) d${nome}`, `E) fim ${nome}`, ...extra];
+}
+
+test("CAD-A) carimbo de uma parte do caderno em menos da metade das páginas, mas no topo de 3+ páginas seguidas, é removido", () => {
+  const paginas = [
+    ...[1, 2, 3].map((n) => ({ numero: n, texto: ["PARTE_COMUM 01/01/2099 10:00:00", ...questaoComposta(n)].join("\n") })),
+    ...[4, 5, 6, 7].map((n) => ({ numero: n, texto: ["PARTE_ESPECIFICA 01/01/2099 11:00:00", ...questaoComposta(n)].join("\n") })),
+  ];
+  const { questoes } = extrairQuestoesDoTexto(paginas);
+  assert.equal(questoes.length, 7);
+  for (const q of questoes) assert.equal(q.alternativas.at(-1).texto, `fim ${NOMES[q.numero_impresso - 1]}`);
+});
+
+test("CAD-A2) linha repetida só no topo de 2 páginas seguidas não é carimbo e fica", () => {
+  const paginas = [1, 2, 3].map((n) => ({ numero: n, texto: questaoComposta(n).join("\n") }));
+  for (const p of paginas.slice(1)) p.texto = ["Linha de abertura só em duas", p.texto].join("\n");
+  const { questoes } = extrairQuestoesDoTexto(paginas);
+  assert.equal(questoes.length, 3);
+  assert.equal(questoes[0].alternativas.at(-1).texto, "fim um\nLinha de abertura só em duas");
+});
+
+test("CAD-B) título de nova seção seguido de texto-base, depois da última alternativa, não entra na alternativa da questão anterior", () => {
+  const texto = [...questaoComposta(1), "LÍNGUA ESTRANGEIRA", "Title of a synthetic text", LONGO, ...questaoComposta(2), ...questaoComposta(3)].join("\n");
+  const { questoes, avisos } = extrairQuestoesDoTexto([{ numero: 1, texto }], {
+    composicao: [{ materia: "Legislação", inicio: 1, fim: 1 }, { materia: "Língua Estrangeira", inicio: 2, fim: 3 }],
+  });
+  assert.equal(questoes[0].alternativas.at(-1).texto, "fim um");
+  assert.deepEqual(avisos, []);
+  // Sem composição, o bloco longo depois do título também basta para o corte.
+  const sem = extrairQuestoesDoTexto([{ numero: 1, texto }]);
+  assert.equal(sem.questoes[0].alternativas.at(-1).texto, "fim um");
+});
+
+test("CAD-B2) linha em maiúsculas sem palavra de título ('I, II, III, IV') ou sem bloco depois dela nunca corta", () => {
+  const texto = [...questaoComposta(1, ["I, II, III, IV", LONGO]), ...questaoComposta(2, ["CONTINUAÇÃO EM MAIÚSCULAS", "curta."]), ...questaoComposta(3)].join("\n");
+  const { questoes } = extrairQuestoesDoTexto([{ numero: 1, texto }]);
+  assert.equal(questoes[0].alternativas.at(-1).texto, `fim um\nI, II, III, IV\n${LONGO.trim()}`);
+  assert.equal(questoes[1].alternativas.at(-1).texto, "fim dois\nCONTINUAÇÃO EM MAIÚSCULAS\ncurta.");
+});
+
+test("CAD-C) conteúdo depois do fim da prova objetiva (redação na página seguinte, com carimbo próprio) não gruda na última questão", () => {
+  const redacao = ["PARTE_REDACAO 01/01/2099 12:00:00", "PROVA DE REDAÇÃO", "Instruções: elabore um texto sintético.", LONGO].join("\n");
+  const { questoes } = extrairQuestoesDoTexto([
+    { numero: 1, texto: [...questaoComposta(1), ...questaoComposta(2)].join("\n") },
+    { numero: 2, texto: questaoComposta(3).join("\n") },
+    { numero: 3, texto: redacao },
+  ]);
+  assert.equal(questoes.length, 3);
+  assert.equal(questoes[2].alternativas.at(-1).texto, "fim três");
+  // Continuação real da alternativa no topo da página nova (começa em minúscula) fica na questão.
+  const cont = extrairQuestoesDoTexto([
+    { numero: 1, texto: [1, 2, 3].flatMap((n) => questaoComposta(n)).join("\n") },
+    { numero: 2, texto: ["continuação da alternativa E.", "PROVA DE REDAÇÃO", LONGO].join("\n") },
+  ]);
+  assert.equal(cont.questoes[2].alternativas.at(-1).texto, "fim três\ncontinuação da alternativa E.");
+});

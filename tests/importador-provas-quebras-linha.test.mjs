@@ -64,3 +64,18 @@ test("QL-I) maiúscula na linha seguinte só junta depois de vírgula/palavra de
   assert.equal(juntarQuebrasArtificiais(`${LONGA} no computador, com o\nExcel aberto.`), `${LONGA} no computador, com o Excel aberto.`);
   assert.equal(juntarQuebrasArtificiais(`${LONGA} de Ana,\nCarol e Luiz.`), `${LONGA} de Ana, Carol e Luiz.`);
 });
+
+test("QL-SYM) marcador U+F0B7 (fonte Symbol) no início da linha vira '• ' e a lista continua em linhas próprias; no meio do texto nada muda", async () => {
+  const { normalizarMarcadoresDeLista, normalizarQuestao } = await import("../scripts/importador-provas/lib/normalizar.mjs");
+  const enunciado = `${LONGA} analise as situações abaixo:\n\uF0B7 Primeira situação ficticia.\n\uF0B7\tSegunda situação ficticia.\nAssinale a alternativa correta.`;
+  assert.equal(normalizarMarcadoresDeLista("a \uF0B7 b"), "a \uF0B7 b");
+  const q = normalizarQuestao(
+    { numero_original: 1, enunciado, alternativas: [{ letra: "A", texto: "\uF0B7 item" }], gabarito: null },
+    {},
+    { materia_id: null, assunto_id: null, confidence: "nenhuma" },
+  );
+  assert.equal(q.enunciado, `${LONGA} analise as situações abaixo:\n• Primeira situação ficticia.\n• Segunda situação ficticia.\nAssinale a alternativa correta.`);
+  assert.equal(q._interno.enunciado_comando, q.enunciado);
+  assert.equal(q.alternativas[0].texto, "• item");
+  assert.doesNotMatch(q.enunciado + q.alternativas[0].texto, /[\uE000-\uF8FF]/);
+});
