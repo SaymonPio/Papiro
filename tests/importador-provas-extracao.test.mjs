@@ -596,3 +596,32 @@ test("CAD-C) conteúdo depois do fim da prova objetiva (redação na página seg
   ]);
   assert.equal(cont.questoes[2].alternativas.at(-1).texto, "fim três\ncontinuação da alternativa E.");
 });
+
+test("CAD-MULTI) PDF com cadernos concatenados (numeração recomeça em 1): nenhuma sequência é escolhida entre cadernos — bloqueio com as páginas de cada um", () => {
+  // Sufixo só com letras: dígitos viram "#" na chave de linha corrida e as alternativas curtas sumiriam como cabeçalho.
+  const sufixo = (k) => String.fromCharCode(97 + Math.floor(k / 26), 97 + (k % 26));
+  const caderno = (desloc, n) =>
+    Array.from({ length: n }, (_, i) => ({
+      numero: desloc + i + 1,
+      texto: [`QUESTÃO ${String(i + 1).padStart(2, "0")} – Enunciado ${sufixo(desloc + i)}.`, ...["A", "B", "C", "D", "E"].map((l) => `${l}) ${l.toLowerCase()}${sufixo(desloc + i)}`)].join("\n"),
+    }));
+  const paginas = [...caderno(0, 12), ...caderno(12, 15)];
+  const resultado = extrairQuestoesDoTexto(paginas);
+  assert.equal(resultado.questoes.length, 0);
+  assert.match(resultado.bloqueio, /2 cadernos.*p\. 1–12 \(12 questões\); p\. 13–27 \(15 questões\)/);
+  // Selecionando as páginas de uma parte (metadata.parte.paginas), a extração segue normal.
+  const parte = extrairQuestoesDoTexto(paginas.slice(12));
+  assert.equal(parte.bloqueio, null);
+  assert.deepEqual(parte.questoes.map((q) => q.numero_impresso), Array.from({ length: 15 }, (_, i) => i + 1));
+});
+
+test("CAD-MULTI2) recomeço curto (lista '1. 2. 3.' dentro de enunciado) não é caderno novo", () => {
+  const texto = [
+    ...questaoComposta(1, ["Coluna 1", "1. Item um.", "2. Item dois.", "3. Item três."]),
+    ...questaoComposta(2),
+    ...questaoComposta(3),
+  ].join("\n");
+  const r = extrairQuestoesDoTexto([{ numero: 1, texto }]);
+  assert.equal(r.bloqueio, null);
+  assert.equal(r.questoes.length, 3);
+});

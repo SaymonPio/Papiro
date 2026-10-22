@@ -155,6 +155,32 @@ function resolverDocumentos(prova, retificacoes, existentes, provaExiste) {
   return { documentos, bloqueios };
 }
 
+// Parte da prova (public.prova_partes): P1/P2 de um mesmo documento
+// oficial, cada uma com numeração própria. numero_original continua sendo
+// o número impresso; "já importada" e unicidade valem DENTRO da parte.
+// Nunca mistura os modelos: prova com questões sem parte não recebe
+// partes, e prova organizada em partes não recebe questão sem parte. A
+// mesma parte reaparecendo precisa ter o mesmo nome e ordem.
+function resolverParte(parte, contexto, provaExiste) {
+  const bloqueios = [];
+  const partesDaProva = provaExiste ? contexto.partesDaProva ?? [] : [];
+  if (!parte) {
+    if (provaExiste && (contexto.questoesComParteNaProva ?? 0) > 0) bloqueios.push("prova organizada em partes (prova_partes) — o staging precisa declarar a parte (metadata.parte)");
+    return { parte: null, bloqueios };
+  }
+  if (!contexto.temTabelaPartes) bloqueios.push("o staging declara a parte da prova, mas o banco não tem public.prova_partes — aplicar a migration antes");
+  if (provaExiste && (contexto.questoesSemParteNaProva ?? 0) > 0) bloqueios.push("prova já cadastrada com questões sem parte — não misturar o modelo com partes e o sem partes");
+  const existente = partesDaProva.find((p) => p.codigo === parte.codigo) ?? null;
+  if (existente && (existente.nome !== parte.nome || existente.ordem !== parte.ordem)) {
+    bloqueios.push(`parte ${parte.codigo} já cadastrada com outro nome/ordem (prova_partes.id=${existente.id}) — PARAR, nunca sobrescrever`);
+  }
+  if (!existente && partesDaProva.some((p) => p.ordem === parte.ordem)) bloqueios.push(`ordem ${parte.ordem} já usada por outra parte desta prova`);
+  return {
+    parte: { codigo: parte.codigo, nome: parte.nome, ordem: parte.ordem, prova_parte_id_existente: existente?.id ?? null, situacao: existente ? "EXISTENTE" : "NOVA" },
+    bloqueios,
+  };
+}
+
 // Liberação explícita de gate conservador (aprovacao.liberacoes): depois
 // de revisão humana, uma CAUSA heurística de um gate do staging pode ser
 // liberada para UMA questão — nunca o gate inteiro, nunca implicitamente.
@@ -333,6 +359,8 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
 
   const { documentos, bloqueios: bloqueiosDocumentos } = resolverDocumentos(prova, proveniencia?.retificacoes ?? [], contexto.documentosDaProva ?? [], provaIdExistente !== null);
   bloqueios.push(...bloqueiosDocumentos);
+  const { parte, bloqueios: bloqueiosParte } = resolverParte(proveniencia?.parte ?? null, contexto, provaIdExistente !== null);
+  bloqueios.push(...bloqueiosParte);
 
   // ---- Questões ----
   const overrides = aprovacao.classificacao ?? {};
@@ -518,7 +546,9 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
   return {
     versao: VERSAO_MANIFESTO,
     modo,
-    prova: { ...prova, prova_id_existente: provaIdExistente, situacao: provaIdExistente !== null ? "EXISTENTE" : "NOVA" },
+    // A parte só entra no manifesto quando o staging a declara — sem parte,
+    // o manifesto (e o hash) é exatamente o de antes.
+    prova: { ...prova, prova_id_existente: provaIdExistente, situacao: provaIdExistente !== null ? "EXISTENTE" : "NOVA", ...(parte ? { parte } : {}) },
     // Documentos que alteraram o gabarito base — fazem parte do hash do
     // manifesto aprovado (o schema de provas ainda não os grava).
     retificacoes_gabarito: proveniencia?.retificacoes ?? [],

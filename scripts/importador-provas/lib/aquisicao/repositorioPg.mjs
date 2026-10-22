@@ -19,6 +19,13 @@ export function criarRepositorioPg(client) {
     temTabelaMidias ??= (await client.query("select to_regclass('public.questao_midias') is not null as existe")).rows[0].existe;
     return temTabelaMidias;
   };
+  // prova_partes só existe depois da migration 20261021120000; sem ela,
+  // nenhuma consulta nem gravação muda.
+  let temTabelaPartes = null;
+  const tabelaPartes = async () => {
+    temTabelaPartes ??= (await client.query("select to_regclass('public.prova_partes') is not null as existe")).rows[0].existe;
+    return temTabelaPartes;
+  };
 
   return {
     async iniciar({ somenteLeitura, chaveLock = null }) {
@@ -42,7 +49,7 @@ export function criarRepositorioPg(client) {
       aberta = false;
     },
 
-    async lerContexto({ hashProva, chaveNatural, slugsCursos, alternativas }) {
+    async lerContexto({ hashProva, chaveNatural, slugsCursos, alternativas, parteCodigo = null }) {
       const porHash = hashProva ? (await client.query("select * from public.provas where hash_prova = $1", [hashProva])).rows[0] ?? null : null;
       const porChave =
         (
@@ -56,8 +63,25 @@ export function criarRepositorioPg(client) {
 
       const numerosJaImportados = new Map();
       let documentosDaProva = [];
+      const comPartes = await tabelaPartes();
+      let partesDaProva = [];
+      let questoesComParteNaProva = 0;
+      let questoesSemParteNaProva = 0;
       if (porHash) {
-        const { rows } = await client.query("select id, numero_original from public.questoes where prova_id = $1", [porHash.id]);
+        if (comPartes) {
+          partesDaProva = (await client.query("select id, codigo, nome, ordem from public.prova_partes where prova_id = $1 order by ordem", [porHash.id])).rows.map((p) => ({ ...p, id: Number(p.id) }));
+          const contagem = (await client.query("select count(*) filter (where prova_parte_id is not null)::int as com, count(*) filter (where prova_parte_id is null)::int as sem from public.questoes where prova_id = $1", [porHash.id])).rows[0];
+          questoesComParteNaProva = contagem.com;
+          questoesSemParteNaProva = contagem.sem;
+        }
+        // "Já importada" vale dentro da parte declarada (ou entre as questões
+        // sem parte, no modelo antigo).
+        const parte = parteCodigo ? partesDaProva.find((p) => p.codigo === parteCodigo) : null;
+        const { rows } = !comPartes
+          ? await client.query("select id, numero_original from public.questoes where prova_id = $1", [porHash.id])
+          : parteCodigo
+            ? await client.query("select id, numero_original from public.questoes where prova_id = $1 and prova_parte_id = $2", [porHash.id, parte?.id ?? null])
+            : await client.query("select id, numero_original from public.questoes where prova_id = $1 and prova_parte_id is null", [porHash.id]);
         for (const r of rows) numerosJaImportados.set(r.numero_original, Number(r.id));
         documentosDaProva = (await client.query("select tipo, ordem, url, hash_sha256 from public.prova_documentos where prova_id = $1 order by tipo, ordem", [porHash.id])).rows;
       }
@@ -114,6 +138,10 @@ export function criarRepositorioPg(client) {
         provaPorChaveNatural: porChave ? { ...porChave, id: Number(porChave.id) } : null,
         numerosJaImportados,
         documentosDaProva,
+        temTabelaPartes: comPartes,
+        partesDaProva,
+        questoesComParteNaProva,
+        questoesSemParteNaProva,
         questoesGlobais: globais.map((g) => ({ id: Number(g.id), enunciado: g.enunciado, alternativas: g.alternativas })),
         materias: new Map(materias.map((m) => [Number(m.id), { id: Number(m.id), nome: m.nome, ativo: m.ativo }])),
         assuntos: new Map(assuntos.map((a) => [Number(a.id), { id: Number(a.id), materia_id: Number(a.materia_id), nome: a.nome }])),
@@ -141,9 +169,22 @@ export function criarRepositorioPg(client) {
       ]);
     },
 
+    async inserirParte(provaId, parte) {
+      const { rows } = await client.query("insert into public.prova_partes (prova_id, codigo, nome, ordem) values ($1, $2, $3, $4) returning id", [provaId, parte.codigo, parte.nome, parte.ordem]);
+      return Number(rows[0].id);
+    },
+
     // Mesmas colunas que importar_questoes_lote() grava, mais a
     // proveniência; usuario_id NULL (questão global), ativa, não IA.
     async inserirQuestao(q) {
+      if (q.prova_parte_id !== undefined) {
+        const { rows } = await client.query(
+          `insert into public.questoes (usuario_id, materia_id, assunto_id, banca, concurso, ano, enunciado, fonte, ativa, gerada_por_ia, prova_id, prova_parte_id, numero_original)
+           values (null, $1, $2, $3, $4, $5, $6, $7, true, false, $8, $9, $10) returning id`,
+          [q.materia_id, q.assunto_id, q.banca, q.concurso, q.ano, q.enunciado, q.fonte, q.prova_id, q.prova_parte_id, q.numero_original],
+        );
+        return Number(rows[0].id);
+      }
       const { rows } = await client.query(
         `insert into public.questoes (usuario_id, materia_id, assunto_id, banca, concurso, ano, enunciado, fonte, ativa, gerada_por_ia, prova_id, numero_original)
          values (null, $1, $2, $3, $4, $5, $6, $7, true, false, $8, $9) returning id`,
@@ -193,17 +234,20 @@ export function criarRepositorioPg(client) {
       await client.query("insert into public.curso_questoes (curso_id, questao_id) values ($1, $2)", [cursoId, questaoId]);
     },
 
-    async lerEstadoPosCheck({ provaId, questaoIds }) {
+    async lerEstadoPosCheck({ provaId, parteId = null, questaoIds }) {
       const prova = (await client.query("select * from public.provas where id = $1", [provaId])).rows[0] ?? null;
+      const comPartes = await tabelaPartes();
+      // Com partes, o estado é o da parte (ou o das questões sem parte).
       const { rows: questoes } = await client.query(
-        `select q.id, q.numero_original, q.enunciado, q.usuario_id,
+        `select q.id, q.numero_original, q.enunciado, q.usuario_id, ${comPartes ? "q.prova_parte_id" : "null::bigint as prova_parte_id"},
                 coalesce(json_agg(json_build_object('correta', a.correta) order by a.ordem) filter (where a.id is not null), '[]') as alternativas
            from public.questoes q
            left join public.alternativas a on a.questao_id = q.id
-          where q.prova_id = $1
+          where q.prova_id = $1 ${comPartes ? "and q.prova_parte_id is not distinct from $2::bigint" : "and $2::bigint is null"}
           group by q.id`,
-        [provaId],
+        [provaId, parteId],
       );
+      const parte = comPartes && parteId !== null ? ((await client.query("select id, codigo, nome, ordem from public.prova_partes where id = $1 and prova_id = $2", [parteId, provaId])).rows[0] ?? null) : null;
       const { rows: vinculos } = await client.query("select curso_id, questao_id from public.curso_questoes where questao_id = any($1::bigint[])", [questaoIds]);
       const { rows: documentos } = await client.query("select tipo, ordem, hash_sha256 from public.prova_documentos where prova_id = $1", [provaId]);
       const midias = (await tabelaMidias())
@@ -211,9 +255,10 @@ export function criarRepositorioPg(client) {
         : [];
       return {
         prova,
+        ...(parte ? { parte: { ...parte, id: Number(parte.id) } } : {}),
         documentos,
         midias,
-        questoesDaProva: questoes.map((q) => ({ ...q, id: Number(q.id) })),
+        questoesDaProva: questoes.map((q) => ({ ...q, id: Number(q.id), prova_parte_id: q.prova_parte_id === null ? null : Number(q.prova_parte_id) })),
         vinculos: vinculos.map((v) => ({ curso_id: v.curso_id, questao_id: Number(v.questao_id) })),
       };
     },
@@ -230,6 +275,7 @@ export function criarRepositorioPg(client) {
            (select count(*) from public.curso_questoes)::int as curso_questoes`,
       );
       if (await tabelaMidias()) rows[0].questao_midias = (await client.query("select count(*)::int as n from public.questao_midias")).rows[0].n;
+      if (await tabelaPartes()) rows[0].prova_partes = (await client.query("select count(*)::int as n from public.prova_partes")).rows[0].n;
       return rows[0];
     },
 

@@ -202,3 +202,36 @@ test("U) grade posicional com \"*\" (anulada) na linha de respostas: a faixa é 
   const { gabaritos } = extrairGabaritoDoTexto(["01 02 03", "A C E", "04 05 06", "B * D"].join("\n"));
   assert.deepEqual(gabaritos.map((g) => `${g.numero}${g.anulada ? "*" : g.alternativa_correta}`), ["1A", "2C", "3E", "4B", "5*", "6D"]);
 });
+
+test("GRADE-SEQ) célula única impressa errada no cabeçalho da grade ('72 33 74'): número deduzido pela posição, com registro; a questão 33 não ganha segunda resposta", () => {
+  const linhas = (de, letras) => [Array.from({ length: 20 }, (_, i) => de + i).join(" "), letras.join(" ")];
+  const L = (s) => s.split("");
+  const texto = [
+    "BLOCO SINTÉTICO – TIPO 1",
+    ...linhas(1, L("ABCDEABCDEABCDEABCDE")),
+    ...linhas(21, L("BCDEABCDEABCDEABCDEA")),
+    ...linhas(41, L("CDEABCDEABCDEABCDEAB")),
+    "61 62 63 64 65 66 67 68 69 70 71 72 33 74 75 76 77 78 79 80",
+    "D E A B C D E A B C D E A B C D E A B *",
+  ].join("\n");
+  const { gabaritos } = extrairGabaritoDoTexto(texto);
+  const g = (n) => gabaritos.filter((x) => x.numero === n);
+  assert.equal(g(33).length, 1);
+  assert.equal(g(33)[0].alternativa_correta, "D");
+  assert.equal(g(73).length, 1);
+  assert.equal(g(73)[0].alternativa_correta, "A");
+  assert.equal(g(73)[0].status, "ok");
+  assert.deepEqual(g(73)[0].numero_deduzido, { impresso: 33, deduzido: 73 });
+  assert.match(g(73)[0].observacao, /impresso na grade "33"; deduzido 73/);
+  assert.equal(gabaritos.length, 80);
+});
+
+test("GRADE-SEQ2) sem dedução quando não é inequívoco: duas células fora da sequência, ou número deduzido já respondido no bloco", () => {
+  const duas = extrairGabaritoDoTexto(["X", "1 2 9 4 8 6", "A B C D E A"].join("\n")).gabaritos;
+  assert.deepEqual(duas.map((x) => x.numero), [1, 2, 9, 4, 8, 6]);
+  assert.ok(duas.every((x) => !x.numero_deduzido));
+  // A posição pede o 3, que já tem resposta no bloco: nada deduzido, o "77" fica como impresso.
+  const jaExiste = extrairGabaritoDoTexto(["X", "3 4 5 6", "A B C D", "1 2 77 4", "A B C D"].join("\n")).gabaritos;
+  assert.ok(jaExiste.every((x) => !x.numero_deduzido));
+  assert.equal(jaExiste.filter((x) => x.numero === 77).length, 1);
+});

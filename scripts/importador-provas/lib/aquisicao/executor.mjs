@@ -52,6 +52,7 @@ async function planejar(repo, entrada) {
   const contexto = await repo.lerContexto({
     hashProva: prova.hash_prova ?? null,
     chaveNatural: prova,
+    parteCodigo: entrada.proveniencia?.parte?.codigo ?? null,
     slugsCursos: (entrada.aprovacao?.vinculos ?? []).map((v) => v.curso),
     alternativas: textosParaChecarSequencia(entrada.questoes),
   });
@@ -66,10 +67,12 @@ function fonteCompativel(prova, numero) {
 
 // Pós-check DENTRO da transação, antes do COMMIT — qualquer falha aqui
 // derruba a aquisição inteira (ROLLBACK).
-function avaliarPosCheck({ estado, estruturaAntes, estruturaDepois, mutaveisAntes, mutaveisDepois, provaNova, prova, inseridas, vinculosEsperados, totalAntes, documentosEsperados, documentosNovos, midiasEsperadas = [], objetosMidia = null }) {
+function avaliarPosCheck({ estado, estruturaAntes, estruturaDepois, mutaveisAntes, mutaveisDepois, provaNova, prova, parteId = null, inseridas, vinculosEsperados, totalAntes, documentosEsperados, documentosNovos, midiasEsperadas = [], objetosMidia = null }) {
   const falhas = [];
+  const parte = prova.parte ?? null;
   const deltasEsperados = {
     provas: provaNova ? 1 : 0,
+    ...("prova_partes" in mutaveisAntes ? { prova_partes: parte?.situacao === "NOVA" ? 1 : 0 } : {}),
     prova_documentos: documentosNovos,
     questoes: inseridas.length,
     alternativas: inseridas.reduce((soma, i) => soma + i.total_alternativas, 0),
@@ -100,6 +103,11 @@ function avaliarPosCheck({ estado, estruturaAntes, estruturaDepois, mutaveisAnte
     if (real !== esperado) falhas.push(`${tabela}: cresceu ${real}, esperado ${esperado}`);
   }
   if (!estado.prova || estado.prova.hash_prova !== prova.hash_prova) falhas.push("prova não encontrada pelo hash após a gravação");
+  if (parte) {
+    const gravada = estado.parte ?? null;
+    if (!gravada || gravada.id !== parteId || gravada.codigo !== parte.codigo || gravada.nome !== parte.nome || gravada.ordem !== parte.ordem) falhas.push(`parte ${parte.codigo} não encontrada na prova com o código/nome/ordem do manifesto`);
+    for (const q of estado.questoesDaProva) if (q.prova_parte_id !== parteId) falhas.push(`questão ${q.id}: prova_parte_id ${q.prova_parte_id}, esperado ${parteId}`);
+  }
 
   const daProva = estado.questoesDaProva;
   if (daProva.length !== totalAntes + inseridas.length) {
@@ -206,7 +214,10 @@ export async function executarAquisicao({ repo, entrada, modo = "dry-run", hashM
     // registrados foram conferidos por hash no planejamento.
     const documentosNovos = manifesto.documentos.filter((d) => d.situacao === "NOVO");
     for (const documento of documentosNovos) await repo.inserirDocumento(provaId, documento);
-    const totalAntes = (await repo.lerEstadoPosCheck({ provaId, questaoIds: [] })).questoesDaProva.length;
+    // Parte da prova (P1/P2): numeração e pós-check valem dentro dela.
+    const parte = prova.parte ?? null;
+    const parteId = parte ? (parte.prova_parte_id_existente ?? (await repo.inserirParte(provaId, parte))) : null;
+    const totalAntes = (await repo.lerEstadoPosCheck({ provaId, parteId, questaoIds: [] })).questoesDaProva.length;
 
     const porNumero = new Map(entrada.questoes.map((q) => [q.numero_original, q]));
     const inseridas = [];
@@ -223,6 +234,7 @@ export async function executarAquisicao({ repo, entrada, modo = "dry-run", hashM
         enunciado: questao.enunciado.trim(),
         fonte: fonteCompativel(prova, item.numero_original),
         prova_id: provaId,
+        ...(parteId !== null ? { prova_parte_id: parteId } : {}),
         numero_original: item.numero_original,
       });
       await repo.inserirAlternativas(
@@ -241,7 +253,7 @@ export async function executarAquisicao({ repo, entrada, modo = "dry-run", hashM
       inseridas.push({ numero_original: item.numero_original, questao_id: questaoId, total_alternativas: questao.alternativas.length, curso_ids: item.curso_ids_aprovados, midias: (item.midias ?? []).length });
     }
 
-    const estado = await repo.lerEstadoPosCheck({ provaId, questaoIds: inseridas.map((i) => i.questao_id) });
+    const estado = await repo.lerEstadoPosCheck({ provaId, parteId, questaoIds: inseridas.map((i) => i.questao_id) });
     const estruturaDepois = await repo.contagensEstruturais();
     const mutaveisDepois = await repo.contagensMutaveis();
     const falhas = avaliarPosCheck({
@@ -252,6 +264,7 @@ export async function executarAquisicao({ repo, entrada, modo = "dry-run", hashM
       mutaveisDepois,
       provaNova: prova.prova_id_existente === null,
       prova,
+      parteId,
       inseridas,
       vinculosEsperados,
       totalAntes,
@@ -274,6 +287,7 @@ export async function executarAquisicao({ repo, entrada, modo = "dry-run", hashM
       hash,
       gravado: modo === "apply",
       prova_id: provaId,
+      ...(parteId !== null ? { prova_parte_id: parteId } : {}),
       prova_reutilizada: prova.prova_id_existente !== null,
       inseridas,
       pos_check: { ok: true, falhas: [] },
@@ -312,6 +326,7 @@ export function montarRelatorioAquisicao(resultado, geradoEm = new Date().toISOS
       id: resultado.prova_id ?? manifesto.prova.prova_id_existente,
       situacao: manifesto.prova.situacao,
       nome: manifesto.prova.nome,
+      ...(manifesto.prova.parte ? { parte: { ...manifesto.prova.parte, id: resultado.prova_parte_id ?? manifesto.prova.parte.prova_parte_id_existente } } : {}),
       hash_prova: manifesto.prova.hash_prova,
       hash_gabarito: manifesto.prova.hash_gabarito,
     },

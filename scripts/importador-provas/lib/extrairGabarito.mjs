@@ -63,6 +63,26 @@ function linhaEhSomenteRespostas(linha, quantidadeEsperada) {
   return tokens.every((t) => /^(?:[A-E]|X|\*)$/i.test(t));
 }
 
+// Cabeçalho de grade com UMA célula impressa errada (checado num gabarito
+// real: Fundatec/PC-RS 2025 Delegado, "61 ... 71 72 33 74 ... 80" nos dois
+// editais e nos 4 tipos): o "33" viraria uma segunda resposta da questão
+// 33 e a 73 ficaria sem gabarito. Só corrige quando é inequívoco — todas
+// as outras células formam uma sequência +1 que determina o número da
+// posição, há exatamente uma célula fora dela, e o número deduzido ainda
+// não tem resposta no bloco. Fora disso, nada é deduzido. A célula
+// corrigida leva o valor impresso e o deduzido (relatório).
+function corrigirCelulaUnicaDaSequencia(numeros, numerosDoBloco) {
+  if (numeros.length < 3) return null;
+  const inicios = new Map();
+  for (const [j, n] of numeros.entries()) inicios.set(n - j, (inicios.get(n - j) ?? 0) + 1);
+  const [inicio, quantos] = [...inicios].sort((a, b) => b[1] - a[1])[0];
+  if (quantos !== numeros.length - 1) return null;
+  const j = numeros.findIndex((n, k) => n - k !== inicio);
+  const deduzido = inicio + j;
+  if (deduzido < 1 || numerosDoBloco.has(deduzido)) return null;
+  return { posicao: j, impresso: numeros[j], deduzido };
+}
+
 // Varre linha a linha procurando pares (linha-de-números, linha-de-
 // respostas-na-posição-seguinte). Quando uma linha "rótulo" aparece
 // imediatamente antes de uma linha de números (e não é ela mesma uma
@@ -73,6 +93,7 @@ function extrairBlocosPosicionais(linhas) {
   const entradas = [];
   const indicesConsumidos = new Set();
   let blocoAtual = null;
+  const numerosPorBloco = new Map();
 
   for (let i = 0; i < linhas.length; i++) {
     // Linha de respostas já pareada nunca é rótulo do bloco seguinte
@@ -88,19 +109,24 @@ function extrairBlocosPosicionais(linhas) {
       const proximaLinha = linhas[i + 1] ?? "";
       if (linhaEhSomenteRespostas(proximaLinha, numeros.length)) {
         const respostas = tokensDaLinha(proximaLinha);
+        const numerosDoBloco = numerosPorBloco.get(blocoAtual) ?? new Set();
+        numerosPorBloco.set(blocoAtual, numerosDoBloco);
+        const correcao = corrigirCelulaUnicaDaSequencia(numeros, numerosDoBloco);
         const numerosVistosNoBloco = new Set();
         for (let j = 0; j < numeros.length; j++) {
-          const numero = numeros[j];
+          const numero = correcao?.posicao === j ? correcao.deduzido : numeros[j];
           const letra = respostas[j].toUpperCase();
           const anulada = letra === "X" || letra === "*";
           const duplicadoNoBloco = numerosVistosNoBloco.has(numero);
           numerosVistosNoBloco.add(numero);
+          numerosDoBloco.add(numero);
           entradas.push({
             numero,
             alternativa_correta: anulada ? null : letra,
             anulada,
             alterada: false,
-            observacao: null,
+            observacao: correcao?.posicao === j ? `número impresso na grade "${correcao.impresso}"; deduzido ${correcao.deduzido} pela posição na sequência` : null,
+            ...(correcao?.posicao === j ? { numero_deduzido: { impresso: correcao.impresso, deduzido: correcao.deduzido } } : {}),
             bloco: blocoAtual,
             status: duplicadoNoBloco ? "revisao_manual" : "ok",
           });

@@ -31,7 +31,12 @@ function texto(valor) {
 // no manifesto (e no hash dele) e são conferidas de novo pelo executor.
 // gabaritoTipo: "definitivo" (padrão) ou "preliminar" (antes dos recursos —
 // o planejador bloqueia o apply).
-export function montarProveniencia(metadata, { hashProva, hashGabarito, retificacoes = [], gabaritoTipo = "definitivo" }) {
+// parte (opcional): parte de uma prova cujo PDF oficial reúne mais de um
+// caderno (ex.: P1 e P2) — { codigo, nome, ordem }, gravada em
+// public.prova_partes. Ausente, a proveniência fica exatamente como antes.
+const REGEX_CODIGO_PARTE = /^[A-Z0-9][A-Z0-9_-]{0,15}$/;
+
+export function montarProveniencia(metadata, { hashProva, hashGabarito, retificacoes = [], gabaritoTipo = "definitivo", parte = null }) {
   const ano = Number.isInteger(metadata?.ano) ? metadata.ano : null;
   const prova = {
     banca: texto(metadata?.banca),
@@ -63,5 +68,23 @@ export function montarProveniencia(metadata, { hashProva, hashGabarito, retifica
     else if (!REGEX_HASH.test(r.hash)) invalidos.push(`${rotulo}.hash`);
   }
 
-  return { prova, retificacoes: retificacoesGabarito, gabarito_tipo: gabaritoTipo, completa: faltando.length === 0 && invalidos.length === 0, faltando, invalidos };
+  let parteNormalizada = null;
+  if (parte) {
+    parteNormalizada = { codigo: texto(parte.codigo), nome: texto(parte.nome), ordem: Number.isInteger(parte.ordem) ? parte.ordem : null };
+    if (parteNormalizada.codigo === null) faltando.push("parte.codigo");
+    else if (!REGEX_CODIGO_PARTE.test(parteNormalizada.codigo)) invalidos.push("parte.codigo");
+    if (parteNormalizada.nome === null) faltando.push("parte.nome");
+    if (parteNormalizada.ordem === null) faltando.push("parte.ordem");
+    else if (parteNormalizada.ordem < 1 || parteNormalizada.ordem > 20) invalidos.push("parte.ordem");
+  }
+
+  return {
+    prova,
+    ...(parteNormalizada ? { parte: parteNormalizada } : {}),
+    retificacoes: retificacoesGabarito,
+    gabarito_tipo: gabaritoTipo,
+    completa: faltando.length === 0 && invalidos.length === 0,
+    faltando,
+    invalidos,
+  };
 }

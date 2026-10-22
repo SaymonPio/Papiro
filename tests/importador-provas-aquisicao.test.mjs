@@ -20,9 +20,12 @@ const CURSO_BM = "11111111-1111-1111-1111-111111111111";
 
 // midias: liga questao_midias + bucket. O bucket (Map path -> bytes) fica FORA do snapshot transacional,
 // como o Storage real: ROLLBACK do banco não desfaz objeto enviado.
-function criarRepositorioMemoria({ falharNaQuestao = null, midias = false, bucket = new Map() } = {}) {
+// partes: liga public.prova_partes (migration 20261021120000), com as mesmas travas: (prova_id, codigo) e
+// (prova_id, ordem) únicos, parte da MESMA prova e unicidade de número dentro da parte.
+function criarRepositorioMemoria({ falharNaQuestao = null, midias = false, bucket = new Map(), partes = false } = {}) {
   const banco = {
     ...(midias ? { questao_midias: [] } : {}),
+    ...(partes ? { prova_partes: [] } : {}),
     provas: [],
     prova_documentos: [],
     questoes: [],
@@ -47,7 +50,7 @@ function criarRepositorioMemoria({ falharNaQuestao = null, midias = false, bucke
   let snapshot = null;
   let somenteLeitura = false;
   let insercoesDeQuestao = 0;
-  const sequencial = { provas: 1, questoes: 1000 };
+  const sequencial = { provas: 1, questoes: 1000, partes: 500 };
   const exigirEscrita = () => {
     if (!snapshot) throw new Error("fora de transação");
     if (somenteLeitura) throw new Error("cannot execute INSERT in a read-only transaction");
@@ -67,7 +70,7 @@ function criarRepositorioMemoria({ falharNaQuestao = null, midias = false, bucke
       for (const chave of Object.keys(banco)) banco[chave] = snapshot[chave];
       snapshot = null;
     },
-    async lerContexto({ hashProva, chaveNatural, slugsCursos, alternativas }) {
+    async lerContexto({ hashProva, chaveNatural, slugsCursos, alternativas, parteCodigo = null }) {
       const n = (v) => String(v ?? "").trim().toLowerCase();
       const porHash = banco.provas.find((p) => p.hash_prova === hashProva) ?? null;
       const porChave =
@@ -76,7 +79,16 @@ function criarRepositorioMemoria({ falharNaQuestao = null, midias = false, bucke
         infraMidias: midias,
         provaPorHash: porHash,
         provaPorChaveNatural: porChave,
-        numerosJaImportados: new Map(banco.questoes.filter((q) => porHash && q.prova_id === porHash.id).map((q) => [q.numero_original, q.id])),
+        temTabelaPartes: partes,
+        partesDaProva: partes && porHash ? banco.prova_partes.filter((p) => p.prova_id === porHash.id) : [],
+        questoesComParteNaProva: porHash ? banco.questoes.filter((q) => q.prova_id === porHash.id && q.prova_parte_id != null).length : 0,
+        questoesSemParteNaProva: porHash ? banco.questoes.filter((q) => q.prova_id === porHash.id && q.prova_parte_id == null).length : 0,
+        numerosJaImportados: new Map(
+          banco.questoes
+            .filter((q) => porHash && q.prova_id === porHash.id)
+            .filter((q) => !partes || (parteCodigo ? q.prova_parte_id === banco.prova_partes.find((p) => p.prova_id === porHash.id && p.codigo === parteCodigo)?.id : q.prova_parte_id == null))
+            .map((q) => [q.numero_original, q.id]),
+        ),
         documentosDaProva: porHash ? banco.prova_documentos.filter((d) => d.prova_id === porHash.id) : [],
         questoesGlobais: banco.questoes
           .filter((q) => q.usuario_id === null && (!porHash || q.prova_id !== porHash.id))
@@ -111,11 +123,23 @@ function criarRepositorioMemoria({ falharNaQuestao = null, midias = false, bucke
       if (banco.prova_documentos.some((x) => x.prova_id === provaId && x.hash_sha256 === d.hash_sha256)) throw new Error("duplicate key prova_documentos_hash_key");
       banco.prova_documentos.push({ prova_id: provaId, tipo: d.tipo, ordem: d.ordem, url: d.url, hash_sha256: d.hash_sha256 });
     },
+    ...(partes
+      ? {
+          async inserirParte(provaId, parte) {
+            exigirEscrita();
+            if (banco.prova_partes.some((p) => p.prova_id === provaId && (p.codigo === parte.codigo || p.ordem === parte.ordem))) throw new Error("duplicate key prova_partes");
+            const id = sequencial.partes++;
+            banco.prova_partes.push({ id, prova_id: provaId, codigo: parte.codigo, nome: parte.nome, ordem: parte.ordem });
+            return id;
+          },
+        }
+      : {}),
     async inserirQuestao(q) {
       exigirEscrita();
       insercoesDeQuestao++;
       if (falharNaQuestao !== null && insercoesDeQuestao === falharNaQuestao) throw new Error("falha simulada no meio do lote");
-      if (banco.questoes.some((x) => x.prova_id === q.prova_id && x.numero_original === q.numero_original)) throw new Error("duplicate key questoes_prova_numero_key");
+      if (q.prova_parte_id != null && !banco.prova_partes?.some((p) => p.id === q.prova_parte_id && p.prova_id === q.prova_id)) throw new Error("foreign key questoes_prova_parte_fkey");
+      if (banco.questoes.some((x) => x.prova_id === q.prova_id && (x.prova_parte_id ?? null) === (q.prova_parte_id ?? null) && x.numero_original === q.numero_original)) throw new Error("duplicate key questoes_prova_numero_key");
       const id = sequencial.questoes++;
       banco.questoes.push({ ...q, id, usuario_id: null, ativa: true });
       return id;
@@ -153,13 +177,15 @@ function criarRepositorioMemoria({ falharNaQuestao = null, midias = false, bucke
           },
         }
       : {}),
-    async lerEstadoPosCheck({ provaId, questaoIds }) {
+    async lerEstadoPosCheck({ provaId, parteId = null, questaoIds }) {
+      const parte = partes && parteId !== null ? banco.prova_partes.find((p) => p.id === parteId && p.prova_id === provaId) : null;
       return {
         ...(midias ? { midias: banco.questao_midias.filter((m) => questaoIds.includes(m.questao_id)) } : {}),
+        ...(parte ? { parte } : {}),
         prova: banco.provas.find((p) => p.id === provaId) ?? null,
         documentos: banco.prova_documentos.filter((d) => d.prova_id === provaId),
         questoesDaProva: banco.questoes
-          .filter((q) => q.prova_id === provaId)
+          .filter((q) => q.prova_id === provaId && (!partes || (q.prova_parte_id ?? null) === parteId))
           .map((q) => ({ ...q, alternativas: banco.alternativas.filter((a) => a.questao_id === q.id) })),
         vinculos: banco.curso_questoes.filter((v) => questaoIds.includes(v.questao_id)),
       };
@@ -172,6 +198,7 @@ function criarRepositorioMemoria({ falharNaQuestao = null, midias = false, bucke
         alternativas: banco.alternativas.length,
         curso_questoes: banco.curso_questoes.length,
         ...(midias ? { questao_midias: banco.questao_midias.length } : {}),
+        ...(partes ? { prova_partes: banco.prova_partes.length } : {}),
       };
     },
     async contagensEstruturais() {
@@ -965,4 +992,60 @@ test("MID-LIB) MIDIA_OK=false: 'mídia sem referência' só passa com liberaçã
 
   const ausente = await executarAquisicao({ repo, entrada: entradaComMidias([questaoStaging(1)], { aprovacao: { liberacoes: [{ ...liberar, motivo: "midia_ausente" }] } }), modo: "dry-run" });
   assert.ok(ausente.manifesto.bloqueios.some((b) => /não é liberável/.test(b)));
+});
+
+// ---- Partes da mesma prova (P1/P2 de um PDF oficial com vários cadernos) ----
+
+const P2 = { codigo: "P2", nome: "Segunda parte sintética", ordem: 2 };
+const P1 = { codigo: "P1", nome: "Primeira parte sintética", ordem: 1 };
+function entradaParte(questoes, parte) {
+  return entradaBase(questoes, { proveniencia: { ...proveniencia(), parte } });
+}
+
+test("PARTE-A) prova nova com parte: cria prova + parte, numero_original = número impresso; outra parte da MESMA prova repete números sem conflito; reexecução idempotente por parte", async () => {
+  const repo = criarRepositorioMemoria({ partes: true });
+  const p2 = await dryRunEApply(repo, entradaParte([questaoStaging(1), questaoStaging(2)], P2));
+  assert.equal(p2.manifesto.prova.parte.situacao, "NOVA");
+  assert.equal(repo.banco.prova_partes.length, 1);
+  assert.deepEqual(repo.banco.questoes.map((q) => [q.numero_original, q.prova_parte_id]), [[1, 500], [2, 500]]);
+  const enunciado = (n) => `Enunciado da primeira parte número ${n} com tema ${n * 13} sem relação nenhuma`;
+  const p1 = await dryRunEApply(repo, entradaParte([questaoStaging(1, { enunciado: enunciado(1) }), questaoStaging(2, { enunciado: enunciado(2) })], P1));
+  assert.equal(p1.manifesto.prova.situacao, "EXISTENTE");
+  assert.equal(p1.inseridas.length, 2);
+  assert.equal(repo.banco.provas.length, 1);
+  assert.deepEqual(repo.banco.prova_partes.map((p) => p.codigo), ["P2", "P1"]);
+  assert.deepEqual(repo.banco.questoes.filter((q) => q.numero_original === 1).map((q) => q.prova_parte_id).sort(), [500, 501]);
+  const deNovo = await dryRunEApply(repo, entradaParte([questaoStaging(1), questaoStaging(2)], P2));
+  assert.equal(deNovo.inseridas.length, 0);
+  assert.equal(deNovo.manifesto.resumo.ja_importadas, 2);
+  assert.equal(deNovo.manifesto.prova.parte.situacao, "EXISTENTE");
+});
+
+test("PARTE-B) nunca mistura modelos nem sobrescreve: sem tabela de partes, prova antiga sem parte, prova com partes sem declarar, mesma parte com outro nome/ordem", async () => {
+  const semTabela = await executarAquisicao({ repo: criarRepositorioMemoria(), entrada: entradaParte([questaoStaging(1)], P2), modo: "dry-run" });
+  assert.ok(semTabela.manifesto.bloqueios.some((b) => /não tem public\.prova_partes/.test(b)));
+
+  const antigo = criarRepositorioMemoria({ partes: true });
+  await dryRunEApply(antigo, entradaBase([questaoStaging(1)]));
+  const misturar = await executarAquisicao({ repo: antigo, entrada: entradaParte([questaoStaging(2)], P2), modo: "dry-run" });
+  assert.ok(misturar.manifesto.bloqueios.some((b) => /questões sem parte/.test(b)));
+
+  const comPartes = criarRepositorioMemoria({ partes: true });
+  await dryRunEApply(comPartes, entradaParte([questaoStaging(1)], P2));
+  const semDeclarar = await executarAquisicao({ repo: comPartes, entrada: entradaBase([questaoStaging(3)]), modo: "dry-run" });
+  assert.ok(semDeclarar.manifesto.bloqueios.some((b) => /organizada em partes/.test(b)));
+  const outroNome = await executarAquisicao({ repo: comPartes, entrada: entradaParte([questaoStaging(3)], { ...P2, nome: "Outro nome" }), modo: "dry-run" });
+  assert.ok(outroNome.manifesto.bloqueios.some((b) => /já cadastrada com outro nome\/ordem/.test(b)));
+  const outraOrdem = await executarAquisicao({ repo: comPartes, entrada: entradaParte([questaoStaging(3)], { codigo: "P3", nome: "x", ordem: 2 }), modo: "dry-run" });
+  assert.ok(outraOrdem.manifesto.bloqueios.some((b) => /ordem 2 já usada/.test(b)));
+  assert.equal(comPartes.banco.questoes.length, 1);
+});
+
+test("PARTE-C) sem parte, o manifesto não ganha a chave 'parte'; com parte, a parte entra no hash", async () => {
+  const semParte = await executarAquisicao({ repo: criarRepositorioMemoria({ partes: true }), entrada: entradaBase([questaoStaging(1)]), modo: "dry-run" });
+  assert.equal("parte" in semParte.manifesto.prova, false);
+  const a = await executarAquisicao({ repo: criarRepositorioMemoria({ partes: true }), entrada: entradaParte([questaoStaging(1)], P2), modo: "dry-run" });
+  const b = await executarAquisicao({ repo: criarRepositorioMemoria({ partes: true }), entrada: entradaParte([questaoStaging(1)], { ...P2, nome: "Outro" }), modo: "dry-run" });
+  assert.notEqual(a.hash, b.hash);
+  assert.notEqual(a.hash, semParte.hash);
 });

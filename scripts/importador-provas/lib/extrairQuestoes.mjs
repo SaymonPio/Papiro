@@ -232,12 +232,44 @@ export function comprimentoDaSequenciaDeQuestoes(paginas) {
 
 function encontrarCandidatosQuestao(textoCompleto) {
   const explicitos = candidatosDoMarcador(textoCompleto, MARCADOR_QUESTAO_EXPLICITO);
-  if (selecionarSequenciaValida(explicitos).length >= MINIMO_SEQUENCIA_EXPLICITA) return explicitos;
+  if (selecionarSequenciaValida(explicitos).length >= MINIMO_SEQUENCIA_EXPLICITA) return Object.assign(explicitos, { familia: "explicito" });
   const pontuados = candidatosDoMarcador(textoCompleto, MARCADOR_QUESTAO);
   const isolados = candidatosDoMarcador(textoCompleto, MARCADOR_QUESTAO_ISOLADO);
   const sequenciaIsolada = selecionarSequenciaValida(isolados).length;
-  if (sequenciaIsolada >= MINIMO_SEQUENCIA_EXPLICITA && sequenciaIsolada > selecionarSequenciaValida(pontuados).length) return isolados;
-  return pontuados;
+  if (sequenciaIsolada >= MINIMO_SEQUENCIA_EXPLICITA && sequenciaIsolada > selecionarSequenciaValida(pontuados).length) return Object.assign(isolados, { familia: "isolado" });
+  return Object.assign(pontuados, { familia: "pontuado" });
+}
+
+// Cadernos concatenados num único PDF (checado numa prova real: Fundatec/
+// PC-RS 2025 Delegado — P1 e P2, cada uma em 4 tipos, 8 cadernos no mesmo
+// arquivo): a numeração recomeça em 1 a cada caderno. A maior sequência
+// +1 emendaria "1..40" de um caderno com "41..80" de outro, misturando
+// questões e gabaritos sem nenhum aviso. Cada recomeço em 1 que sustenta
+// MINIMO_QUESTOES_CADERNO+ questões até o próximo recomeço é um caderno;
+// com dois ou mais, nenhuma sequência é escolhida — a parte a extrair
+// precisa ser declarada (metadata.parte.paginas). Listas internas de
+// enunciado ("1. ... 2. ... 3.") nunca chegam a esse tamanho. Só vale
+// para "QUESTÃO N" e "N." (ver extrairQuestoesDoTexto).
+const MINIMO_QUESTOES_CADERNO = 10;
+
+function encontrarCadernos(candidatos) {
+  const ordenados = [...candidatos].sort((a, b) => a.offsetMarcador - b.offsetMarcador);
+  const recomecos = ordenados.filter((c) => c.numero === 1);
+  const cadernos = [];
+  for (const [i, inicio] of recomecos.entries()) {
+    const limite = recomecos[i + 1]?.offsetMarcador ?? Infinity;
+    const doTrecho = ordenados.filter((c) => c.offsetMarcador >= inicio.offsetMarcador && c.offsetMarcador < limite);
+    let atual = inicio;
+    let tamanho = 1;
+    for (const c of doTrecho) {
+      if (c.numero === atual.numero + 1 && c.offsetMarcador > atual.offsetMarcador) {
+        atual = c;
+        tamanho++;
+      }
+    }
+    if (tamanho >= MINIMO_QUESTOES_CADERNO) cadernos.push({ inicio: inicio.offsetMarcador, fim: atual.offsetMarcador, questoes: tamanho });
+  }
+  return cadernos;
 }
 
 // Entre todos os candidatos, acha a maior sequência consecutiva (+1) e
@@ -634,6 +666,21 @@ export function extrairQuestoesDoTexto(paginasOriginais, opcoes = {}) {
 
   const candidatos = encontrarCandidatosQuestao(textoCompleto);
   const cabecalhosBloco = encontrarCabecalhosDeBloco(textoCompleto);
+  // Numeração por bloco declarado ("Português 5 questões") recomeça de
+  // propósito e já é tratada por montarSegmentos — não é caderno novo.
+  // Número isolado na linha fica de fora: a numeração de linhas de cada
+  // texto-base ("01", "02"...) também recomeça em 1 e seria confundida.
+  const cadernos = cabecalhosBloco.length === 0 && candidatos.familia !== "isolado" ? encontrarCadernos(candidatos) : [];
+  if (cadernos.length > 1) {
+    const descricao = cadernos.map((c) => `p. ${paginaDoOffset(mapaPaginas, c.inicio)}–${paginaDoOffset(mapaPaginas, c.fim)} (${c.questoes} questões)`);
+    return {
+      questoes: [],
+      numerosIgnorados: [],
+      avisos: [],
+      cadernos: descricao,
+      bloqueio: `documento com ${cadernos.length} cadernos/partes concatenados (a numeração recomeça em 1): ${descricao.join("; ")} — declare a parte a extrair (metadata.parte.paginas); nenhuma sequência é escolhida entre cadernos`,
+    };
+  }
   const { itens: sequencia, numerosIgnorados } = montarSegmentos(textoCompleto, candidatos, cabecalhosBloco);
   const titulosSecao = encontrarTitulosDeSecao(textoCompleto, sequencia, mapaPaginas, topoRemovido);
 
@@ -766,5 +813,5 @@ export function extrairQuestoesDoTexto(paginasOriginais, opcoes = {}) {
     }
   }
 
-  return { questoes, numerosIgnorados, avisos };
+  return { questoes, numerosIgnorados, avisos, cadernos: [], bloqueio: null };
 }

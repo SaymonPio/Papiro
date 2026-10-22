@@ -135,13 +135,30 @@ async function main() {
     return;
   }
 
-  const { paginas, requerOcr, totalPaginas } = await extrairTextoPdf(provaPath, { estrategia: estrategiaPdf });
+  const { paginas: todasAsPaginas, requerOcr, totalPaginas } = await extrairTextoPdf(provaPath, { estrategia: estrategiaPdf });
 
   if (requerOcr) {
     console.warn("ATENÇÃO: o PDF da prova parece ser escaneado (pouco ou nenhum texto extraível). requires_ocr=true — nenhuma tentativa de OCR foi feita nesta PoC.");
   }
 
-  const { questoes, numerosIgnorados, avisos: avisosExtracao } = extrairQuestoesDoTexto(paginas, { composicao: metadata.composicao });
+  // Parte de uma prova cujo PDF oficial junta vários cadernos (metadata.parte
+  // = { codigo, nome, ordem, paginas: [inicio, fim] }): só as páginas da
+  // parte declarada são lidas; o hash continua sendo o do PDF oficial
+  // inteiro, e numero_original continua sendo o número impresso.
+  const intervalo = metadata.parte?.paginas;
+  if (metadata.parte && !(Array.isArray(intervalo) && intervalo.length === 2 && intervalo.every(Number.isInteger) && intervalo[0] >= 1 && intervalo[0] <= intervalo[1] && intervalo[1] <= totalPaginas)) {
+    console.error(`metadata.parte.paginas inválido (${JSON.stringify(intervalo)}): use [início, fim] dentro de 1..${totalPaginas}`);
+    process.exitCode = 1;
+    return;
+  }
+  const paginas = intervalo ? todasAsPaginas.filter((p) => p.numero >= intervalo[0] && p.numero <= intervalo[1]) : todasAsPaginas;
+
+  const { questoes, numerosIgnorados, avisos: avisosExtracao, bloqueio: bloqueioExtracao } = extrairQuestoesDoTexto(paginas, { composicao: metadata.composicao });
+  if (bloqueioExtracao) {
+    console.error(`BLOQUEADO: ${bloqueioExtracao}`);
+    process.exitCode = 1;
+    return;
+  }
   const textoGabarito = await extrairTextoDeGabarito(gabaritoPath);
   const { gabaritos: gabaritosBrutos, naoReconhecidas } = extrairGabaritoDoTexto(textoGabarito);
 
@@ -186,6 +203,7 @@ async function main() {
     hashGabarito: calcularHashArquivo(gabaritoPath),
     retificacoes: retificacoesLidas.map((r) => ({ ordem: r.ordem, documento: r.documento, url: r.url, hash: r.hash })),
     gabaritoTipo: manifestoGabaritos?.base.tipo ?? "definitivo",
+    parte: metadata.parte ? { codigo: metadata.parte.codigo, nome: metadata.parte.nome, ordem: metadata.parte.ordem } : null,
   });
   if (!proveniencia.completa) {
     console.warn(
@@ -232,6 +250,8 @@ async function main() {
     numeros_de_questao_ignorados: numerosIgnorados,
     avisos_extracao: avisosExtracao,
     linhas_de_gabarito_nao_reconhecidas: naoReconhecidas,
+    gabarito_numeros_deduzidos: gabaritos.filter((g) => g.numero_deduzido).map((g) => ({ bloco: g.bloco, ...g.numero_deduzido, resposta: g.anulada ? "ANULADA" : g.alternativa_correta })),
+    ...(metadata.parte ? { parte: metadata.parte } : {}),
     retificacoes_gabarito: {
       documentos: retificacoesLidas.map((r) => ({ ordem: r.ordem, documento: r.documento, url: r.url, hash: r.hash, entradas: r.gabaritos.length, mencoes: r.mencoes })),
       problemas: problemasRetificacao,

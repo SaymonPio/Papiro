@@ -68,3 +68,15 @@ test("F) calcularHashArquivo devolve o SHA-256 hex do conteúdo do arquivo", () 
   assert.equal(calcularHashArquivo(arquivo), "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad");
   fs.rmSync(dir, { recursive: true });
 });
+
+test("PARTE) parte da prova na proveniência: válida entra; código/ordem inválidos ou ausentes deixam a proveniência incompleta; sem parte nada muda", () => {
+  const meta = { banca: "B", orgao: "O", cargo: "C", ano: 2025, nome_prova: "N", fonte_url: "https://x.org/p.pdf", gabarito_url: "https://x.org/g.pdf" };
+  const hashes = { hashProva: "a".repeat(64), hashGabarito: "b".repeat(64) };
+  assert.equal("parte" in montarProveniencia(meta, hashes), false);
+  const ok = montarProveniencia(meta, { ...hashes, parte: { codigo: "P2", nome: "Parte 2", ordem: 2 } });
+  assert.deepEqual(ok.parte, { codigo: "P2", nome: "Parte 2", ordem: 2 });
+  assert.equal(ok.completa, true);
+  const ruim = montarProveniencia(meta, { ...hashes, parte: { codigo: "p 2", nome: "", ordem: 30 } });
+  assert.equal(ruim.completa, false);
+  assert.deepEqual([...ruim.faltando, ...ruim.invalidos].sort(), ["parte.codigo", "parte.nome", "parte.ordem"]);
+});
