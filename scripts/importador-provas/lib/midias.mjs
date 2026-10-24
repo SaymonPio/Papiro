@@ -321,7 +321,23 @@ function primeiraComDono(linhas, infos) {
 
 // Linha do enunciado ANTES da qual a mídia aparece (null = depois do
 // enunciado, antes das alternativas).
-function ancoraNoEnunciado(info, linhaAbaixo) {
+// Linha com rótulo de alternativa ("A) 80.") é a PRIMEIRA alternativa da
+// própria questão quando a letra e o texto conferem — as alternativas são
+// comparadas sem o rótulo, e alternativa curta ("80.") nem chegava a ser
+// comparada (checado numa prova real: Fundatec/GM Sant'Ana do Livramento
+// 2025, questão 46, figura entre o enunciado e "A) 80.").
+const ROTULO_ALTERNATIVA = /^\s*\(?([A-Ea-e])[ \t]*[).][ \t]*(.*)$/;
+
+function ehPrimeiraAlternativa(info, texto) {
+  const rotulo = (texto ?? "").match(ROTULO_ALTERNATIVA);
+  const primeira = info.q.alternativas?.[0];
+  if (!rotulo || !primeira || rotulo[1].toUpperCase() !== primeira.letra.toUpperCase()) return false;
+  const resto = normalizarTexto(rotulo[2]);
+  return resto.length > 0 && normalizarTexto(primeira.texto).startsWith(resto);
+}
+
+function ancoraNoEnunciado(info, linhaAbaixo, abaixoNaColuna = null) {
+  if (ehPrimeiraAlternativa(info, abaixoNaColuna?.texto) || ehPrimeiraAlternativa(info, linhaAbaixo?.texto)) return { ancora: null };
   if (!linhaAbaixo) return { erro: "nada abaixo da figura nesta coluna/página — posição incerta" };
   const nL = normalizarTexto(linhaAbaixo.texto);
   if (nL.length < 4) return { erro: "linha abaixo da figura curta demais para ancorar" };
@@ -373,6 +389,14 @@ export function resolverMidias({ paginas, questoes }) {
       const naColuna = pagina.linhas.filter((l) => sobrepoeX({ x0: l.xInicio, x1: l.xFim }, caixa));
       const acima = naColuna.filter((l) => l.y > caixa.y1 - 1 && l.y - caixa.y1 < DISTANCIA_DONO_PT).sort((a, b) => a.y - b.y);
       const abaixo = naColuna.filter((l) => l.y < caixa.y0 + 1 && caixa.y0 - l.y < DISTANCIA_DONO_PT).sort((a, b) => b.y - a.y);
+      // Primeira linha logo abaixo na MESMA coluna, mesmo sem sobrepor a
+      // figura em X — a alternativa "A) 80." começa na margem, à esquerda
+      // de uma figura centralizada.
+      const colunaDaFigura = (acima[0] ?? abaixo[0])?.coluna;
+      const abaixoNaColuna =
+        pagina.linhas
+          .filter((l) => l.coluna === colunaDaFigura && l.y < caixa.y0 + 1 && caixa.y0 - l.y < DISTANCIA_DONO_PT)
+          .sort((a, b) => b.y - a.y)[0] ?? null;
       const sobre = naColuna.filter((l) => l.y > caixa.y0 + 2 && l.y < caixa.y1 - 2);
       const perto = [...acima, ...abaixo].filter((l) => Math.min(Math.abs(l.y - caixa.y1), Math.abs(caixa.y0 - l.y)) <= DISTANCIA_LEGENDA_PT);
       const linhaLegenda = perto.find((l) => LEGENDA.test(l.texto.trim()));
@@ -426,6 +450,7 @@ export function resolverMidias({ paginas, questoes }) {
         rotulo,
         credito: linhaCredito ? linhaCredito.texto.trim().replace(/\s+/g, " ") : null,
         linhaAbaixo: abaixo[0] ?? null,
+        abaixoNaColuna,
         ambigua,
         erroComposicao: erroComposicao ?? (png && png.length > MAX_BYTES_MIDIA ? `arquivo grande demais (${png.length} bytes)` : null),
         png,
@@ -456,7 +481,7 @@ export function resolverMidias({ paginas, questoes }) {
     const midias = figuras.map((f, indice) => {
       if (f.ambigua) causas.push(causa("midia_posse_ambigua", `página ${f.pagina}`));
       if (f.erroComposicao) causas.push(causa("midia_composicao_incerta", f.erroComposicao));
-      const ancora = ancoraNoEnunciado(info, f.linhaAbaixo);
+      const ancora = ancoraNoEnunciado(info, f.linhaAbaixo, f.abaixoNaColuna);
       if (ancora.erro) causas.push(causa("midia_posicao_incerta", ancora.erro));
       const tipo = tipoDaMidia(f.legenda, dependencia?.sinal);
       const terceiro = tipo === "CHARGE" || PECA_DE_TERCEIRO.test(dependencia?.sinal ?? "") || Boolean(f.credito);

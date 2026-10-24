@@ -29,6 +29,10 @@ export function causasDeExtracao(questao) {
       motivo: `expressão matemática não reconstruída com confiança na página (${interno.alertas_expressao.map((a) => a.motivo).join("; ")})`,
     });
   }
+  // Integridade (lib/integridade.mjs): divergência entre as leituras do PDF,
+  // lixo de cabeçalho/rodapé, glifo matemático solto, igualdade truncada.
+  // Nenhuma dessas causas é liberável — o conteúdo precisa ser corrigido.
+  for (const problema of interno.integridade ?? []) causas.push({ codigo: problema.codigo, motivo: problema.motivo });
   return causas;
 }
 
@@ -49,8 +53,10 @@ function avaliarExtracao(questao) {
   return primeira ? { ok: false, motivo: primeira.motivo } : { ok: true, motivo: null };
 }
 
-function avaliarGabarito(questao) {
+function avaliarGabarito(questao, bloqueiosGlobais = []) {
   const interno = questao._interno;
+  const excedente = bloqueiosGlobais.find((b) => b.tipo === "gabarito_excedente");
+  if (excedente) return { ok: false, motivo: excedente.mensagem };
   if (interno.motivos_juncao.includes("questao_sem_gabarito")) return { ok: false, motivo: "gabarito ausente para esta questão" };
   if (interno.motivos_juncao.includes("alternativa_correta_inexistente")) return { ok: false, motivo: "gabarito aponta para uma alternativa que não existe na questão" };
   if (interno.gabarito_status === "revisao_manual") return { ok: false, motivo: "linha de gabarito ambígua (ex.: número duplicado no documento)" };
@@ -83,14 +89,14 @@ function avaliarProveniencia(proveniencia) {
 
 export function calcularStatus(questao, resultadoDedup, bloqueiosGlobais, proveniencia) {
   const extracao = avaliarExtracao(questao);
-  const gabarito = avaliarGabarito(questao);
+  const gabarito = avaliarGabarito(questao, bloqueiosGlobais);
   const classificacao = avaliarClassificacao(questao);
   const dedup = avaliarDedup(resultadoDedup);
   const origem = avaliarProveniencia(proveniencia);
   const [causaMidia] = causasDeMidia(questao);
 
   const bloqueiosDestaQuestao = bloqueiosGlobais.filter(
-    (b) => b.numero === undefined || b.numero === questao.numero_original,
+    (b) => b.tipo !== "gabarito_excedente" && (b.numero === undefined || b.numero === questao.numero_original),
   );
 
   const etapas = {

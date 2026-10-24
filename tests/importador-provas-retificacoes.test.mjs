@@ -82,9 +82,9 @@ test("RT-F) mesmo documento com valores diferentes para a mesma questão -> REVI
   assert.equal(repetido[2].anulada, true);
 });
 
-test("RT-G) modo estrito: par acidental na prosa (\"em 2015) e\") nunca vira alteração de gabarito", () => {
+test("RT-G) par acidental na prosa (\"em 2015) e\") nunca vira gabarito — nem no modo estrito, nem no normal", () => {
   const texto = ["A lei publicada em 2015) e alterada depois.", "Questão Resposta", "1 B Portugues"].join("\n");
-  assert.ok(extrairGabaritoDoTexto(texto).gabaritos.some((g) => g.numero === 15), "modo normal pega o par acidental");
+  assert.deepEqual(extrairGabaritoDoTexto(texto).gabaritos.map((g) => g.numero), [1]);
   assert.deepEqual(extrairGabaritoDoTexto(texto, { estrito: true }).gabaritos.map((g) => g.numero), [1]);
 });
 

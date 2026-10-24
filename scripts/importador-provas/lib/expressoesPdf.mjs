@@ -104,16 +104,126 @@ function converterPorTabela(texto, tabela) {
   return convertido.every(Boolean) ? convertido.join("") : null;
 }
 
+// Fração de editor de equação em fonte de CORPO (ou maior): o numerador e o
+// denominador não são "pequenos", então o sinal é o traço vetorial entre
+// eles (regras de lerItensDoPdf). Radical: "√" seguido do radicando, com o
+// traço do radical por cima — sem o traço não há como saber onde o
+// radicando termina ("√2x−6" = √(2x−6) ou √2·x−6?). Checado numa prova
+// real: Fundatec/GM Sant'Ana do Livramento 2025, questão 43,
+// "f(x) = √(2x−6)/(x−5)". Glifos matemáticos alfanuméricos (𝑥, U+1D465)
+// são a mesma letra em itálico — NFKC.
+const ALCANCE_NUMERADOR = 1.2; // em alturas de corpo acima do traço
+const ALCANCE_DENOMINADOR = 1.8; // em alturas de corpo abaixo do traço
+const CONTEUDO_FORMULA = /^[0-9A-Za-z.,+\-–−×·÷=<>≤≥πθ√()\s]{1,40}$/;
+
+const textoMatematico = (texto) => texto.normalize("NFKC");
+
+// O próprio item precisa estar majoritariamente SOBRE o traço: o traço
+// curto de um "√2" no meio da frase não transforma a linha de cima em
+// numerador (checado: Fundatec/GM Sant'Ana do Livramento 2025, questão 49).
+function sobrepoeRegra(item, regra) {
+  const inicio = Math.max(item.x, regra.x0);
+  const fim = Math.min(item.x + item.largura, regra.x1);
+  return fim - inicio >= item.largura * 0.5;
+}
+
+// Radical num trecho de UM item ("√2𝑥−6"): o traço precisa começar no fim
+// do glifo "√" e cobrir o resto do item — qualquer outra situação é incerta.
+function resolverRadical(item, regras, corpo) {
+  const texto = textoMatematico(item.texto).trim();
+  if (!texto.includes("√")) return { texto };
+  const indice = texto.indexOf("√");
+  if (texto.indexOf("√", indice + 1) >= 0) return { incerto: "mais de um radical no mesmo trecho" };
+  const larguraCaractere = item.largura / Math.max([...texto].length, 1);
+  const fimDoRadical = item.x + larguraCaractere * ([...texto.slice(0, indice)].length + 1);
+  const fimDoItem = item.x + item.largura;
+  const traco = regras.find(
+    (r) => r.y > item.y && r.y - item.y <= corpo * ALCANCE_NUMERADOR && Math.abs(r.x0 - fimDoRadical) <= larguraCaractere && r.x1 >= fimDoItem - larguraCaractere * 0.5,
+  );
+  if (!traco) return { incerto: "radical sem traço que delimite o radicando" };
+  const radicando = texto.slice(indice + 1).trim();
+  if (!radicando) return { incerto: "radical sem radicando" };
+  const radical = /^[0-9A-Za-z]$/.test(radicando) ? `√${radicando}` : `√(${radicando})`;
+  return { texto: `${texto.slice(0, indice)}${radical}` };
+}
+
+function detectarFracoesComTraco(itens, regras, corpo) {
+  const expressoes = [];
+  const incertas = [];
+  const consumidos = new Set();
+  const comTexto = itens.filter((i) => !ehEspaco(i));
+  for (const regra of regras) {
+    const cima = comTexto.filter((i) => !consumidos.has(i) && i.y > regra.y && i.y - regra.y <= corpo * ALCANCE_NUMERADOR && sobrepoeRegra(i, regra)).sort((a, b) => a.x - b.x);
+    const baixo = comTexto.filter((i) => !consumidos.has(i) && i.y < regra.y && regra.y - i.y <= corpo * ALCANCE_DENOMINADOR && sobrepoeRegra(i, regra)).sort((a, b) => a.x - b.x);
+    if (cima.length === 0 || baixo.length === 0) continue;
+    const empilhados = new Set([...cima, ...baixo]);
+    // Linha de base: texto de corpo ENTRE numerador e denominador, encostado
+    // numa das pontas do traço — sem isso o traço é de tabela/sublinhado.
+    const naLinhaDeBase = comTexto.filter((i) => !empilhados.has(i) && i.y < Math.min(...cima.map((c) => c.y)) && i.y > Math.max(...baixo.map((b) => b.y)));
+    const alcance = corpo * DISTANCIA_MAXIMA_VIZINHO;
+    const esquerda = naLinhaDeBase.filter((i) => i.x + i.largura <= regra.x0 + 1 && regra.x0 - (i.x + i.largura) <= alcance).sort((a, b) => b.x + b.largura - (a.x + a.largura))[0] ?? null;
+    const direita = naLinhaDeBase.filter((i) => i.x >= regra.x1 - 1 && i.x - regra.x1 <= alcance).sort((a, b) => a.x - b.x)[0] ?? null;
+    if (!esquerda && !direita) continue;
+    for (const i of empilhados) consumidos.add(i);
+    const parteDe = (lista) => lista.map((i) => i.texto).join("").trim();
+    const base = {
+      numerador: parteDe(cima),
+      denominador: parteDe(baixo),
+      x: regra.x0,
+      y: (esquerda ?? direita).y,
+      largura: regra.x1 - regra.x0,
+      contextoAntes: esquerda?.texto ?? null,
+      contextoDepois: direita?.texto ?? null,
+      itensOriginais: [...empilhados],
+      partes: [parteDe(cima), parteDe(baixo)],
+    };
+    const resolver = (lista) => {
+      if (lista.length !== 1) return { texto: textoMatematico(parteDe(lista)) };
+      return resolverRadical(lista[0], regras, corpo);
+    };
+    const numerador = resolver(cima);
+    const denominador = resolver(baixo);
+    const incerto = numerador.incerto ?? denominador.incerto ?? (/√/.test(`${numerador.texto}${denominador.texto}`) && (cima.length > 1 || baixo.length > 1) ? "radical em trecho de vários itens" : null);
+    if (incerto || !CONTEUDO_FORMULA.test(numerador.texto) || !CONTEUDO_FORMULA.test(denominador.texto)) {
+      incertas.push({ ...base, tipo: "fracao", motivo: incerto ? `fração com ${incerto}` : "fração com conteúdo não trivial" });
+      continue;
+    }
+    expressoes.push({ ...base, tipo: "fracao", texto: textoFracao(numerador.texto.trim(), denominador.texto.trim()) });
+  }
+  return { expressoes, incertas, consumidos };
+}
+
 // Núcleo puro: itens de UMA página ({texto,x,y,largura,altura}) ->
 // expressões detectadas + itens com cada expressão já fundida num item
 // sintético na linha de base (para a reconstrução posicional) + trechos
-// incertos.
-export function detectarExpressoes(itens) {
-  const corpo = alturaDoCorpo(itens);
-  if (!corpo) return { expressoes: [], incertas: [], itens };
+// incertos. regras: traços horizontais vetoriais da página (frações e
+// radicais de editor de equação em fonte de corpo).
+export function detectarExpressoes(itensDaPagina, regras = []) {
+  const corpo = alturaDoCorpo(itensDaPagina);
+  if (!corpo) return { expressoes: [], incertas: [], itens: itensDaPagina };
+
+  const comTraco = detectarFracoesComTraco(itensDaPagina, regras, corpo);
+  const itens = comTraco.consumidos.size === 0 ? itensDaPagina : itensDaPagina.filter((i) => !comTraco.consumidos.has(i));
+  const juntar = (resultado) => {
+    if (comTraco.consumidos.size === 0) return resultado;
+    const expressoes = [...comTraco.expressoes, ...resultado.expressoes];
+    const originais = new Set(comTraco.expressoes.flatMap((e) => e.itensOriginais));
+    const limpar = ({ itensOriginais, ...resto }) => resto;
+    return {
+      expressoes: expressoes.map(limpar),
+      incertas: [...comTraco.incertas.map(limpar), ...resultado.incertas],
+      itens: [
+        ...resultado.itens.filter((i) => !originais.has(i)),
+        // Fração incerta: os itens originais ficam onde estavam (texto bruto
+        // + alerta), nunca somem.
+        ...comTraco.incertas.flatMap((e) => e.itensOriginais),
+        ...comTraco.expressoes.map((e) => ({ texto: e.texto, x: e.x, y: e.y, largura: e.largura, altura: corpo, sintetico: e.tipo })),
+      ],
+    };
+  };
 
   const pequenos = itens.filter((i) => !ehEspaco(i) && i.altura > 0 && i.altura <= corpo * PROPORCAO_FONTE_PEQUENA);
-  if (pequenos.length === 0) return { expressoes: [], incertas: [], itens };
+  if (pequenos.length === 0) return juntar({ expressoes: [], incertas: [], itens });
   const normais = itens.filter((i) => !ehEspaco(i) && i.altura >= corpo * PROPORCAO_FONTE_CORPO);
 
   const trechos = agruparTrechosPequenos(pequenos, corpo).map((t) => {
@@ -194,7 +304,7 @@ export function detectarExpressoes(itens) {
   ];
 
   const limpar = ({ itensOriginais, ...resto }) => resto;
-  return { expressoes: expressoes.map(limpar), incertas: incertas.map(limpar), itens: itensReconstruidos };
+  return juntar({ expressoes: expressoes.map(limpar), incertas: incertas.map(limpar), itens: itensReconstruidos });
 }
 
 // Expressões incertas/não aplicadas de uma página no formato de alerta

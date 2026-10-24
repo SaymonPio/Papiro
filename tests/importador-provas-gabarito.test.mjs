@@ -181,7 +181,7 @@ test("R) grade tabular de VÁRIOS cargos ('24 - Cargo X' + linhas '01 - B 02 - E
   assert.equal(gabaritos.filter((g) => g.bloco === "23 - Cargo Sintético Um").length, 6);
   assert.ok(gabaritos.filter((g) => g.bloco !== null).every((g) => g.status === "ok"), "números repetidos entre cargos diferentes não são duplicados");
   const soltos = gabaritos.filter((g) => g.bloco === null);
-  assert.deepEqual(soltos.map((g) => g.numero), [15], "o par acidental da prosa ('2015) e') existe, mas sem dono");
+  assert.deepEqual(soltos.map((g) => g.numero), [], "o par acidental da prosa ('2015) e') nunca vira entrada");
 });
 
 test("S) grade tabular de UM cargo só, mesmo partida em duas corridas (quebra de página), continua bloco=null como antes", () => {

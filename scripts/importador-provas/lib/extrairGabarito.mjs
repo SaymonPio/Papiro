@@ -160,10 +160,40 @@ function extrairBlocosPosicionais(linhas) {
 // como "...em 2015) e..." nunca vira uma alteração de gabarito.
 const PAR_NO_INICIO_DA_LINHA = /^(?:quest(?:ão|ao)[ \t]*(?:n[º°o.]*)?[ \t]*:?[ \t]*)?\d{1,3}\b/i;
 
+function parAbreALinha(linha, par) {
+  return par.index === linha.search(/\d/) && PAR_NO_INICIO_DA_LINHA.test(linha);
+}
+
 function parAceitoNoModoEstrito(linha, par, ehGrade) {
   if (ehGrade) return true;
-  if (par.index !== linha.search(/\d/) || !PAR_NO_INICIO_DA_LINHA.test(linha)) return false;
+  if (!parAbreALinha(linha, par)) return false;
   return /^(?:[A-E]|\*|ANULAD[AO]|DESERTA)$/.test(par[2]);
+}
+
+// Intervalo em prosa ("de 09 a 11/12/2025", "questões 1 a 10", "itens 2 e
+// 3"): "a"/"e" minúsculo, sem separador entre número e letra, seguido de
+// outro número — preposição/conjunção, nunca resposta.
+function parEhIntervalo(linha, par) {
+  if (!/^[ae]$/.test(par[2]) || /[-.):]/.test(par[0])) return false;
+  return /^[ \t]+\d/.test(linha.slice(par.index + par[0].length));
+}
+
+// Modo normal (gabarito base): fora de linha de grade, par só vale com
+// CONTEXTO ESTRUTURAL — abrindo a linha (lista "N - LETRA") ou numa linha em
+// que os pares são a maior parte do conteúdo (grade com rótulo). Um par
+// isolado no meio de prosa administrativa nunca é resposta (checado num
+// gabarito real: Fundatec/GM Sant'Ana do Livramento 2025, "recursos
+// interpostos ... durante o período de 09 a 11/12/2025" virava "Q9 = A", e
+// a resposta verdadeira da grade ficava em conflito).
+const PROPORCAO_MINIMA_PARES_NA_LINHA = 0.5;
+
+function paresComContextoEstrutural(linha, pares, ehGrade) {
+  const candidatos = pares.filter((par) => !parEhIntervalo(linha, par));
+  if (ehGrade) return candidatos;
+  const conteudo = linha.replace(/\s+/g, "").length;
+  const dosPares = candidatos.reduce((soma, par) => soma + par[0].replace(/\s+/g, "").length, 0);
+  if (candidatos.length >= 2 && dosPares >= conteudo * PROPORCAO_MINIMA_PARES_NA_LINHA) return candidatos;
+  return candidatos.filter((par) => parAbreALinha(linha, par));
 }
 
 // "Anula-se a Questão nº 15", "Altera-se o gabarito da questão 12" —
@@ -204,7 +234,7 @@ export function extrairGabaritoDoTexto(texto, opcoes = {}) {
 
     const todosOsPares = [...linha.matchAll(PAR_NUMERO_RESULTADO)];
     const ehGrade = linhaEhGradeTabular(linha, todosOsPares);
-    const pares = estrito ? todosOsPares.filter((par) => parAceitoNoModoEstrito(linha, par, ehGrade)) : todosOsPares;
+    const pares = estrito ? todosOsPares.filter((par) => parAceitoNoModoEstrito(linha, par, ehGrade)) : paresComContextoEstrutural(linha, todosOsPares, ehGrade);
     if (ehGrade && !linhaAnterior?.ehGrade) corridas.push((corridaAtual = { rotulo: linhaAnterior?.texto ?? null, entradas: [] }));
     if (!ehGrade) corridaAtual = null;
     linhaAnterior = { texto: linha, ehGrade };
@@ -264,16 +294,26 @@ export function extrairGabaritoDoTexto(texto, opcoes = {}) {
   // legitimamente ter ambos uma "questão 1" — isso nunca é um erro. O
   // formato linear/tabular de um cargo só tem bloco=null, preservando o
   // comportamento de antes (chave vira só o número).
-  const vistos = new Set();
+  // A mesma resposta repetida no mesmo documento (anulação listada nas
+  // justificativas E na grade — "QUESTÃO: 49 - ANULADA" e "49 - *", checado
+  // num gabarito real: Fundatec/GM Sant'Ana do Livramento 2025) é UMA
+  // entrada; respostas diferentes para o mesmo número continuam conflito.
+  const vistos = new Map();
+  const repetidasIdenticas = new Set();
   for (const item of gabaritos) {
     if (item.status === "revisao_manual") continue; // já marcado (duplicado dentro do próprio bloco posicional)
     const chave = `${item.bloco ?? ""} ${item.numero}`;
-    if (vistos.has(chave)) {
+    const anterior = vistos.get(chave);
+    if (anterior && anterior.anulada === item.anulada && anterior.alternativa_correta === item.alternativa_correta && !item.numero_deduzido) {
+      repetidasIdenticas.add(item);
+      continue;
+    }
+    if (anterior) {
       item.status = "revisao_manual";
       item.observacao = [item.observacao, "numero de gabarito duplicado neste documento/bloco"].filter(Boolean).join(" — ");
     }
-    vistos.add(chave);
+    if (!anterior) vistos.set(chave, item);
   }
 
-  return { gabaritos, naoReconhecidas };
+  return { gabaritos: gabaritos.filter((g) => !repetidasIdenticas.has(g)), naoReconhecidas };
 }

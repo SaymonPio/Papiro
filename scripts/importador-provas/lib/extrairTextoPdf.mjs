@@ -17,7 +17,8 @@
 import { PDFParse } from "pdf-parse";
 import { extrairTextoPdfPosicionado, lerItensDoPdf } from "./extrairTextoPdfPosicionado.mjs";
 import { alertasDeExpressao, aplicarExpressoesAoTexto, detectarExpressoes } from "./expressoesPdf.mjs";
-import { comprimentoDaSequenciaDeQuestoes } from "./extrairQuestoes.mjs";
+import { comprimentoDaSequenciaDeQuestoes, extrairQuestoesDoTexto } from "./extrairQuestoes.mjs";
+import { compararQuestoes } from "./integridade.mjs";
 
 const MEDIA_MINIMA_CARACTERES_POR_PAGINA = 20;
 
@@ -37,7 +38,7 @@ async function extrairTextoPdfLinear(caminhoArquivoOuBuffer) {
     // da página — nunca texto alterado por aproximação.
     const paginasDeItens = await lerItensDoPdf(dados);
     const paginas = resultado.pages.map((pagina, i) => {
-      const { expressoes, incertas, itens } = detectarExpressoes(paginasDeItens[i]?.itens ?? []);
+      const { expressoes, incertas, itens } = detectarExpressoes(paginasDeItens[i]?.itens ?? [], paginasDeItens[i]?.regras ?? []);
       const { texto, aplicadas, naoAplicadas } = aplicarExpressoesAoTexto(pagina.text ?? "", expressoes);
       return { numero: pagina.num, texto, itens, expressoes: aplicadas, alertas: alertasDeExpressao(pagina.num, [...incertas, ...naoAplicadas]) };
     });
@@ -79,10 +80,22 @@ async function extrairTextoPdfAuto(caminhoArquivoOuBuffer) {
   // com o caminho linear já validado.
   const linear = await extrairTextoPdfLinear(caminhoArquivoOuBuffer);
   const umaColuna = await extrairTextoPdfPosicionado(caminhoArquivoOuBuffer, { umaColuna: true });
-  if (comprimentoDaSequenciaDeQuestoes(umaColuna.paginas) > comprimentoDaSequenciaDeQuestoes(linear.paginas)) {
-    return { ...umaColuna, estrategiaEscolhida: "posicional-1-coluna" };
+  const sequenciaGeometrica = comprimentoDaSequenciaDeQuestoes(umaColuna.paginas);
+  const sequenciaLinear = comprimentoDaSequenciaDeQuestoes(linear.paginas);
+  const geometrica = { ...umaColuna, estrategiaEscolhida: "posicional-1-coluna", leituraAlternativa: { estrategia: "linear", paginas: linear.paginas } };
+  if (sequenciaGeometrica > sequenciaLinear) return geometrica;
+  // Empate: a ordem do stream do PDF pode divergir da ordem visual SEM
+  // perder nenhuma questão — uma linha do fim do enunciado saindo depois da
+  // alternativa E da questão anterior (checado numa prova real: Fundatec/GM
+  // Sant'Ana do Livramento 2025, 7 questões). Quando TODA diferença entre as
+  // duas leituras é só de ordem (as mesmas linhas, ver integridade.mjs), a
+  // posição na página decide; leituras idênticas ou com diferença de
+  // conteúdo continuam no caminho linear já validado.
+  if (sequenciaGeometrica === sequenciaLinear && sequenciaLinear > 0) {
+    const comparacao = [...compararQuestoes(extrairQuestoesDoTexto(umaColuna.paginas).questoes, extrairQuestoesDoTexto(linear.paginas).questoes).values()];
+    if (comparacao.some((c) => c.tipo === "reordenada") && comparacao.every((c) => c.tipo !== "divergente")) return geometrica;
   }
-  return linear;
+  return { ...linear, estrategiaEscolhida: "linear", leituraAlternativa: { estrategia: "posicional-1-coluna", paginas: umaColuna.paginas } };
 }
 
 export async function extrairTextoPdf(caminhoArquivoOuBuffer, opcoes = {}) {

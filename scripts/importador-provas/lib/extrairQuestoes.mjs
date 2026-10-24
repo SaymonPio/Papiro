@@ -136,12 +136,23 @@ function chavesEmExtremoDePaginasConsecutivas(paginasDeLinhas) {
   return chaves;
 }
 
-function removerLinhasCorridas(paginas) {
-  const bordas = paginas.map((p) => {
+function bordasDasPaginas(paginas) {
+  return paginas.map((p) => {
     const linhas = (p.texto ?? "").split("\n");
     const indices = linhas.map((l, i) => (l.trim() ? i : -1)).filter((i) => i >= 0);
     return { linhas, borda: new Set([...indices.slice(0, LINHAS_BORDA_PAGINA), ...indices.slice(-LINHAS_BORDA_PAGINA)]) };
   });
+}
+
+// Chaves (números como "#") das linhas corridas do documento — o MESMO
+// critério da remoção, reaproveitado pelo gate de integridade
+// (lib/integridade.mjs) para achar fragmento de cabeçalho/rodapé que
+// escapou da remoção e grudou numa questão.
+export function chavesDeLinhasCorridas(paginas) {
+  return encontrarCorridas(bordasDasPaginas(paginas), paginas.length);
+}
+
+function encontrarCorridas(bordas, totalPaginas) {
   const paginasPorLinha = new Map();
   for (const { linhas, borda } of bordas) {
     for (const texto of new Set([...borda].map((i) => chaveLinhaCorrida(linhas[i])))) paginasPorLinha.set(texto, (paginasPorLinha.get(texto) ?? 0) + 1);
@@ -149,12 +160,18 @@ function removerLinhasCorridas(paginas) {
   // Linha só de número (ex.: "1", que pode ser a própria questão no topo
   // da página) nunca é tratada como corrida.
   const corridas = new Set(
-    [...paginasPorLinha].filter(([texto, n]) => texto !== "#" && n >= MINIMO_PAGINAS_LINHA_CORRIDA && n >= paginas.length / 2).map(([texto]) => texto),
+    [...paginasPorLinha].filter(([texto, n]) => texto !== "#" && n >= MINIMO_PAGINAS_LINHA_CORRIDA && n >= totalPaginas / 2).map(([texto]) => texto),
   );
   // O extremo é medido sem as linhas corridas já confirmadas (o carimbo
   // pode vir logo abaixo de um "Execução: ..." comum a todas as páginas).
   const semCorridas = bordas.map(({ linhas }) => linhas.filter((l) => l.trim() && !corridas.has(chaveLinhaCorrida(l))));
   for (const chave of chavesEmExtremoDePaginasConsecutivas(semCorridas)) corridas.add(chave);
+  return corridas;
+}
+
+function removerLinhasCorridas(paginas) {
+  const bordas = bordasDasPaginas(paginas);
+  const corridas = encontrarCorridas(bordas, paginas.length);
   if (corridas.size === 0) return { paginas, topoRemovido: paginas.map(() => false) };
 
   const topoRemovido = [];
@@ -399,8 +416,14 @@ function referenciaVisual(texto) {
   return match ? `cita elemento visual que o texto extraído não preserva ("${match[0].replace(/\s+/g, " ")}")` : null;
 }
 
+// "pontos ... destacados na figura": o destaque está DENTRO da peça visual
+// — a mídia extraída o preserva, não é destaque tipográfico do texto
+// (checado numa prova real: Fundatec/GM Sant'Ana do Livramento 2025,
+// questão 46).
+const DESTAQUE_NA_PECA = /\b(?:destacad[ao]s?|em destaque|hachurad[ao]s?)[ \t\n]+(?:n[ao]s?|em)[ \t\n]+(?:figuras?|imagens?|ilustra[çc][ãa]o|gr[áa]ficos?|mapas?|quadros?|tabelas?|charges?)\b/gi;
+
 export function temReferenciaDeDestaque(texto) {
-  return REFERENCIA_DESTAQUE.test(texto);
+  return REFERENCIA_DESTAQUE.test((texto ?? "").replace(DESTAQUE_NA_PECA, " "));
 }
 
 // Só a parte de referenciaVisual que uma MÍDIA pode resolver (figura,

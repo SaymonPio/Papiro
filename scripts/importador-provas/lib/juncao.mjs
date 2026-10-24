@@ -31,7 +31,16 @@ export function juntarQuestoesEGabarito(questoes, gabaritos) {
     }
   }
 
-  if (questoes.length > 0 && gabaritos.length > 0 && questoes.length !== gabaritos.length) {
+  // Mais respostas do que questões não tem explicação estrutural (o bloco
+  // e as retificações já foram resolvidos antes daqui): alguma entrada veio
+  // de onde não devia — o gabarito inteiro deixa de ser confiável (gate
+  // GABARITO_OK em score.mjs). Menos respostas já é tratado por questão.
+  if (questoes.length > 0 && gabaritos.length > questoes.length) {
+    bloqueios.push({
+      tipo: "gabarito_excedente",
+      mensagem: `gabarito com mais respostas do que questões: ${questoes.length} questão(ões) extraída(s) vs. ${gabaritos.length} entrada(s) no gabarito`,
+    });
+  } else if (questoes.length > 0 && gabaritos.length > 0 && questoes.length !== gabaritos.length) {
     bloqueios.push({
       tipo: "quantidade_incompativel",
       mensagem: `${questoes.length} questão(ões) extraída(s) vs. ${gabaritos.length} entrada(s) no gabarito`,

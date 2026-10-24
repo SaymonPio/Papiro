@@ -35,6 +35,7 @@ import { extrairGabaritoDoTexto, extrairMencoesDeAlteracao } from "./lib/extrair
 import { lerManifestoDeGabaritos, selecionarBloco } from "./lib/gabaritos.mjs";
 import { aplicarRetificacoes } from "./lib/retificacoes.mjs";
 import { juntarQuestoesEGabarito } from "./lib/juncao.mjs";
+import { compararQuestoes, fragmentosDeMargem, problemasDeIntegridade } from "./lib/integridade.mjs";
 import { classificarMateriaAssunto } from "./lib/classificar.mjs";
 import { classificarDuplicidade } from "./lib/deduplicar.mjs";
 import { normalizarQuestao } from "./lib/normalizar.mjs";
@@ -135,7 +136,7 @@ async function main() {
     return;
   }
 
-  const { paginas: todasAsPaginas, requerOcr, totalPaginas } = await extrairTextoPdf(provaPath, { estrategia: estrategiaPdf });
+  const { paginas: todasAsPaginas, requerOcr, totalPaginas, estrategiaEscolhida, leituraAlternativa } = await extrairTextoPdf(provaPath, { estrategia: estrategiaPdf });
 
   if (requerOcr) {
     console.warn("ATENÇÃO: o PDF da prova parece ser escaneado (pouco ou nenhum texto extraível). requires_ocr=true — nenhuma tentativa de OCR foi feita nesta PoC.");
@@ -159,6 +160,32 @@ async function main() {
     process.exitCode = 1;
     return;
   }
+
+  // Integridade (lib/integridade.mjs): a outra leitura do mesmo PDF só serve
+  // de referência quando recupera exatamente as mesmas questões — uma
+  // leitura linear que perde a sequência (ordem do stream quebrada) não é
+  // referência de nada. Sem referência, valem só as checagens de conteúdo.
+  const integridade = { estrategia_escolhida: estrategiaEscolhida ?? estrategiaPdf, leitura_alternativa: leituraAlternativa?.estrategia ?? null, cruzamento_aplicado: false, motivo: null };
+  let comparacoes = null;
+  if (leituraAlternativa) {
+    const paginasAlternativas = intervalo ? leituraAlternativa.paginas.filter((p) => p.numero >= intervalo[0] && p.numero <= intervalo[1]) : leituraAlternativa.paginas;
+    const alternativas = extrairQuestoesDoTexto(paginasAlternativas, { composicao: metadata.composicao }).questoes;
+    const mesmas = alternativas.length === questoes.length && alternativas.every((q, i) => q.numero_original === questoes[i].numero_original);
+    if (mesmas) {
+      comparacoes = compararQuestoes(questoes, alternativas);
+      integridade.cruzamento_aplicado = true;
+    } else {
+      integridade.motivo = `leitura ${leituraAlternativa.estrategia} recupera ${alternativas.length} questão(ões) contra ${questoes.length} — não serve de referência`;
+    }
+  } else {
+    integridade.motivo = "só há uma leitura confiável deste documento (multicoluna) — valem as checagens de conteúdo";
+  }
+  const margem = fragmentosDeMargem(paginas);
+  for (const questao of questoes) {
+    questao.problemas_integridade = problemasDeIntegridade(questao, { comparacao: comparacoes?.get(questao.numero_original) ?? null, margem });
+  }
+  integridade.reordenadas = comparacoes ? [...comparacoes].filter(([, c]) => c.tipo === "reordenada").map(([n]) => n) : [];
+  integridade.questoes_com_problema = questoes.filter((q) => q.problemas_integridade.length > 0).map((q) => ({ numero: q.numero_original, problemas: q.problemas_integridade.map((p) => p.codigo) }));
   const textoGabarito = await extrairTextoDeGabarito(gabaritoPath);
   const { gabaritos: gabaritosBrutos, naoReconhecidas } = extrairGabaritoDoTexto(textoGabarito);
 
@@ -249,6 +276,7 @@ async function main() {
     requires_ocr: requerOcr,
     numeros_de_questao_ignorados: numerosIgnorados,
     avisos_extracao: avisosExtracao,
+    integridade_extracao: integridade,
     linhas_de_gabarito_nao_reconhecidas: naoReconhecidas,
     gabarito_numeros_deduzidos: gabaritos.filter((g) => g.numero_deduzido).map((g) => ({ bloco: g.bloco, ...g.numero_deduzido, resposta: g.anulada ? "ANULADA" : g.alternativa_correta })),
     ...(metadata.parte ? { parte: metadata.parte } : {}),

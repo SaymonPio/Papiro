@@ -162,8 +162,21 @@ export function textoDaLinha(itensDaLinha) {
 // FGV/PCPR 2026). Só vale quando a altura da página é conhecida.
 const PROPORCAO_MARGEM_PAGINA = 0.06;
 
+const naFaixaDeMargem = (y, alturaPagina) => alturaPagina !== null && (y >= alturaPagina * (1 - PROPORCAO_MARGEM_PAGINA) || y <= alturaPagina * PROPORCAO_MARGEM_PAGINA);
+
+// Carimbo de impressão na margem ("<código do caderno> 02/12/2025 19:00:04"):
+// data com hora, sozinho no item, na faixa de cabeçalho/rodapé — metadado
+// da gráfica, nunca corpo de questão (checado numa prova real: Fundatec/GM
+// Sant'Ana do Livramento 2025, a metade "data hora" do carimbo caía dentro
+// do texto-base). Data/hora no corpo da página nunca é tocada.
+const CARIMBO_DATA_HORA = /^\s*\d{1,2}\/\d{1,2}\/\d{2,4}[ \t]+\d{1,2}:\d{2}(?::\d{2})?\s*$/;
+
+export function removerCarimbosDeMargem(itens, alturaPagina) {
+  return itens.filter((i) => !(naFaixaDeMargem(i.y, alturaPagina) && CARIMBO_DATA_HORA.test(i.texto)));
+}
+
 function reconstruirPagina(itens, larguraPagina, clusters, tolerancia, alturaPagina = null, porPicos = false) {
-  const naMargem = (y) => porPicos && alturaPagina !== null && (y >= alturaPagina * (1 - PROPORCAO_MARGEM_PAGINA) || y <= alturaPagina * PROPORCAO_MARGEM_PAGINA);
+  const naMargem = (y) => porPicos && naFaixaDeMargem(y, alturaPagina);
   const candidatos = candidatosPorProximidadeVertical(itens);
 
   const linhasDivididas = [];
@@ -255,6 +268,48 @@ function clustersPorPicos(valores, larguraPagina) {
   return clusters.map((c) => ({ ...c, tamanho: valores.filter((x) => x >= c.min - 1 && x <= c.max + 1).length }));
 }
 
+// Coluna de verdade tem CALHA: as linhas que têm conteúdo dos dois lados da
+// margem esquerda da coluna seguinte quase nunca atravessam essa margem com
+// texto corrido. Num documento de 1 coluna justificado, poucas linhas
+// recuadas à direita (autoria "Por Fulano", fonte do texto, partes de uma
+// fórmula) bastavam para inventar uma "coluna direita" com confiança alta,
+// e o trecho de cada linha corrida que caía nessa faixa era emitido depois
+// da coluna esquerda inteira — grudado na alternativa E (checado numa prova
+// real: Fundatec/GM Sant'Ana do Livramento 2025, 15 questões: 303 de 308
+// linhas atravessavam a "fronteira"). Só o documento SEM NENHUMA calha
+// confirmada vira 1 coluna: documentos de 2 colunas reais têm a calha
+// verdadeira ao lado de fronteiras espúrias que a leitura já tolera
+// (checado: FEPESE/PMBC 2014 15/210 na calha real, ACAFE/PC-SC 2008 24/677,
+// FGV/PCPR 2026 4/1238 — todos inalterados).
+const PROPORCAO_LINHAS_ATRAVESSANDO_CALHA = 0.5;
+const MINIMO_LINHAS_DOS_DOIS_LADOS = 5;
+const FATOR_ESPACO_ENTRE_PALAVRAS = 0.8; // lacuna < 0,8 altura = espaço entre palavras, não calha
+
+function atravessaFronteira(itens, fronteira) {
+  const ordenados = [...itens].sort((a, b) => a.x - b.x);
+  for (const [i, item] of ordenados.entries()) {
+    if (item.x < fronteira - 1 && item.x + item.largura > fronteira + 1) return true;
+    const proximo = ordenados[i + 1];
+    if (proximo && item.x + item.largura <= fronteira && proximo.x >= fronteira && proximo.x - (item.x + item.largura) < Math.max(item.altura, 1) * FATOR_ESPACO_ENTRE_PALAVRAS) return true;
+  }
+  return false;
+}
+
+function calhaConfirmada(candidatosPorPagina, fronteira) {
+  let dosDoisLados = 0;
+  let atravessando = 0;
+  for (const candidatos of candidatosPorPagina) {
+    for (const c of candidatos) {
+      const comTexto = c.itens.filter((i) => i.texto.trim().length > 0);
+      if (!comTexto.some((i) => i.x < fronteira) || !comTexto.some((i) => i.x + i.largura > fronteira)) continue;
+      dosDoisLados++;
+      if (atravessaFronteira(c.itens, fronteira)) atravessando++;
+    }
+  }
+  if (dosDoisLados < MINIMO_LINHAS_DOS_DOIS_LADOS) return true;
+  return atravessando / dosDoisLados < PROPORCAO_LINHAS_ATRAVESSANDO_CALHA;
+}
+
 function detectarColunasDoDocumento(candidatosPorPagina, larguraPagina) {
   const xIniciosGlobais = candidatosPorPagina.flatMap((candidatos) => candidatos.map((c) => c.itens[0].x));
   let { clusters, gaps } = clustersPorGap(xIniciosGlobais, larguraPagina);
@@ -266,6 +321,11 @@ function detectarColunasDoDocumento(candidatosPorPagina, larguraPagina) {
       gaps = picos.slice(1).map((c, i) => c.min - picos[i].max);
       porPicos = true;
     }
+  }
+  if (clusters.length > 1 && !clusters.slice(1).some((c) => calhaConfirmada(candidatosPorPagina, c.min))) {
+    clusters = [{ min: clusters[0].min, max: clusters.at(-1).max, tamanho: clusters.reduce((s, c) => s + c.tamanho, 0) }];
+    gaps = [];
+    porPicos = false;
   }
   const deteccao = confiancaDaDeteccao(clusters, gaps);
   const tolerancia = larguraPagina * 0.03;
@@ -347,6 +407,45 @@ export function reconstruirDocumentoPosicionado(paginasDeItens, opcoes = {}) {
   };
 }
 
+// Traços horizontais finos desenhados como vetor (barra de fração, traço
+// de radical, sublinhado): {x0, x1, y}. Só a caixa do caminho importa —
+// fração e radical "empilhados" de editor de equação não têm o traço no
+// texto (checado numa prova real: Fundatec/GM Sant'Ana do Livramento 2025,
+// questão 43, "√(2x−6)/(x−5)").
+const ESPESSURA_MAXIMA_REGRA = 1.5;
+const COMPRIMENTO_MINIMO_REGRA = 3;
+
+function multiplicar(m, n) {
+  return [m[0] * n[0] + m[2] * n[1], m[1] * n[0] + m[3] * n[1], m[0] * n[2] + m[2] * n[3], m[1] * n[2] + m[3] * n[3], m[0] * n[4] + m[2] * n[5] + m[4], m[1] * n[4] + m[3] * n[5] + m[5]];
+}
+
+async function lerRegrasHorizontais(pagina, OPS) {
+  const { fnArray, argsArray } = await pagina.getOperatorList();
+  const regras = [];
+  let ctm = [1, 0, 0, 1, 0, 0];
+  const pilha = [];
+  for (let i = 0; i < fnArray.length; i++) {
+    const fn = fnArray[i];
+    const args = argsArray[i];
+    if (fn === OPS.save) pilha.push(ctm);
+    else if (fn === OPS.restore) ctm = pilha.pop() ?? ctm;
+    else if (fn === OPS.transform) ctm = multiplicar(ctm, args);
+    else if (fn === OPS.paintFormXObjectBegin) {
+      pilha.push(ctm);
+      if ((Array.isArray(args?.[0]) || ArrayBuffer.isView(args?.[0])) && args[0].length === 6) ctm = multiplicar(ctm, [...args[0]]);
+    } else if (fn === OPS.paintFormXObjectEnd) ctm = pilha.pop() ?? ctm;
+    else if (fn === OPS.constructPath) {
+      const caixa = args?.[2];
+      if (!caixa || caixa.length < 4 || ctm[1] !== 0 || ctm[2] !== 0) continue;
+      const [xa, ya] = [ctm[0] * caixa[0] + ctm[4], ctm[3] * caixa[1] + ctm[5]];
+      const [xb, yb] = [ctm[0] * caixa[2] + ctm[4], ctm[3] * caixa[3] + ctm[5]];
+      const [x0, x1, y0, y1] = [Math.min(xa, xb), Math.max(xa, xb), Math.min(ya, yb), Math.max(ya, yb)];
+      if (y1 - y0 <= ESPESSURA_MAXIMA_REGRA && x1 - x0 >= COMPRIMENTO_MINIMO_REGRA) regras.push({ x0, x1, y: (y0 + y1) / 2 });
+    }
+  }
+  return regras;
+}
+
 // Camada de I/O — abre o PDF real via pdfjs-dist e extrai os itens de
 // texto (com posição) de cada página. Também usada pela estratégia
 // linear, que precisa da geometria para expressões e textos-base.
@@ -378,7 +477,7 @@ export async function lerItensDoPdf(caminhoArquivoOuBuffer) {
         altura: item.height || 10,
       }));
 
-    paginasDeItens.push({ numero, larguraPagina: viewport.width, alturaPagina: viewport.height, itens });
+    paginasDeItens.push({ numero, larguraPagina: viewport.width, alturaPagina: viewport.height, itens: removerCarimbosDeMargem(itens, viewport.height), regras: await lerRegrasHorizontais(pagina, pdfjsLib.OPS) });
   }
 
   await doc.destroy();
@@ -391,7 +490,7 @@ export async function lerItensDoPdf(caminhoArquivoOuBuffer) {
 export async function extrairTextoPdfPosicionado(caminhoArquivoOuBuffer, opcoes = {}) {
   const paginasDeItens = await lerItensDoPdf(caminhoArquivoOuBuffer);
   const expressoesPorPagina = paginasDeItens.map((p) => {
-    const { expressoes, incertas, itens } = detectarExpressoes(p.itens);
+    const { expressoes, incertas, itens } = detectarExpressoes(p.itens, p.regras ?? []);
     p.itens = itens;
     return { expressoes, incertas };
   });
