@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";
-import { hashManifesto, planejarAquisicao } from "../scripts/importador-provas/lib/aquisicao/planejar.mjs";
+import { hashConteudoQuestao, hashManifesto, planejarAquisicao } from "../scripts/importador-provas/lib/aquisicao/planejar.mjs";
 import { ErroAquisicao, executarAquisicao, montarRelatorioAquisicao } from "../scripts/importador-provas/lib/aquisicao/executor.mjs";
 
 // PAPIRO — executor controlado de aquisição. Fixture 100% sintética:
@@ -563,6 +563,43 @@ test("LIB-DEDUP-C) DEDUP_OK sem questao_id bloqueia o documento; questao_id em o
     assert.ok(manifesto.bloqueios.some((b) => padrao.test(b)), `esperado bloqueio ${padrao}`);
     assert.equal(manifesto.resumo.importar, 0);
   }
+});
+
+test("LIB-HASH-A) liberação amarrada ao conteudo_hash do candidato revisado: vale para ele, entra no hash do manifesto e caduca se o candidato mudar", async () => {
+  const { repo, parecida } = cenarioProvavelDuplicada();
+  const revisado = comMatchStaging(parecida(), 1);
+  const hash = hashConteudoQuestao(revisado);
+  const valida = await executarAquisicao({ repo, entrada: entradaBase([revisado], { aprovacao: { liberacoes: [liberarDedup(2, 1, { conteudo_hash: hash })] } }), modo: "dry-run" });
+  assert.equal(valida.manifesto.questoes[0].acao, "IMPORTAR");
+  assert.deepEqual(valida.manifesto.questoes[0].liberacoes_aplicadas, [{ gate: "DEDUP_OK", motivo: "provavel_duplicada", questao_id: 1, conteudo_hash: hash, justificativa: JUSTIFICATIVA_DEDUP }]);
+  const semHash = await executarAquisicao({ repo, entrada: entradaBase([revisado], { aprovacao: { liberacoes: [liberarDedup(2, 1)] } }), modo: "dry-run" });
+  assert.notEqual(valida.hash, semHash.hash, "o conteudo_hash aprovado faz parte do manifesto");
+
+  const mudou = comMatchStaging({ ...parecida(), enunciado: `${parecida().enunciado} (corrigido)` }, 1);
+  const caduca = await executarAquisicao({ repo, entrada: entradaBase([mudou], { aprovacao: { liberacoes: [liberarDedup(2, 1, { conteudo_hash: hash })] } }), modo: "dry-run" });
+  const item = caduca.manifesto.questoes[0];
+  assert.equal(item.acao, "REVISAR");
+  assert.ok(item.motivos.some((m) => /revisada sobre outro conteúdo \(DEDUP_OK\/provavel_duplicada/.test(m)));
+  assert.ok(item.motivos.some((m) => /DEDUP_OK=false/.test(m)), "a causa original volta a valer");
+  assert.equal(item.liberacoes_aplicadas, undefined);
+  assert.equal(caduca.manifesto.bloqueios.length, 0);
+});
+
+test("LIB-HASH-B) EXTRACAO_OK com conteudo_hash caduca do mesmo jeito; conteudo_hash malformado bloqueia o documento", async () => {
+  const q = () => comInterno(questaoStaging(1), { dependencia_texto_incerta: "bloco do texto" });
+  const hash = hashConteudoQuestao(q());
+  const ok = await executarAquisicao({ repo: criarRepositorioMemoria(), entrada: entradaBase([q()], { aprovacao: { liberacoes: [liberar(1, "dependencia_texto_incerta", { conteudo_hash: hash })] } }), modo: "dry-run" });
+  assert.equal(ok.manifesto.questoes[0].acao, "IMPORTAR");
+
+  const mudou = { ...q(), alternativas: q().alternativas.map((a, i) => (i === 0 ? { ...a, texto: `${a.texto}!` } : a)) };
+  const caduca = await executarAquisicao({ repo: criarRepositorioMemoria(), entrada: entradaBase([mudou], { aprovacao: { liberacoes: [liberar(1, "dependencia_texto_incerta", { conteudo_hash: hash })] } }), modo: "dry-run" });
+  assert.equal(caduca.manifesto.questoes[0].acao, "REVISAR");
+  assert.ok(caduca.manifesto.questoes[0].motivos.some((m) => /revisada sobre outro conteúdo/.test(m)));
+  assert.ok(caduca.manifesto.questoes[0].motivos.some((m) => /^EXTRACAO_OK=false no staging$/.test(m)));
+
+  const malformado = await executarAquisicao({ repo: criarRepositorioMemoria(), entrada: entradaBase([q()], { aprovacao: { liberacoes: [liberar(1, "dependencia_texto_incerta", { conteudo_hash: "abc" })] } }), modo: "dry-run" });
+  assert.ok(malformado.manifesto.bloqueios.some((b) => /conteudo_hash precisa ser o sha256/.test(b)));
+  assert.equal(malformado.manifesto.resumo.importar, 0);
 });
 
 test("L) vínculo implícito pela origem é proibido: COM_VINCULO sem matérias, COM_VINCULO sem vínculos e BASE_GLOBAL com vínculos bloqueiam", async () => {

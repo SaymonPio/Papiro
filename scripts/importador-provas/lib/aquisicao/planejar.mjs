@@ -185,7 +185,11 @@ function resolverParte(parte, contexto, provaExiste) {
 // de revisão humana, uma CAUSA heurística de um gate do staging pode ser
 // liberada para UMA questão — nunca o gate inteiro, nunca implicitamente.
 //   { "numero_original": 10, "gate": "EXTRACAO_OK",
-//     "motivo": "dependencia_texto_incerta", "justificativa": "..." }
+//     "motivo": "dependencia_texto_incerta", "justificativa": "...",
+//     "conteudo_hash": "<sha256 opcional do candidato revisado>" }
+// Com conteudo_hash, a liberação só vale para aquele conteúdo
+// (hashConteudoQuestao): se o candidato mudar, ela caduca e a questão
+// volta a REVISAR.
 // Só causas em que o conteúdo gravado está íntegro e a dúvida se resolve
 // lendo a questão. Conteúdo faltante/corrompido (alternativa faltante,
 // texto-base ou expressão não reconstruídos...) nunca é liberável: exige
@@ -219,11 +223,18 @@ function validarLiberacoes(liberacoes, numerosDoLote) {
     else if (l.gate === "DEDUP_OK" && !(Number.isInteger(l.questao_id) && l.questao_id > 0)) bloqueios.push(`${rotulo}: DEDUP_OK exige questao_id da questão do banco comparada`);
     else if (l.gate !== "DEDUP_OK" && l.questao_id !== undefined) bloqueios.push(`${rotulo}: questao_id só se aplica a DEDUP_OK`);
     else if (typeof l.justificativa !== "string" || l.justificativa.trim().length < JUSTIFICATIVA_MINIMA) bloqueios.push(`${rotulo}: justificativa da revisão humana ausente ou curta demais`);
+    else if (l.conteudo_hash !== undefined && !(typeof l.conteudo_hash === "string" && /^[0-9a-f]{64}$/.test(l.conteudo_hash))) bloqueios.push(`${rotulo}: conteudo_hash precisa ser o sha256 (64 hex) do conteúdo revisado`);
     else if (vistas.has(`${l.numero_original}:${l.gate}:${l.motivo}:${l.questao_id ?? ""}`)) bloqueios.push(`${rotulo}: liberação repetida para nº ${l.numero_original} ${l.gate}/${l.motivo}`);
     else {
       vistas.add(`${l.numero_original}:${l.gate}:${l.motivo}:${l.questao_id ?? ""}`);
       const lista = porNumero.get(l.numero_original) ?? [];
-      lista.push({ gate: l.gate, motivo: l.motivo, ...(l.gate === "DEDUP_OK" ? { questao_id: l.questao_id } : {}), justificativa: l.justificativa.trim() });
+      lista.push({
+        gate: l.gate,
+        motivo: l.motivo,
+        ...(l.gate === "DEDUP_OK" ? { questao_id: l.questao_id } : {}),
+        ...(l.conteudo_hash !== undefined ? { conteudo_hash: l.conteudo_hash } : {}),
+        justificativa: l.justificativa.trim(),
+      });
       porNumero.set(l.numero_original, lista);
     }
   }
@@ -425,7 +436,10 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
       return item;
     }
     if (!etapas.PROVENIENCIA_OK) revisar("PROVENIENCIA_OK=false no staging");
-    const liberacoesDaQuestao = liberacoesPorNumero.get(numero) ?? [];
+    // Liberação revisada sobre outro conteúdo caducou: não libera nada.
+    const caducas = (liberacoesPorNumero.get(numero) ?? []).filter((l) => l.conteudo_hash !== undefined && l.conteudo_hash !== item.conteudo_hash);
+    if (caducas.length > 0) revisar(`liberação explícita revisada sobre outro conteúdo (${caducas.map((l) => `${l.gate}/${l.motivo}`).join(", ")}: conteudo_hash ${caducas[0].conteudo_hash.slice(0, 12)}… ≠ candidato ${item.conteudo_hash.slice(0, 12)}…) — o candidato mudou depois da revisão humana; revisar o aprovacao.json`);
+    const liberacoesDaQuestao = (liberacoesPorNumero.get(numero) ?? []).filter((l) => !caducas.includes(l));
     const aplicadas = [];
     // MIDIA_OK ausente (staging anterior ao suporte a mídias) = sem mídia.
     for (const gate of ["EXTRACAO_OK", "MIDIA_OK"]) {
