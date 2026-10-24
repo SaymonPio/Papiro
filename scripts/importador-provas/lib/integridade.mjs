@@ -111,6 +111,24 @@ const GLIFO_MATEMATICO = /[\u{1D400}-\u{1D7FF}]/u;
 // "f(x) =" seguido só de "?"/":"/fim: o lado direito da igualdade sumiu.
 const IGUALDADE_TRUNCADA = /=\s*(?:[?:]|$)/m;
 
+// Tabela-verdade linearizada: linhas seguidas feitas só de células de valor
+// lógico ("V V F F V F"). O texto corrido não guarda as colunas — com
+// célula em branco, nem dá para saber qual coluna falta (checado numa
+// prova real: Fundatec/PP-RS 2022, tabela-verdade incompleta). Não é
+// reconstruída nem liberável: precisa de estrutura confiável, de mídia ou
+// de revisão.
+const LINHA_DE_CELULAS_LOGICAS = /^[ \t]*[VF](?:[ \t]+[VF])+[ \t]*$/; // 2+ células: linha incompleta também conta
+const MINIMO_LINHAS_TABELA = 3;
+
+function temTabelaLinearizada(texto) {
+  let seguidas = 0;
+  for (const linha of (texto ?? "").split("\n")) {
+    seguidas = LINHA_DE_CELULAS_LOGICAS.test(linha) ? seguidas + 1 : 0;
+    if (seguidas >= MINIMO_LINHAS_TABELA) return true;
+  }
+  return false;
+}
+
 // Problemas de integridade de UMA questão já extraída (sem texto-base:
 // enunciado_comando + alternativas). comparacao: resultado de
 // compararQuestoes para esta questão (ou null quando só há uma leitura).
@@ -132,6 +150,7 @@ export function problemasDeIntegridade(questao, { comparacao = null, margem = { 
     if (carimbo || corrida) problemas.push({ codigo: "lixo_de_pagina", motivo: `${rotulo} contém fragmento de cabeçalho/rodapé da página ("${carimbo ?? texto.match(corrida)[0].trim()}")` });
     if (GLIFO_MATEMATICO.test(texto)) problemas.push({ codigo: "glifo_matematico", motivo: `${rotulo} contém glifo matemático de expressão não reconstruída` });
     if (IGUALDADE_TRUNCADA.test(texto)) problemas.push({ codigo: "igualdade_truncada", motivo: `${rotulo} termina uma igualdade sem o lado direito (expressão possivelmente perdida depois de "=")` });
+    if (temTabelaLinearizada(texto)) problemas.push({ codigo: "tabela_linearizada", motivo: `${rotulo} contém tabela-verdade convertida em texto corrido — a estrutura de colunas não é preservada` });
   }
   return problemas;
 }

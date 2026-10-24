@@ -36,6 +36,7 @@ import { lerManifestoDeGabaritos, selecionarBloco } from "./lib/gabaritos.mjs";
 import { aplicarRetificacoes } from "./lib/retificacoes.mjs";
 import { juntarQuestoesEGabarito } from "./lib/juncao.mjs";
 import { compararQuestoes, fragmentosDeMargem, problemasDeIntegridade } from "./lib/integridade.mjs";
+import { sha256DoTexto, textoDeGabaritoHtml } from "./lib/gabaritoHtml.mjs";
 import { classificarMateriaAssunto } from "./lib/classificar.mjs";
 import { classificarDuplicidade } from "./lib/deduplicar.mjs";
 import { normalizarQuestao } from "./lib/normalizar.mjs";
@@ -79,14 +80,24 @@ function lerJsonSeExistir(caminho, padrao) {
 // três formatos reais conhecidos (linear, tabular, grade posicional) a
 // partir do texto entregue pela estratégia linear — nenhuma necessidade
 // de reconstrução por coordenadas aqui.
+// Documentos de gabarito publicados como página HTML: o hash registrado é
+// o do HTML (documento oficial); o texto derivado (lib/gabaritoHtml.mjs)
+// fica anotado à parte no relatório, nunca no lugar do original.
+const textosDerivadosDeHtml = [];
+
 async function extrairTextoDeGabarito(caminho) {
   const extensao = path.extname(caminho).toLowerCase();
   if (extensao === ".txt") return fs.readFileSync(caminho, "utf8");
+  if (extensao === ".html" || extensao === ".htm") {
+    const texto = textoDeGabaritoHtml(fs.readFileSync(caminho));
+    textosDerivadosDeHtml.push({ arquivo: path.basename(caminho), sha256_html_oficial: calcularHashArquivo(caminho), sha256_texto_derivado: sha256DoTexto(texto), conversao: "lib/gabaritoHtml.mjs (determinística)" });
+    return texto;
+  }
   if (extensao === ".pdf") {
     const { paginas } = await extrairTextoPdf(caminho, { estrategia: "linear" });
     return paginas.map((p) => p.texto).join("\n");
   }
-  throw new Error(`Extensão de gabarito não suportada: "${extensao}" (use .pdf ou .txt)`);
+  throw new Error(`Extensão de gabarito não suportada: "${extensao}" (use .pdf, .html ou .txt)`);
 }
 
 async function main() {
@@ -278,6 +289,7 @@ async function main() {
     avisos_extracao: avisosExtracao,
     integridade_extracao: integridade,
     linhas_de_gabarito_nao_reconhecidas: naoReconhecidas,
+    ...(textosDerivadosDeHtml.length > 0 ? { gabarito_textos_derivados_de_html: textosDerivadosDeHtml } : {}),
     gabarito_numeros_deduzidos: gabaritos.filter((g) => g.numero_deduzido).map((g) => ({ bloco: g.bloco, ...g.numero_deduzido, resposta: g.anulada ? "ANULADA" : g.alternativa_correta })),
     ...(metadata.parte ? { parte: metadata.parte } : {}),
     retificacoes_gabarito: {

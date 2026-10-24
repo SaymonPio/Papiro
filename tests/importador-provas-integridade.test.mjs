@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { reconstruirDocumentoPosicionado, removerCarimbosDeMargem } from "../scripts/importador-provas/lib/extrairTextoPdfPosicionado.mjs";
-import { detectarExpressoes } from "../scripts/importador-provas/lib/expressoesPdf.mjs";
+import { detectarExpressoes, normalizarAlfanumericosMatematicos } from "../scripts/importador-provas/lib/expressoesPdf.mjs";
 import { compararQuestoes, fragmentosDeMargem, problemasDeIntegridade } from "../scripts/importador-provas/lib/integridade.mjs";
 import { extrairGabaritoDoTexto } from "../scripts/importador-provas/lib/extrairGabarito.mjs";
 import { juntarQuestoesEGabarito } from "../scripts/importador-provas/lib/juncao.mjs";
@@ -252,4 +252,34 @@ test("MID) 'destacados na figura' é destaque DENTRO da peça visual; 'destacada
   assert.equal(temReferenciaDeDestaque("As áreas hachuradas no gráfico somam 30%."), false);
   assert.equal(temReferenciaDeDestaque("A palavra destacada no texto é um advérbio."), true);
   assert.equal(temReferenciaDeDestaque("O termo sublinhado exerce a função de sujeito."), true);
+});
+
+// ------------------------------------------------- glifos matemáticos ----
+
+test("MAT-A) itálico/negrito/sem serifa matemáticos viram a letra comum; operadores lógicos e de conjunto ficam intactos", () => {
+  const entrada = "(𝑃 → ~𝑄) ∨ (¬𝑅 ↔ 𝐒) ∧ ∀𝑥 ∈ A, ∃𝑦: 𝑥 + 𝟐 > 𝗓 · ℎ · 𝜋";
+  assert.equal(normalizarAlfanumericosMatematicos(entrada), "(P → ~Q) ∨ (¬R ↔ S) ∧ ∀x ∈ A, ∃y: x + 2 > z · h · π");
+  for (const operador of ["¬", "∧", "∨", "→", "↔", "∀", "∃", "∈", "~"]) assert.ok(normalizarAlfanumericosMatematicos(entrada).includes(operador), operador);
+  assert.equal(normalizarAlfanumericosMatematicos("texto sem nada matemático"), "texto sem nada matemático");
+});
+
+test("MAT-B) script, fraktur e double-struck (podem denotar conjuntos) NÃO são normalizados e continuam apontados pelo gate", () => {
+  const entrada = "x ∈ 𝔸 ou 𝒜 ou 𝔄 ou ℝ";
+  assert.equal(normalizarAlfanumericosMatematicos(entrada), entrada);
+  const q = { enunciado: `Seja ${entrada}. Assinale:`, alternativas: ["1", "2", "3", "4", "5"].map((t, i) => ({ letra: "ABCDE"[i], texto: t })) };
+  assert.ok(problemasDeIntegridade(q).some((p) => p.codigo === "glifo_matematico"));
+  const normalizada = { ...q, enunciado: normalizarAlfanumericosMatematicos("A sentença 𝑃 → ~𝑄 é:") };
+  assert.equal(problemasDeIntegridade(normalizada).some((p) => p.codigo === "glifo_matematico"), false, "itálico normalizado não é mais glifo solto");
+});
+
+// ------------------------------------------------- tabela linearizada ----
+
+test("TAB) tabela-verdade convertida em texto corrido vira problema (não liberável); alternativas 'V – F – V.' e uma linha solta de valores não", () => {
+  const alternativas = ["V – V – V.", "V – F – V.", "F – F – V.", "F – V – F.", "F – F – F."].map((texto, i) => ({ letra: "ABCDE"[i], texto }));
+  const tabela = { enunciado: "Complete a tabela:\np q p ∧ q\nV V V\nV F\nF V F\nF F F\nOs valores que faltam são:", alternativas };
+  assert.ok(problemasDeIntegridade(tabela).some((p) => p.codigo === "tabela_linearizada"));
+  const r = calcularStatus({ numero_original: 1, ...tabela, _interno: { alternativa_faltante: false, motivos_juncao: [], gabarito_status: "ok", integridade: problemasDeIntegridade(tabela) } }, { status: "nova", match_id: null }, [], PROVENIENCIA);
+  assert.equal(r.etapas.EXTRACAO_OK, false);
+  const semTabela = { enunciado: "Se p é V e q é F, o valor de p ∧ q, q ∨ p e p → q é:\nV F V", alternativas };
+  assert.equal(problemasDeIntegridade(semTabela).some((p) => p.codigo === "tabela_linearizada"), false);
 });

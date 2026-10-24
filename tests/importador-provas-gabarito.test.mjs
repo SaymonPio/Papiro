@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { textoDeGabaritoHtml } from "../scripts/importador-provas/lib/gabaritoHtml.mjs";
 import { extrairGabaritoDoTexto } from "../scripts/importador-provas/lib/extrairGabarito.mjs";
 
 // PAPIRO — PoC do importador de provas: extração do gabarito oficial.
@@ -234,4 +235,34 @@ test("GRADE-SEQ2) sem dedução quando não é inequívoco: duas células fora d
   const jaExiste = extrairGabaritoDoTexto(["X", "3 4 5 6", "A B C D", "1 2 77 4", "A B C D"].join("\n")).gabaritos;
   assert.ok(jaExiste.every((x) => !x.numero_deduzido));
   assert.equal(jaExiste.filter((x) => x.numero === 77).length, 1);
+});
+
+// ------------------------------------------------ gabarito em página HTML ----
+
+test("HTML-A) página de gabarito (Latin-1, tabela de leiaute aninhada, entidades, script): texto determinístico, uma linha por <tr> folha, anulada '*' preservada", () => {
+  const html = [
+    "<html><head><script>var x = '<tr><td>99 A</td></tr>';</script><style>td{}</style></head><body>",
+    "<table><tr><td>",
+    "<table>",
+    "<tr><td>Concurso Sint&eacute;tico n&ordm; 01</td></tr>",
+    "<tr><td>Quest&atilde;o</td><td>Respostas</td><td>Componente</td></tr>",
+    "<tr><td>1</td><td>C</td><td>L&iacute;ngua Portuguesa</td></tr>",
+    "<tr><td>2</td><td>*</td><td>Inform&aacute;tica</td></tr>",
+    "<tr><td>3</td><td>E</td><td>Racioc&#237;nio L&#xF3;gico</td></tr>",
+    "</table>",
+    "</td></tr></table><!-- <tr><td>4 A</td></tr> --></body></html>",
+  ].join("\n");
+  const bytes = Buffer.from(html, "latin1");
+  const texto = textoDeGabaritoHtml(bytes);
+  assert.equal(texto, ["Concurso Sintético nº 01", "Questão Respostas Componente", "1 C Língua Portuguesa", "2 * Informática", "3 E Raciocínio Lógico", ""].join("\n"));
+  assert.equal(textoDeGabaritoHtml(Buffer.from(html, "latin1")), texto, "mesmos bytes -> mesmo texto");
+  const { gabaritos } = extrairGabaritoDoTexto(texto);
+  assert.deepEqual(gabaritos.map((g) => [g.numero, g.anulada ? "*" : g.alternativa_correta]), [[1, "C"], [2, "*"], [3, "E"]]);
+});
+
+test("HTML-B) charset UTF-8 declarado é respeitado; bytes inválidos em UTF-8 sem declaração caem para Latin-1", () => {
+  const utf8 = Buffer.from('<meta charset="utf-8"><table><tr><td>7</td><td>B</td><td>Matemática</td></tr></table>', "utf8");
+  assert.equal(textoDeGabaritoHtml(utf8), "7 B Matemática\n");
+  const latin1 = Buffer.from("<table><tr><td>8</td><td>D</td><td>Física</td></tr></table>", "latin1");
+  assert.equal(textoDeGabaritoHtml(latin1), "8 D Física\n");
 });

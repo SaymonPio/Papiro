@@ -16,7 +16,7 @@
 
 import { PDFParse } from "pdf-parse";
 import { extrairTextoPdfPosicionado, lerItensDoPdf } from "./extrairTextoPdfPosicionado.mjs";
-import { alertasDeExpressao, aplicarExpressoesAoTexto, detectarExpressoes } from "./expressoesPdf.mjs";
+import { alertasDeExpressao, aplicarExpressoesAoTexto, detectarExpressoes, normalizarAlfanumericosMatematicos } from "./expressoesPdf.mjs";
 import { comprimentoDaSequenciaDeQuestoes, extrairQuestoesDoTexto } from "./extrairQuestoes.mjs";
 import { compararQuestoes } from "./integridade.mjs";
 
@@ -98,10 +98,30 @@ async function extrairTextoPdfAuto(caminhoArquivoOuBuffer) {
   return { ...linear, estrategiaEscolhida: "linear", leituraAlternativa: { estrategia: "posicional-1-coluna", paginas: umaColuna.paginas } };
 }
 
+// Saída única de todas as estratégias: letras/dígitos matemáticos
+// tipográficos (𝑃, 𝑥) viram a letra comum — no texto, nos itens com
+// posição e na leitura alternativa, para que o cruzamento de integridade e
+// o texto-base comparem a mesma coisa (ver normalizarAlfanumericosMatematicos).
+function normalizarPaginas(paginas) {
+  return paginas.map((p) => ({
+    ...p,
+    texto: normalizarAlfanumericosMatematicos(p.texto),
+    ...(Array.isArray(p.itens) ? { itens: p.itens.map((i) => ({ ...i, texto: normalizarAlfanumericosMatematicos(i.texto) })) } : {}),
+  }));
+}
+
+function normalizarResultado(resultado) {
+  return {
+    ...resultado,
+    paginas: normalizarPaginas(resultado.paginas),
+    ...(resultado.leituraAlternativa ? { leituraAlternativa: { ...resultado.leituraAlternativa, paginas: normalizarPaginas(resultado.leituraAlternativa.paginas) } } : {}),
+  };
+}
+
 export async function extrairTextoPdf(caminhoArquivoOuBuffer, opcoes = {}) {
   const estrategia = opcoes.estrategia ?? "linear";
-  if (estrategia === "linear") return extrairTextoPdfLinear(caminhoArquivoOuBuffer);
-  if (estrategia === "posicional") return extrairTextoPdfPosicionado(caminhoArquivoOuBuffer, opcoes);
-  if (estrategia === "auto") return extrairTextoPdfAuto(caminhoArquivoOuBuffer);
+  if (estrategia === "linear") return normalizarResultado(await extrairTextoPdfLinear(caminhoArquivoOuBuffer));
+  if (estrategia === "posicional") return normalizarResultado(await extrairTextoPdfPosicionado(caminhoArquivoOuBuffer, opcoes));
+  if (estrategia === "auto") return normalizarResultado(await extrairTextoPdfAuto(caminhoArquivoOuBuffer));
   throw new Error(`Estratégia de extração de PDF desconhecida: "${estrategia}" (use "linear", "posicional" ou "auto")`);
 }

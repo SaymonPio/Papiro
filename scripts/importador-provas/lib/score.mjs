@@ -30,7 +30,8 @@ export function causasDeExtracao(questao) {
     });
   }
   // Integridade (lib/integridade.mjs): divergência entre as leituras do PDF,
-  // lixo de cabeçalho/rodapé, glifo matemático solto, igualdade truncada.
+  // lixo de cabeçalho/rodapé, glifo matemático solto, igualdade truncada,
+  // tabela-verdade linearizada.
   // Nenhuma dessas causas é liberável — o conteúdo precisa ser corrigido.
   for (const problema of interno.integridade ?? []) causas.push({ codigo: problema.codigo, motivo: problema.motivo });
   return causas;

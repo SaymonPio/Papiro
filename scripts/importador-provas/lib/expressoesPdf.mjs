@@ -118,6 +118,37 @@ const CONTEUDO_FORMULA = /^[0-9A-Za-z.,+\-–−×·÷=<>≤≥πθ√()\s]{1,40
 
 const textoMatematico = (texto) => texto.normalize("NFKC");
 
+// Variantes tipográficas Unicode de letras/dígitos usadas por editores de
+// equação no texto corrido ("𝑃 → ~𝑄", "∀𝑥 ∈ A"): itálico, negrito,
+// sem serifa e monoespaçado são a MESMA letra — a equivalência de
+// compatibilidade (NFKC) é inequívoca e o significado não muda (checado
+// numa prova real: Fundatec/PP-RS 2022, lógica proposicional e
+// quantificadores). Fora: script, fraktur e double-struck (𝒜, 𝔄, 𝔸 — e ℝ,
+// ℕ, ℤ fora do bloco), que podem carregar significado próprio (conjuntos),
+// ficam como estão e o gate de integridade continua apontando. Operadores
+// (¬ ∧ ∨ → ↔ ∀ ∃ ∈ ...) não estão nessas faixas e nunca são tocados.
+const FAIXAS_ALFANUMERICAS_EQUIVALENTES = [
+  [0x1d400, 0x1d49b], // negrito, itálico, negrito itálico (latinas)
+  [0x1d5a0, 0x1d6a5], // sem serifa (todas as variantes), monoespaçado, ı/ȷ itálicos
+  [0x1d6a8, 0x1d7cb], // gregas: negrito, itálico, negrito itálico, sem serifa
+  [0x1d7ce, 0x1d7d7], // dígitos negrito
+  [0x1d7e2, 0x1d7ff], // dígitos sem serifa e monoespaçados
+];
+const PLANCK = 0x210e; // "ℎ" ocupa o buraco do h itálico no bloco matemático
+
+function ehAlfanumericoEquivalente(codigo) {
+  return codigo === PLANCK || FAIXAS_ALFANUMERICAS_EQUIVALENTES.some(([ini, fim]) => codigo >= ini && codigo <= fim);
+}
+
+export function normalizarAlfanumericosMatematicos(texto) {
+  if (typeof texto !== "string" || !/[\u{1D400}-\u{1D7FF}ℎ]/u.test(texto)) return texto;
+  return texto.replace(/[\u{1D400}-\u{1D7FF}ℎ]/gu, (glifo) => {
+    if (!ehAlfanumericoEquivalente(glifo.codePointAt(0))) return glifo;
+    const base = glifo.normalize("NFKC");
+    return [...base].length === 1 && base !== glifo ? base : glifo;
+  });
+}
+
 // O próprio item precisa estar majoritariamente SOBRE o traço: o traço
 // curto de um "√2" no meio da frase não transforma a linha de cima em
 // numerador (checado: Fundatec/GM Sant'Ana do Livramento 2025, questão 49).

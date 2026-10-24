@@ -184,6 +184,38 @@ test("TB-J) reconstrução geométrica que não reproduz as palavras do texto li
   assert.match(resultado.motivo, /mesmas palavras/);
 });
 
+// Número de linha que o PDF entrega partido em glifos: "0" + "4" colados
+// (lacuna ~0) na mesma linha de base e com a mesma altura.
+function itensComNumeroPartido(lacunaEntreDigitos) {
+  const itens = [item("Titulo Ficticio", 200, 724)];
+  LINHAS.forEach((linha, i) => {
+    const y = 700 - i * 12;
+    const numero = String(i + 1).padStart(2, "0");
+    if (i === 3) itens.push({ texto: numero[0], x: 40, y, largura: 5, altura: 10 }, { texto: numero[1], x: 45 + lacunaEntreDigitos, y, largura: 5, altura: 10 });
+    else itens.push(item(numero, 40, y));
+    itens.push(item(linha, i === 0 || i === 2 ? 92 : 67, y));
+  });
+  return itens;
+}
+
+test("TB-N) número de linha partido em glifos COLADOS ('0' + '4') é um número só: sequência e parágrafos preservados, sem falsa 'lacuna interna'", () => {
+  const linear = ["Titulo Ficticio", "01", "02", "03", "04", "05", ...LINHAS].join("\n");
+  const resultado = reconstruirTextoBase([{ texto: linear, itens: itensComNumeroPartido(0) }]);
+  assert.equal(resultado.confiavel, true, resultado.motivo);
+  assert.equal(resultado.linhasNumeradas, true);
+  assert.equal(
+    resultado.texto,
+    ["Titulo Ficticio", "", `[01] ${LINHAS[0]}`, `[02] ${LINHAS[1]}`, "", `[03] ${LINHAS[2]}`, `[04] ${LINHAS[3]}`, `[05] ${LINHAS[4]}`].join("\n"),
+  );
+});
+
+test("TB-O) dígitos AFASTADOS na margem ('0'   '4') são ambíguos: nunca viram número por concatenação — reconstrução recusada (revisão)", () => {
+  const linear = ["Titulo Ficticio", "01", "02", "03", "0", "4", "05", ...LINHAS].join("\n");
+  const resultado = reconstruirTextoBase([{ texto: linear, itens: itensComNumeroPartido(6) }]);
+  assert.equal(resultado.confiavel, false);
+  assert.doesNotMatch(resultado.texto, /\[04\]/);
+});
+
 test("TB-K) questão que cita destaque tipográfico ou imagem fica sinalizada; alternativa anormalmente longa também", () => {
   const { questoes } = extrairQuestoesDoTexto([
     {
