@@ -1086,3 +1086,14 @@ test("PARTE-C) sem parte, o manifesto não ganha a chave 'parte'; com parte, a p
   assert.notEqual(a.hash, b.hash);
   assert.notEqual(a.hash, semParte.hash);
 });
+
+test("LIB-ENUM) item_enumerado_vazio nunca é liberado: nem por EXTRACAO_OK, nem por DEDUP_OK válido da provável duplicada", async () => {
+  const { repo, parecida } = cenarioProvavelDuplicada();
+  const vazia = () => comInterno(comMatchStaging(parecida(), 1), { integridade: [{ codigo: "item_enumerado_vazio", motivo: "enunciado tem itens enumerados sem conteúdo (I. II. III. IV.)" }] });
+  const soDedup = await executarAquisicao({ repo, entrada: entradaBase([vazia()], { aprovacao: { liberacoes: [liberarDedup(2, 1)] } }), modo: "dry-run" });
+  assert.equal(soDedup.manifesto.questoes[0].acao, "REVISAR", "DEDUP_OK liberado não esconde o item vazio");
+  assert.deepEqual(soDedup.manifesto.questoes[0].motivos, ["EXTRACAO_OK=false no staging"]);
+  const tentativa = await executarAquisicao({ repo, entrada: entradaBase([vazia()], { aprovacao: { liberacoes: [liberarDedup(2, 1), liberar(2, "item_enumerado_vazio")] } }), modo: "dry-run" });
+  assert.ok(tentativa.manifesto.bloqueios.some((b) => /não é liberável/.test(b)));
+  assert.equal(tentativa.manifesto.resumo.importar, 0);
+});

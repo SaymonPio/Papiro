@@ -241,3 +241,43 @@ test("PNG) codificação determinística e decodificável (RGB 8 bits, filtro 0)
   const idat = a.subarray(a.indexOf("IDAT") + 4, a.indexOf("IEND") - 8);
   assert.deepEqual([...inflateSync(idat)], [0, 255, 0, 0, 0, 255, 0, 0, 0, 0, 255, 9, 9, 9]);
 });
+
+// Diagrama/fluxograma/esquema com contexto visual explícito exigem mídia (checado numa prova real: Fundatec/
+// Araquari 2025, questão 15 — "diagrama lógico abaixo" passava com todas as etapas OK e sem figura).
+const STATUS_LIMPO = [{ status: "nova", match_id: null }, [], { prova: {}, completa: true, faltando: [], invalidos: [] }];
+function semMidia(enunciado) {
+  const q = { ...questao(1, `${enunciado}\nQual é o resultado indicado?`), confidence: "alta" };
+  const res = resolverMidias({ paginas: [pagina(6, [linha(enunciado, 700), linha("Qual é o resultado indicado?", 686), ...linhasDeAlternativas(660)], [])], questoes: [q] }).porQuestao.get(1);
+  anexarMidias(q, res);
+  return { q, res, status: calcularStatus(q, ...STATUS_LIMPO) };
+}
+
+for (const [rotulo, enunciado] of [["VIS-A", "Considere o diagrama abaixo."], ["VIS-B", "De acordo com o fluxograma a seguir, responda."], ["VIS-C", "Observe o esquema apresentado abaixo."]]) {
+  test(`${rotulo}) "${enunciado}" sem mídia -> midia_ausente, MIDIA_OK=false e REVISAO mesmo com as demais etapas OK`, () => {
+    const { res, status } = semMidia(enunciado);
+    assert.deepEqual(res.causas.map((c) => c.codigo), ["midia_ausente"]);
+    assert.equal(status.etapas.MIDIA_OK, false);
+    assert.deepEqual(Object.entries(status.etapas).filter(([k, v]) => k !== "MIDIA_OK" && !v), [], "só a mídia trava a questão");
+    assert.equal(status.status, "REVISAO_MANUAL");
+  });
+}
+
+test("VIS-D) diagrama com figura associada pela legenda -> MIDIA_OK", () => {
+  const legenda = "Figura 1 – Diagrama sintético de operações";
+  const { q, p } = cenarioFigura({ legenda, enunciado: `Considere o diagrama abaixo para responder à questão.\n${legenda}\nQual elemento aparece em evidência no painel?` });
+  p.linhas[0] = linha("Considere o diagrama abaixo para responder à questão.", 720);
+  q._interno.referencia_visual = 'cita elemento visual ("diagrama abaixo")';
+  const res = resolverMidias({ paginas: [p], questoes: [q] }).porQuestao.get(1);
+  assert.equal(res.status, "OK", JSON.stringify(res.causas));
+  anexarMidias(q, res);
+  const status = calcularStatus(q, ...STATUS_LIMPO);
+  assert.deepEqual([status.etapas.EXTRACAO_OK, status.etapas.MIDIA_OK, status.status], [true, true, "PRONTA_PARA_REVISAO"]);
+});
+
+test("VIS-E) \"esquema\" narrativo, sem contexto visual, não exige mídia", () => {
+  for (const enunciado of ["O esquema de corrupção apresentado pelo Ministério Público envolvia servidores.", "O esquema tático dado pelo treinador foi criticado."]) {
+    const q = questao(1, enunciado);
+    const r = resolverMidias({ paginas: [pagina(2, [linha(enunciado, 700), ...linhasDeAlternativas(680)], [])], questoes: [q] });
+    assert.equal(r.porQuestao.size, 0, enunciado);
+  }
+});

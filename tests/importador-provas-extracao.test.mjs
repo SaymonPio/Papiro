@@ -625,3 +625,25 @@ test("CAD-MULTI2) recomeço curto (lista '1. 2. 3.' dentro de enunciado) não é
   assert.equal(r.bloqueio, null);
   assert.equal(r.questoes.length, 3);
 });
+
+test("VIS) diagrama/fluxograma/esquema com contexto visual explícito sinalizam; uso narrativo de \"esquema\" e termos antigos não mudam", () => {
+  const enunciados = [
+    "Considere o diagrama abaixo e indique o resultado.",
+    "De acordo com o fluxograma a seguir, qual é a próxima etapa?",
+    "Observe o esquema apresentado abaixo e responda.",
+    "Com base nas etapas do DIAGRAMA SINTÉTICO ABAIXO, indique o resultado.",
+    "Analise os seguintes diagramas e assinale a correta.",
+    "O esquema de corrupção apresentado pelo Ministério Público envolvia servidores.",
+    "O esquema tático dado pelo treinador foi criticado.",
+    "Usando o diagrama de Venn, dados os conjuntos A e B, quantos elementos há na interseção?",
+    "Analise o gráfico a seguir sobre as ocorrências.",
+    "A palavra destacada no texto é um advérbio.",
+  ];
+  const texto = enunciados.flatMap((e, i) => [String(i + 1), e, ...alternativasFgv(String.fromCharCode(97 + i))]).join("\n");
+  const { questoes } = extrairQuestoesDoTexto([{ numero: 1, texto }]);
+  assert.equal(questoes.length, enunciados.length);
+  const sinal = questoes.map((q) => q.referencia_visual?.match(/\("(.*)"\)/)?.[1] ?? null);
+  assert.deepEqual(sinal.slice(0, 5), ["diagrama abaixo", "fluxograma a seguir", "esquema apresentado abaixo", "DIAGRAMA SINTÉTICO ABAIXO", "seguintes diagramas"]);
+  assert.deepEqual(sinal.slice(5, 8), [null, null, null], "esquema/diagrama sem contexto visual não sinaliza");
+  assert.deepEqual(sinal.slice(8), ["gráfico a seguir", "destacada"], "termos já suportados: comportamento inalterado");
+});

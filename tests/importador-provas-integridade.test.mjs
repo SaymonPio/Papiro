@@ -283,3 +283,47 @@ test("TAB) tabela-verdade convertida em texto corrido vira problema (não liber�
   const semTabela = { enunciado: "Se p é V e q é F, o valor de p ∧ q, q ∨ p e p → q é:\nV F V", alternativas };
   assert.equal(problemasDeIntegridade(semTabela).some((p) => p.codigo === "tabela_linearizada"), false);
 });
+
+// ------------------------------------------------ itens enumerados vazios ----
+
+const ALTS_ITENS = ["Apenas I e II.", "Apenas III e IV.", "Apenas I, III e IV.", "Apenas II, III e IV.", "I, II, III e IV."].map((texto, i) => ({ letra: "ABCDE"[i], texto, correta: i === 3 }));
+const vazio = (enunciado) => problemasDeIntegridade({ enunciado, alternativas: ALTS_ITENS }).filter((p) => p.codigo === "item_enumerado_vazio");
+const statusDe = (enunciado, { interno = {}, dedup = { status: "nova", match_id: null } } = {}) =>
+  calcularStatus({ numero_original: 1, enunciado, alternativas: ALTS_ITENS, confidence: "alta", _interno: { alternativa_faltante: false, motivos_juncao: [], gabarito_status: "ok", integridade: problemasDeIntegridade({ enunciado, alternativas: ALTS_ITENS }), ...interno } }, dedup, [], PROVENIENCIA);
+const PERDIDOS = "Considere o cenário sintético de teste e as sentenças:\nI.\nII.\nIII.\nIV.\nQuais sentenças são verdadeiras?";
+
+test("ENUM-A/B/C) só os marcadores sobreviveram (I. II. III. IV., 1) 2) 3), a) b) c), I) II), a. b.) -> item_enumerado_vazio e REVISAR", () => {
+  assert.match(vazio(PERDIDOS)[0]?.motivo ?? "", /\(I\. II\. III\. IV\.\)/);
+  for (const lista of ["1)\n2)\n3)", "a)\nb)\nc)", "I)\nII)\nIII)", "a.\nb.\nc.", "1.\n2.\n3."]) {
+    const enunciado = `Analise os itens a seguir:\n${lista}\nQuais estão corretos?`;
+    assert.equal(vazio(enunciado).length, 1, lista);
+    const r = statusDe(enunciado);
+    assert.deepEqual([r.etapas.EXTRACAO_OK, r.status], [false, "REVISAO_MANUAL"], lista);
+  }
+});
+
+test("ENUM-D/E/F/I) itens com conteúdo, fórmulas, placeholders do documento e citação de itens não bloqueiam", () => {
+  for (const enunciado of [
+    "Analise as assertivas:\nI. primeira afirmação\nII. segunda afirmação\nQuais estão corretas?",
+    "Estão corretas I, II e III.",
+    "Considere os itens I e II.",
+    "A alternativa correta é II.",
+    "I e III são verdadeiras.",
+    "Segundo os itens I, II e IV, assinale a correta.",
+    "Considere as proposições:\nI. P ∧ Q\nII. ¬P\nIII. x > 2",
+    "Complete:\nI. ______\nII. (   )\nIII. ?",
+    "Analise as assertivas:\nI.\nprimeira afirmação em outra linha\nII.\nsegunda afirmação em outra linha",
+    "O prazo terminou em 2020.\n3.",
+  ]) {
+    assert.deepEqual(vazio(enunciado), [], enunciado);
+    assert.equal(statusDe(enunciado).etapas.EXTRACAO_OK, true, enunciado);
+  }
+});
+
+test("ENUM-G/H) item vazio continua REVISAR com mídia associada (MIDIA_OK) e com dedup OK", () => {
+  const comMidia = statusDe(PERDIDOS, { interno: { dependencia_midia: true, midias: [{ ordem: 1, sha256: "a".repeat(64) }] } });
+  assert.deepEqual([comMidia.etapas.MIDIA_OK, comMidia.etapas.EXTRACAO_OK, comMidia.status], [true, false, "REVISAO_MANUAL"]);
+  const r = statusDe(PERDIDOS);
+  assert.deepEqual(Object.entries(r.etapas).filter(([, v]) => !v).map(([k]) => k), ["EXTRACAO_OK"], "só a extração trava — DEDUP_OK e os demais estão OK");
+  assert.equal(r.status, "REVISAO_MANUAL");
+});

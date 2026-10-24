@@ -129,6 +129,50 @@ function temTabelaLinearizada(texto) {
   return false;
 }
 
+// Itens enumerados vazios: 2+ linhas SEGUIDAS só com o marcador, em
+// sequência ("I." "II." "III.", "1)" "2)", "a)" "b)") — a lista sobreviveu
+// e o conteúdo dos itens se perdeu (era imagem; checado numa prova real:
+// Fundatec/PP-RS 2022 Técnico, questão 79, sentenças I–IV). Citação de
+// itens ("Estão corretas I, II e III") nunca é linha só de marcador, e
+// placeholder do documento ("I. ______", "II. (   )") é conteúdo. Não é
+// liberável e não depende de mídia: posse de figura não recupera o item.
+const LINHA_SO_MARCADOR = /^[ \t]*([IVXivx]{1,6}|\d{1,2}|[A-Za-z])[ \t]*([.)])[ \t]*$/;
+const MINIMO_ITENS_VAZIOS = 2;
+const ROMANOS = { i: 1, v: 5, x: 10 };
+
+function valorRomano(s) {
+  if (!/^[ivx]+$/i.test(s)) return null;
+  const d = [...s.toLowerCase()].map((c) => ROMANOS[c]);
+  return d.reduce((t, v, i) => t + (v < (d[i + 1] ?? 0) ? -v : v), 0);
+}
+
+// cur é o item seguinte a prev na mesma família (romano, número ou letra),
+// com a mesma caixa e a mesma pontuação.
+function itemSeguinte([prev, pPrev], [cur, pCur]) {
+  if (pPrev !== pCur || (prev === prev.toUpperCase()) !== (cur === cur.toUpperCase())) return false;
+  const romanos = [valorRomano(prev), valorRomano(cur)];
+  if (romanos.every((v) => v !== null) && romanos[1] === romanos[0] + 1) return true;
+  if (/^\d+$/.test(prev) && /^\d+$/.test(cur)) return Number(cur) === Number(prev) + 1;
+  return prev.length === 1 && cur.length === 1 && /[a-z]/i.test(prev) && cur.toLowerCase().charCodeAt(0) === prev.toLowerCase().charCodeAt(0) + 1;
+}
+
+// Primeira sequência de itens vazios (marcadores, ex. ["I.", "II."]) ou null.
+export function itensEnumeradosVazios(texto) {
+  let seguidos = [];
+  for (const linha of [...(texto ?? "").split("\n"), "fim"]) {
+    if (!linha.trim()) continue;
+    const m = linha.match(LINHA_SO_MARCADOR);
+    const item = m ? [m[1], m[2]] : null;
+    if (item && seguidos.length > 0 && itemSeguinte(seguidos.at(-1), item)) {
+      seguidos.push(item);
+      continue;
+    }
+    if (seguidos.length >= MINIMO_ITENS_VAZIOS) return seguidos.map(([marcador, pontuacao]) => marcador + pontuacao);
+    seguidos = item ? [item] : [];
+  }
+  return null;
+}
+
 // Problemas de integridade de UMA questão já extraída (sem texto-base:
 // enunciado_comando + alternativas). comparacao: resultado de
 // compararQuestoes para esta questão (ou null quando só há uma leitura).
@@ -151,6 +195,8 @@ export function problemasDeIntegridade(questao, { comparacao = null, margem = { 
     if (GLIFO_MATEMATICO.test(texto)) problemas.push({ codigo: "glifo_matematico", motivo: `${rotulo} contém glifo matemático de expressão não reconstruída` });
     if (IGUALDADE_TRUNCADA.test(texto)) problemas.push({ codigo: "igualdade_truncada", motivo: `${rotulo} termina uma igualdade sem o lado direito (expressão possivelmente perdida depois de "=")` });
     if (temTabelaLinearizada(texto)) problemas.push({ codigo: "tabela_linearizada", motivo: `${rotulo} contém tabela-verdade convertida em texto corrido — a estrutura de colunas não é preservada` });
+    const vazios = itensEnumeradosVazios(texto);
+    if (vazios) problemas.push({ codigo: "item_enumerado_vazio", motivo: `${rotulo} tem itens enumerados sem conteúdo (${vazios.join(" ")}) — o conteúdo dos itens se perdeu na extração` });
   }
   return problemas;
 }

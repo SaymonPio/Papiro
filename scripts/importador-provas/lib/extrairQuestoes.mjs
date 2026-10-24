@@ -408,11 +408,31 @@ const REFERENCIA_PECA_VISUAL = new RegExp(
   `\\b(?:observe|analise|veja)\\b[^.\\n]{0,40}?\\b${PECA_VISUAL}\\b|\\b${PECA_VISUAL}\\b[^.\\n]{0,25}?\\b(?:a seguir|abaixo|acima)\\b`,
   "i",
 );
+// Diagrama/fluxograma/esquema só contam como peça visual com contexto de
+// posição explícito ("diagrama lógico abaixo", "fluxograma a seguir",
+// "esquema apresentado") — "esquema de corrupção", "diagramas de Venn"
+// soltos não bastam (checado numa prova real: Fundatec/Araquari 2025,
+// questão 15 passava sem mídia nem gate). "esquema" é o mais ambíguo e
+// "apresentado/dado" também narra ("esquema tático dado pelo treinador"):
+// fora diagrama/fluxograma + posição, aceita no máximo uma palavra entre
+// o termo e a posição, e o particípio nunca seguido de agente (por/pelo).
+const DIAGRAMA = "(?:diagramas?|fluxogramas?)";
+const ESQUEMATICO = "(?:diagramas?|fluxogramas?|esquemas?)";
+const UMA_PALAVRA = "(?:[ \\t\\n]+[^\\s.,;:()]+)?[ \\t\\n]+";
+const REFERENCIA_ESQUEMA_VISUAL = new RegExp(
+  [
+    `\\b${DIAGRAMA}\\b[^.\\n]{0,25}?\\b(?:a seguir|abaixo|acima|ao lado)\\b`,
+    `\\b${ESQUEMATICO}${UMA_PALAVRA}(?:a seguir|abaixo|acima|ao lado|seguintes?)\\b`,
+    `\\b${ESQUEMATICO}${UMA_PALAVRA}(?:apresentad|dad)[ao]s?\\b(?![ \\t\\n]+(?:por|pel[ao]s?)\\b)`,
+    `\\b(?:seguintes?|abaixo)[ \\t\\n]+${ESQUEMATICO}\\b`,
+  ].join("|"),
+  "i",
+);
 const TEXTO_SEM_CONTEUDO = /\b(?:leia|observe|analise|considere)\b[^\n]{0,60}?\ba seguir\b[^\n]{0,60}:?[ \t]*\n[ \t]*(?:https?:\/\/|dispon[íi]vel em)/i;
 
 function referenciaVisual(texto) {
   if (TEXTO_SEM_CONTEUDO.test(texto)) return "o texto/peça \"a seguir\" não tem conteúdo extraído (só a fonte) — provavelmente é imagem";
-  const match = texto.match(REFERENCIA_DESTAQUE) ?? texto.match(REFERENCIA_IMAGEM) ?? texto.match(REFERENCIA_PECA_VISUAL);
+  const match = texto.match(REFERENCIA_DESTAQUE) ?? texto.match(REFERENCIA_IMAGEM) ?? texto.match(REFERENCIA_PECA_VISUAL) ?? texto.match(REFERENCIA_ESQUEMA_VISUAL);
   return match ? `cita elemento visual que o texto extraído não preserva ("${match[0].replace(/\s+/g, " ")}")` : null;
 }
 
@@ -432,7 +452,7 @@ export function temReferenciaDeDestaque(texto) {
 // resolve. rotulos = "figura 1", "grafico 2"... citados no texto.
 const ROTULO_MIDIA = /\b(figura|gr[áa]fico|tabela|imagem|quadro|mapa)\s*(?:n[ºo°.]?\s*)?(\d{1,2})\b/gi;
 export function referenciaDeMidia(texto) {
-  const sinal = TEXTO_SEM_CONTEUDO.test(texto) ? "texto a seguir sem conteúdo extraído" : (texto.match(REFERENCIA_IMAGEM) ?? texto.match(REFERENCIA_PECA_VISUAL))?.[0];
+  const sinal = TEXTO_SEM_CONTEUDO.test(texto) ? "texto a seguir sem conteúdo extraído" : (texto.match(REFERENCIA_IMAGEM) ?? texto.match(REFERENCIA_PECA_VISUAL) ?? texto.match(REFERENCIA_ESQUEMA_VISUAL))?.[0];
   if (!sinal) return null;
   const rotulos = [...texto.matchAll(ROTULO_MIDIA)].map((m) => `${m[1].normalize("NFD").replace(/\p{M}/gu, "").toLowerCase()} ${Number(m[2])}`);
   return { sinal: sinal.replace(/\s+/g, " "), rotulos: [...new Set(rotulos)] };
