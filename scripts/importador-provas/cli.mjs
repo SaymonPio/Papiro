@@ -44,6 +44,7 @@ import { calcularStatus } from "./lib/score.mjs";
 import { anexarMidias, lerPaginasVisuais, resolverMidias } from "./lib/midias.mjs";
 import { calcularHashArquivo, montarProveniencia } from "./lib/proveniencia.mjs";
 import { gerarRelatorio } from "./lib/relatorio.mjs";
+import { conferirDeclaracao, selecionarIntervalo } from "./lib/partes.mjs";
 
 function lerArgumentos(argv) {
   const args = {};
@@ -153,21 +154,27 @@ async function main() {
     console.warn("ATENÇÃO: o PDF da prova parece ser escaneado (pouco ou nenhum texto extraível). requires_ocr=true — nenhuma tentativa de OCR foi feita nesta PoC.");
   }
 
-  // Parte de uma prova cujo PDF oficial junta vários cadernos (metadata.parte
-  // = { codigo, nome, ordem, paginas: [inicio, fim] }): só as páginas da
-  // parte declarada são lidas; o hash continua sendo o do PDF oficial
-  // inteiro, e numero_original continua sendo o número impresso.
-  const intervalo = metadata.parte?.paginas;
-  if (metadata.parte && !(Array.isArray(intervalo) && intervalo.length === 2 && intervalo.every(Number.isInteger) && intervalo[0] >= 1 && intervalo[0] <= intervalo[1] && intervalo[1] <= totalPaginas)) {
-    console.error(`metadata.parte.paginas inválido (${JSON.stringify(intervalo)}): use [início, fim] dentro de 1..${totalPaginas}`);
+  // PDF oficial que junta vários cadernos (lib/partes.mjs): só as páginas
+  // da parte (metadata.parte) ou do caderno canônico (metadata.caderno)
+  // declarados são lidas; o hash continua sendo o do PDF oficial inteiro,
+  // e numero_original continua sendo o número impresso.
+  const selecao = selecionarIntervalo(metadata, todasAsPaginas, totalPaginas);
+  if (selecao.bloqueio) {
+    console.error(`BLOQUEADO: ${selecao.bloqueio}`);
     process.exitCode = 1;
     return;
   }
-  const paginas = intervalo ? todasAsPaginas.filter((p) => p.numero >= intervalo[0] && p.numero <= intervalo[1]) : todasAsPaginas;
+  const { paginas, intervalo } = selecao;
 
   const { questoes, numerosIgnorados, avisos: avisosExtracao, bloqueio: bloqueioExtracao } = extrairQuestoesDoTexto(paginas, { composicao: metadata.composicao });
   if (bloqueioExtracao) {
     console.error(`BLOQUEADO: ${bloqueioExtracao}`);
+    process.exitCode = 1;
+    return;
+  }
+  const bloqueioDeclaracao = conferirDeclaracao({ ...selecao, todasAsPaginas, questoes, blocoGabarito: blocoBase });
+  if (bloqueioDeclaracao) {
+    console.error(`BLOQUEADO: ${bloqueioDeclaracao}`);
     process.exitCode = 1;
     return;
   }
@@ -292,6 +299,7 @@ async function main() {
     ...(textosDerivadosDeHtml.length > 0 ? { gabarito_textos_derivados_de_html: textosDerivadosDeHtml } : {}),
     gabarito_numeros_deduzidos: gabaritos.filter((g) => g.numero_deduzido).map((g) => ({ bloco: g.bloco, ...g.numero_deduzido, resposta: g.anulada ? "ANULADA" : g.alternativa_correta })),
     ...(metadata.parte ? { parte: metadata.parte } : {}),
+    ...(metadata.caderno ? { caderno: metadata.caderno } : {}),
     retificacoes_gabarito: {
       documentos: retificacoesLidas.map((r) => ({ ordem: r.ordem, documento: r.documento, url: r.url, hash: r.hash, entradas: r.gabaritos.length, mencoes: r.mencoes })),
       problemas: problemasRetificacao,
