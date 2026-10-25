@@ -34,7 +34,10 @@ const MARCADOR_QUESTAO = /(?:^|\n)[ \t]*(\d{1,3})[.)][ \t]+/g;
 // internas (instruções da capa, itens de enunciado) e deixam de ser
 // candidatos: sem isso, a lista de instruções "1. ... 11." da capa da
 // mesma prova emendava na sequência real e ocupava as questões 1 a 11.
-const MARCADOR_QUESTAO_EXPLICITO = /(?:^|\n)[ \t]*(?:QUEST[ÃA]O|Quest[ãa]o)[ \t]+(\d{1,3})[ \t]*[-–—:.)][ \t]*/g;
+// "QUESTÂO" (Â no lugar de Ã) é erro de impressão da própria banca no
+// marcador (checado numa prova real: Fundatec/SEJUSP-MG 2022, Q43 e Q45
+// do TIPO 1) — vale só como marcador estrutural; o texto bruto não muda.
+const MARCADOR_QUESTAO_EXPLICITO = /(?:^|\n)[ \t]*(?:QUEST[ÃÂA]O|Quest[ãâa]o)[ \t]+(\d{1,3})[ \t]*[-–—:.)][ \t]*/g;
 const MINIMO_SEQUENCIA_EXPLICITA = 3;
 // 'i' não é usado — a letra sempre é normalizada para maiúscula na
 // captura abaixo, nunca comparada no caso original (provas reais variam
@@ -119,7 +122,7 @@ function chaveLinhaCorrida(linha) {
 // de várias páginas CONSECUTIVAS — posição que conteúdo de questão não
 // repete. Marcador de questão/alternativa nunca conta ("QUESTÃO # –
 // Assinale..." ou "E) Apenas I." podem abrir/fechar páginas seguidas).
-const MARCADOR_DE_CONTEUDO = /^(?:\(?[A-Ea-e][ \t]*(?:\)|⇒|→|\.)|(?:QUEST[ÃA]O|Quest[ãa]o)[ \t]+#|#[.)])/;
+const MARCADOR_DE_CONTEUDO = /^(?:\(?[A-Ea-e][ \t]*(?:\)|⇒|→|\.)|(?:QUEST[ÃÂA]O|Quest[ãâa]o)[ \t]+#|#[.)])/;
 
 function chavesEmExtremoDePaginasConsecutivas(paginasDeLinhas) {
   const chaves = new Set();
