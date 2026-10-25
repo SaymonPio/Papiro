@@ -65,6 +65,7 @@ export function normalizarQuestao(juntada, metadata, classificacao) {
       referencia_visual: juntada.referencia_visual ?? null,
       alertas_expressao: juntada.alertas_expressao ?? [],
       integridade: juntada.problemas_integridade ?? [],
+      ...(juntada.decisao_leitura ? { decisao_leitura: juntada.decisao_leitura } : {}),
       expressoes: juntada.expressoes ?? [],
       gabarito_historico: gabarito?.historico ?? null,
       alternativa_faltante: juntada.alternativa_faltante,

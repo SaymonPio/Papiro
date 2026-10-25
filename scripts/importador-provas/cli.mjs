@@ -36,6 +36,7 @@ import { lerManifestoDeGabaritos, selecionarBloco } from "./lib/gabaritos.mjs";
 import { aplicarRetificacoes } from "./lib/retificacoes.mjs";
 import { juntarQuestoesEGabarito } from "./lib/juncao.mjs";
 import { compararQuestoes, fragmentosDeMargem, problemasDeIntegridade } from "./lib/integridade.mjs";
+import { aplicarDecisoesDeLeitura } from "./lib/decisoesLeitura.mjs";
 import { sha256DoTexto, textoDeGabaritoHtml } from "./lib/gabaritoHtml.mjs";
 import { classificarMateriaAssunto } from "./lib/classificar.mjs";
 import { classificarDuplicidade } from "./lib/deduplicar.mjs";
@@ -166,7 +167,8 @@ async function main() {
   }
   const { paginas, intervalo } = selecao;
 
-  const { questoes, numerosIgnorados, avisos: avisosExtracao, bloqueio: bloqueioExtracao } = extrairQuestoesDoTexto(paginas, { composicao: metadata.composicao });
+  const { questoes: questoesExtraidas, numerosIgnorados, avisos: avisosExtracao, bloqueio: bloqueioExtracao } = extrairQuestoesDoTexto(paginas, { composicao: metadata.composicao });
+  let questoes = questoesExtraidas;
   if (bloqueioExtracao) {
     console.error(`BLOQUEADO: ${bloqueioExtracao}`);
     process.exitCode = 1;
@@ -185,9 +187,10 @@ async function main() {
   // referência de nada. Sem referência, valem só as checagens de conteúdo.
   const integridade = { estrategia_escolhida: estrategiaEscolhida ?? estrategiaPdf, leitura_alternativa: leituraAlternativa?.estrategia ?? null, cruzamento_aplicado: false, motivo: null };
   let comparacoes = null;
+  let alternativas = null;
   if (leituraAlternativa) {
     const paginasAlternativas = intervalo ? leituraAlternativa.paginas.filter((p) => p.numero >= intervalo[0] && p.numero <= intervalo[1]) : leituraAlternativa.paginas;
-    const alternativas = extrairQuestoesDoTexto(paginasAlternativas, { composicao: metadata.composicao }).questoes;
+    alternativas = extrairQuestoesDoTexto(paginasAlternativas, { composicao: metadata.composicao }).questoes;
     const mesmas = alternativas.length === questoes.length && alternativas.every((q, i) => q.numero_original === questoes[i].numero_original);
     if (mesmas) {
       comparacoes = compararQuestoes(questoes, alternativas);
@@ -198,9 +201,24 @@ async function main() {
   } else {
     integridade.motivo = "só há uma leitura confiável deste documento (multicoluna) — valem as checagens de conteúdo";
   }
+  // A outra leitura é a posicional (ordem visual): conteúdo igual em outra
+  // ordem é problema da escolhida (ordem_leituras_divergente), salvo decisão
+  // declarada no staging, presa às assinaturas (lib/decisoesLeitura.mjs).
+  const referenciaPosicional = integridade.cruzamento_aplicado && leituraAlternativa.estrategia.startsWith("posicional");
+  const decisoes = aplicarDecisoesDeLeitura(metadata, { questoes, posicionais: referenciaPosicional ? alternativas : null, comparacoes, referenciaPosicional });
+  if (decisoes.bloqueio) {
+    console.error(`BLOQUEADO: ${decisoes.bloqueio}`);
+    process.exitCode = 1;
+    return;
+  }
+  if (decisoes.aplicadas.length > 0) {
+    questoes = decisoes.questoes;
+    comparacoes = compararQuestoes(questoes, alternativas);
+    integridade.decisoes_leitura = decisoes.aplicadas;
+  }
   const margem = fragmentosDeMargem(paginas);
   for (const questao of questoes) {
-    questao.problemas_integridade = problemasDeIntegridade(questao, { comparacao: comparacoes?.get(questao.numero_original) ?? null, margem });
+    questao.problemas_integridade = problemasDeIntegridade(questao, { comparacao: comparacoes?.get(questao.numero_original) ?? null, margem, referenciaPosicional });
   }
   integridade.reordenadas = comparacoes ? [...comparacoes].filter(([, c]) => c.tipo === "reordenada").map(([n]) => n) : [];
   integridade.questoes_com_problema = questoes.filter((q) => q.problemas_integridade.length > 0).map((q) => ({ numero: q.numero_original, problemas: q.problemas_integridade.map((p) => p.codigo) }));
