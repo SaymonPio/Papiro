@@ -241,7 +241,7 @@ async function main() {
     gabaritosBase = selecionarBloco(gabaritosBrutos, blocoBase, "o gabarito");
     for (const retificacao of manifestoGabaritos?.retificacoes ?? []) {
       const texto = await extrairTextoDeGabarito(retificacao.arquivo);
-      const { gabaritos: entradas } = extrairGabaritoDoTexto(texto, { estrito: true });
+      const { gabaritos: entradas } = extrairGabaritoDoTexto(texto, { estrito: true, secoesDeCargo: retificacao.natureza === "justificativa_recursos" });
       retificacoesLidas.push({
         ...retificacao,
         hash: calcularHashArquivo(retificacao.arquivo),
@@ -264,8 +264,9 @@ async function main() {
   const proveniencia = montarProveniencia(metadata, {
     hashProva: calcularHashArquivo(provaPath),
     hashGabarito: calcularHashArquivo(gabaritoPath),
-    retificacoes: retificacoesLidas.map((r) => ({ ordem: r.ordem, documento: r.documento, url: r.url, hash: r.hash })),
-    gabaritoTipo: manifestoGabaritos?.base.tipo ?? "definitivo",
+    // natureza/escopo só quando declarados (justificativa por cargo): sem eles, a proveniência é a de antes.
+    retificacoes: retificacoesLidas.map((r) => ({ ordem: r.ordem, documento: r.documento, url: r.url, hash: r.hash, ...(r.natureza ? { natureza: r.natureza, bloco: r.bloco } : {}) })),
+    gabaritoTipo: manifestoGabaritos?.estadoFinal === "composto" ? "composto" : (manifestoGabaritos?.base.tipo ?? "definitivo"),
     parte: metadata.parte ? { codigo: metadata.parte.codigo, nome: metadata.parte.nome, ordem: metadata.parte.ordem } : null,
   });
   if (!proveniencia.completa) {

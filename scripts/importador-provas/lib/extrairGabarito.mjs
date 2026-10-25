@@ -196,6 +196,33 @@ function paresComContextoEstrutural(linha, pares, ehGrade) {
   return candidatos.filter((par) => parAbreALinha(linha, par));
 }
 
+// Justificativas de recursos (modo estrito + secoesDeCargo): o documento é dividido em
+// seções "CARGO(S): A, B, C" (lista que pode continuar na linha seguinte
+// quando termina em vírgula) e cada decisão é uma linha "QUESTÃO: N -
+// <decisão>" — MANTIDA (confirma a letra), ALTERA ... DE 'X' PARA 'Y' ou
+// ANULADA. O MESMO número aparece em seções de cargos diferentes (checado
+// num documento real: Fundatec, justificativas com a mesma questão anulada
+// em duas seções e outra anulada só na seção de um cargo diferente), então
+// toda decisão leva o escopo da seção (bloco + lista de cargos) e nada
+// fora de uma decisão estruturada vale dentro da seção. Decisão que não
+// se reconhece não é ignorada: vira revisão daquela questão.
+const CABECALHO_CARGOS = /^CARGO\(S\)[ \t]*:[ \t]*(.*)$/i;
+const DECISAO_JUSTIFICATIVA = /^quest(?:ão|ao)[ \t]*(?:n[º°o.]*)?[ \t]*:?[ \t]*(\d{1,3})[ \t]*[-–][ \t]*(.*)$/i;
+const ASPA = "['’‘\"“”]?";
+const DECISAO_MANTIDA = new RegExp(`^MANTID[AO][ \\t]+(?:a[ \\t]+)?alternativa[ \\t]+${ASPA}([A-E])${ASPA}(?![A-Za-z])`, "i");
+const DECISAO_ALTERA = new RegExp(`^ALTERA[A-Z]*[ \\t]+(?:O[ \\t]+)?GABARITO[ \\t]+DE[ \\t]+(?:ALTERNATIVA[ \\t]+)?${ASPA}([A-E])${ASPA}[ \\t]+PARA[ \\t]+(?:A[ \\t]+)?(?:ALTERNATIVA[ \\t]+)?${ASPA}([A-E])${ASPA}(?![A-Za-z])`, "i");
+const DECISAO_ANULADA = /^ANULAD[AO]\b/i;
+
+function decisaoDeJustificativa(numero, texto, secao) {
+  const escopo = { bloco: secao.rotulo, cargos: secao.cargos };
+  const base = { numero, alterada: false, observacao: null, status: "ok", ...escopo };
+  let m;
+  if (DECISAO_ANULADA.test(texto)) return { ...base, alternativa_correta: null, anulada: true, decisao: "anulada" };
+  if ((m = texto.match(DECISAO_MANTIDA))) return { ...base, alternativa_correta: m[1].toUpperCase(), anulada: false, decisao: "mantida" };
+  if ((m = texto.match(DECISAO_ALTERA))) return { ...base, alternativa_correta: m[2].toUpperCase(), anulada: false, alterada: true, decisao: "alterada", de: m[1].toUpperCase() };
+  return { ...base, alternativa_correta: null, anulada: false, status: "revisao_manual", decisao: "indeterminada", observacao: `decisão de justificativa não reconhecida: "${texto.slice(0, 60)}"` };
+}
+
 // "Anula-se a Questão nº 15", "Altera-se o gabarito da questão 12" —
 // anúncio em prosa que precisa ser confirmado por uma entrada estruturada
 // do mesmo documento (ver retificacoes.mjs).
@@ -205,8 +232,12 @@ export function extrairMencoesDeAlteracao(texto) {
   return [...(texto ?? "").matchAll(MENCAO_ALTERACAO)].map((m) => ({ numero: Number(m[2]), acao: m[1].toLowerCase() === "anul" ? "anula" : "altera" }));
 }
 
+// secoesDeCargo: só quando o manifesto declara a retificação como
+// justificativa de recursos POR CARGO (gabaritos.mjs) — documentos sem essa
+// declaração são lidos exatamente como antes, mesmo que tenham seções.
 export function extrairGabaritoDoTexto(texto, opcoes = {}) {
   const estrito = opcoes.estrito === true;
+  const secoesDeCargo = estrito && opcoes.secoesDeCargo === true;
   const linhas = (texto ?? "").split(/\r?\n/);
 
   const { entradas: entradasPosicionais, indicesConsumidos } = extrairBlocosPosicionais(linhas);
@@ -226,11 +257,31 @@ export function extrairGabaritoDoTexto(texto, opcoes = {}) {
   const corridas = [];
   let corridaAtual = null;
   let linhaAnterior = null;
+  let secaoDeCargos = null;
 
   for (let i = 0; i < linhas.length; i++) {
     if (indicesConsumidos.has(i)) continue;
     const linha = linhas[i].trim();
     if (linha.length === 0) continue;
+
+    if (secoesDeCargo) {
+      const cabecalho = linha.match(CABECALHO_CARGOS);
+      if (cabecalho) {
+        let rotulo = cabecalho[1].trim();
+        while (rotulo.endsWith(",") && i + 1 < linhas.length && linhas[i + 1].trim()) rotulo = `${rotulo} ${linhas[++i].trim()}`;
+        rotulo = rotulo.replace(/\s+/g, " ").replace(/\s*,\s*/g, ", ").replace(/,$/, "").trim();
+        secaoDeCargos = { rotulo, cargos: rotulo.split(",").map((c) => c.trim()).filter(Boolean) };
+        corridaAtual = null;
+        linhaAnterior = null;
+        continue;
+      }
+      if (secaoDeCargos) {
+        const decisao = linha.match(DECISAO_JUSTIFICATIVA);
+        if (decisao) gabaritos.push(decisaoDeJustificativa(Number(decisao[1]), decisao[2], secaoDeCargos));
+        else naoReconhecidas.push(linha);
+        continue;
+      }
+    }
 
     const todosOsPares = [...linha.matchAll(PAR_NUMERO_RESULTADO)];
     const ehGrade = linhaEhGradeTabular(linha, todosOsPares);

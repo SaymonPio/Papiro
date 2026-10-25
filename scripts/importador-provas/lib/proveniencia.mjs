@@ -29,8 +29,10 @@ function texto(valor) {
 // hash }]. Ficam FORA de `prova` (que espelha as colunas de
 // public.provas): o schema atual não tem onde gravá-las, mas elas entram
 // no manifesto (e no hash dele) e são conferidas de novo pelo executor.
-// gabaritoTipo: "definitivo" (padrão) ou "preliminar" (antes dos recursos —
-// o planejador bloqueia o apply).
+// gabaritoTipo: "definitivo" (padrão), "preliminar" (antes dos recursos —
+// o planejador bloqueia o apply) ou "composto" (estado final derivado de
+// preliminar + justificativa dos recursos do cargo + atos posteriores —
+// gabaritos.mjs; o planejador exige todas as questões determinadas).
 // parte (opcional): parte de uma prova cujo PDF oficial reúne mais de um
 // caderno (ex.: P1 e P2) — { codigo, nome, ordem }, gravada em
 // public.prova_partes. Ausente, a proveniência fica exatamente como antes.
@@ -59,7 +61,13 @@ export function montarProveniencia(metadata, { hashProva, hashGabarito, retifica
   if (prova.hash_prova !== null && !REGEX_HASH.test(prova.hash_prova)) invalidos.push("hash_prova");
   if (prova.hash_gabarito !== null && !REGEX_HASH.test(prova.hash_gabarito)) invalidos.push("hash_gabarito");
 
-  const retificacoesGabarito = retificacoes.map((r) => ({ ordem: r.ordem, documento: texto(r.documento), url: texto(r.url), hash: r.hash ?? null }));
+  const retificacoesGabarito = retificacoes.map((r) => ({
+    ordem: r.ordem,
+    documento: texto(r.documento),
+    url: texto(r.url),
+    hash: r.hash ?? null,
+    ...(r.natureza ? { natureza: r.natureza, bloco: texto(r.bloco) } : {}),
+  }));
   for (const r of retificacoesGabarito) {
     const rotulo = `retificacao[${r.ordem}]`;
     if (r.url === null) faltando.push(`${rotulo}.url`);

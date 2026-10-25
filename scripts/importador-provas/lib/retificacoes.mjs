@@ -22,10 +22,28 @@ function consolidarDocumento(entradas) {
   for (const entrada of entradas) {
     const atual = porNumero.get(entrada.numero);
     const resultado = resultadoDe(entrada);
-    if (!atual) porNumero.set(entrada.numero, { resultado, conflito: false });
-    else if (atual.resultado !== resultado) atual.conflito = true;
+    // Decisão de justificativa (extrairGabarito.mjs): MANTIDA confirma a
+    // letra vigente; ALTERA traz a letra de partida ("de"); indeterminada
+    // (não reconhecida) nunca vira resposta.
+    const decisao = entrada.decisao ? { tipo: entrada.decisao, de: entrada.de ?? null } : null;
+    if (!atual) porNumero.set(entrada.numero, { resultado, conflito: false, indeterminada: entrada.status !== "ok", decisao });
+    else {
+      if (atual.resultado !== resultado) atual.conflito = true;
+      if (entrada.status !== "ok") atual.indeterminada = true;
+    }
   }
   return porNumero;
+}
+
+// Decisão oficial incompatível com o estado vigente da questão: "MANTIDA
+// 'X'" com o gabarito vigente em outra letra, ou "ALTERA DE 'X'" com a
+// vigente diferente de X — duas fontes oficiais dizendo coisas diferentes;
+// nunca se escolhe uma delas automaticamente.
+function conflitoComVigente(doDocumento, vigente) {
+  const d = doDocumento.decisao;
+  if (d?.tipo === "mantida" && doDocumento.resultado !== vigente) return `mantém ${doDocumento.resultado}, mas o gabarito vigente é ${vigente ?? "?"}`;
+  if (d?.tipo === "alterada" && d.de !== vigente) return `altera de ${d.de} para ${doDocumento.resultado}, mas o gabarito vigente é ${vigente ?? "?"}`;
+  return null;
 }
 
 function validarOrdens(retificacoes) {
@@ -72,6 +90,17 @@ export function aplicarRetificacoes(base, retificacoes = []) {
       if (doDocumento?.conflito) {
         historico.status_final = "revisao_manual";
         historico.motivos.push(`"${retificacao.documento}" traz valores diferentes para a questão`);
+        continue;
+      }
+      if (doDocumento?.indeterminada) {
+        historico.status_final = "revisao_manual";
+        historico.motivos.push(`"${retificacao.documento}" traz decisão não reconhecida para a questão`);
+        continue;
+      }
+      const conflito = doDocumento ? conflitoComVigente(doDocumento, historico.resultado_final) : null;
+      if (conflito) {
+        historico.status_final = "revisao_manual";
+        historico.motivos.push(`GABARITO_OFICIAL_CONFLITANTE: "${retificacao.documento}" ${conflito}`);
         continue;
       }
       // Texto corrido que anuncia mudança ("Anula-se a Questão nº 15")

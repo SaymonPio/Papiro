@@ -528,6 +528,15 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
     return item;
   });
 
+  // Estado final COMPOSTO (gabaritos.mjs) só é final se TODA questão tem
+  // estado determinado pelas fontes oficiais — letra válida ou anulada.
+  // Uma questão indeterminada ou com fontes conflitantes invalida a
+  // composição inteira: nada é importado.
+  if (proveniencia?.gabarito_tipo === "composto") {
+    const indeterminadas = planejadas.filter((q) => q.status_gabarito === "FALHA").map((q) => q.numero_original);
+    if (indeterminadas.length > 0) bloqueios.push(`GABARITO_FINAL_COMPOSTO incompleto: estado do gabarito não determinado (ou conflitante entre fontes oficiais) nas questões ${indeterminadas.join(", ")}`);
+  }
+
   // Bloqueio do documento vence qualquer questão: nada é importado. A ação
   // que a questão teria sem o bloqueio fica em acao_potencial — só para
   // medir qualidade (ex.: lote com gabarito ainda preliminar).
