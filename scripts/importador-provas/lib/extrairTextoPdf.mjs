@@ -107,6 +107,7 @@ function normalizarPaginas(paginas) {
     ...p,
     texto: normalizarAlfanumericosMatematicos(p.texto),
     ...(Array.isArray(p.itens) ? { itens: p.itens.map((i) => ({ ...i, texto: normalizarAlfanumericosMatematicos(i.texto) })) } : {}),
+    ...(Array.isArray(p.linhas) ? { linhas: p.linhas.map((l) => ({ ...l, itens: l.itens.map((i) => ({ ...i, texto: normalizarAlfanumericosMatematicos(i.texto) })) })) } : {}),
   }));
 }
 

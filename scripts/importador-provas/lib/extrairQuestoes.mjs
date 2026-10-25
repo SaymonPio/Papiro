@@ -508,7 +508,7 @@ function segmentosDaRegiao(paginas, mapaPaginas, textoCompleto, inicio, fim) {
   for (const [i, entrada] of mapaPaginas.entries()) {
     const a = Math.max(inicio, entrada.inicio);
     const b = Math.min(fim, entrada.fim);
-    if (b > a) segmentos.push({ numeroPagina: entrada.numero, texto: textoCompleto.slice(a, b), itens: paginas[i].itens ?? null });
+    if (b > a) segmentos.push({ numeroPagina: entrada.numero, texto: textoCompleto.slice(a, b), itens: paginas[i].itens ?? null, linhas: paginas[i].linhas ?? null });
   }
   return segmentos;
 }

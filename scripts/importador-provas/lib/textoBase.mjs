@@ -96,6 +96,66 @@ function tokens(texto) {
 
 const FATOR_LACUNA_INTERNA = 2.5; // mesma régua da reconstrução posicional ("\t")
 const MINIMO_LINHAS_NUMERADAS = 5;
+// Abaixo de MINIMO_LINHAS_NUMERADAS, a numeração só vale como bloco
+// CONTÍNUO (toda linha entre a primeira e a última numerada tem número):
+// lista "1 / 2 / 3" com linha de continuação não é numeração de linha.
+// A partir de 3 números na margem, numeração que não se prova é
+// indeterminada — nunca vira parágrafo corrido "confiável".
+const MINIMO_EVIDENCIA_NUMERACAO = 3;
+const LINHAS_INDETERMINADAS = "TEXTO_BASE_LINHAS_INDETERMINADAS";
+
+// Lacuna horizontal interna (possível fronteira de coluna): um espaço de
+// FATOR_LACUNA_INTERNA alturas que destoa dos demais espaços entre palavras
+// da linha. Linha JUSTIFICADA tem todos os espaços largos e parecidos —
+// isso não é coluna (checado numa prova real: Fundatec/SEJUSP-MG 2022,
+// linha 04 do texto, oito espaços entre 2,80 e 2,85 alturas). Pedaços de
+// palavra colados (espaço de até ESPACO_DE_PALAVRA alturas) não contam.
+const ESPACO_DE_PALAVRA = 0.25;
+const UNIFORMIDADE_JUSTIFICADA = 0.8;
+function temLacunaInterna(conteudo) {
+  const espacos = [];
+  for (let k = 1; k < conteudo.length; k++) {
+    const altura = Math.max(conteudo[k - 1].altura, 1);
+    const espaco = (conteudo[k].x - (conteudo[k - 1].x + conteudo[k - 1].largura)) / altura;
+    if (espaco > ESPACO_DE_PALAVRA) espacos.push(espaco);
+  }
+  const maior = Math.max(...espacos, 0);
+  if (maior < FATOR_LACUNA_INTERNA) return false;
+  const justificada = espacos.length >= 2 && Math.min(...espacos) >= maior * UNIFORMIDADE_JUSTIFICADA;
+  return !justificada;
+}
+
+// Sem geometria, numeração de linhas aparente no próprio texto: linhas que
+// começam por um número de até 3 dígitos seguido de espaço (ou só o
+// número), formando 3+ valores seguidos de +1 em +1. "12.594/2012",
+// "18 anos" isolado, datas e percentuais não formam essa sequência.
+function numeracaoAparente(texto) {
+  const valores = texto
+    .split("\n")
+    .map((l) => l.match(/^[ \t]*(\d{1,3})(?:[ \t]+\S|[ \t]*$)/)?.[1])
+    .filter(Boolean)
+    .map(Number);
+  let sequencia = 1;
+  for (let i = 1; i < valores.length; i++) {
+    sequencia = valores[i] === valores[i - 1] + 1 ? sequencia + 1 : 1;
+    if (sequencia >= MINIMO_EVIDENCIA_NUMERACAO) return true;
+  }
+  return false;
+}
+
+// Linhas de um segmento: pelos itens soltos (agrupados por Y — leitura
+// linear e posicional de 1 coluna) ou, quando a página só traz as linhas
+// já montadas pela leitura posicional multicoluna, por elas mesmas, na
+// ordem de leitura (coluna a coluna — agrupar por Y misturaria colunas).
+function linhasDoSegmento(segmento) {
+  if (Array.isArray(segmento.itens) && segmento.itens.length > 0) {
+    return candidatosPorProximidadeVertical(segmento.itens.filter((i) => i.texto.length > 0)).sort((a, b) => b.y - a.y);
+  }
+  return segmento.linhas
+    .map((l) => ({ ...l, itens: l.itens.filter((i) => i.texto.length > 0).sort((a, b) => a.x - b.x) }))
+    .filter((l) => l.itens.length > 0);
+}
+const temGeometria = (s) => (Array.isArray(s.itens) && s.itens.length > 0) || (Array.isArray(s.linhas) && s.linhas.length > 0);
 
 // Número de linha da margem: {valor, texto, itens} ou null. O PDF pode
 // entregar o número partido em glifos ("4" + "2" = 42 — checado numa prova
@@ -140,17 +200,22 @@ function numeroDaMargem(visiveis) {
 // do pdf-parse trocava uma linha do texto de lugar e soltava a numeração
 // de linhas (01..49) num bloco separado, antes do texto.
 //
-// segmentos: [{ texto (linear, da região nesta página), itens|null }].
+// segmentos: [{ texto (da região nesta página), itens|null, linhas|null }]
+// — linhas: as linhas já montadas pela leitura posicional multicoluna.
 export function reconstruirTextoBase(segmentos) {
   const textoLinear = segmentos.map((s) => s.texto.trim()).filter(Boolean).join("\n");
-  if (segmentos.some((s) => !Array.isArray(s.itens) || s.itens.length === 0)) {
+  if (!segmentos.every(temGeometria)) {
+    // Sem geometria não há como provar a numeração de linhas impressa:
+    // texto que a exibe não é confiável (as linhas viram parágrafo com os
+    // números no meio — checado numa prova real: Fundatec/SEJUSP-MG 2022).
+    if (numeracaoAparente(textoLinear)) return { texto: textoLinear, geometrico: false, confiavel: false, motivo: `${LINHAS_INDETERMINADAS}: numeração de linhas no texto sem geometria para reconstruí-la` };
     return { texto: textoLinear, geometrico: false, confiavel: true, motivo: null };
   }
 
   const restante = multiconjunto(tokens(textoLinear));
   const linhasSelecionadas = [];
   for (const segmento of segmentos) {
-    const linhas = candidatosPorProximidadeVertical(segmento.itens.filter((i) => i.texto.length > 0)).sort((a, b) => b.y - a.y);
+    const linhas = linhasDoSegmento(segmento);
     const indices = [];
     for (const [indice, linha] of linhas.entries()) {
       // Juntar pela distância real entre itens (textoDaLinha): o PDF quebra
@@ -174,7 +239,13 @@ export function reconstruirTextoBase(segmentos) {
   // do resto, formando uma sequência +1 em +1.
   const numeracao = linhasSelecionadas.map((linha) => numeroDaMargem(linha.itens.filter((i) => i.texto.trim())));
   const numeradas = numeracao.filter((n) => n !== null).map((n) => n.valor);
-  const sequencial = numeradas.length >= MINIMO_LINHAS_NUMERADAS && numeradas.every((n, i) => i === 0 || n === numeradas[i - 1] + 1);
+  const posicoes = numeracao.flatMap((n, i) => (n !== null ? [i] : []));
+  const consecutivas = numeradas.every((n, i) => i === 0 || n === numeradas[i - 1] + 1);
+  const blocoContinuo = posicoes.length > 0 && posicoes.at(-1) - posicoes[0] + 1 === posicoes.length;
+  const sequencial = consecutivas && (numeradas.length >= MINIMO_LINHAS_NUMERADAS || (numeradas.length >= MINIMO_EVIDENCIA_NUMERACAO && blocoContinuo));
+  if (!sequencial && numeradas.length >= MINIMO_EVIDENCIA_NUMERACAO) {
+    return { texto: textoLinear, geometrico: false, confiavel: false, motivo: `${LINHAS_INDETERMINADAS}: números na margem (${numeradas.join(", ")}) não formam uma sequência de linhas` };
+  }
 
   // Parágrafo = linha recuada em relação à margem mais comum do texto
   // (questões citam "primeiro parágrafo", "parágrafo anterior"); vira uma
@@ -185,13 +256,22 @@ export function reconstruirTextoBase(segmentos) {
     const primeiro = sequencial && numeracao[i] !== null ? visiveis[numeracao[i].itens] : visiveis[0];
     return primeiro ? { x: primeiro.x, altura: Math.max(primeiro.altura, 1) } : null;
   });
-  const frequencia = new Map();
-  for (const inicio of inicioDoConteudo) if (inicio) frequencia.set(Math.round(inicio.x), (frequencia.get(Math.round(inicio.x)) ?? 0) + 1);
-  const margem = [...frequencia].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+  // Margem por coluna: linhas montadas pela leitura multicoluna trazem a
+  // coluna; itens soltos são sempre uma coluna só.
+  const colunaDa = (i) => linhasSelecionadas[i].coluna ?? 0;
+  const frequencias = new Map();
+  for (const [i, inicio] of inicioDoConteudo.entries()) {
+    if (!inicio) continue;
+    const frequencia = frequencias.get(colunaDa(i)) ?? new Map();
+    frequencia.set(Math.round(inicio.x), (frequencia.get(Math.round(inicio.x)) ?? 0) + 1);
+    frequencias.set(colunaDa(i), frequencia);
+  }
+  const margens = new Map([...frequencias].map(([coluna, frequencia]) => [coluna, [...frequencia].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null]));
   const iniciaParagrafo = (i) => {
     if (i === 0) return false;
     if (sequencial && (numeracao[i] !== null) !== (numeracao[i - 1] !== null)) return true;
     const inicio = inicioDoConteudo[i];
+    const margem = margens.get(colunaDa(i)) ?? null;
     return Boolean(sequencial && numeracao[i] !== null && inicio && margem !== null && inicio.x - margem >= inicio.altura);
   };
 
@@ -201,10 +281,8 @@ export function reconstruirTextoBase(segmentos) {
     const visiveis = linha.itens.filter((it) => it.texto.trim());
     const numerada = sequencial && numeracao[i] !== null;
     const conteudo = numerada ? visiveis.slice(numeracao[i].itens) : visiveis;
-    for (let k = 1; k < conteudo.length; k++) {
-      if (conteudo[k].x - (conteudo[k - 1].x + conteudo[k - 1].largura) >= Math.max(conteudo[k - 1].altura, 1) * FATOR_LACUNA_INTERNA) {
-        return { texto: textoLinear, geometrico: false, confiavel: false, motivo: "linha do texto-base com lacuna horizontal interna (possível multicoluna)" };
-      }
+    if (temLacunaInterna(conteudo)) {
+      return { texto: textoLinear, geometrico: false, confiavel: false, motivo: "linha do texto-base com lacuna horizontal interna (possível multicoluna)" };
     }
     let itensDoConteudo = linha.itens;
     if (numerada) {

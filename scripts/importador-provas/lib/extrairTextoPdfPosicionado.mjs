@@ -366,12 +366,14 @@ export function reconstruirDocumentoPosicionado(paginasDeItens, opcoes = {}) {
     // Linha só de espaço (item " " isolado numa altura própria) não é
     // parágrafo — virava linha em branco no meio da frase (checado numa
     // prova real: FGV/PCPR 2026, "qualquer lixo\n\njogado pelo homem").
-    const texto = linhasFinais
-      .map((l) => textoDaLinha(l.itens))
-      .filter((t) => t.trim().length > 0)
-      .join("\n");
+    const linhasComTexto = linhasFinais.filter((l) => textoDaLinha(l.itens).trim().length > 0);
+    const texto = linhasComTexto.map((l) => textoDaLinha(l.itens)).join("\n");
 
-    paginas.push({ numero: dados.numero, texto });
+    // As linhas montadas (itens + coluna), na mesma ordem do texto: em
+    // multicoluna os itens soltos da página não servem ao texto-base
+    // (agrupar por Y mistura colunas), mas estas linhas sim — é delas que
+    // sai a numeração de linhas impressa ("[01] ...", textoBase.mjs).
+    paginas.push({ numero: dados.numero, texto, linhas: linhasComTexto.map((l) => ({ itens: l.itens, coluna: l.coluna })) });
     if (debugPorPagina) {
       debugPorPagina.push({
         pagina: dados.numero,
