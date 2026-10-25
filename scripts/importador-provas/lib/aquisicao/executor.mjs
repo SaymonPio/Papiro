@@ -18,7 +18,7 @@
 
 import { createHash } from "node:crypto";
 import { hashManifesto, planejarAquisicao } from "./planejar.mjs";
-import { normalizarTexto } from "../deduplicar.mjs";
+import { chaveDeConteudo } from "../deduplicar.mjs";
 
 // MÍDIAS (Storage x transação SQL — o Storage NÃO participa do BEGIN):
 //   - objeto conteúdo-endereçado (questoes/<sha256>.png): sem identidade
@@ -115,8 +115,10 @@ function avaliarPosCheck({ estado, estruturaAntes, estruturaDepois, mutaveisAnte
   }
   const numeros = daProva.map((q) => q.numero_original);
   if (new Set(numeros).size !== numeros.length) falhas.push("numero_original duplicado dentro da prova");
-  const enunciados = daProva.map((q) => normalizarTexto(q.enunciado));
-  if (new Set(enunciados).size !== enunciados.length) falhas.push("enunciado duplicado dentro da prova");
+  // Mesma questão duas vezes na prova = mesmo conteúdo (enunciado +
+  // alternativas); comando genérico igual entre questões diferentes não é.
+  const conteudos = daProva.map(chaveDeConteudo);
+  if (new Set(conteudos).size !== conteudos.length) falhas.push("conteúdo (enunciado e alternativas) duplicado dentro da prova");
 
   for (const esperada of inseridas) {
     const real = daProva.find((q) => q.id === esperada.questao_id);

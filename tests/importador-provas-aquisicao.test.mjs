@@ -3,6 +3,7 @@ import test from "node:test";
 import { createHash } from "node:crypto";
 import { hashConteudoQuestao, hashManifesto, planejarAquisicao } from "../scripts/importador-provas/lib/aquisicao/planejar.mjs";
 import { ErroAquisicao, executarAquisicao, montarRelatorioAquisicao } from "../scripts/importador-provas/lib/aquisicao/executor.mjs";
+import { chaveDeConteudo, classificarDuplicidade, normalizarComSimbolos, normalizarTexto } from "../scripts/importador-provas/lib/deduplicar.mjs";
 
 // PAPIRO — executor controlado de aquisição. Fixture 100% sintética:
 // um repositório em memória com a mesma interface de repositorioPg.mjs,
@@ -16,6 +17,7 @@ const MATEMATICA = 12;
 const HISTORIA = 20;
 const ASSUNTO_CRASE = 100;
 const ASSUNTO_PORCENTAGEM = 200;
+const ASSUNTO_FARROUPILHA = 300;
 const CURSO_BM = "11111111-1111-1111-1111-111111111111";
 
 // midias: liga questao_midias + bucket. O bucket (Map path -> bytes) fica FORA do snapshot transacional,
@@ -45,6 +47,7 @@ function criarRepositorioMemoria({ falharNaQuestao = null, midias = false, bucke
     assuntos: [
       { id: ASSUNTO_CRASE, materia_id: PORTUGUES, nome: "Crase" },
       { id: ASSUNTO_PORCENTAGEM, materia_id: MATEMATICA, nome: "Porcentagem" },
+      { id: ASSUNTO_FARROUPILHA, materia_id: HISTORIA, nome: "Revolução Farroupilha" },
     ],
   };
   let snapshot = null;
@@ -354,7 +357,7 @@ test("G) vínculo explícito: matéria aprovada para o curso e presente na estru
 
 test("H) matéria fora da estrutura do curso: rejeitada no manifesto, questão entra só global, nada criado no curso", async () => {
   const repo = criarRepositorioMemoria();
-  const entrada = entradaBase([questaoStaging(1, { materia: HISTORIA, assunto: null })], {
+  const entrada = entradaBase([questaoStaging(1, { materia: HISTORIA, assunto: ASSUNTO_FARROUPILHA })], {
     modo: "BASE_GLOBAL_COM_VINCULO",
     aprovacao: { vinculos: [{ curso: "brigada-militar-rs", materias: ["História"] }] },
   });
@@ -1096,4 +1099,114 @@ test("LIB-ENUM) item_enumerado_vazio nunca é liberado: nem por EXTRACAO_OK, nem
   const tentativa = await executarAquisicao({ repo, entrada: entradaBase([vazia()], { aprovacao: { liberacoes: [liberarDedup(2, 1), liberar(2, "item_enumerado_vazio")] } }), modo: "dry-run" });
   assert.ok(tentativa.manifesto.bloqueios.some((b) => /não é liberável/.test(b)));
   assert.equal(tentativa.manifesto.resumo.importar, 0);
+});
+
+// ------------------------------------------------- classificação completa ----
+// IMPORTAR exige matéria E assunto válidos (CLASSIFICACAO_INCOMPLETA), depois
+// de toda liberação — checado numa prova real: Fundatec/PC-RS 2025
+// Escrivão-Inspetor, P2, quatro questões saíam IMPORTAR com assunto nulo.
+
+const semAssunto = (numero, extras = {}) => questaoStaging(numero, { assunto: null, ...extras });
+
+test("CLS-A) matéria + assunto válidos: IMPORTAR e grava", async () => {
+  const repo = criarRepositorioMemoria();
+  const resultado = await dryRunEApply(repo, entradaBase([questaoStaging(1)]));
+  assert.equal(resultado.manifesto.questoes[0].acao, "IMPORTAR");
+  assert.equal(repo.banco.questoes.length, 1);
+});
+
+test("CLS-B) matéria válida + assunto NULL (automático ou aprovado): REVISAR por CLASSIFICACAO_INCOMPLETA; nada é gravado", async () => {
+  const repo = criarRepositorioMemoria();
+  const automatica = await executarAquisicao({ repo, entrada: entradaBase([semAssunto(1)]), modo: "dry-run" });
+  assert.equal(automatica.manifesto.questoes[0].acao, "REVISAR");
+  assert.match(automatica.manifesto.questoes[0].motivos.join(" "), /CLASSIFICACAO_INCOMPLETA/);
+  const aprovada = entradaBase([semAssunto(1)], { aprovacao: { classificacao: { 1: { materia_id: PORTUGUES, assunto_id: null } } } });
+  const resultado = await dryRunEApply(repo, aprovada);
+  assert.equal(resultado.manifesto.questoes[0].acao, "REVISAR");
+  assert.equal(resultado.manifesto.resumo.importar, 0);
+  assert.equal(repo.banco.questoes.length, 0);
+});
+
+test("CLS-C) matéria NULL (automática incerta ou aprovação sem matéria): nunca IMPORTAR", async () => {
+  const repo = criarRepositorioMemoria();
+  const incerta = await executarAquisicao({ repo, entrada: entradaBase([questaoStaging(1, { materia: null, assunto: null, confidence: "baixa" })]), modo: "dry-run" });
+  assert.equal(incerta.manifesto.questoes[0].acao, "REVISAR");
+  const aprovadaSemMateria = await executarAquisicao({ repo, entrada: entradaBase([questaoStaging(1)], { aprovacao: { classificacao: { 1: { materia_id: null, assunto_id: ASSUNTO_CRASE } } } }), modo: "dry-run" });
+  assert.equal(aprovadaSemMateria.manifesto.questoes[0].acao, "REVISAR");
+});
+
+test("CLS-D) liberação de dedup (ou de extração) não contorna a classificação incompleta", async () => {
+  const { repo, parecida } = cenarioProvavelDuplicada();
+  const candidata = comMatchStaging({ ...parecida(), assunto_sugerido: null }, 1);
+  const r = await executarAquisicao({ repo, entrada: entradaBase([candidata], { aprovacao: { liberacoes: [liberarDedup(2, 1)] } }), modo: "dry-run" });
+  const item = r.manifesto.questoes[0];
+  assert.equal(item.acao, "REVISAR");
+  assert.deepEqual(item.liberacoes_aplicadas.map((l) => l.gate), ["DEDUP_OK"], "a liberação de dedup foi aplicada");
+  assert.match(item.motivos.join(" "), /CLASSIFICACAO_INCOMPLETA/, "e mesmo assim a questão não é importada");
+  const comDependencia = comInterno(semAssunto(1), { dependencia_texto_incerta: "questão dentro do bloco do texto" });
+  const r2 = await executarAquisicao({ repo: criarRepositorioMemoria(), entrada: entradaBase([comDependencia], { aprovacao: { liberacoes: [liberar(1, "dependencia_texto_incerta")] } }), modo: "dry-run" });
+  assert.equal(r2.manifesto.questoes[0].acao, "REVISAR");
+  assert.match(r2.manifesto.questoes[0].motivos.join(" "), /CLASSIFICACAO_INCOMPLETA/);
+});
+
+test("CLS-E) legado já existente (duplicada exata), mesmo sem assunto no staging: IGNORAR, nenhuma questão nova, legado intacto", async () => {
+  const repo = criarRepositorioMemoria();
+  const legada = semAssunto(1);
+  repo.banco.questoes.push({ id: 1, enunciado: legada.enunciado, usuario_id: null, prova_id: null, numero_original: null, ativa: true });
+  for (const [i, a] of legada.alternativas.entries()) repo.banco.alternativas.push({ questao_id: 1, texto: a.texto, ordem: i + 1, correta: a.correta });
+  const distinta = questaoStaging(2, {
+    enunciado: "Quanto vale o dobro de quarenta e dois mais oito?",
+    alternativas: ["90", "92", "84", "100", "76"].map((texto, i) => ({ letra: "ABCDE"[i], texto, correta: i === 1 })),
+  });
+  const resultado = await dryRunEApply(repo, entradaBase([legada, distinta]));
+  const item = resultado.manifesto.questoes.find((q) => q.numero_original === 1);
+  assert.equal(item.acao, "IGNORAR");
+  assert.equal(item.status_deduplicacao, "duplicada");
+  assert.ok(!item.motivos.some((m) => /CLASSIFICACAO_INCOMPLETA/.test(m)), "o gate de classificação é só de IMPORTAR");
+  assert.equal(repo.banco.questoes.length, 2, "1 legado + 1 nova (nº 2); o nº 1 não vira questão nova");
+  assert.equal(repo.banco.questoes.find((q) => q.id === 1).prova_id, null, "o legado não é tocado pelo importador");
+});
+
+// --------------------------------------------- identidade por conteúdo ----
+// Enunciado sozinho não identifica questão: comando genérico repetido entre
+// questões diferentes (PC-RS 2025 Escrivão-Inspetor, P2 47/48/51) e fórmulas
+// de lógica apagadas pela normalização (banco real: 1989/1990/1991).
+
+const genericaIncorreta = (numero, tema) =>
+  questaoStaging(numero, {
+    enunciado: "Assinale a alternativa INCORRETA.",
+    alternativas: ["A", "B", "C", "D", "E"].map((letra) => ({ letra, texto: `Afirmação ${letra} sobre ${tema}, número ${numero}${letra}`, correta: letra === "A" })),
+  });
+
+test("ID-A) mesmo comando genérico com alternativas diferentes no mesmo lote: as duas são IMPORTAR e o pós-check do apply aceita", async () => {
+  const repo = criarRepositorioMemoria();
+  const resultado = await dryRunEApply(repo, entradaBase([genericaIncorreta(1, "inquérito"), genericaIncorreta(2, "medidas assecuratórias")]));
+  assert.deepEqual(resultado.manifesto.questoes.map((q) => q.acao), ["IMPORTAR", "IMPORTAR"]);
+  assert.equal(resultado.gravado, true);
+  assert.equal(resultado.pos_check.ok, true);
+});
+
+test("ID-B) mesmo CONTEÚDO (enunciado + alternativas) duas vezes no lote: a segunda vai para REVISAR", async () => {
+  const repetida = genericaIncorreta(1, "inquérito");
+  const r = await executarAquisicao({ repo: criarRepositorioMemoria(), entrada: entradaBase([repetida, { ...repetida, numero_original: 2 }]), modo: "dry-run" });
+  assert.equal(r.manifesto.questoes[0].acao, "IMPORTAR");
+  assert.equal(r.manifesto.questoes[1].acao, "REVISAR");
+  assert.match(r.manifesto.questoes[1].motivos.join(" "), /conteúdo \(enunciado e alternativas\) idêntico ao da questão 1/);
+});
+
+test("ID-C) dedup exata não confunde fórmulas que só diferem nos símbolos; a mesma fórmula continua duplicada", () => {
+  const alternativas = ["Tautologia.", "Contradição.", "Contingência.", "Equivalência.", "Sentença aberta."].map((texto, i) => ({ letra: "ABCDE"[i], texto, correta: i === 0 }));
+  const banco = [{ id: 7, enunciado: "A proposição composta p ∨ ~p ∨ q é classificada como:", alternativas }];
+  const outraFormula = { enunciado: "A proposição composta p → (p ∧ q) é classificada como:", alternativas, _interno: {} };
+  assert.notEqual(classificarDuplicidade(outraFormula, banco).status, "duplicada");
+  const mesmaFormula = { enunciado: "A proposição composta  p ∨ ~p ∨ q  é classificada como:", alternativas, _interno: {} };
+  assert.equal(classificarDuplicidade(mesmaFormula, banco).status, "duplicada");
+});
+
+test("ID-D) texto sem símbolo: normalizarComSimbolos = normalizarTexto; a chave de conteúdo ignora a ordem das alternativas e distingue alternativas diferentes", () => {
+  const texto = "Considerando o “art. 5o” — e a Lei no 8.429/1992 —, assinale a alternativa CORRETA: (I), [II]; III!";
+  assert.equal(normalizarComSimbolos(texto), normalizarTexto(texto));
+  const q = genericaIncorreta(1, "x");
+  assert.equal(chaveDeConteudo(q), chaveDeConteudo({ ...q, alternativas: [...q.alternativas].reverse() }));
+  assert.notEqual(chaveDeConteudo(q), chaveDeConteudo(genericaIncorreta(1, "y")));
 });

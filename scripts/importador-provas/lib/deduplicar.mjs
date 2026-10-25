@@ -18,6 +18,30 @@ export function normalizarTexto(valor) {
     .trim();
 }
 
+// Como normalizarTexto, mas PRESERVANDO símbolos e números não ASCII
+// (∨ ¬ → ↔ ≤ ≥ ² π...): normalizarTexto apaga a fórmula, e enunciados de
+// lógica diferentes viram o mesmo texto (checado no banco real: "A
+// proposição composta p ∨ ~p ∨ q é classificada como:" e "... p → (p ∧ q)
+// ..." colidiam). Texto sem símbolo sai igual ao de normalizarTexto.
+export function normalizarComSimbolos(valor) {
+  return (valor ?? "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^\p{L}\p{N}\p{S} ]+/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+// Identidade de CONTEÚDO de uma questão: enunciado + conjunto de
+// alternativas. O enunciado sozinho não identifica questão — comando
+// genérico ("Assinale a alternativa INCORRETA.") repete-se entre questões
+// diferentes (checado numa prova real: Fundatec/PC-RS 2025 Escrivão-
+// Inspetor, P2 47, 48 e 51).
+export function chaveDeConteudo(questao) {
+  return [normalizarComSimbolos(questao.enunciado), ...(questao.alternativas ?? []).map((a) => normalizarComSimbolos(a.texto)).sort()].join("\u0000");
+}
+
 export function jaccard(a, b) {
   const setA = new Set(normalizarTexto(a).split(" ").filter(Boolean));
   const setB = new Set(normalizarTexto(b).split(" ").filter(Boolean));
@@ -115,11 +139,11 @@ export function classificarDuplicidade(questaoNormalizada, bancoExistente) {
 }
 
 function classificarDuplicidadeDoEnunciado(questaoNormalizada, bancoExistente, { soExata = false } = {}) {
-  const enunciadoNovo = normalizarTexto(questaoNormalizada.enunciado);
+  const enunciadoNovo = normalizarComSimbolos(questaoNormalizada.enunciado);
   const alternativasNovo = textoAlternativas(questaoNormalizada.alternativas);
 
   for (const existente of bancoExistente) {
-    if (normalizarTexto(existente.enunciado) === enunciadoNovo) {
+    if (normalizarComSimbolos(existente.enunciado) === enunciadoNovo) {
       const simAlternativas = jaccard(alternativasNovo, textoAlternativas(existente.alternativas));
       if (simAlternativas >= LIMIAR_ALTERNATIVAS_COMPATIVEIS) {
         return { status: "duplicada", motivo: `enunciado identico e alternativas compativeis (questoes.id=${existente.id})`, match_id: existente.id };

@@ -240,7 +240,7 @@ export function criarRepositorioPg(client) {
       // Com partes, o estado é o da parte (ou o das questões sem parte).
       const { rows: questoes } = await client.query(
         `select q.id, q.numero_original, q.enunciado, q.usuario_id, ${comPartes ? "q.prova_parte_id" : "null::bigint as prova_parte_id"},
-                coalesce(json_agg(json_build_object('correta', a.correta) order by a.ordem) filter (where a.id is not null), '[]') as alternativas
+                coalesce(json_agg(json_build_object('texto', a.texto, 'correta', a.correta) order by a.ordem) filter (where a.id is not null), '[]') as alternativas
            from public.questoes q
            left join public.alternativas a on a.questao_id = q.id
           where q.prova_id = $1 ${comPartes ? "and q.prova_parte_id is not distinct from $2::bigint" : "and $2::bigint is null"}

@@ -21,7 +21,7 @@
 // banco vivo em vez de snapshot.
 
 import { createHash } from "node:crypto";
-import { classificarDuplicidade, normalizarTexto } from "../deduplicar.mjs";
+import { chaveDeConteudo, classificarDuplicidade } from "../deduplicar.mjs";
 import { causasDeExtracao, causasDeMidia } from "../score.mjs";
 
 export const MODOS = ["BASE_GLOBAL", "BASE_GLOBAL_COM_VINCULO"];
@@ -381,7 +381,7 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
   bloqueios.push(...bloqueiosDireitos);
   const contagemNumeros = new Map();
   for (const q of questoes) contagemNumeros.set(q.numero_original, (contagemNumeros.get(q.numero_original) ?? 0) + 1);
-  const enunciadosDoLote = new Map();
+  const conteudosDoLote = new Map();
   const ordenadas = [...questoes].sort((a, b) => (a.numero_original ?? 0) - (b.numero_original ?? 0));
 
   const planejadas = ordenadas.map((questao) => {
@@ -508,18 +508,22 @@ export function planejarAquisicao({ modo, proveniencia, questoes, contexto, apro
       revisar(dedup.motivo);
     }
 
-    const chaveEnunciado = normalizarTexto(questao.enunciado);
-    if (chaveEnunciado && enunciadosDoLote.has(chaveEnunciado)) revisar(`enunciado idêntico ao da questão ${enunciadosDoLote.get(chaveEnunciado)} do mesmo lote`);
-    else if (chaveEnunciado) enunciadosDoLote.set(chaveEnunciado, numero);
+    // Mesma questão duas vezes no lote = mesmo CONTEÚDO (enunciado +
+    // alternativas), nunca só o enunciado: comando genérico repete-se entre
+    // questões diferentes (lib/deduplicar.mjs, chaveDeConteudo).
+    const chave = questao.enunciado?.trim() ? chaveDeConteudo(questao) : null;
+    if (chave && conteudosDoLote.has(chave)) revisar(`conteúdo (enunciado e alternativas) idêntico ao da questão ${conteudosDoLote.get(chave)} do mesmo lote`);
+    else if (chave) conteudosDoLote.set(chave, numero);
+
+    // Classificação completa é condição de IMPORTAR — matéria E assunto
+    // válidos (a validade já foi conferida em resolverClassificacao). Vem
+    // depois de toda liberação: nenhuma (dedup, extração, mídia) contorna.
+    if (item.acao === "IMPORTAR" && (item.materia_id === null || item.assunto_id === null)) {
+      revisar(`CLASSIFICACAO_INCOMPLETA: IMPORTAR exige matéria e assunto (materia_id=${item.materia_id ?? "null"}, assunto_id=${item.assunto_id ?? "null"})`);
+    }
 
     if (item.acao === "IMPORTAR") {
       item.curso_ids_aprovados = vinculos.filter((v) => v.materia_ids_aprovadas.includes(item.materia_id)).map((v) => v.curso_id).sort();
-      // Questão vinculada entra em missões por assunto — sem assunto
-      // ela ficaria órfã dentro do curso.
-      if (item.curso_ids_aprovados.length > 0 && item.assunto_id === null) {
-        item.curso_ids_aprovados = [];
-        revisar("assunto obrigatório para vínculo com curso (aprovação de matéria sem assunto confirmado)");
-      }
     }
     return item;
   });
