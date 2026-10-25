@@ -1,0 +1,146 @@
+-- PC-RS 2025 Escrivão e Inspetor de Polícia (Fundatec, concurso 993) — TAXONOMIA (somente dados globais, nenhum curso).
+-- Cria 2 matérias GLOBAIS novas, "Contabilidade" e "Estatística" (nenhuma matéria ou assunto equivalente), e 14 assuntos GLOBAIS:
+-- "Contabilidade" (5): Estoques e CMV; Depreciação; Demonstração dos Fluxos de Caixa; Lançamentos e balancete; Receitas e despesas;
+-- "Estatística" (4): Estatística descritiva; Inferência / testes de hipóteses; Probabilidade; Correlação e regressão;
+-- "Informática" (1): Linux;
+-- "Legislação Penal Especial" (1): Crimes de trânsito;
+-- "Direito Processual Penal" (1): Princípios da lei processual penal;
+-- "Direito Administrativo" (2): LGPD; Lei Orgânica Nacional das Polícias Civis;
+-- Busca de equivalentes (nome, lei, termo; normalizado sem acento, caixa e pontuação, em nome + descrição
+-- de TODOS os assuntos e matérias, globais e de usuário). Homônimos aceitos por decisão explícita
+-- e conferidos onde estão — tratam de outro ente ou de outro conteúdo, não são equivalentes:
+--   assunto 297 (matéria 4) — Conceitos e definições do CTB (Anexo I): conceitos do Anexo I, não crimes de trânsito;
+--   assunto 298 (matéria 4) — Sinalização de trânsito: sinalização, não crimes de trânsito;
+--   assunto 260 (matéria 16) — Estatuto da Polícia Civil do RS (Lei 7.366/1980): lei ESTADUAL, não a Lei Orgânica Nacional (Lei 14.735/2023);
+--   assunto 286 (matéria 22) — Lei Orgânica do Município de Sant'Ana do Livramento: lei orgânica municipal;
+--   assunto 335 (matéria 22) — Lei Orgânica do Município de Araquari: lei orgânica municipal;
+-- Qualquer OUTRO equivalente aborta. Nenhum curso_materia, curso_conteudo, curso_questao ou classificação de
+-- questão é alterado (conferido por assinatura antes/depois).
+--
+-- REVERSÃO REAL de manutencao_pcrs_2025_escrivao_taxonomia.sql. Recusa se qualquer questão, curso ou histórico
+-- referenciar os assuntos criados (reverter antes as questões classificadas neles).
+
+begin;
+
+create function pg_temp.norm(p text) returns text language sql immutable as $fn$
+  select btrim(regexp_replace(lower(translate(p, 'áàâãäéèêëíìîïóòôõöúùûüçÁÀÂÃÄÉÈÊËÍÌÎÏÓÒÔÕÖÚÙÛÜÇ', 'aaaaaeeeeiiiiooooouuuucaaaaaeeeeiiiiooooouuuuc')), '[^a-z0-9]+', ' ', 'g'))
+$fn$;
+
+create temporary table _993_tax (materia text not null, nome text not null, chaves text[] not null) on commit drop;
+insert into _993_tax values
+('Contabilidade', 'Estoques e CMV', array['estoque', 'cmv', 'custo das mercadorias']),
+('Contabilidade', 'Depreciação', array['deprecia', 'imobilizado', 'amortiza']),
+('Contabilidade', 'Demonstração dos Fluxos de Caixa', array['fluxo de caixa', 'fluxos de caixa', 'dfc', 'cpc 03']),
+('Contabilidade', 'Lançamentos e balancete', array['lancamento', 'balancete', 'escritura', 'partidas dobradas']),
+('Contabilidade', 'Receitas e despesas', array['receita', 'despesa']),
+('Estatística', 'Estatística descritiva', array['estatistica descritiva', 'mediana', 'desvio padrao', 'variancia', 'medidas de posicao', 'medidas de dispersao']),
+('Estatística', 'Inferência / testes de hipóteses', array['inferencia', 'hipotese', 'intervalo de confianca']),
+('Estatística', 'Probabilidade', array['probabilid']),
+('Estatística', 'Correlação e regressão', array['correlac', 'regressa']),
+('Informática', 'Linux', array['linux', 'sistema operacional', 'sistemas operacionais', 'unix']),
+('Legislação Penal Especial', 'Crimes de trânsito', array['transito', 'ctb', '9 503', 'codigo de transito']),
+('Direito Processual Penal', 'Princípios da lei processual penal', array['principio', 'lei processual', 'sistemas processuais', 'sistema acusatorio', 'aplicacao da lei']),
+('Direito Administrativo', 'LGPD', array['lgpd', 'protecao de dados', 'dados pessoais', '13 709']),
+('Direito Administrativo', 'Lei Orgânica Nacional das Polícias Civis', array['lei organica', 'policias civis', 'policia civil', '14 735']);
+
+create temporary table _993_mat (nome text not null, chaves text[] not null) on commit drop;
+insert into _993_mat values
+('Contabilidade', array['contab', 'contador', 'patrimonio liquido', 'balanco patrimonial']),
+('Estatística', array['estatistic', 'probabilid', 'amostra']);
+
+create temporary table _993_homonimos (assunto_id bigint not null, materia_id bigint not null) on commit drop;
+insert into _993_homonimos values (297, 4), (298, 4), (260, 16), (286, 22), (335, 22);
+
+create temporary table _993_antes on commit drop as
+select (select count(*) from public.materias) materias, (select count(*) from public.assuntos) assuntos,
+       (select count(*) from public.curso_materias) curso_materias, (select count(*) from public.curso_conteudos) curso_conteudos,
+       (select count(*) from public.curso_questoes) curso_questoes, (select count(*) from public.questoes) questoes,
+       (select count(*) from public.questao_unidades_pedagogicas) unidades,
+       (select md5(string_agg(id::text || ':' || coalesce(materia_id::text,'') || ':' || nome || ':' || coalesce(peso::text,''), '|' order by id)) from public.curso_materias) md5_curso_materias,
+       (select md5(string_agg(id::text || ':' || coalesce(assunto_id::text,''), '|' order by id)) from public.curso_conteudos) md5_curso_conteudos,
+       (select md5(string_agg(id::text || ':' || materia_id::text || ':' || coalesce(assunto_id::text,''), '|' order by id)) from public.questoes) md5_classificacao_questoes;
+
+do $$
+declare
+  v_refs int; v_a int; v_m int;
+begin
+  with alvo_a as (select s.id from public.assuntos s join public.materias m on m.id = s.materia_id join _993_tax t on t.nome = s.nome and t.materia = m.nome where s.usuario_id is null and m.usuario_id is null)
+  select (select count(*) from public.questoes where assunto_id in (select id from alvo_a))
+       + (select count(*) from public.curso_conteudos where assunto_id in (select id from alvo_a))
+       + (select count(*) from public.erros_usuarios where assunto_id in (select id from alvo_a))
+       + (select count(*) from public.revisoes where assunto_id in (select id from alvo_a))
+       + (select count(*) from public.sessoes_estudo where assunto_id in (select id from alvo_a))
+       + (select count(*) from public.sessoes_tempo where assunto_id in (select id from alvo_a))
+       + (select count(*) from public.conversas_ia where assunto_id in (select id from alvo_a))
+    into v_refs;
+  if v_refs <> 0 then raise exception 'REVERSAO RECUSADA: % referência(s) aos assuntos criados — reverter as questões antes', v_refs; end if;
+  with alvo_m as (select m.id from public.materias m join _993_mat t on t.nome = m.nome where m.usuario_id is null)
+  select (select count(*) from public.questoes where materia_id in (select id from alvo_m))
+       + (select count(*) from public.curso_materias where materia_id in (select id from alvo_m))
+       + (select count(*) from public.conversas_ia where materia_id in (select id from alvo_m))
+       + (select count(*) from public.sessoes_estudo where materia_id in (select id from alvo_m))
+       + (select count(*) from public.sessoes_tempo where materia_id in (select id from alvo_m))
+       + (select count(*) from public.assuntos s where s.materia_id in (select id from alvo_m) and s.nome not in (select nome from _993_tax))
+    into v_refs;
+  if v_refs <> 0 then raise exception 'REVERSAO RECUSADA: % referência(s) às matérias criadas', v_refs; end if;
+
+  delete from public.assuntos s using public.materias m, _993_tax t where m.id = s.materia_id and t.nome = s.nome and t.materia = m.nome and s.usuario_id is null and m.usuario_id is null;
+  get diagnostics v_a = row_count;
+  if v_a <> 14 then raise exception 'REVERSAO: apagou % assunto(s), esperado 14', v_a; end if;
+  delete from public.materias m using _993_mat t where t.nome = m.nome and m.usuario_id is null;
+  get diagnostics v_m = row_count;
+  if v_m <> 2 then raise exception 'REVERSAO: apagou % matéria(s), esperado 2', v_m; end if;
+  raise notice 'REVERSAO aplicada: 14 assuntos e 2 matérias removidos';
+end $$;
+
+do $$
+declare
+  v_destino int; v_equiv int; v_homon int; r record;
+begin
+  select count(*) into v_destino from (select m.nome from public.materias m
+   where m.usuario_id is null and m.ativo and m.nome in ('Informática', 'Legislação Penal Especial', 'Direito Processual Penal', 'Direito Administrativo') group by m.nome having count(*) = 1) x;
+  if v_destino <> 4 then raise exception 'AUDITORIA: esperadas 4 matérias globais ativas e únicas de destino, encontradas %', v_destino; end if;
+  if (select array_agg(id order by id) from public.materias where usuario_id is null and ativo and nome in ('Informática', 'Legislação Penal Especial', 'Direito Processual Penal', 'Direito Administrativo')) <> array[7, 8, 9, 16]::bigint[] then
+    raise exception 'AUDITORIA: matérias de destino fora dos ids aprovados (7, 8, 9, 16)';
+  end if;
+
+  select count(*) into v_equiv from (
+    select distinct a.id, a.materia_id, a.nome from public.assuntos a join _993_tax t
+      on pg_temp.norm(a.nome) = pg_temp.norm(t.nome)
+      or exists (select 1 from unnest(t.chaves) k where pg_temp.norm(a.nome || ' ' || coalesce(a.descricao, '')) like '%' || k || '%')
+     where a.id not in (select assunto_id from _993_homonimos)) x;
+  if v_equiv <> 0 then
+    for r in select distinct a.id, a.materia_id, a.nome from public.assuntos a join _993_tax t
+      on pg_temp.norm(a.nome) = pg_temp.norm(t.nome)
+      or exists (select 1 from unnest(t.chaves) k where pg_temp.norm(a.nome || ' ' || coalesce(a.descricao, '')) like '%' || k || '%')
+     where a.id not in (select assunto_id from _993_homonimos) loop
+      raise notice 'EQUIVALENTE: assunto % (matéria %) "%"', r.id, r.materia_id, r.nome;
+    end loop;
+    raise exception 'AUDITORIA: % assunto(s) equivalente(s) fora dos homônimos aceitos — reauditar antes de criar', v_equiv;
+  end if;
+
+  select count(*) into v_homon from _993_homonimos h join public.assuntos a on a.id = h.assunto_id and a.materia_id = h.materia_id;
+  if v_homon <> 5 then raise exception 'AUDITORIA: homônimo aceito fora de onde a decisão o encontrou — reauditar'; end if;
+
+  select count(*) into v_equiv from (
+    select distinct m.id, m.nome from public.materias m, _993_mat t
+      where pg_temp.norm(m.nome) = pg_temp.norm(t.nome)
+         or exists (select 1 from unnest(t.chaves) k where pg_temp.norm(m.nome || ' ' || coalesce(m.descricao, '')) like '%' || k || '%')
+      union
+      select distinct a.id, a.nome from public.assuntos a, _993_mat t
+      where exists (select 1 from unnest(t.chaves) k where pg_temp.norm(a.nome || ' ' || coalesce(a.descricao, '')) like '%' || k || '%')) x;
+  if v_equiv <> 0 then
+    for r in select distinct m.id, m.nome from public.materias m, _993_mat t
+      where pg_temp.norm(m.nome) = pg_temp.norm(t.nome)
+         or exists (select 1 from unnest(t.chaves) k where pg_temp.norm(m.nome || ' ' || coalesce(m.descricao, '')) like '%' || k || '%')
+      union
+      select distinct a.id, a.nome from public.assuntos a, _993_mat t
+      where exists (select 1 from unnest(t.chaves) k where pg_temp.norm(a.nome || ' ' || coalesce(a.descricao, '')) like '%' || k || '%') loop
+      raise notice 'EQUIVALENTE DE MATÉRIA: % "%"', r.id, r.nome;
+    end loop;
+    raise exception 'AUDITORIA: já existe matéria/assunto equivalente a Contabilidade ou Estatística — reutilizar, não criar';
+  end if;
+  raise notice 'AUDITORIA OK: matérias Contabilidade e Estatística ausentes (nenhuma equivalente); 4 matérias de destino únicas; 14 assuntos ausentes; nenhum equivalente fora dos 5 homônimos aceitos';
+end $$;
+
+commit;
