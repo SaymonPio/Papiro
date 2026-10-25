@@ -75,6 +75,29 @@ function vizinhosDeCorpo(trecho, normais, corpo) {
   return { esquerda, direita };
 }
 
+// Base tipográfica colada à ESQUERDA do item: termina onde ele começa
+// (lacuna de até 0,3 da altura da base), com a linha de base a até 0,6 da
+// altura da base, e altura >= altura do item / proporcao. Vence a mais
+// próxima somando as duas distâncias — em itens empilhados (I., II., III.
+// com a mesma fórmula) a base da linha de cima nunca rouba o expoente da
+// linha de baixo.
+const LACUNA_MAXIMA_BASE = 0.3;
+const FAIXA_VERTICAL_BASE = 0.6;
+const CANDIDATO_A_EXPOENTE = /^[0-9A-Za-z+\-−–]{1,3}$/;
+
+function baseAdjacente(item, normais, proporcao) {
+  let melhor = null;
+  for (const n of normais) {
+    if (n === item || n.altura * proporcao < item.altura) continue;
+    const lacuna = item.x - (n.x + n.largura);
+    const vertical = Math.abs(item.y - n.y);
+    if (lacuna < -1 || lacuna > n.altura * LACUNA_MAXIMA_BASE || vertical > n.altura * FAIXA_VERTICAL_BASE) continue;
+    const distancia = Math.max(lacuna, 0) + vertical;
+    if (!melhor || distancia < melhor.distancia) melhor = { n, distancia };
+  }
+  return melhor?.n ?? null;
+}
+
 function sobreposicaoHorizontal(a, b) {
   const inicio = Math.max(a.x, b.x);
   const fim = Math.min(a.x + a.largura, b.x + b.largura);
@@ -254,14 +277,28 @@ export function detectarExpressoes(itensDaPagina, regras = []) {
   };
 
   const pequenos = itens.filter((i) => !ehEspaco(i) && i.altura > 0 && i.altura <= corpo * PROPORCAO_FONTE_PEQUENA);
-  if (pequenos.length === 0) return juntar({ expressoes: [], incertas: [], itens });
   const normais = itens.filter((i) => !ehEspaco(i) && i.altura >= corpo * PROPORCAO_FONTE_CORPO);
+  // Contexto LOCAL: fórmula em fonte maior que o texto da página (𝑥 em 12
+  // num caderno de corpo 10) tem expoente que não é "pequeno" para a
+  // página, mas é para a base colada a ele (checado numa prova real:
+  // Fundatec/PC-RS 2025 Escrivão-Inspetor, P2 TIPO 1 — "2" de 8,52 junto de
+  // 𝑥 de 12, perdido por 0,02 do limite da página, enquanto o mesmo
+  // expoente de 8,40 no TIPO 2 era reconhecido). Quando há base adjacente,
+  // a altura DELA é a referência dos limites; sem base, vale a da página.
+  const pequenosLocais = itens.filter((i) => !ehEspaco(i) && i.altura > corpo * PROPORCAO_FONTE_PEQUENA && baseAdjacente(i, normais, PROPORCAO_FONTE_PEQUENA));
 
-  const trechos = agruparTrechosPequenos(pequenos, corpo).map((t) => {
-    const { esquerda, direita } = vizinhosDeCorpo(t, normais, corpo);
-    const base = esquerda ?? direita;
-    return { ...t, esquerda, direita, linhaBase: base ? base.y : null, deslocamento: base ? t.y - base.y : null };
-  });
+  const trechos = [
+    ...agruparTrechosPequenos(pequenos, corpo).map((t) => {
+      const { esquerda, direita } = vizinhosDeCorpo(t, normais, corpo);
+      const base = esquerda ?? direita;
+      return { ...t, esquerda, direita, linhaBase: base ? base.y : null, deslocamento: base ? t.y - base.y : null, referencia: corpo };
+    }),
+    ...agruparTrechosPequenos(pequenosLocais, corpo).map((t) => {
+      const esquerda = baseAdjacente(t.itens[0], normais, PROPORCAO_FONTE_PEQUENA);
+      const { direita } = vizinhosDeCorpo(t, normais, esquerda.altura);
+      return { ...t, esquerda, direita, linhaBase: esquerda.y, deslocamento: t.y - esquerda.y, referencia: esquerda.altura };
+    }),
+  ];
 
   const expressoes = [];
   const incertas = [];
@@ -270,14 +307,14 @@ export function detectarExpressoes(itensDaPagina, regras = []) {
   // Fração: um trecho acima e outro abaixo da MESMA linha de base,
   // empilhados na mesma faixa X.
   for (const cima of trechos) {
-    if (consumidos.has(cima) || cima.linhaBase === null || cima.deslocamento <= corpo * DESLOCAMENTO_MINIMO) continue;
+    if (consumidos.has(cima) || cima.linhaBase === null || cima.deslocamento <= cima.referencia * DESLOCAMENTO_MINIMO) continue;
     const baixo = trechos.find(
       (t) =>
         !consumidos.has(t) &&
         t !== cima &&
         t.linhaBase !== null &&
-        Math.abs(t.linhaBase - cima.linhaBase) <= corpo * 0.2 &&
-        t.deslocamento < -corpo * DESLOCAMENTO_MINIMO &&
+        Math.abs(t.linhaBase - cima.linhaBase) <= cima.referencia * 0.2 &&
+        t.deslocamento < -t.referencia * DESLOCAMENTO_MINIMO &&
         sobreposicaoHorizontal(cima, t) >= SOBREPOSICAO_MINIMA_FRACAO,
     );
     if (!baixo) continue;
@@ -313,26 +350,55 @@ export function detectarExpressoes(itensDaPagina, regras = []) {
       itensOriginais: t.itens,
       partes: [t.texto],
     };
-    if (t.deslocamento >= corpo * DESLOCAMENTO_MINIMO_SOBRESCRITO) {
+    if (t.deslocamento >= t.referencia * DESLOCAMENTO_MINIMO_SOBRESCRITO) {
       const convertido = converterPorTabela(t.texto, SOBRESCRITOS) ?? indicadorOrdinal(t.texto, t.esquerda?.texto);
       if (convertido) expressoes.push({ ...base, tipo: "sobrescrito", texto: convertido });
       else incertas.push({ ...base, tipo: "sobrescrito", motivo: `sobrescrito sem representação segura ("${t.texto}")` });
       consumidos.add(t);
-    } else if (t.deslocamento <= -corpo * DESLOCAMENTO_MINIMO) {
+    } else if (t.deslocamento <= -t.referencia * DESLOCAMENTO_MINIMO) {
       const convertido = converterPorTabela(t.texto, SUBSCRITOS);
       if (convertido) expressoes.push({ ...base, tipo: "subscrito", texto: convertido });
       else incertas.push({ ...base, tipo: "subscrito", motivo: `subscrito sem representação segura ("${t.texto}")` });
+      consumidos.add(t);
+    } else if (t.deslocamento >= t.referencia * DESLOCAMENTO_MINIMO) {
+      // Acima da linha de base, mas sem chegar à altura de expoente: nem
+      // texto da linha nem sobrescrito com segurança.
+      incertas.push({ ...base, tipo: "sobrescrito", motivo: `deslocamento de linha de base ambíguo ("${t.texto}")` });
       consumidos.add(t);
     }
     // Deslocamento pequeno: só uma fonte menor na própria linha (sigla,
     // símbolo) — não é expressão, fica como está.
   }
 
+  // Gate: glifo curto colado ao fim de outro com a linha de base elevada
+  // (ou rebaixada) como expoente/índice, mas SEM fonte menor que confirme —
+  // a geometria sugere expressão que nada acima representou. Nunca vira
+  // texto corrido em silêncio: incerta, a questão vai para revisão.
+  const emTrecho = new Set(trechos.flatMap((t) => t.itens));
+  for (const item of itens) {
+    if (ehEspaco(item) || emTrecho.has(item) || comTraco.consumidos.has(item) || !CANDIDATO_A_EXPOENTE.test(item.texto.trim())) continue;
+    const base = baseAdjacente(item, normais, 1 / PROPORCAO_FONTE_CORPO);
+    if (!base) continue;
+    const deslocamento = item.y - base.y;
+    const sobe = deslocamento >= base.altura * DESLOCAMENTO_MINIMO_SOBRESCRITO;
+    if (!sobe && deslocamento > -base.altura * DESLOCAMENTO_MINIMO_SOBRESCRITO) continue;
+    incertas.push({
+      tipo: sobe ? "sobrescrito" : "subscrito",
+      motivo: `${sobe ? "expoente" : "índice"} aparente sem fonte menor ("${item.texto.trim()}") — linha de base deslocada sem representação segura`,
+      x: item.x,
+      y: base.y,
+      largura: item.largura,
+      contextoAntes: base.texto,
+      contextoDepois: null,
+      partes: [item.texto.trim()],
+    });
+  }
+
   const originaisSubstituidos = new Set(expressoes.flatMap((e) => e.itensOriginais));
-  const itensReconstruidos = [
-    ...itens.filter((i) => !originaisSubstituidos.has(i)),
-    ...expressoes.map((e) => ({ texto: e.texto, x: e.x, y: e.y, largura: e.largura, altura: corpo, sintetico: e.tipo })),
-  ];
+  const itensReconstruidos =
+    expressoes.length === 0
+      ? itens
+      : [...itens.filter((i) => !originaisSubstituidos.has(i)), ...expressoes.map((e) => ({ texto: e.texto, x: e.x, y: e.y, largura: e.largura, altura: corpo, sintetico: e.tipo }))];
 
   const limpar = ({ itensOriginais, ...resto }) => resto;
   return juntar({ expressoes: expressoes.map(limpar), incertas: incertas.map(limpar), itens: itensReconstruidos });
@@ -357,11 +423,16 @@ function escaparRegex(texto) {
 // forma linearizada (partes separadas por espaço/quebra de linha) só é
 // substituída quando aparece EXATAMENTE uma vez entre os mesmos vizinhos
 // de corpo normal — qualquer outra situação vira "nao_aplicada" (revisão
-// manual), nunca uma substituição por aproximação.
+// manual), nunca uma substituição por aproximação. A MESMA expressão
+// repetida na página (mesmos vizinhos, mesmas partes, mesmo resultado —
+// "x²" nos itens I e III de uma questão) é aplicada em grupo: N detectadas
+// e exatamente N ocorrências da forma linear, todas trocadas pelo mesmo
+// texto; qualquer outra contagem continua "nao_aplicada".
 export function aplicarExpressoesAoTexto(texto, expressoes) {
   let resultado = texto;
   const aplicadas = [];
   const naoAplicadas = [];
+  const grupos = new Map();
   for (const expressao of expressoes) {
     const antes = expressao.contextoAntes ? escaparRegex(expressao.contextoAntes.trim().slice(-8)) : "";
     const depois = expressao.contextoDepois ? escaparRegex(expressao.contextoDepois.trim().slice(0, 4)) : "";
@@ -370,16 +441,23 @@ export function aplicarExpressoesAoTexto(texto, expressoes) {
       continue;
     }
     const miolo = expressao.partes.map(escaparRegex).join("[ \\t]*\\n?[ \\t]*");
-    const padrao = new RegExp(`(${antes}[ \\t]*\\n?[ \\t]*)(${miolo})(?=[ \\t]*\\n?[ \\t]*${depois})`, "g");
-    const ocorrencias = [...resultado.matchAll(padrao)];
-    if (ocorrencias.length !== 1) {
-      naoAplicadas.push({ ...expressao, motivo: `forma linear encontrada ${ocorrencias.length} vez(es) — esperado exatamente 1` });
+    const fonte = `(${antes}[ \\t]*\\n?[ \\t]*)(${miolo})(?=[ \\t]*\\n?[ \\t]*${depois})`;
+    const chave = `${fonte}\u0000${expressao.texto}`;
+    if (!grupos.has(chave)) grupos.set(chave, { fonte, texto: expressao.texto, expressoes: [] });
+    grupos.get(chave).expressoes.push(expressao);
+  }
+  for (const grupo of grupos.values()) {
+    const ocorrencias = [...resultado.matchAll(new RegExp(grupo.fonte, "g"))];
+    if (ocorrencias.length !== grupo.expressoes.length) {
+      const esperado = grupo.expressoes.length === 1 ? "exatamente 1" : `exatamente ${grupo.expressoes.length} (expressão repetida)`;
+      for (const expressao of grupo.expressoes) naoAplicadas.push({ ...expressao, motivo: `forma linear encontrada ${ocorrencias.length} vez(es) — esperado ${esperado}` });
       continue;
     }
-    const [ocorrencia] = ocorrencias;
-    const inicio = ocorrencia.index + ocorrencia[1].length;
-    resultado = resultado.slice(0, inicio) + expressao.texto + resultado.slice(inicio + ocorrencia[2].length);
-    aplicadas.push(expressao);
+    for (const ocorrencia of ocorrencias.reverse()) {
+      const inicio = ocorrencia.index + ocorrencia[1].length;
+      resultado = resultado.slice(0, inicio) + grupo.texto + resultado.slice(inicio + ocorrencia[2].length);
+    }
+    aplicadas.push(...grupo.expressoes);
   }
   return { texto: resultado, aplicadas, naoAplicadas };
 }
