@@ -61,6 +61,7 @@ export function normalizarQuestao(juntada, metadata, classificacao) {
       enunciado_comando: juntarQuebrasArtificiais(normalizarMarcadoresDeLista(juntada.enunciado)),
       textos_base: textosBase.map((t) => ({ id: t.id, tipo: t.tipo, confiavel: t.confiavel, motivo: t.motivo, caracteres: t.texto.length, linhas_numeradas: t.linhas_numeradas ?? false })),
       dependencia_texto_incerta: juntada.dependencia_texto_incerta ?? null,
+      ...(juntada.inconsistencias_texto_base?.length > 0 ? { inconsistencias_texto_base: juntada.inconsistencias_texto_base } : {}),
       alternativa_suspeita: juntada.alternativa_suspeita ?? null,
       referencia_visual: juntada.referencia_visual ?? null,
       alertas_expressao: juntada.alertas_expressao ?? [],

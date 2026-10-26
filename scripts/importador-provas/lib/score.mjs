@@ -18,6 +18,11 @@ export function causasDeExtracao(questao) {
   // aluno precisa conseguir responder só com o que será gravado.
   const textoNaoConfiavel = (interno.textos_base ?? []).find((t) => !t.confiavel);
   if (textoNaoConfiavel) causas.push({ codigo: "texto_base_nao_confiavel", motivo: `texto-base ${textoNaoConfiavel.id} não reconstruído com fidelidade (${textoNaoConfiavel.motivo})` });
+  // Questão e texto-base associado inconsistentes (linha citada que o texto
+  // não tem, trecho que não está na linha indicada — extrairQuestoes.mjs).
+  // Não liberável: a associação
+  // precisa ser corrigida.
+  for (const inconsistencia of interno.inconsistencias_texto_base ?? []) causas.push({ codigo: inconsistencia.codigo, motivo: inconsistencia.motivo });
   if (interno.dependencia_texto_incerta) causas.push({ codigo: "dependencia_texto_incerta", motivo: `dependência de texto-base incerta: ${interno.dependencia_texto_incerta}` });
   if (interno.alternativa_suspeita) causas.push({ codigo: "alternativa_suspeita", motivo: interno.alternativa_suspeita });
   // Referência a peça visual resolvida por mídia extraída (MIDIA_OK) deixa

@@ -24,6 +24,7 @@
 // aparição no texto NÃO precisa ser alfabética (ver segmentarAlternativas)
 // — só a presença e a unicidade de cada letra são exigidas.
 
+import { normalizarTexto } from "./deduplicar.mjs";
 import { encontrarBlocosDeApoio, reconstruirTextoBase, referenciasAoTexto } from "./textoBase.mjs";
 
 const MARCADOR_QUESTAO = /(?:^|\n)[ \t]*(\d{1,3})[.)][ \t]+/g;
@@ -468,7 +469,7 @@ export function referenciaDeMidia(texto) {
 // cortada, para nunca ficar grudada na alternativa E da anterior.
 const TAMANHO_MINIMO_TEXTO_IMPLICITO = 300;
 
-function encontrarRegiaoDeTexto(textoCompleto, { inicioBusca, limiteInferior, fimBusca, numeroImpresso, titulos }) {
+function encontrarRegiaoDeTexto(textoCompleto, { inicioBusca, limiteInferior, fimBusca, numeroImpresso, titulos, mapaPaginas, entreQuestoes }) {
   const trecho = textoCompleto.slice(inicioBusca, fimBusca);
   const absoluto = (offsetRelativo) => inicioBusca + offsetRelativo;
 
@@ -500,7 +501,69 @@ function encontrarRegiaoDeTexto(textoCompleto, { inicioBusca, limiteInferior, fi
       return { inicio, fim: fimBusca, tipo: "implicito", rotulo: null, faixaNumeros: null };
     }
   }
-  return null;
+  return entreQuestoes ? encontrarTextoNumerado(textoCompleto, mapaPaginas, limiteInferior, fimBusca) : null;
+}
+
+// Texto-base SEM nenhum cabeçalho entre duas questões: o sinal forte é a
+// numeração de linhas recomeçando em 1 depois da última alternativa da
+// questão anterior (checado numa prova real: Fundatec/PC-RS 2025 Delegado
+// P1 — um texto em três partes, cada uma no topo de uma página com título,
+// subtítulo, autoria e linhas 01… próprias; sem isto, as partes 2 e 3
+// grudavam na alternativa E das questões 11 e 21 e todas as questões
+// seguintes recebiam a parte 1, passando por todos os gates). Sozinho, o
+// recomeço não basta — exige também: MINIMO_LINHAS_TEXTO_NUMERADO linhas
+// CONTÍGUAS 1, 2, 3... (a leitura linear entrega os números sozinhos, a
+// posicional com o conteúdo ao lado: as duas formas contam), corpo de
+// texto de TAMANHO_MINIMO_TEXTO_IMPLICITO+ caracteres e uma fronteira
+// provada com a alternativa anterior. Autoria ("Por ...") e fonte
+// ("Disponível em") nunca são exigidas. Fronteira sem prova (abertura
+// longa demais, linha em minúscula, alternativa sem pontuação final) não
+// muda nada: o candidato é descartado e a extração fica exatamente como
+// sem este detector — nenhum texto criado, nenhuma alternativa cortada.
+// O detector só SEPARA um texto novo de um texto-base ainda ativo (o que
+// seria herdado se o bloco novo não fosse reconhecido) — não descobre o
+// primeiro texto-base de uma prova: ver extrairQuestoesDoTexto.
+const NUMERO_DE_LINHA_NO_INICIO = /^[ \t]*(\d{1,3})(?=[ \t]|$)/;
+const MINIMO_LINHAS_TEXTO_NUMERADO = 5;
+// Linhas de abertura (título, subtítulo, autoria) entre a alternativa e a
+// linha 1 — o mesmo limite das bordas de página.
+const MAXIMO_LINHAS_DE_ABERTURA = LINHAS_BORDA_PAGINA;
+const ALTERNATIVA_ENCERRADA = /[.!?…;:)”"»]$/;
+
+function encontrarTextoNumerado(textoCompleto, mapaPaginas, limiteInferior, fimBusca) {
+  if (!Number.isFinite(limiteInferior)) return null;
+  const quebraDaAlternativa = textoCompleto.indexOf("\n", limiteInferior);
+  if (quebraDaAlternativa === -1 || quebraDaAlternativa >= fimBusca) return null;
+  const inicioDasLinhas = quebraDaAlternativa + 1;
+  const linhas = [];
+  let offset = inicioDasLinhas;
+  for (const texto of textoCompleto.slice(inicioDasLinhas, fimBusca).split("\n")) {
+    linhas.push({ texto, inicio: offset, numero: Number(texto.match(NUMERO_DE_LINHA_NO_INICIO)?.[1] ?? NaN) });
+    offset += texto.length + 1;
+  }
+  const primeira = linhas.findIndex((l, k) => l.numero === 1 && linhas.slice(k, k + MINIMO_LINHAS_TEXTO_NUMERADO).every((x, j) => x.numero === j + 1));
+  if (primeira === -1) return null;
+  const corpo = linhas.slice(primeira).map((l) => l.texto.replace(NUMERO_DE_LINHA_NO_INICIO, "")).join(" ").trim();
+  if (corpo.length < TAMANHO_MINIMO_TEXTO_IMPLICITO) return null;
+
+  const linhaUm = linhas[primeira];
+  const naoVazias = (de, ate) => textoCompleto.slice(de, ate).split("\n").filter((l) => l.trim());
+  const comecaEmMinuscula = (l) => /^[a-zà-öø-ÿ]/.test(l.trim());
+  const paginaDaLinhaUm = mapaPaginas.find((p) => linhaUm.inicio >= p.inicio && linhaUm.inicio <= p.fim);
+  let inicio = null;
+  if (paginaDaLinhaUm && paginaDaLinhaUm.inicio > limiteInferior) {
+    // Texto no topo de uma página seguinte: começa no início da página.
+    const abertura = naoVazias(paginaDaLinhaUm.inicio, linhaUm.inicio);
+    if (abertura.length <= MAXIMO_LINHAS_DE_ABERTURA && !abertura.some(comecaEmMinuscula)) inicio = paginaDaLinhaUm.inicio;
+  } else {
+    // Mesma página: as linhas de abertura só vão para o texto se a
+    // alternativa terminou na própria linha (pontuação final).
+    const abertura = naoVazias(inicioDasLinhas, linhaUm.inicio);
+    const linhaDaAlternativa = textoCompleto.slice(limiteInferior, quebraDaAlternativa).trim();
+    if (abertura.length === 0) inicio = linhaUm.inicio;
+    else if (abertura.length <= MAXIMO_LINHAS_DE_ABERTURA && ALTERNATIVA_ENCERRADA.test(linhaDaAlternativa) && !abertura.some(comecaEmMinuscula)) inicio = inicioDasLinhas;
+  }
+  return inicio === null ? null : { inicio, fim: fimBusca, tipo: "numerado", rotulo: null, faixaNumeros: null };
 }
 
 function segmentosDaRegiao(paginas, mapaPaginas, textoCompleto, inicio, fim) {
@@ -522,6 +585,53 @@ function segmentosDaRegiao(paginas, mapaPaginas, textoCompleto, inicio, fim) {
 // manual) — nunca recebe um texto por suposição, nem fica sem ele por
 // suposição.
 const LACUNA_MAXIMA_BLOCO_TEXTUAL = 3;
+const REFERENCIA_A_VARIOS_TEXTOS =
+  /\b(?:os|ambos[ \t\n]+os|dois|tr[eê]s|quatro|cinco)[ \t\n]+textos\b(?![ \t\n]*(?:\d|[IVX]+\b))|\b(?:duas|tr[eê]s|quatro|cinco|v[áa]rias|todas[ \t\n]+as)[ \t\n]+partes[ \t\n]+do[ \t\n]+texto\b/i;
+
+// Defesa independente da detecção: a questão cita linha(s) do texto que
+// recebeu ("l. 12", "linhas 10 e 11", "(l. 27-28)") — a linha precisa
+// existir NELE; e o trecho citado junto da linha ("“...” (l. 04)") precisa
+// estar naquelas linhas. Compara o texto normalizado sem espaços (a quebra
+// de linha do PDF pode partir uma palavra), por partes quando o trecho tem
+// supressão ("...", "(...)"); nunca por semelhança. Só olha textos
+// confiáveis com numeração reconhecida — texto não confiável já vai para
+// revisão; texto confiável sem numeração não tem a linha citada.
+const LINHAS_CITADAS = /(?:\bls?\.|\blinhas?\b)[ \t\n]*(\d{1,3})(?:[ \t\n]*(?:-|–|a|e|até)[ \t\n]*(\d{1,3}))?/gi;
+const TRECHO_COM_LINHA = /“([^”]{1,300})”[ \t\n]*\([ \t\n]*(?:ls?\.|linhas?)[ \t\n]*(\d{1,3})(?:[ \t\n]*(?:-|–|a|e|até)[ \t\n]*(\d{1,3}))?[ \t\n]*\)/gi;
+const SUPRESSAO_NO_TRECHO = /\.{3,}|…|_{2,}|\([ \t]*\.\.\.[ \t]*\)|\[[ \t]*\.\.\.[ \t]*\]/;
+const LACUNA_NO_TEXTO = /_{3,}|\.{4,}/;
+const compacto = (texto) => normalizarTexto(texto).replace(/ /g, "");
+
+function inconsistenciasDoTextoBase(r) {
+  const textos = r.textos ?? [];
+  if (textos.length === 0 || !textos.every((t) => t.confiavel)) return [];
+  const conteudoQuestao = [r.enunciado, ...r.alternativas.map((a) => a.texto)].join("\n");
+  const citadas = [...conteudoQuestao.matchAll(LINHAS_CITADAS)].map((m) => ({ de: Number(m[1]), ate: Number(m[2] ?? m[1]), texto: m[0].replace(/\s+/g, " ") }));
+  if (citadas.length === 0) return [];
+  const linhasDoTexto = new Map();
+  for (const t of textos) for (const m of t.conteudo.matchAll(/^\[(\d{1,3})\][ \t]?(.*)$/gm)) linhasDoTexto.set(Number(m[1]), `${linhasDoTexto.get(Number(m[1])) ?? ""} ${m[2]}`);
+  const ultima = Math.max(0, ...linhasDoTexto.keys());
+  const fora = citadas.filter((c) => c.de > ultima || c.ate > ultima);
+  if (fora.length > 0) {
+    const descricao = ultima === 0 ? "o texto-base associado não tem numeração de linhas reconhecida" : `o texto-base associado vai só até a linha ${ultima}`;
+    return [{ codigo: "referencia_linha_fora_do_texto_base", motivo: `cita ${fora.map((c) => `"${c.texto}"`).join(", ")}, mas ${descricao}` }];
+  }
+  const ausentes = [];
+  for (const m of conteudoQuestao.matchAll(TRECHO_COM_LINHA)) {
+    const de = Number(m[2]);
+    const ate = Number(m[3] ?? m[2]);
+    const linhasDaJanela = Array.from({ length: (m[3] ? ate : de + 1) - de + 1 }, (_, k) => linhasDoTexto.get(de + k) ?? "").join(" ");
+    // Trecho com lacuna citando linha que também tem lacuna ("“en__urrada”
+    // (l. 02)" para a palavra que preenche o "________" da linha — checado
+    // numa prova real: Fundatec/PP-RS 2022, questão 16): não há como
+    // conferir sem supor o preenchimento — nada é sinalizado.
+    if (SUPRESSAO_NO_TRECHO.test(m[1]) && LACUNA_NO_TEXTO.test(linhasDaJanela)) continue;
+    const janela = compacto(linhasDaJanela);
+    const partes = m[1].split(SUPRESSAO_NO_TRECHO).map(compacto).filter(Boolean);
+    if (partes.length > 0 && !partes.every((p) => janela.includes(p))) ausentes.push(`“${m[1].replace(/\s+/g, " ")}” (l. ${m[3] ? `${de}-${ate}` : de})`);
+  }
+  return ausentes.length > 0 ? [{ codigo: "citacao_ausente_do_texto_base", motivo: `trecho citado não está na(s) linha(s) indicada(s) do texto-base associado: ${ausentes.join("; ")}` }] : [];
+}
 
 function associarTextosBase(rascunhos) {
   let ativos = [];
@@ -536,6 +646,9 @@ function associarTextosBase(rascunhos) {
       secaoAtual = q.secao;
       ultimaAtividade = -Infinity;
     }
+    // Texto-base sem faixa que esta questão herdaria (se o citar) caso
+    // nenhum texto novo começasse aqui.
+    q.blocoAtivoNaEntrada = ativos.length > 0 && i - ultimaAtividade <= LACUNA_MAXIMA_BLOCO_TEXTUAL;
     for (const texto of q.textosQueComecamAqui) {
       if (texto.faixaNumeros) comFaixa.push(texto);
       else ativos.push(texto);
@@ -555,6 +668,11 @@ function associarTextosBase(rascunhos) {
         if (principais.length < refs.numeros.size) dependenciaIncerta = `cita texto(s) ${[...refs.numeros].join(", ")}, mas nem todos foram localizados na prova`;
       } else if (refs.texto || refs.linhas || (refs.indireta && !coberta)) {
         principais = [ativos.at(-1)];
+        // "As três partes do texto...", "os dois textos": só o mais recente
+        // seria anexado — a questão pede mais do que vai receber.
+        if (ativos.length > 1 && REFERENCIA_A_VARIOS_TEXTOS.test([q.enunciado, ...q.alternativas.map((a) => a.texto)].join("\n"))) {
+          dependenciaIncerta = "cita mais de um texto (ou partes do texto), mas só o texto-base mais recente seria associado";
+        }
       } else if (!coberta) {
         dependenciaIncerta = "questão dentro do bloco de um texto-base sem citá-lo explicitamente — confirmar se depende do texto";
       }
@@ -704,7 +822,26 @@ function corteDeSecaoAposUltimaAlternativa(textoCompleto, mapaPaginas, inicioSpa
   return null;
 }
 
+// Texto numerado implícito (encontrarTextoNumerado) só entra quando separa
+// um texto novo de um texto-base ainda ATIVO. Os candidatos são decididos
+// em ordem de documento, cada um pela associação da extração SEM ele (com
+// os anteriores já decididos): aceito só se, na entrada da sua questão, um
+// texto-base continua no bloco (associarTextosBase) e seria herdado. Sem
+// candidato aceito, a extração é exatamente a de antes do detector. A lista
+// de candidatos não depende dos aceitos (o limite de cada um vem da última
+// alternativa da questão anterior antes de qualquer corte por região).
 export function extrairQuestoesDoTexto(paginasOriginais, opcoes = {}) {
+  const aceitos = new Set();
+  let extracao = extrairComTextosNumerados(paginasOriginais, opcoes, aceitos);
+  for (const i of extracao.candidatosNumerados) {
+    if (!extracao.blocoAtivoNaEntrada[i]) continue;
+    aceitos.add(i);
+    extracao = extrairComTextosNumerados(paginasOriginais, opcoes, aceitos);
+  }
+  return extracao.resultado;
+}
+
+function extrairComTextosNumerados(paginasOriginais, opcoes, aceitos) {
   const composicao = Array.isArray(opcoes.composicao) && opcoes.composicao.length > 0 ? opcoes.composicao : null;
   const { paginas, topoRemovido } = removerLinhasCorridas(paginasOriginais);
   const mapaPaginas = construirMapaDePaginas(paginas);
@@ -720,11 +857,15 @@ export function extrairQuestoesDoTexto(paginasOriginais, opcoes = {}) {
   if (cadernos.length > 1) {
     const descricao = cadernos.map((c) => `p. ${paginaDoOffset(mapaPaginas, c.inicio)}–${paginaDoOffset(mapaPaginas, c.fim)} (${c.questoes} questões)`);
     return {
-      questoes: [],
-      numerosIgnorados: [],
-      avisos: [],
-      cadernos: descricao,
-      bloqueio: `documento com ${cadernos.length} cadernos/partes concatenados (a numeração recomeça em 1): ${descricao.join("; ")} — declare a parte a extrair (metadata.parte.paginas); nenhuma sequência é escolhida entre cadernos`,
+      resultado: {
+        questoes: [],
+        numerosIgnorados: [],
+        avisos: [],
+        cadernos: descricao,
+        bloqueio: `documento com ${cadernos.length} cadernos/partes concatenados (a numeração recomeça em 1): ${descricao.join("; ")} — declare a parte a extrair (metadata.parte.paginas); nenhuma sequência é escolhida entre cadernos`,
+      },
+      candidatosNumerados: [],
+      blocoAtivoNaEntrada: [],
     };
   }
   const { itens: sequencia, numerosIgnorados } = montarSegmentos(textoCompleto, candidatos, cabecalhosBloco);
@@ -737,6 +878,7 @@ export function extrairQuestoesDoTexto(paginasOriginais, opcoes = {}) {
     const tituloNoFim = titulosSecao.find((t) => t.antesDeQuestao && t.inicio >= atual.inicioSpan && t.inicio < atual.fimSpan);
     return tituloNoFim ? tituloNoFim.inicio : atual.fimSpan;
   });
+  const candidatosNumerados = [];
   const regioes = sequencia.map((atual, i) => {
     let limiteInferior = 0;
     if (i > 0) {
@@ -744,13 +886,18 @@ export function extrairQuestoesDoTexto(paginasOriginais, opcoes = {}) {
       const { offsetUltimaAlternativa } = segmentarAlternativas(textoCompleto.slice(anterior.inicioSpan, fins[i - 1]));
       limiteInferior = offsetUltimaAlternativa === null ? Infinity : anterior.inicioSpan + offsetUltimaAlternativa;
     }
-    return encontrarRegiaoDeTexto(textoCompleto, {
+    const regiao = encontrarRegiaoDeTexto(textoCompleto, {
       inicioBusca: i === 0 ? 0 : sequencia[i - 1].offsetFimMarcador,
       limiteInferior,
       fimBusca: atual.offsetMarcador,
       numeroImpresso: atual.numeroImpresso,
       titulos: titulosSecao,
+      mapaPaginas,
+      entreQuestoes: i > 0,
     });
+    if (regiao?.tipo !== "numerado") return regiao;
+    candidatosNumerados.push(i);
+    return aceitos.has(i) ? regiao : null;
   });
   for (let i = 1; i < sequencia.length; i++) if (regioes[i]) fins[i - 1] = Math.min(fins[i - 1], regioes[i].inicio);
   for (let i = 0; i < sequencia.length; i++) {
@@ -827,6 +974,7 @@ export function extrairQuestoesDoTexto(paginasOriginais, opcoes = {}) {
   });
 
   associarTextosBase(rascunhos);
+  for (const r of rascunhos) r.inconsistencias = inconsistenciasDoTextoBase(r);
 
   const questoes = rascunhos.map((r, i) => ({
     numero_original: i + 1,
@@ -846,6 +994,7 @@ export function extrairQuestoesDoTexto(paginasOriginais, opcoes = {}) {
     expressoes: r.expressoes,
     alternativa_faltante: r.alternativaFaltante,
     contagem_materia_divergente: r.contagemMateriaDivergente,
+    ...(r.inconsistencias.length > 0 ? { inconsistencias_texto_base: r.inconsistencias } : {}),
   }));
 
   // Contagem declarada x encontrada por seção da composição.
@@ -859,5 +1008,9 @@ export function extrairQuestoesDoTexto(paginasOriginais, opcoes = {}) {
     }
   }
 
-  return { questoes, numerosIgnorados, avisos, cadernos: [], bloqueio: null };
+  return {
+    resultado: { questoes, numerosIgnorados, avisos, cadernos: [], bloqueio: null },
+    candidatosNumerados,
+    blocoAtivoNaEntrada: rascunhos.map((r) => r.blocoAtivoNaEntrada),
+  };
 }
